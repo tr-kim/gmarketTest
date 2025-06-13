@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" th:href="@{/css/bootstrap-icons.min.css}">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/fonts.css}">
+<link rel="stylesheet" th:href="@{/css/common.css}">
+<link rel="stylesheet" th:href="@{/css/style3.css}">
+<script th:src="@{/js/common.js}"></script>
+<title>Gmarket</title>
+</head>
+<body>
+	<div id="gm_login" class="d-flex flex-column justify-content-center">
+		<header class="position-fixed top-0 start-0 w-100">
+			<h1>
+				<img th:src="@{/images/logo.png}" alt="지마켓로고">
+			</h1>
+		</header>        
+        <div class="container d-flex justify-content-between align-items-center align-content-center">
+            <h2 class="font-weight-700">지능형 SMS<br>시스템 관리 페이지</h2>
+            <form name='LoginForm' method='Post' class="col-5 d-flex flex-column align-items-center bg-white  rounded-4">
+                <p class="font-sz-20 font-weight-600 ">Login</p>
+                <span class="login_span font-weight-500 ">아이디와 비밀번호를 입력해 주세요.</span>
+                <div class="d-flex flex-column w-100 my-3">
+                    <label for="id" class="font-weight-500 ">ID</label>
+                    <input class="p-2 rounded-1" type="text" name="id" id="id" placeholder="아이디를 입력해 주세요.">
+                </div>
+                <div class="d-flex flex-column w-100 mt-3 mb-5">
+                    <label for="password" class="font-weight-500 ">Password</label>
+                    <input class="p-2 rounded-1" type="password" name="password" id="password" placeholder="비밀번호를 입력해 주세요.">
+                </div>
+                <button type="submit" class="login_btn">로그인</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+/* login.html.2   */
+#gm_login{
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    background-color: #43435E;
+}
+#gm_login .write_wrap{
+    min-width: 300px;
+}
+#gm_login input{
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #ffffff;
+    padding-left: 0;
+    caret-color: #fff;
+    color: #ffffff;
+}
+#gm_login input::placeholder{
+    color:#ffffff60;
+    font-weight: 100;
+}
+#gm_login form {
+    background-color: #43435E;
+    padding: 5rem;
+    position: relative;
+    box-shadow: 0 5px 20px #000000a0;
+    overflow: hidden;
+}
+#gm_login form::before{
+    content: "";
+    width: 300px;
+    height: 320px;
+    position: absolute;
+    top: -90px;
+    left: -35px;
+    background-image: url(../images/login.svg);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: top left;    
+    transform: rotate(-20deg);
+    opacity: 0.8;
+} 
+#gm_login h2{
+    color: #ffffff;
+}
+.login_btn{
+    background-color: #0abb26;
+    color: #fff;
+    border-radius: 0.3rem;
+    font-weight: bold;
+    padding: .8rem 0;
+    width: 100%;
+    transition: box-shadow 0.2s;
+}
+.login_btn:hover{
+    box-shadow: 0 0px 5px #ffffff80;
+}
+.find_psw:hover{
+    border-bottom: 1px solid #fff;
+}
