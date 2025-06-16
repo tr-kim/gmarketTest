@@ -4,10 +4,6 @@
     min-height: 100vh;
     position: relative;
     background-color: #EDF0F6;
-    /* background-image: url(../images/Gmarket.svg);
-    background-repeat: no-repeat;
-    background-size: 80%;
-    background-position: bottom right; */
 }
 #gm_login::before{
     content: "";
@@ -43,7 +39,6 @@
     left: 0; right: 0;margin: auto 0;
     text-align: center;
     bottom: 100%;
-    /* transform: translateY(-50%); */
 }
 #gm_login form h1 img{
     height: 100px;
@@ -64,4 +59,141 @@
 }
 .find_psw:hover{
     border-bottom: 1px solid #00000080;
+}
+/* topMenu.html */
+header{
+    border-bottom: 1px solid #ddd;    
+    padding: 2px 0;
+}
+.logo{
+    height: 32px;
+}
+.logo img{
+    height: 100%;
+    transform: scale(1.8) translateX(2px);
+}
+.user_profile{
+    max-height: 50px;
+    padding: 14px 0;
+    color: #666;
+}
+.user_profile .user_img{
+    width: 32px;
+    height: 32px;
+    border-radius: 3px;
+    background-color: #888;
+    overflow: hidden;
+}
+.user_profile .user_img img{
+    width: 100%;
+}
+.user_profile .user_nm{
+   line-height: 1.2;   
+}
+.user_profile .user_grade{
+    font-size: 13px;
+    line-height: 1.2;
+}
+header li{
+    padding: 14px 0;
+    max-height: 50px;
+    position: relative;
+}
+header li ul{
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #ffffff;
+    width: 100%;
+    box-shadow: 0 0 5px #00000020;
+}
+header li ul li{
+    padding: 7px 2px;
+    width: 100%;
+    text-align: center;
+}
+header li ul li a{
+    padding: 7px;
+    display: block;
+    width: 100%;
+}
+header li a{
+    padding: 14px;
+    vertical-align: middle;
+    border-radius:5px;
+    color: #666;
+    transition: .2s background-color, .2s color;
+}
+header .gnb > li:hover > a{
+    background-color: #f9fafb;
+    color: #333;
+}
+/* header .gnb > li:hover > ul{
+    display: flex;
+} */
+header .gnb > li > ul li > a:hover{
+    background-color: #f0f0f0;
+    color: #333;
+}
+header li.active::before{
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 2px;
+    background: #0abb26;
+    top:100%
+}
+/* leftMenu.html */
+aside{
+    position: fixed;
+    width: 15rem;
+    height: 100%;
+    background-color: #f9fafb;
+    color: #666;
+}
+aside li{
+    width: 100%;
+    border-radius:5px;
+    position: relative;
+}
+aside li a{
+    display: block;
+    width: 100%;
+    padding: 0.7rem 1.3rem;
+    border-radius:5px;
+}
+aside li a{    
+    color: #666;
+    background-color: #f9fafb;
+    transition: .2s background-color, .2s color;
+}
+aside .user_profile:hover,
+aside .logout_btn button:hover,
+aside li:hover a{
+    background-color: #f1f2f3;
+    color: #333;
+}
+aside .user_profile{
+    padding-left: 1.3rem;
+}
+aside .user_img{
+    box-shadow: 0 0 5px #00000020;
+}
+aside .logout_btn button{
+    max-height: 50px;
+    padding: 14px 1.3rem;
+    color: #666;
+}
+aside li.active::before{
+    position: absolute;
+    content: "";
+    width: 3px;
+    height: 100%;
+    background: #0abb26;
+    left: 0;
+    z-index: 1;
+}
+aside li.active a{
+    color: #333;
 }
