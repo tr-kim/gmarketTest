@@ -37,4 +37,10 @@ window.addEventListener('load', function() {
             })
         })         
     }
+
+    if(document.getElementById('gm_login')){
+        document.querySelector('.fixed_btn').addEventListener('click', function() {
+            document.getElementById('gm_login').classList.toggle('light_mode');
+        })
+    }
 })

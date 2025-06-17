@@ -5,8 +5,17 @@
     position: relative;
     background-color: #43435E;
 }
+#gm_login .light_logo{
+    display: none;
+}
+#gm_login .dark_logo{
+    display: block;
+}
 #gm_login .write_wrap{
     min-width: 300px;
+}
+#gm_login .text-color{
+    color: #ffffff;
 }
 #gm_login input{
     background: transparent;
@@ -58,4 +67,48 @@
 }
 .find_psw:hover{
     border-bottom: 1px solid #fff;
+}
+.fixed_btn{
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    color : #ffa;
+    background-color: #43435E;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    box-shadow: 0 0 10px #00000080;
+    border: 2px solid #7f7fa0;
+}
+#gm_login.light_mode{
+    background-color: #f8fafc;
+}
+#gm_login.light_mode .text-color{
+    color: #666;
+}
+#gm_login.light_mode form{
+    background-color: #fff;
+    box-shadow: 0 5px 20px #00000020;
+}
+#gm_login.light_mode .dark_logo{
+    display: none;
+}
+#gm_login.light_mode .light_logo {
+    display: block;
+}
+#gm_login.light_mode input{
+    border-bottom: 2px solid #666;
+    caret-color: #666;
+    color: #666;
+}
+#gm_login.light_mode input::placeholder{
+    color:#00000080;
+    font-weight: 100;
+}
+#gm_login.light_mode .login_btn:hover{
+    box-shadow: 0 0px 5px #00000080;
+}
+#gm_login.light_mode .find_psw:hover{
+    border-bottom: 1px solid #666;
 }
