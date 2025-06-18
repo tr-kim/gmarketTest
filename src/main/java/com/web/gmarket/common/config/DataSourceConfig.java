@@ -40,11 +40,11 @@ public class DataSourceConfig  {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(dataSource);
         // 매퍼 xml 위치 지정
-        factoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/*.xml"));
+        //factoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/*.xml"));
         // 타입별칭 패키지
         //factoryBean.setTypeAliasesPackage("com.reseller.rocket.user.vo");
         // mybatis 설정 xml (있으면)
-        factoryBean.setConfigLocation(applicationContext.getResource("classpath:mybatis-config.xml"));
+        //factoryBean.setConfigLocation(applicationContext.getResource("classpath:mybatis-config.xml"));
         return factoryBean.getObject();
     }
 
