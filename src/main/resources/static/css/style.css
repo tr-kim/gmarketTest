@@ -129,9 +129,6 @@ header .gnb > li:hover > a{
     background-color: #f9fafb;
     color: #333;
 }
-/* header .gnb > li:hover > ul{
-    display: flex;
-} */
 header .gnb > li > ul li > a:hover{
     background-color: #f0f0f0;
     color: #333;
@@ -143,6 +140,22 @@ header li.active::before{
     height: 2px;
     background: #0abb26;
     top:100%
+}
+.psw_chg_btn{
+    position: absolute;
+    display: none;
+    top: 100%;
+    right: 0;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 0 5px #00000020;
+    padding: 0.4375rem 1rem;
+    border:1px solid #fff;
+    color: #666;
+}
+.psw_chg_btn:hover{
+    border:1px solid #0abb2650;
+    color: #333;
 }
 /* leftMenu.html */
 aside{
@@ -196,4 +209,11 @@ aside li.active::before{
 }
 aside li.active a{
     color: #333;
+}
+/* passwordChg.html */
+.passwordChg{
+    display: none;
+}
+.passwordChg .modal-wrap{
+    margin: 15rem auto;
 }
