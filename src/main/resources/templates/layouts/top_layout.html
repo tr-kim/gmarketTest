@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lagn="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"> <!-- 폐쇄망일 경우 layout 라이브러리를 따로 설치해서 사용해야됨 -->
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" th:href="@{/css/bootstrap-icons.min.css}">
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+	<link rel="stylesheet" th:href="@{/css/fonts.css}">
+	<link rel="stylesheet" th:href="@{/css/common.css}">
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+	<script th:src="@{/js/common.js}"></script>
+	<title>Gmarket</title>
+</head>
+<body>
+	<header>
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="logo">
+                <a href="/" th:href="@{/}">
+                    <img th:src="@{/images/logo.png}" alt="지마켓로고">
+                </a>
+            </div>
+            <a href="#" class="user_profile d-flex align-items-center">
+                <div class="user_img">
+                    <img th:src="@{/images/user.png}" alt="사용자 이미지">
+                </div>
+                <div class="ms-2 text-center">
+                    <div class="user_nm font-weight-500">
+                        사용자
+                    </div>
+                    <div class="user_grade ">
+                        관리자
+                    </div>
+                </div>
+            </a>
+        </div>
+    </header>
+    <header>
+        <div class="container d-flex justify-content-between align-items-center">
+            <ul class="gnb d-flex justify-content-between align-items-center">
+                <li th:classappend="${active == 'hist' ? 'active' : ''}">
+					<a href="/view/hist"><i class="bi bi-list-task me-2"></i>이력조회</a>
+				</li>
+                <li th:classappend="${active == 'send' ? 'active' : ''}">
+					<a href="/view/send"><i class="bi bi-menu-up me-2"></i>개별발송</a>
+				</li>
+                <li class="sendmenu">
+                    <a href="javascript:void(0);">
+						<i class="bi bi-envelope-arrow-up me-2"></i>대량발송
+						<i class="bi bi-chevron-down font-sz-12"></i>
+					</a>
+                    <ul class="flex-column align-items-center">                        
+                        <li>
+							<a href="/view/excelSend">엑셀발송</a>
+						</li>
+                        <li>
+							<a href="/view/fileSend">파일발송</a>
+						</li>
+                        <li>
+							<a href="/view/dbSend">DB발송</a>
+						</li>
+                        <li>
+							<a href="/view/bulkHist">대량발송 이력</a>
+						</li>
+                    </ul>
+                </li>
+                <li th:classappend="${active == 'wait' ? 'active' : ''}">
+					<a href="/view/wait"><i class="bi bi-envelope-paper me-2"></i>대기 메시지 조회</a>
+				</li>
+                <li th:classappend="${active == 'real' ? 'active' : ''}">
+					<a href="/view/real"><i class="bi bi-bar-chart-line me-2"></i>실시간 발송현황</a>
+				</li>
+                <li th:classappend="${active == 'stat' ? 'active' : ''}">
+					<a href="/view/stat"><i class="bi bi-archive me-2"></i>정산/통계 조회</a>
+				</li>
+                <li th:classappend="${active == 'user' ? 'active' : ''}">
+					<a href="/view/user"><i class="bi bi-sliders2 me-2"></i>사용자 관리</a>
+				</li>
+            </ul>
+            <!-- <ul class="settings">
+                <li><a href="#"><i class="bi bi-gear me-2"></i>설정</a></li>
+            </ul> -->
+        </div>
+    </header>
+	
+	<th:block layout:fragment="content"></th:block>
+	
+</body>
+</html>
