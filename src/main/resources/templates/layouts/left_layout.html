@@ -11,7 +11,7 @@
 	<link rel="stylesheet" th:href="@{/css/style.css}">
 	<script th:src="@{/js/common.js}"></script>
 	<title>Gmarket</title>
-
+	
 	<!-- DevExtreme theme -->
 	<link rel="stylesheet" th:href="@{/css/devextreme/dx.light.css}" />
 	
@@ -92,9 +92,9 @@
 	</aside>
 	<th:block th:replace="~{/passwordChg :: passwordChg}"></th:block>
 	<th:block layout:fragment="content"></th:block>
+	
 	<script>
 		DevExpress.localization.locale(navigator.language);
 	</script>
 </body>
-
 </html>
