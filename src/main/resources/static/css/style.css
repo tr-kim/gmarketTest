@@ -141,6 +141,14 @@ header li.active::before{
     background: #0abb26;
     top:100%
 }
+a.logout{
+    border-bottom: 1px solid transparent;
+    color: #666;
+}
+a.logout:hover{
+    color: #333;
+    border-bottom: 1px solid #666;
+}
 .psw_chg_btn{
     position: absolute;
     display: none;
@@ -209,6 +217,29 @@ aside li.active::before{
 }
 aside li.active a{
     color: #333;
+}
+
+aside .psw_chg_btn{
+    /* bottom: 100%;
+    left: 50%;
+    width: 150px;
+    height: 100%; */
+    /* display: block; */
+    position: unset;
+    width: 100%;
+    box-shadow: none;
+    border-radius: 0px;
+    background-color: #00000010;
+    border: 1px solid transparent;
+
+    
+}
+aside .psw_chg_btn.on{
+
+}
+aside .psw_chg_btn:hover{
+    border: 1px solid transparent;
+    background-color: #00000020;
 }
 /* passwordChg.html */
 .passwordChg{

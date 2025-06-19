@@ -55,6 +55,7 @@
 			</ul>
 		</div>
 		<div>
+			<div class="position-relative">
 			<a href="#" class="user_profile d-flex align-items-center">
 				<div class="user_img">
 					<img th:src="@{/images/user.png}" alt="사용자 이미지">
@@ -63,11 +64,15 @@
 					<div class="user_nm font-weight-500">
 						사용자
 					</div>
-					<div class="user_grade ">
+						<div class="user_grade">
 						관리자
 					</div>
 				</div>
 			</a>
+				<button class="psw_chg_btn">
+					비밀번호 변경
+				</button>
+			</div>			
 			<div class="logout_btn w-100 mb-2">
 				<button class="w-100 text-start">
 					<i class="bi bi-box-arrow-right me-2"></i>로그아웃
@@ -75,7 +80,7 @@
 			</div>
 		</div>
 	</aside>
-	
+	<th:block th:replace="~{/passwordChg :: passwordChg}"></th:block>
 	<th:block layout:fragment="content"></th:block>
 </body>
 

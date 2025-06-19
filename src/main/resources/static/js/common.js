@@ -1,5 +1,5 @@
 window.addEventListener('load', function() {
-    
+    //상단메뉴일때
     if (document.querySelector('header')) {
         //메뉴 클릭
         const lis = document.querySelectorAll('header li');
@@ -47,6 +47,7 @@ window.addEventListener('load', function() {
         });
 
     }
+    //좌측메뉴일때
     if(document.querySelector('aside')){
         //메뉴 클릭
         const lis = document.querySelectorAll('aside .gnb li');
@@ -58,6 +59,25 @@ window.addEventListener('load', function() {
                 li.classList.add('active');
             })
         })         
+        //사용자 클릭시 비밀번호 변경 버튼
+        const user_profile = document.querySelector('.user_profile');
+        const psw_chg_btn = document.querySelector('.psw_chg_btn');
+        const passwordChg = document.querySelector('.passwordChg');
+
+        user_profile.addEventListener('click',function(e){
+            e.stopPropagation();
+            psw_chg_btn.classList.toggle('d-block');
+        })
+        document.addEventListener('click', function (e) {
+            if (!user_profile.contains(e.target)) {
+                psw_chg_btn.classList.remove('d-block');
+            }
+        });
+        psw_chg_btn.addEventListener('click', function(){
+            console.log(passwordChg)
+            passwordChg.classList.add('d-block');
+        });
+      
     }
 
     if(document.getElementById('gm_login')){
