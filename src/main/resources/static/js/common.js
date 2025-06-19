@@ -58,7 +58,7 @@ window.addEventListener('load', function() {
                 })
                 li.classList.add('active');
             })
-        })         
+        })   
         //사용자 클릭시 비밀번호 변경 버튼
         const user_profile = document.querySelector('.user_profile');
         const psw_chg_btn = document.querySelector('.psw_chg_btn');

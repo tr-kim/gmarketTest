@@ -11,6 +11,16 @@
 	<link rel="stylesheet" th:href="@{/css/style.css}">
 	<script th:src="@{/js/common.js}"></script>
 	<title>Gmarket</title>
+
+	<!-- DevExtreme theme -->
+	<link rel="stylesheet" th:href="@{/css/devextreme/dx.light.css}" />
+	
+	<!-- DevExtreme library -->
+	<script th:src="@{/js/devextreme/jquery.min.js}"></script>
+	<script th:src="@{/js/devextreme/dx.all.js}"></script>
+	<script th:src="@{/js/devextreme/exceljs.min.js}"></script>
+	<script th:src="@{/js/devextreme/FileSaver.min.js}"></script>
+	<script th:src="@{/js/devextreme/localization/dx.messages.ko.js}"></script>
 </head>
 
 <body>
@@ -56,19 +66,19 @@
 		</div>
 		<div>
 			<div class="position-relative">
-			<a href="#" class="user_profile d-flex align-items-center">
-				<div class="user_img">
-					<img th:src="@{/images/user.png}" alt="사용자 이미지">
-				</div>
-				<div class="ms-2 text-center">
-					<div class="user_nm font-weight-500">
-						사용자
+				<a href="#" class="user_profile d-flex align-items-center">
+					<div class="user_img">
+						<img th:src="@{/images/user.png}" alt="사용자 이미지">
 					</div>
+					<div class="ms-2 text-center">
+						<div class="user_nm font-weight-500">
+							사용자
+						</div>
 						<div class="user_grade">
-						관리자
+							관리자
+						</div>
 					</div>
-				</div>
-			</a>
+				</a>
 				<button class="psw_chg_btn">
 					비밀번호 변경
 				</button>
@@ -82,6 +92,9 @@
 	</aside>
 	<th:block th:replace="~{/passwordChg :: passwordChg}"></th:block>
 	<th:block layout:fragment="content"></th:block>
+	<script>
+		DevExpress.localization.locale(navigator.language);
+	</script>
 </body>
 
 </html>
