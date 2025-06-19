@@ -15,7 +15,7 @@
 </head>
 <body>
 	<header>
-        <div class="container d-flex justify-content-between align-items-center">
+        <div class="container d-flex justify-content-between align-items-center position-relative">
             <div class="logo">
                 <a href="/" th:href="@{/}">
                     <img th:src="@{/images/logo.png}" alt="지마켓로고">
@@ -34,6 +34,9 @@
                     </div>
                 </div>
             </a>
+            <button class="psw_chg_btn">
+                비밀번호 변경
+            </button>
         </div>
     </header>
     <header>
@@ -83,7 +86,7 @@
             </ul> -->
         </div>
     </header>
-    <th:block th:replace="~{passwordChg :: passwordChg}"></th:block>
+    <th:block th:replace="~{/passwordChg :: passwordChg}"></th:block>
 	
 	<th:block layout:fragment="content"></th:block>
 	
