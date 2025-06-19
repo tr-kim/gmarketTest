@@ -12,6 +12,16 @@
 	<link rel="stylesheet" th:href="@{/css/style.css}">
 	<script th:src="@{/js/common.js}"></script>
 	<title>Gmarket</title>
+	
+	<!-- DevExtreme theme -->
+	<link rel="stylesheet" th:href="@{/css/devextreme/dx.light.css}" />
+	
+	<!-- DevExtreme library -->
+	<script th:src="@{/js/devextreme/jquery.min.js}"></script>
+	<script th:src="@{/js/devextreme/dx.all.js}"></script>
+	<script th:src="@{/js/devextreme/exceljs.min.js}"></script>
+	<script th:src="@{/js/devextreme/FileSaver.min.js}"></script>
+	<script th:src="@{/js/devextreme/localization/dx.messages.ko.js}"></script>
 </head>
 <body>
 	<header>
@@ -90,5 +100,8 @@
 	
 	<th:block layout:fragment="content"></th:block>
 	
+	<script>
+		DevExpress.localization.locale(navigator.language);
+	</script>
 </body>
 </html>
