@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.web.gmarket.user.mapper.UserMapper">
+  <select id="selectUserInfo" resultType="com.web.gmarket.user.dto.UserDto">
+    SELECT 
+		USER_SEQ, USER_ID, USER_PWD, USER_NAME, TEL_NO, HP_NO, EMAIL, COMPANY_CODE
+		, USER_GRADE, SMS_YN, EXCEL_YN, FILE_YN, DB_YN, REG_DATE, CHG_DATE
+		, USE_YN, DEL_FLAG, USER_TEXT0, USER_TEXT1, LMS_YN, MMS_YN, ENC_1_PA  
+	FROM T_SMS_CLIENT
+	WHERE USER_ID = #{userId}
+  </select>
+</mapper>

@@ -1,25 +1,27 @@
-server:
-  port: 8080
 
 spring:
   web:
     resources:
       add-mappings: true
-      # static-locations: classpath:/static/
-      static-locations: file:src/main/resources/static/
+      static-locations: classpath:/static/
+      #static-locations: file:src/main/resources/static/
   thymeleaf:
-    #prefix: classpath:/templates/
-    prefix: file:src/main/resources/templates/
+    prefix: classpath:/templates/
+    #prefix: file:src/main/resources/templates/
     check-template-location: true
     suffix: .html
     mode: HTML
     cache: false #개발 시에는 false
   datasource:
     hikari:
-      jdbc-url: jdbc:mariadb://10.1.75.103:3306/reseller  # 추후 MSSQL 정보로 변경
-      username: reseller
-      password: dnvreseller
-      driver-class-name: org.mariadb.jdbc.Driver
+      #jdbc-url: jdbc:mariadb://10.1.75.103:3306/reseller  # 추후 MSSQL 정보로 변경
+      #username: reseller
+      #password: dnvreseller
+      #driver-class-name: org.mariadb.jdbc.Driver
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      jdbc-url: jdbc:sqlserver://;serverName=192.168.0.122\SQLEXPRESS;databaseName=gmarket;encrypt=false # encrypt=false 운영 환경에서는 true
+      username: gmarket
+      password: gmarket12#$
       maximum-pool-size: 10
       minimum-idle: 5
       idle-timeout: 600000

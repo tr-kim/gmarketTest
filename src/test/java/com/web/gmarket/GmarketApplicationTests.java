@@ -1,24 +1,24 @@
 package com.web.gmarket;
 
-import java.util.Base64;
-
-import javax.crypto.SecretKey;
-
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import io.jsonwebtoken.security.Keys;
-
-@WebMvcTest
+@ExtendWith(MockitoExtension.class)
 class GmarketApplicationTests {
+	
+	PasswordEncoder encoder = new BCryptPasswordEncoder();
 
 	@Test
 	void contextLoads() {
 		
-		SecretKey secretKey = Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS256);
-        String base64Key = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+		String password = "dinnovan1234";
 
-        System.out.println("랜덤 JWT Secret Key: " + base64Key);
+		String encodedPassword = encoder.encode(password);
+		System.out.println(encodedPassword);
+		
 	}
 
 }

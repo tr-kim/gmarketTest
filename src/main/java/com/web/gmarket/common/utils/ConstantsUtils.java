@@ -23,4 +23,9 @@ public class ConstantsUtils {
 	public static final String APPLICATION_JSON = "application/json";
 	public static final String AUTHORIZATION = "Authorization";
 	
+	public static final String ROLE_SUPER = "ROLE_SUPER";
+	public static final String ROLE_ADMIN = "ROLE_ADMIN";
+	public static final String ROLE_USER = "ROLE_USER";
+	public static final String ROLE_OPERATOR = "ROLE_OPERATOR";
+	public static final String ROLE_COMMON = "ROLE_COMMON";
 }

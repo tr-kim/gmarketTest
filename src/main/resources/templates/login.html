@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lagn="ko"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" th:href="@{/css/bootstrap-icons.min.css}">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/fonts.css}">
+<link rel="stylesheet" th:href="@{/css/common.css}">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<script th:src="@{/js/common.js}"></script>
+<title>Gmarket</title>
+</head>
+<body>
+	<th:block th:if="${DUPLICATE_LOGIN eq 'true'}">
+		<script> alert("다른 기기에서 로그인되어 현재 로그인이 종료되었습니다.") </script>						
+	</th:block>
+	<div id="gm_login" class="d-flex flex-column justify-content-center align-items-center">			    
+        <form name='LoginForm' method="post" th:action="@{/login-process}" class="d-flex flex-column align-items-center rounded-3 bg-white">  
+            <h1>
+				<img th:src="@{/images/logo.png}" alt="지마켓로고">
+			</h1>            
+            <span class="login_span font-sz-20 font-weight-600">로그인</span>
+            <div class="write_wrap mt-2">
+                <div class="d-flex flex-column my-3">
+                    <label for="id" class="font-weight-500">ID</label>
+                    <input class="py-2" type="text" name="userId" id="id" placeholder="아이디를 입력해 주세요.">
+                </div>
+                <div class="d-flex flex-column mt-3 mb-5">
+                    <label for="password" class="font-weight-500">Password</label>
+                    <input class="py-2" type="password" name="userPwd" id="password" placeholder="비밀번호를 입력해 주세요.">
+                </div>
+                <button type="submit" class="login_btn">로그인</button>
+                <div class="text-center mt-3">
+                    <a href="" class="find_psw font-sz-14 font-weight-100">비밀번호 찾기</a>
+                </div>                
+            </div>            
+        </form>
+  
+    </div>
+</body>

@@ -39,13 +39,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         // 'AuthenticationFilter' 에서 생성된 토큰으로부터 아이디와 비밀번호를 조회함
         String userId = token.getName();
         String userPw = (String) token.getCredentials();
-
+        
         // Spring Security - UserDetailsService를 통해 DB에서 아이디로 사용자 조회
         UserDetailsDto userDetailsDto = (UserDetailsDto) userDetailsService.loadUserByUsername(userId);
 
-        if (!(userDetailsDto.getUserPw().equalsIgnoreCase(userPw))) {
-            throw new BadCredentialsException(userDetailsDto.getUserNm() + "Invalid password");
+        if (!(passwordEncoder.matches(userPw, userDetailsDto.getUserPwd()))) {
+            throw new BadCredentialsException(userDetailsDto.getUserName() + " Invalid password");
         }
+        
         return new UsernamePasswordAuthenticationToken(userDetailsDto, userPw, userDetailsDto.getAuthorities());
 	}
 

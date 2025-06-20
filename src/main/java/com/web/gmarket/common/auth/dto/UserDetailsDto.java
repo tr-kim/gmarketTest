@@ -1,10 +1,15 @@
 package com.web.gmarket.common.auth.dto;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.web.gmarket.common.utils.UserRole;
 import com.web.gmarket.user.dto.UserDto;
 
 import lombok.AllArgsConstructor;
@@ -19,15 +24,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @AllArgsConstructor
-public class UserDetailsDto implements UserDetails {
+public class UserDetailsDto implements UserDetails, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	// @Delegate 어노테이션을 사용하여 UserDto 객체의 메서드를 이 클래스에서 직접 사용할 수 있게 합니다.
     @Delegate
     private UserDto userDto;
-
-    private Collection<? extends GrantedAuthority> authorities;
 
     /**
      * 사용자의 권한 목록을 반환합니다.
@@ -36,8 +39,71 @@ public class UserDetailsDto implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+    	
+    	// 등급에 따라 사용자 룰 추가
+        int userGrade = userDto.getUserGrade();
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        
+        switch (userGrade) {
+			case 0:
+				authorities.add(new SimpleGrantedAuthority(UserRole.SUPER.getValue()));			// 슈퍼관리자
+				break;
+			case 1:
+				authorities.add(new SimpleGrantedAuthority(UserRole.ADMIN.getValue()));			// 관리자
+				break;
+			case 2:
+				authorities.add(new SimpleGrantedAuthority(UserRole.USER.getValue()));			// 사용자
+				break;
+			case 3:
+				authorities.add(new SimpleGrantedAuthority(UserRole.COMMON.getValue()));		// 일반
+				break;
+			default:
+				authorities.add(new SimpleGrantedAuthority(UserRole.OPERATOR.getValue()));		// 그 외
+				break;
+		}
+
         return authorities;
     }
+    
+    /**
+     * 사용자의 아이디를 반환합니다.
+     *
+     * @return String
+     */
+    public String getUserId() {
+        return userDto.getUserId();
+    }
+    
+    /**
+     * 사용자의 권한을 반환합니다.
+     *
+     * @return String
+     */
+    public String getUserGrade() {
+    	
+    	int userGrade = userDto.getUserGrade();
+    	String str = "슈퍼관리자";
+    	
+    	switch (userGrade) {
+			case 0:
+				str = "슈퍼관리자";	// 슈퍼관리자
+				break;
+			case 1:
+				str = "관리자";		// 관리자
+				break;
+			case 2:
+				str = "사용자";		// 사용자
+				break;
+			case 3:
+				str = "일반";		// 일반
+				break;
+			default:
+				str = "그 외";			// 그 외
+				break;
+    	}
+        return str;
+    }
+
 
     /**
      * 사용자의 비밀번호를 반환합니다.
@@ -46,7 +112,7 @@ public class UserDetailsDto implements UserDetails {
      */
     @Override
     public String getPassword() {
-        return userDto.getUserPw();
+        return userDto.getUserPwd();
     }
 
 
@@ -57,7 +123,7 @@ public class UserDetailsDto implements UserDetails {
      */
     @Override
     public String getUsername() {
-        return userDto.getUserNm();
+        return userDto.getUserName();
     }
 
     /**

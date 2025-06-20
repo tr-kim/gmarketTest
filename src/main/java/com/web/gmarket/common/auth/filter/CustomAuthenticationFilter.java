@@ -8,8 +8,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.gmarket.user.dto.UserDto;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -50,13 +48,15 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
      */
     private UsernamePasswordAuthenticationToken getAuthRequest(HttpServletRequest request) throws Exception {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
-            UserDto user = objectMapper.readValue(request.getInputStream(), UserDto.class);
-            log.debug("1.CustomAuthenticationFilter :: userId:" + user.getUserId() + " userPw:" + user.getUserPw());
+        	String username = request.getParameter("userId");
+        	String userPwd = request.getParameter("userPwd");
+        	
+        	UserDto user = UserDto.builder().userId(username).userPwd(userPwd).build();
+        	
+            log.debug("1.CustomAuthenticationFilter :: userId:" + user.getUserId());
 
             // ID와 암호화된 패스워드를 기반으로 토큰 발급
-            return new UsernamePasswordAuthenticationToken(user.getUserId(), user.getUserPw());
+            return new UsernamePasswordAuthenticationToken(user.getUserId(), user.getUserPwd());
         } catch (UsernameNotFoundException ae) {
             throw new UsernameNotFoundException(ae.getMessage());
         }

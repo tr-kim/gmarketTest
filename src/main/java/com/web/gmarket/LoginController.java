@@ -1,10 +1,22 @@
 package com.web.gmarket;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class LoginController{
+	
+	@GetMapping("/login")
+	public String login(Authentication authentication) {
+		
+		// 이미 로그인된 사용자면 /index 으로 리다이렉트
+		if (authentication != null && authentication.isAuthenticated()) {
+	        return "redirect:/index";
+	    }
+		
+		return "login";
+	}
 	
 	@GetMapping("/login1")
 	public String login1() {

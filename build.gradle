@@ -24,6 +24,16 @@ repositories {
 	mavenCentral()
 }
 
+bootWar {
+	archiveBaseName = 'gmarket'
+	archiveFileName = 'ROOT.war'
+	archiveVersion = "0.0.1"
+}
+
+bootWar.enabled = true 	// 단독으로 실행 가능
+war.enabled = false		// 외장 톰캣을 사용
+
+
 dependencies {
 	// implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
@@ -35,11 +45,14 @@ dependencies {
 	// mybatis
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 	
+	// HikariCP
+	implementation 'com.zaxxer:HikariCP:5.0.1'
+	
 	// mariadb
-	implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
+	// implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
 	
 	// mssql
-	// implementation("com.microsoft.sqlserver:mssql-jdbc:12.10.0.jre17")
+	implementation 'com.microsoft.sqlserver:mssql-jdbc:10.2.3.jre17'
 	
 	// security 
 	implementation 'org.springframework.boot:spring-boot-starter-security:3.3.4'
@@ -57,12 +70,15 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-core:2.14.0'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.14.0'
 	
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	// developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	
+	// 톰캣 사용
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 }
 
 tasks.named('test') {
