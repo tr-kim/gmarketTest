@@ -140,23 +140,54 @@ input, textarea{
     opacity: .8;
 }
 .form-control {
-    display: block;
-    width: 100%;
-    padding: .4375rem .75rem;
+    display: block !important;
+    width: 100% !important;
+    padding: .4375rem .75rem !important;
     /* font-weight: 600; */
-    line-height: 1.4285714286;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    box-shadow: 0 1px 1px rgba(31,41,55, 0.06);
-    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    line-height: 1.4285714286 !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background-color: #fff !important;
+    background-clip: padding-box !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 6px !important;
+    box-shadow: 0 1px 1px rgba(31,41,55, 0.06) !important;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out !important;
+}
+.form-control:focus {
+    color: #212529 !important;
+    background-color: #fff !important;
+    border-color: #86b7fe !important;
+    outline: 0 !important;
+    box-shadow: 0 0 0 .25rem rgba(13,110,253,.25) !important;
 }
 .form-control::placeholder{
-    color:#999;
-    font-weight: 300;
+    color:#999 !important;
+    font-weight: 300 !important;
+}
+.dx-texteditor-input{
+    font-size: 1rem !important;
+}
+.dx-placeholder {
+    font-weight: 300 !important;
+    font-size: 1rem !important;
+}
+.dx-editor-outlined{
+    border: 1px solid #e5e7eb !important;
+    border-radius: 6px !important;
+}
+.dx-state-hover{
+    border: 1px solid #e5e7eb !important;
+}
+.dx-state-focused{
+    color: #212529 !important;
+    background-color: #fff !important;
+    border-color: #86b7fe !important;
+    outline: 0 !important;
+    box-shadow: 0 0 0 .25rem rgba(13,110,253,.25) !important;
+}
+.dx-texteditor-input {
+    min-height: 38px !important;
 }
 
