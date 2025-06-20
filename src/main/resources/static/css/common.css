@@ -189,4 +189,6 @@ input, textarea{
 .dx-texteditor-input {
     min-height: 38px !important;
 }
-
+.dx-calendar-body thead th {
+    text-align: center;
+}
