@@ -113,7 +113,8 @@ $(function () {
 	}).dxDataGrid("instance");
 });
 
-document.getElementById("excel-btn").addEventListener('click',function(){
+document.getElementById("excel-btn").addEventListener('click',function(e){
+	e.preventDefault();
 	const grid = $("#histGrid").dxDataGrid("instance");
 	exportGridToExcel(grid);
 })
