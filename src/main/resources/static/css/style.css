@@ -66,7 +66,6 @@ header{
     padding: 2px 0;
     background: #fff;
     position: relative;
-    z-index: 1000;
 }
 .logo{
     height: 32px;
@@ -164,6 +163,7 @@ a.logout:hover{
     padding: 0.4375rem 1rem;
     border:1px solid #fff;
     color: #666;
+    z-index: 10;
 }
 .psw_chg_btn:hover{
     border:1px solid #0abb2650;
