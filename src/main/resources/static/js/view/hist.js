@@ -3,116 +3,7 @@ $(function () {
 	const endDate = new Date();
 	endDate.setDate(endDate.getDate() + 7);
 	
-	//조회 그리드
-	$("#histGrid").dxDataGrid({
-		dataSource: [
-			{ idx: 1, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 2, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 3, msg_key: "0000003", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 4, msg_key: "0000004", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 5, msg_key: "0000005", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 6, msg_key: "0000006", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 7, msg_key: "0000007", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 8, msg_key: "0000008", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 9, msg_key: "0000009", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 10, msg_key: "0000010", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 11, msg_key: "0000011", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 12, msg_key: "0000012", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 13, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 14, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 15, msg_key: "0000003", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 16, msg_key: "0000004", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 17, msg_key: "0000005", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 18, msg_key: "0000006", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 19, msg_key: "0000007", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 20, msg_key: "0000008", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 21, msg_key: "0000009", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 22, msg_key: "0000010", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 23, msg_key: "0000011", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 24, msg_key: "0000012", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 25, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 26, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 27, msg_key: "0000003", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 28, msg_key: "0000004", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 29, msg_key: "0000005", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 30, msg_key: "0000006", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 31, msg_key: "0000007", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 32, msg_key: "0000008", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 33, msg_key: "0000009", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 34, msg_key: "0000010", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 35, msg_key: "0000011", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 36, msg_key: "0000012", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 1, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 2, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 3, msg_key: "0000003", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 4, msg_key: "0000004", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 5, msg_key: "0000005", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 6, msg_key: "0000006", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 7, msg_key: "0000007", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 8, msg_key: "0000008", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 9, msg_key: "0000009", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 10, msg_key: "0000010", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 11, msg_key: "0000011", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 12, msg_key: "0000012", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 1, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 2, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 3, msg_key: "0000003", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 4, msg_key: "0000004", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 5, msg_key: "0000005", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 6, msg_key: "0000006", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 7, msg_key: "0000007", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 8, msg_key: "0000008", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 9, msg_key: "0000009", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 10, msg_key: "0000010", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 11, msg_key: "0000011", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 12, msg_key: "0000012", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 1, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 2, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 3, msg_key: "0000003", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 4, msg_key: "0000004", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 5, msg_key: "0000005", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 6, msg_key: "0000006", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 7, msg_key: "0000007", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 8, msg_key: "0000008", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 9, msg_key: "0000009", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 10, msg_key: "0000010", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 11, msg_key: "0000011", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 12, msg_key: "0000012", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-		],
-		headerFilter: {
-			visible: true
-		},
-		searchPanel: {
-			visible: true,
-			width: 300
-		},
-		paging: {
-			pageSize: 50
-		},
-		pager: {
-			showInfo: true,
-			showNavigationButtons: true,
-			showPageSizeSelector: true,
-			allowedPageSizes: [50, 100, 200]
-		},
-		columnAutoWidth: true,
-		allowColumnResizing: true,
-		columnResizingMode: 'widget',
-		columns: [
-			{ dataField: "idx", caption: "NO" },
-			{ dataField: "msg_key", caption: "MSG_KEY" },
-			{ dataField: "msg_type", caption: "메시지 종류" },
-			{ dataField: "callback_no", caption: "발신 번호" },
-			{ dataField: "caller_no", caption: "수신 번호" },
-			{ dataField: "gubun1", caption: "이통사" },
-			{ dataField: "gubun2", caption: "발송사" },
-			{ dataField: "status1", caption: "전송상태" },
-			{ dataField: "status2", caption: "전송결과" },
-			{ dataField: "msg_body", caption: "내용" }
-		],		
-	}).dxDataGrid("instance");
-
-	//달력
+	//조회 기간
 	$("#startDate").dxDateBox({
 		type: "date",
 		value: startDate,
@@ -128,7 +19,7 @@ $(function () {
 			}
 		},
 	});
-
+	
 	$("#endDate").dxDateBox({
 		type: "date",
 		value: endDate,
@@ -144,9 +35,135 @@ $(function () {
 			}
 		},
 	});
+	
+	//조회 그리드
+	$("#histGrid").dxDataGrid({
+		dataSource: [
+			{ idx: 1, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 2, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 3, msg_key: "0000003", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 4, msg_key: "0000004", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 5, msg_key: "0000005", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 6, msg_key: "0000006", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 7, msg_key: "0000007", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 8, msg_key: "0000008", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 9, msg_key: "0000009", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 10, msg_key: "0000010", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 11, msg_key: "0000011", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 12, msg_key: "0000012", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 13, msg_key: "0000013", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 14, msg_key: "0000014", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 15, msg_key: "0000015", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 16, msg_key: "0000016", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 17, msg_key: "0000017", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 18, msg_key: "0000018", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 19, msg_key: "0000019", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 20, msg_key: "0000020", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 21, msg_key: "0000021", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 22, msg_key: "0000022", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 23, msg_key: "0000023", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 24, msg_key: "0000024", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 25, msg_key: "0000025", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 26, msg_key: "0000026", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 27, msg_key: "0000027", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 28, msg_key: "0000028", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 29, msg_key: "0000029", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 30, msg_key: "0000030", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 31, msg_key: "0000031", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 32, msg_key: "0000032", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 33, msg_key: "0000033", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 34, msg_key: "0000034", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 35, msg_key: "0000035", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 36, msg_key: "0000036", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 37, msg_key: "0000037", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 38, msg_key: "0000038", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 39, msg_key: "0000039", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 40, msg_key: "0000040", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 41, msg_key: "0000041", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 42, msg_key: "0000042", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 43, msg_key: "0000043", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 44, msg_key: "0000044", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 45, msg_key: "0000045", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 46, msg_key: "0000046", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 47, msg_key: "0000047", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 48, msg_key: "0000058", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 49, msg_key: "0000049", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 50, msg_key: "0000050", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 51, msg_key: "0000051", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 52, msg_key: "0000052", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 53, msg_key: "0000053", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 54, msg_key: "0000054", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 55, msg_key: "0000055", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 56, msg_key: "0000056", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 57, msg_key: "0000057", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 58, msg_key: "0000058", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 59, msg_key: "0000059", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 60, msg_key: "0000060", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 61, msg_key: "0000061", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 62, msg_key: "0000062", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 63, msg_key: "0000063", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 64, msg_key: "0000064", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 65, msg_key: "0000065", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 66, msg_key: "0000066", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 67, msg_key: "0000067", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 68, msg_key: "0000068", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 69, msg_key: "0000069", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ idx: 70, msg_key: "0000070", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "KT", gubun2: "KT", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+		],
+		headerFilter: {
+			visible: true
+		},
+		searchPanel: {
+			visible: true,
+			width: 300
+		},
+		paging: {
+			pageSize: 50
+		},
+		pager: {
+			visible: true,
+			showInfo: true,
+			showNavigationButtons: true,
+			showPageSizeSelector: true,
+			allowedPageSizes: [50, 100, 200]
+		},
+		columnAutoWidth: true,
+		allowColumnResizing: true,
+		columnResizingMode: 'widget',
+		columns: [
+			{ dataField: "idx", caption: "NO", alignment: "center" },
+			{ dataField: "msg_key", caption: "MSG_KEY", alignment: "center" },
+			{ dataField: "msg_type", caption: "메시지 종류", alignment: "center" },
+			{ dataField: "callback_no", caption: "발신 번호", alignment: "center" },
+			{ dataField: "caller_no", caption: "수신 번호", alignment: "center" },
+			{ dataField: "gubun1", caption: "이통사", alignment: "center" },
+			{ dataField: "gubun2", caption: "발송사", alignment: "center" },
+			{ dataField: "status1", caption: "전송상태", alignment: "center" },
+			{ dataField: "status2", caption: "전송결과", alignment: "center" },
+			{ dataField: "msg_body", caption: "내용" }
+		],
+		toolbar: {
+			items: [
+				{
+					location: "before",
+					template: function() {
+					return $("<div>")
+						.attr("id", "totalCount")
+						.css({ fontSize: "17px", color: "#333", padding: "0 5px" });
+					}
+				},
+				"searchPanel"
+			]
+		},
+		onContentReady: function(e) {
+			const totalCount = e.component.totalCount();
+			$("#totalCount").text(`총 ${totalCount}건`);
+		}
+	}).dxDataGrid("instance");
 });
 
-document.getElementById("excel-btn").addEventListener('click',function(e){
+//엑셀 다운로드 버튼
+document.getElementById("excel-btn").addEventListener('click', function(e){
 	e.preventDefault();
 	const grid = $("#histGrid").dxDataGrid("instance");
 	exportGridToExcel(grid);
