@@ -67,7 +67,7 @@ public class WebSecurityConfig {
                 		.requestMatchers("/view/dbSend").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
                 		.requestMatchers("/view/bulkHist").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
                 		.requestMatchers("/view/wait").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
-                		.requestMatchers("/view/real").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
+                		.requestMatchers("/view/real").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_OPERATOR")
                 		.requestMatchers("/view/stat").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN")
                 		.requestMatchers("/view/user").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN")
                         .anyRequest().authenticated())

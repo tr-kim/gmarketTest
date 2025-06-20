@@ -32,35 +32,55 @@
 				</a>
 			</div>
 			<ul class="gnb w-100">
-				<li th:classappend="${active == 'hist' ? 'active' : ''}">
-					<a href="/view/hist/left"><i class="bi bi-list-task me-2"></i>이력조회</a>
+				<li th:classappend="${active == 'hist' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
+					<a th:href="@{/view/hist/left}">
+						<i class="bi bi-list-task me-2"></i>이력조회
+					</a>
 				</li>
-				<li th:classappend="${active == 'send' ? 'active' : ''}">
-					<a href="/view/send/left"><i class="bi bi-envelope-arrow-up me-2"></i>개별발송</a>
+				<li th:classappend="${active == 'send' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
+					<a th:href="@{/view/send/left}">
+						<i class="bi bi-envelope-arrow-up me-2"></i>개별발송
+					</a>
 				</li>
-				<li th:classappend="${active == 'excelSend' ? 'active' : ''}">
-					<a href="/view/excelSend/left"><i class="bi bi-file-earmark-spreadsheet me-2"></i>엑셀발송</a>
+				<li th:classappend="${active == 'excelSend' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
+					<a th:href="@{/view/excelSend/left}">
+						<i class="bi bi-file-earmark-spreadsheet me-2"></i>엑셀발송
+					</a>
 				</li>
-				<li th:classappend="${active == 'fileSend' ? 'active' : ''}">
-					<a href="/view/fileSend/left"><i class="bi bi-file-earmark-arrow-down me-2"></i>파일발송</a>
+				<li th:classappend="${active == 'fileSend' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
+					<a th:href="@{/view/fileSend/left}">
+						<i class="bi bi-file-earmark-arrow-down me-2"></i>파일발송
+					</a>
 				</li>
-				<li th:classappend="${active == 'dbSend' ? 'active' : ''}">
-					<a href="/view/dbSend/left"><i class="bi bi-database me-2"></i>DB발송</a>
+				<li th:classappend="${active == 'dbSend' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
+					<a th:href="@{/view/dbSend/left}">
+						<i class="bi bi-database me-2"></i>DB발송
+					</a>
 				</li>
-				<li th:classappend="${active == 'bulkHist' ? 'active' : ''}">
-					<a href="/view/bulkHist/left"><i class="bi bi-menu-up me-2"></i>대량발송 이력</a>
+				<li th:classappend="${active == 'bulkHist' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
+					<a th:href="@{/view/bulkHist/left}">
+						<i class="bi bi-menu-up me-2"></i>대량발송 이력
+					</a>
 				</li>
-				<li th:classappend="${active == 'wait' ? 'active' : ''}">
-					<a href="/view/wait/left"><i class="bi bi-envelope-paper me-2"></i>대기 메시지 조회</a>
+				<li th:classappend="${active == 'wait' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
+					<a th:href="@{/view/wait/left}">
+						<i class="bi bi-envelope-paper me-2"></i>대기 메시지 조회
+					</a>
 				</li>
-				<li th:classappend="${active == 'real' ? 'active' : ''}">
-					<a href="/view/real/left"><i class="bi bi-bar-chart-line me-2"></i>실시간 발송현황</a>
+				<li th:classappend="${active == 'real' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_OPERATOR')">
+					<a th:href="@{/view/real/left}">
+						<i class="bi bi-bar-chart-line me-2"></i>실시간 발송현황
+					</a>
 				</li>
-				<li th:classappend="${active == 'stat' ? 'active' : ''}">
-					<a href="/view/stat/left"><i class="bi bi-archive me-2"></i>정산/통계 조회</a>
+				<li th:classappend="${active == 'stat' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN')">
+					<a th:href="@{/view/stat/left}">
+						<i class="bi bi-archive me-2"></i>정산/통계 조회
+					</a>
 				</li>
-				<li th:classappend="${active == 'user' ? 'active' : ''}">
-					<a href="/view/user/left"><i class="bi bi-sliders2 me-2"></i>사용자 관리</a>
+				<li th:classappend="${active == 'user' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN')">
+					<a th:href="@{/view/user/left}">
+						<i class="bi bi-sliders2 me-2"></i>사용자 관리
+					</a>
 				</li>
 			</ul>
 		</div>
@@ -72,10 +92,10 @@
 					</div>
 					<div class="ms-2 text-center">
 						<div class="user_nm font-weight-500">
-							사용자
+							<span sec:authentication="principal.username"></span>
 						</div>
 						<div class="user_grade">
-							관리자
+							<span sec:authentication="principal.userGrade"></span>
 						</div>
 					</div>
 				</a>
@@ -84,7 +104,7 @@
 				</button>
 			</div>			
 			<div class="logout_btn w-100 mb-2">
-				<button class="w-100 text-start">
+				<button class="w-100 text-start" th:onclick="|location.href='@{/logout}'|">
 					<i class="bi bi-box-arrow-right me-2"></i>로그아웃
 				</button>
 			</div>

@@ -55,56 +55,16 @@ public class UserDetailsDto implements UserDetails, Serializable {
 				authorities.add(new SimpleGrantedAuthority(UserRole.USER.getValue()));			// 사용자
 				break;
 			case 3:
-				authorities.add(new SimpleGrantedAuthority(UserRole.COMMON.getValue()));		// 일반
+				authorities.add(new SimpleGrantedAuthority(UserRole.OPERATOR.getValue()));		// 운영자
 				break;
 			default:
-				authorities.add(new SimpleGrantedAuthority(UserRole.OPERATOR.getValue()));		// 그 외
+				authorities.add(new SimpleGrantedAuthority(UserRole.COMMON.getValue()));		// 일반
 				break;
 		}
 
         return authorities;
     }
     
-    /**
-     * 사용자의 아이디를 반환합니다.
-     *
-     * @return String
-     */
-    public String getUserId() {
-        return userDto.getUserId();
-    }
-    
-    /**
-     * 사용자의 권한을 반환합니다.
-     *
-     * @return String
-     */
-    public String getUserGrade() {
-    	
-    	int userGrade = userDto.getUserGrade();
-    	String str = "슈퍼관리자";
-    	
-    	switch (userGrade) {
-			case 0:
-				str = "슈퍼관리자";	// 슈퍼관리자
-				break;
-			case 1:
-				str = "관리자";		// 관리자
-				break;
-			case 2:
-				str = "사용자";		// 사용자
-				break;
-			case 3:
-				str = "일반";		// 일반
-				break;
-			default:
-				str = "그 외";			// 그 외
-				break;
-    	}
-        return str;
-    }
-
-
     /**
      * 사용자의 비밀번호를 반환합니다.
      *
@@ -147,7 +107,6 @@ public class UserDetailsDto implements UserDetails, Serializable {
         return false;
     }
 
-
     /**
      * 자격 증명(비밀번호)이 만료되지 않았는지 여부를 반환합니다.
      *
@@ -166,5 +125,98 @@ public class UserDetailsDto implements UserDetails, Serializable {
     @Override
     public boolean isEnabled() {
         return false;
+    }
+    
+    /**
+     * 사용자의 아이디를 반환합니다.
+     *
+     * @return String
+     */
+    public String getUserId() {
+        return userDto.getUserId();
+    }
+    
+    /**
+     * 사용자의 권한을 반환합니다.
+     *
+     * @return String
+     */
+    public String getUserGrade() {
+    	
+    	int userGrade = userDto.getUserGrade();
+    	String str = "슈퍼관리자";
+    	
+    	switch (userGrade) {
+			case 0:
+				str = "슈퍼관리자";	// 슈퍼관리자
+				break;
+			case 1:
+				str = "관리자";		// 관리자
+				break;
+			case 2:
+				str = "사용자";		// 사용자
+				break;
+			case 3:
+				str = "운영자";		// 운영자
+				break;
+			default:
+				str = "일반";			// 일반
+				break;
+    	}
+        return str;
+    }
+    
+    /**
+     * 사용자의 SMS 사용 여부를 반환합니다.
+     *
+     * @return String
+     */
+    public String getSmsYn() {
+        return userDto.getSmsYn();
+    }
+    
+    /**
+     * 사용자의 EXCEL 발송 사용 여부를 반환합니다.
+     *
+     * @return String
+     */
+    public String getExcelYn() {
+        return userDto.getExcelYn();
+    }
+    
+    /**
+     * 사용자의 FILE 발송 사용 여부를 반환합니다.
+     *
+     * @return String
+     */
+    public String getFileYn() {
+        return userDto.getFileYn();
+    }
+    
+    /**
+     * 사용자의 DB 발송 사용 여부를 반환합니다.
+     *
+     * @return String
+     */
+    public String getDbYn() {
+        return userDto.getDbYn();
+    }
+    
+    /**
+     * 사용자의 LMS 사용 여부를 반환합니다.
+     *
+     * @return String
+     */
+    public String getLmsYn() {
+        return userDto.getLmsYn();
+    }
+    
+    /**
+     * 사용자의 MMS 사용 여부를 반환합니다.
+     *
+     * @return String
+     */
+    public String getMmsYn() {
+        return userDto.getMmsYn();
     }
 }
