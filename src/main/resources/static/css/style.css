@@ -65,6 +65,8 @@ header{
     border-bottom: 1px solid #ddd;    
     padding: 2px 0;
     background: #fff;
+    position: relative;
+    z-index: 1000;
 }
 .logo{
     height: 32px;
@@ -108,6 +110,7 @@ header li ul{
     background-color: #ffffff;
     width: 100%;
     box-shadow: 0 0 5px #00000020;
+    z-index: 100000;
 }
 header li ul li{
     padding: 7px 2px;
@@ -235,9 +238,6 @@ aside .psw_chg_btn{
 
     
 }
-aside .psw_chg_btn.on{
-
-}
 aside .psw_chg_btn:hover{
     border: 1px solid transparent;
     background-color: #00000020;
@@ -252,4 +252,8 @@ aside .psw_chg_btn:hover{
 /* hist.html */
 #histGrid .dx-bordered-bottom-view {
     max-height: calc(100vh - 520px);
+}
+/* bulk_hist.html */
+#bulkHistGrid .dx-bordered-bottom-view {
+    max-height: calc(100vh - 480px);
 }

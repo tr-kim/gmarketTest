@@ -4,7 +4,7 @@ $(function () {
 	endDate.setDate(endDate.getDate() + 7);
 	
 	//조회 그리드
-	$("#histGrid").dxDataGrid({
+	$("#bulkHistGrid").dxDataGrid({
 		dataSource: [
 			{ idx: 1, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
 			{ idx: 2, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
@@ -100,15 +100,14 @@ $(function () {
 		columnResizingMode: 'widget',
 		columns: [
 			{ dataField: "idx", caption: "NO" },
-			{ dataField: "msg_key", caption: "MSG_KEY" },
-			{ dataField: "msg_type", caption: "메시지 종류" },
-			{ dataField: "callback_no", caption: "발신 번호" },
-			{ dataField: "caller_no", caption: "수신 번호" },
-			{ dataField: "gubun1", caption: "이통사" },
-			{ dataField: "gubun2", caption: "발송사" },
-			{ dataField: "status1", caption: "전송상태" },
-			{ dataField: "status2", caption: "전송결과" },
-			{ dataField: "msg_body", caption: "내용" }
+			{ dataField: "", caption: "제목" },
+			{ dataField: "msg_body", caption: "내용" },
+			{ dataField: "", caption: "전체" },
+			{ dataField: "", caption: "상세" },
+			{ dataField: "", caption: "발송ID" },
+			{ dataField: "", caption: "TYPE" },
+			{ dataField: "status2", caption: "성공/실패" },
+			{ dataField: "", caption: "text파일" }
 		],		
 	}).dxDataGrid("instance");
 
@@ -148,14 +147,14 @@ $(function () {
 
 document.getElementById("excel-btn").addEventListener('click',function(e){
 	e.preventDefault();
-	const grid = $("#histGrid").dxDataGrid("instance");
+	const grid = $("#bulkHistGrid").dxDataGrid("instance");
 	exportGridToExcel(grid);
 })
 
 //엑셀 다운로드
 function exportGridToExcel(gridInstance){
 	const workbook = new ExcelJS.Workbook();
-	const worksheet = workbook.addWorksheet('이력조회');
+	const worksheet = workbook.addWorksheet('대량 발송 이력조회');
 	
 	DevExpress.excelExporter.exportDataGrid({
 		component: gridInstance,
@@ -163,7 +162,7 @@ function exportGridToExcel(gridInstance){
 		autoFilterEnabled: true,
 	}).then(() => {
 		workbook.xlsx.writeBuffer().then((buffer) => {
-			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '이력조회.xlsx');
+			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '대량 발송 이력조회.xlsx');
 		});
 	});
 }
