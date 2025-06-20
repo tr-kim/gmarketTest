@@ -24,7 +24,7 @@ $(function () {
 		},
 		searchPanel: {
 			visible: true,
-			width: 250
+			width: 300
 		},
 		paging: {
 			pageSize: 10
@@ -49,32 +49,19 @@ $(function () {
 			{ dataField: "status1", caption: "전송상태" },
 			{ dataField: "status2", caption: "전송결과" },
 			{ dataField: "msg_body", caption: "내용" }
-		],
-		toolbar: {
-			items: [
-				{
-					location: "after",
-					widget: "dxButton",
-					options: {
-						text: "엑셀 다운로드",
-						type: "default",
-						width: 130,
-						onClick(e) {
-							const grid = $("#smsResultGrid").dxDataGrid("instance");
-							exportGridToExcel(grid);
-						},
-					},
-				},
-				"searchPanel"
-			]
-		},
+		],		
 	}).dxDataGrid("instance");
 });
+
+document.getElementById("excel-btn").addEventListener('click',function(){
+	const grid = $("#histGrid").dxDataGrid("instance");
+	exportGridToExcel(grid);
+})
 
 //엑셀 다운로드
 function exportGridToExcel(gridInstance){
 	const workbook = new ExcelJS.Workbook();
-	const worksheet = workbook.addWorksheet('문자발송결과');
+	const worksheet = workbook.addWorksheet('이력조회');
 	
 	DevExpress.excelExporter.exportDataGrid({
 		component: gridInstance,
