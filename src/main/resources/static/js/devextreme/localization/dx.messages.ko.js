@@ -118,7 +118,7 @@
             "dxDataGrid-validationCancelChanges": "Cancel changes",
             "dxDataGrid-groupPanelEmptyText": "Drag a column header here to group by that column",
             "dxDataGrid-noDataText": "No data",
-            "dxDataGrid-searchPanelPlaceholder": "찾고 싶은 내용을 입력하세요.",
+            "dxDataGrid-searchPanelPlaceholder": "찾을 내용을 입력하세요.",
             "dxDataGrid-filterRowShowAllText": "(All)",
             "dxDataGrid-filterRowResetOperationText": "Reset",
             "dxDataGrid-filterRowOperationEquals": "Equals",

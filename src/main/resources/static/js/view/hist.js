@@ -69,7 +69,7 @@ function exportGridToExcel(gridInstance){
 		autoFilterEnabled: true,
 	}).then(() => {
 		workbook.xlsx.writeBuffer().then((buffer) => {
-			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '문자발송결과.xlsx');
+			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '이력조회.xlsx');
 		});
 	});
 }
