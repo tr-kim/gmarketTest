@@ -173,14 +173,13 @@ input, textarea{
     font-weight: 300 !important;
     font-size: 1rem !important;
 }
-.dx-editor-outlined{
+.dx-textbox.dx-editor-outlined,
+.dx-datebox.dx-editor-outlined{
     border: 1px solid #e5e7eb !important;
     border-radius: 6px !important;
 }
-.dx-state-hover{
-    border: 1px solid #e5e7eb !important;
-}
-.dx-state-focused{
+.dx-textbox.dx-state-focused,
+.dx-datebox.dx-state-focused{
     color: #212529 !important;
     background-color: #fff !important;
     border-color: #86b7fe !important;

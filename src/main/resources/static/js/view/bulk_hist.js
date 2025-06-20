@@ -90,7 +90,7 @@ $(function () {
 			pageSize: 50
 		},
 		pager: {
-			showInfo: true,
+			visible: true,
 			showNavigationButtons: true,
 			showPageSizeSelector: true,
 			allowedPageSizes: [50, 100, 200]
@@ -102,13 +102,40 @@ $(function () {
 			{ dataField: "idx", caption: "NO" },
 			{ dataField: "", caption: "제목" },
 			{ dataField: "msg_body", caption: "내용" },
-			{ dataField: "", caption: "전체" },
-			{ dataField: "", caption: "상세" },
+			{ dataField: "", caption: "전체" },			
 			{ dataField: "", caption: "발송ID" },
 			{ dataField: "", caption: "TYPE" },
-			{ dataField: "status2", caption: "성공/실패" },
-			{ dataField: "", caption: "text파일" }
-		],		
+			{ dataField: "status2", caption: "성공/실패" },		
+			{ 
+				dataField: "", 
+				caption: "상세" , 
+				type: 'buttons', 
+				width: 60,				
+				buttons: [{
+					icon: 'find',
+					onClick(e) {
+						alert('test');
+					},
+				}],
+			},				
+		],
+		toolbar: {
+			items: [
+				{
+					location: "before",
+					template: function() {
+					return $("<div>")
+						.attr("id", "totalCount")
+						.css({ fontSize: "17px", color: "#333", padding: "0 5px" });
+					}
+				},
+				"searchPanel"
+			]
+		},
+		onContentReady: function(e) {
+			const totalCount = e.component.totalCount();
+			$("#totalCount").text(`총 ${totalCount}건`);
+		}		
 	}).dxDataGrid("instance");
 
 	//달력
