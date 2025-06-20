@@ -3,11 +3,7 @@
 	layout:decorate="~{${layout}}" layout:fragment="content">
 <!-- 폐쇄망일 경우 layout 라이브러리를 따로 설치해서 사용해야됨 -->
 
-<body>
-
-	<div style="text-align: center;">
-		<h1>G마켓 이력조회 페이지</h1>
-	</div>
-</body>
-
+	<div id="histGrid"></div>
+	
+	<script th:src="@{/js/view/hist.js}"></script>
 </html>
