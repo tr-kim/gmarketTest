@@ -49,10 +49,10 @@ dependencies {
 	implementation 'com.zaxxer:HikariCP:5.0.1'
 	
 	// mariadb
-	implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
+	// implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
 	
 	// mssql
-	// implementation 'com.microsoft.sqlserver:mssql-jdbc:10.2.3.jre17'
+	implementation 'com.microsoft.sqlserver:mssql-jdbc:10.2.3.jre17'
 	
 	// security 
 	implementation 'org.springframework.boot:spring-boot-starter-security:3.3.4'
