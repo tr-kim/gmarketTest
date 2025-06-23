@@ -110,9 +110,12 @@
 			</div>
 		</div>
 	</aside>
-	<th:block th:replace="~{/passwordChg :: passwordChg}"></th:block>
-	<th:block layout:fragment="content"></th:block>
-	
+	<section class="aside-m pt-4">
+        <div class="container">
+            <th:block layout:fragment="content"></th:block>
+        </div>
+    </section>
+	<th:block th:replace="~{/passwordChg :: passwordChg}"></th:block>	
 	<script>
 		DevExpress.localization.locale(navigator.language);
 	</script>

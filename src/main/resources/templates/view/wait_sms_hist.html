@@ -5,9 +5,52 @@
 
 <body>
 
-	<div style="text-align: center;">
-		<h1>G마켓 대기 메시지 조회 페이지</h1>
+	<p class="font-sz-20 font-weight-600 pt-3 text-666">대기 메시지 조회</p>
+	<form class="content row mx-0 mb-2" id="hist">
+		<div class="col-6">
+			<div class="row d-flex align-items-center mb-2">
+				<div class="col-3">
+					<label class="font-weight-500">조회 기간</label>
+				</div>
+				<div class="col d-flex align-items-center">
+					<div id="startDate" class="me-2"></div>
+					<span class="mx-1">~</span>
+					<div id="endDate" class="ms-2"></div>
+				</div>
+			</div>
+			<div class="row d-flex align-items-center mb-2">
+				<div class="col-3">
+					<label class="font-weight-500">제목</label>
+				</div>
+				<div class="col">
+					<input type="text" name="" id="" class="form-control" placeholder="제목을 입력하세요.">
+				</div>
+			</div>			
+		</div>
+		<div class="col-6">
+			<div class="row d-flex align-items-center mb-2">
+				<div class="col-3">
+			 		<label class="font-weight-500">대분류</label>
+				</div>
+				<div class="col">
+					<select name="" id="" class="form-select">
+						<option value="">G마켓</option>
+					</select>
+				</div>
+			</div>			
+			<div class="row d-flex align-items-center">
+				<div class="col d-flex justify-content-end">
+					<button class="btn btn-secondary font-sz-14 ms-2" id="del-btn">선택 삭제</button>
+					<button class="btn btn-primary font-sz-14 ms-2">조회</button>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="content">
+		<div id="waitHistGrid"></div>
 	</div>
+	
+	<script th:src="@{/js/view/wait_sms_hist.js}"></script>
 </body>
 
 </html>

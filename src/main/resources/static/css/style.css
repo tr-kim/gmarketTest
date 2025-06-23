@@ -170,12 +170,17 @@ a.logout:hover{
     color: #333;
 }
 /* leftMenu.html */
+.aside-m{
+    margin-left: 15rem;
+}
 aside{
     position: fixed;
     width: 15rem;
     height: 100%;
     background-color: #f9fafb;
     color: #666;
+    top: 0;
+    left: 0;
 }
 aside li{
     width: 100%;
@@ -256,4 +261,8 @@ aside .psw_chg_btn:hover{
 /* bulk_hist.html */
 #bulkHistGrid .dx-bordered-bottom-view {
     max-height: calc(100vh - 480px);
+}
+/* wait_sms_hist.html */
+#waitHistGrid .dx-bordered-bottom-view {
+    max-height: calc(100vh - 490px);
 }
