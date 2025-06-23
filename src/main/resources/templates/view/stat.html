@@ -12,10 +12,10 @@
 					<label class="font-weight-500">구분</label>
 				</div>
 				<div class="col row">
-					<div class="col"><label><input type="radio" name="stat-radio" checked> 시간</label></div>
-					<div class="col"><label><input type="radio" name="stat-radio"> 일</label></div>
-					<div class="col"><label><input type="radio" name="stat-radio"> 월</label></div>
-					<div class="col"><label><input type="radio" name="stat-radio"> 년</label></div>
+					<div class="col"><label><input type="radio" name="stat-radio" value="1" checked> 시간</label></div>
+					<div class="col"><label><input type="radio" name="stat-radio" value="2"> 일</label></div>
+					<div class="col"><label><input type="radio" name="stat-radio" value="3"> 월</label></div>
+					<div class="col"><label><input type="radio" name="stat-radio" value="4"> 년</label></div>
 					<div class="col"></div>
 				</div>
 			</div>
@@ -29,19 +29,10 @@
 					<div id="endDate" class="ms-2"></div>
 				</div>
 			</div>
-			<div class="row d-flex align-items-center">
-				<div class="col-3">
-					<label class="font-weight-500">중분류</label>
-				</div>
-				<div class="col">
-					<select name="" id="" class="form-select">
-						<option value="">G마켓</option> 								                               
-					</select>
-				</div>
-			</div>                                     
+			                                 
 		</div>
 		<div class="col-6">
-			<div class="row d-flex align-items-center mb-2">
+			<!-- <div class="row d-flex align-items-center mb-2">
 				<div class="col-3">
 					<label class="font-weight-500">시간</label>
 				</div>
@@ -50,7 +41,7 @@
 					<span class="mx-1">~</span>
 					<div id="endTime" class="ms-2"></div>
 				</div>
-			</div>
+			</div> -->
 			<div class="row d-flex align-items-center mb-2">
 				<div class="col-3">
 					<label class="font-weight-500">대분류</label>
@@ -60,7 +51,17 @@
 						<option value="">G마켓</option> 								                               
 					</select>
 				</div>
-			</div>       
+			</div>   
+			<div class="row d-flex align-items-center mb-2">
+				<div class="col-3">
+					<label class="font-weight-500">중분류</label>
+				</div>
+				<div class="col">
+					<select name="" id="" class="form-select">
+						<option value="">G마켓</option> 								                               
+					</select>
+				</div>
+			</div>        
 			<div class="row d-flex align-items-center">
 				<div class="col d-flex justify-content-end">
 					<button class="btn btn-success font-sz-14 ms-2" id="excel-btn">엑셀 다운로드</button>

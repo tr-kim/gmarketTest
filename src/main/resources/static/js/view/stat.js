@@ -1,11 +1,10 @@
 $(function () {
+    //라디오
+    const radios = document.querySelectorAll('input[name="stat-radio"]'); 
+
 	const startDate = new Date();
 	const endDate = new Date();
     endDate.setDate(endDate.getDate() + 7);
-
-    const startTime = new Date();
-    const endTime = new Date();
-    startTime.setTime(startDate.getTime() - 2 * 60 * 60 * 1000);	
 	
 	//조회 그리드
 	$("#statGrid").dxDataGrid({
@@ -106,9 +105,9 @@ $(function () {
 		columns: [
 			{ dataField: "idx", caption: "NO" },
 			{ dataField: "", caption: "시간/일자" },
-			{ dataField: "", caption: "대분류" },	
-			{ dataField: "", caption: "중분류" },
-			{ dataField: "", caption: "전체" },		
+			{ dataField: "gubun1", caption: "대분류" },	
+			{ dataField: "gubun2", caption: "중분류" },
+			{ dataField: "msg_body", caption: "전체" },		
 			{ dataField: "status1", caption: "성공" },		
 			{ dataField: "status2", caption: "실패" },						
 		],
@@ -131,49 +130,156 @@ $(function () {
 		}		
 	}).dxDataGrid("instance");
 
-	//달력
-	$("#startDate").dxDateBox({
-		type: "date",
-		value: startDate,
-		displayFormat: "yyyy-MM-dd",
-		onValueChanged(e) {
-			const date = e.value;
-			if (date instanceof Date && !isNaN(date)) {
-				const yyyy = date.getFullYear();
-				const mm = String(date.getMonth() + 1).padStart(2, '0');
-				const dd = String(date.getDate()).padStart(2, '0');
-				
-				console.log(`${yyyy}${mm}${dd}`);
-			}
-		},
-	});
+    //라디오 버튼클릭시 초기화
+    function recreateDateBox(selector, options) {
+        const $el = $(selector);
+        if ($el.data("dxDateBox")) {
+            $el.dxDateBox("dispose"); // 기존 제거
+            $el.empty();              // DOM 비우기
+        }
+        $el.dxDateBox(options);     // 새로 생성
+    }
 
-	$("#endDate").dxDateBox({
-		type: "date",
-		value: endDate,
-		displayFormat: "yyyy-MM-dd",
-		onValueChanged(e) {
-			const date = e.value;
-			if (date instanceof Date && !isNaN(date)) {
-				const yyyy = date.getFullYear();
-				const mm = String(date.getMonth() + 1).padStart(2, '0');
-				const dd = String(date.getDate()).padStart(2, '0');
-				
-				console.log(`${yyyy}${mm}${dd}`);
-			}
-		},
-	});
+    radios.forEach(radio => {
+        radio.addEventListener('change', function () {
 
-    //시간
-    $('#startTime').dxDateBox({
-        type: 'time',
-        value: startTime,
-    });
+            //시간
+            if(this.value == "1"){
+                recreateDateBox("#startDate", {
+                    type: 'datetime',
+                    //displayFormat: "yyyy-MM-dd a h:mm",
+                    value: startDate,
+                    onValueChanged(e) {
+                        const date = e.value;
+                        if (date instanceof Date && !isNaN(date)) {
+                            const yyyy = date.getFullYear();
+                            const mm = String(date.getMonth() + 1).padStart(2, '0');
+                            const dd = String(date.getDate()).padStart(2, '0');
+                            const hh = String(date.getHours()).padStart(2, '0');
+                            const min = String(date.getMinutes()).padStart(2, '0');
 
-    $('#endTime').dxDateBox({
-        type: 'time',
-        value: endTime,
-    });
+                            console.log(`${yyyy}${mm}${dd}${hh}${min}`);
+                        }
+                    }
+                });
+                
+                recreateDateBox("#endDate", {
+                    type: 'datetime',
+                    //displayFormat: "yyyy-MM-dd a h:mm",
+                    value: endDate,
+                    onValueChanged(e) {
+                        const date = e.value;
+                        if (date instanceof Date && !isNaN(date)) {
+                            const yyyy = date.getFullYear();
+                            const mm = String(date.getMonth() + 1).padStart(2, '0');
+                            const dd = String(date.getDate()).padStart(2, '0');
+                            const hh = String(date.getHours()).padStart(2, '0');
+                            const min = String(date.getMinutes()).padStart(2, '0');
+
+                            console.log(`${yyyy}${mm}${dd}${hh}${min}`);
+                        }
+                    }
+                });
+            }
+            if(this.value == "2"){
+                recreateDateBox("#startDate", {
+                    type: "date",
+                    value: startDate,
+                    displayFormat: "yyyy-MM-dd",
+                    onValueChanged(e) {
+                        const date = e.value;
+                        if (date instanceof Date && !isNaN(date)) {
+                            const yyyy = date.getFullYear();
+                            const mm = String(date.getMonth() + 1).padStart(2, '0');
+                            const dd = String(date.getDate()).padStart(2, '0');
+                            
+                            console.log(`${yyyy}${mm}${dd}`);
+                        }
+                    },
+                });
+                recreateDateBox("#endDate", {
+                    type: "date",
+                    value: endDate,
+                    displayFormat: "yyyy-MM-dd",
+                    onValueChanged(e) {
+                        const date = e.value;
+                        if (date instanceof Date && !isNaN(date)) {
+                            const yyyy = date.getFullYear();
+                            const mm = String(date.getMonth() + 1).padStart(2, '0');
+                            const dd = String(date.getDate()).padStart(2, '0');
+                            
+                            console.log(`${yyyy}${mm}${dd}`);
+                        }
+                    },
+                });
+            }
+            if(this.value == "3"){
+                recreateDateBox("#startDate", {
+                    type: "date",
+                    value: startDate,
+                    displayFormat: "yyyy-MM",
+                    onValueChanged(e) {
+                        const date = e.value;
+                        if (date instanceof Date && !isNaN(date)) {
+                            const yyyy = date.getFullYear();
+                            const mm = String(date.getMonth() + 1).padStart(2, '0');
+                            console.log(`${yyyy}${mm}`);
+                        }
+                    },
+                });
+                
+                recreateDateBox("#endDate", {
+                    type: "date",
+                    value: endDate,
+                    displayFormat: "yyyy-MM",
+                    onValueChanged(e) {
+                        const date = e.value;
+                        if (date instanceof Date && !isNaN(date)) {
+                            const yyyy = date.getFullYear();
+                            const mm = String(date.getMonth() + 1).padStart(2, '0');
+                            console.log(`${yyyy}${mm}`);
+                        }
+                    },
+                });
+            }
+            if(this.value == "4"){
+                recreateDateBox("#startDate", {
+                    showClearButton: true,
+                    useMaskBehavior: true,
+                    displayFormat: "yyyy '년' ",
+                    type: 'date',
+                    value: startDate,
+                    onValueChanged(e) {
+                        const date = e.value;
+                        if (date instanceof Date && !isNaN(date)) {
+                            const yyyy = date.getFullYear();
+                            console.log(`${yyyy}`);
+                        }
+                    },
+                });
+                
+                recreateDateBox("#endDate", {
+                    showClearButton: true,
+                    useMaskBehavior: true,
+                    displayFormat: "yyyy '년' ",
+                    type: 'date',
+                    value: endDate,
+                    onValueChanged(e) {
+                        const date = e.value;
+                        if (date instanceof Date && !isNaN(date)) {
+                            const yyyy = date.getFullYear();
+                            console.log(`${yyyy}`);
+                        }
+                    },
+                });
+            }
+        })
+    })   
+
+    const checkedRadio = document.querySelector('input[name="stat-radio"]:checked');
+    if (checkedRadio) {
+        checkedRadio.dispatchEvent(new Event('change'));
+    }
 });
 
 document.getElementById("excel-btn").addEventListener('click',function(e){
@@ -185,7 +291,7 @@ document.getElementById("excel-btn").addEventListener('click',function(e){
 //엑셀 다운로드
 function exportGridToExcel(gridInstance){
 	const workbook = new ExcelJS.Workbook();
-	const worksheet = workbook.addWorksheet('대량 발송 이력조회');
+	const worksheet = workbook.addWorksheet('정산/통계 조회');
 	
 	DevExpress.excelExporter.exportDataGrid({
 		component: gridInstance,
@@ -193,7 +299,7 @@ function exportGridToExcel(gridInstance){
 		autoFilterEnabled: true,
 	}).then(() => {
 		workbook.xlsx.writeBuffer().then((buffer) => {
-			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '대량 발송 이력조회.xlsx');
+			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '정산/통계 조회.xlsx');
 		});
 	});
 }

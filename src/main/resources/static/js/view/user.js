@@ -4,7 +4,7 @@ $(function () {
 	endDate.setDate(endDate.getDate() + 7);
 	
 	//조회 그리드
-	$("#waitHistGrid").dxDataGrid({
+	$("#userGrid").dxDataGrid({
 		dataSource: [
 			{ idx: 1, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
 			{ idx: 2, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
@@ -99,21 +99,25 @@ $(function () {
 		columnAutoWidth: true,
 		allowColumnResizing: true,
 		columnResizingMode: 'widget',
-		selection: {
-			mode: "multiple"
-		},
 		columns: [
 			{ dataField: "idx", caption: "NO" },
-			{ dataField: "", caption: "제목" },
-			{ dataField: "", caption: "전송일시" },	
-			{ dataField: "msg_body", caption: "내용" },
-			{ dataField: "", caption: "전체" },		
-			{ dataField: "", caption: "상세" },		
-			{ dataField: "", caption: "발송ID" },			
+			{ dataField: "", caption: "사용자 ID" },
+			{ dataField: "msg_body", caption: "이름" },
+			{ dataField: "gubun2", caption: "구분" },			
+			{ dataField: "", caption: "등급" },
+			{ dataField: "", caption: "계정 사용 여부" },
 			{ 
-				type: "selection", 
-      			width: 50
-			},							
+				dataField: "", 
+				caption: "수정" , 
+				type: 'buttons', 
+				width: 60,				
+				buttons: [{
+					icon: 'edit',
+					onClick(e) {
+						alert('test');
+					},
+				}],
+			},				
 		],
 		toolbar: {
 			items: [
