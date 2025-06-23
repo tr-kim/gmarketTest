@@ -4,10 +4,77 @@
 <!-- 폐쇄망일 경우 layout 라이브러리를 따로 설치해서 사용해야됨 -->
 
 <body>
-
-	<div style="text-align: center;">
-		<h1>G마켓 정산/통계 조회 페이지</h1>
+	<p class="font-sz-20 font-weight-600 pt-3 text-666">정산/통계 조회</p>
+	<form class="content row mx-0 mb-2" id="statHist">
+		<div class="col-6">
+			<div class="row d-flex align-items-center mb-2 height-38">
+				<div class="col-3">
+					<label class="font-weight-500">구분</label>
+				</div>
+				<div class="col row">
+					<div class="col"><label><input type="radio" name="stat-radio" checked> 시간</label></div>
+					<div class="col"><label><input type="radio" name="stat-radio"> 일</label></div>
+					<div class="col"><label><input type="radio" name="stat-radio"> 월</label></div>
+					<div class="col"><label><input type="radio" name="stat-radio"> 년</label></div>
+					<div class="col"></div>
+				</div>
+			</div>
+			<div class="row d-flex align-items-center mb-2">
+				<div class="col-3">
+					<label class="font-weight-500">조회기간</label>
+				</div>
+				<div class="col d-flex align-items-center">
+					<div id="startDate" class="me-2"></div>
+					<span class="mx-1">~</span>
+					<div id="endDate" class="ms-2"></div>
+				</div>
+			</div>
+			<div class="row d-flex align-items-center">
+				<div class="col-3">
+					<label class="font-weight-500">중분류</label>
+				</div>
+				<div class="col">
+					<select name="" id="" class="form-select">
+						<option value="">G마켓</option> 								                               
+					</select>
+				</div>
+			</div>                                     
+		</div>
+		<div class="col-6">
+			<div class="row d-flex align-items-center mb-2">
+				<div class="col-3">
+					<label class="font-weight-500">시간</label>
+				</div>
+				<div class="col d-flex align-items-center">
+					<div id="startTime" class="me-2"></div>
+					<span class="mx-1">~</span>
+					<div id="endTime" class="ms-2"></div>
+				</div>
+			</div>
+			<div class="row d-flex align-items-center mb-2">
+				<div class="col-3">
+					<label class="font-weight-500">대분류</label>
+				</div>
+				<div class="col">
+					<select name="" id="" class="form-select">
+						<option value="">G마켓</option> 								                               
+					</select>
+				</div>
+			</div>       
+			<div class="row d-flex align-items-center">
+				<div class="col d-flex justify-content-end">
+					<button class="btn btn-success font-sz-14 ms-2" id="excel-btn">엑셀 다운로드</button>
+					<button class="btn btn-primary font-sz-14 ms-2">조회</button>
+				</div>                        
+			</div>
+		</div>
+	</form>
+	<div class="content">
+		<div id="statGrid"></div>
 	</div>
+	
+	
+	<script th:src="@{/js/view/stat.js}"></script>
 </body>
 
 </html>

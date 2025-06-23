@@ -266,3 +266,7 @@ aside .psw_chg_btn:hover{
 #waitHistGrid .dx-bordered-bottom-view {
     max-height: calc(100vh - 490px);
 }
+/* stat.html */
+#statGrid .dx-bordered-bottom-view {
+    max-height: calc(100vh - 525px);
+}

@@ -1,10 +1,14 @@
 $(function () {
 	const startDate = new Date();
 	const endDate = new Date();
-	endDate.setDate(endDate.getDate() + 7);
+    endDate.setDate(endDate.getDate() + 7);
+
+    const startTime = new Date();
+    const endTime = new Date();
+    startTime.setTime(startDate.getTime() - 2 * 60 * 60 * 1000);	
 	
 	//조회 그리드
-	$("#waitHistGrid").dxDataGrid({
+	$("#statGrid").dxDataGrid({
 		dataSource: [
 			{ idx: 1, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
 			{ idx: 2, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
@@ -105,8 +109,8 @@ $(function () {
 			{ dataField: "", caption: "대분류" },	
 			{ dataField: "", caption: "중분류" },
 			{ dataField: "", caption: "전체" },		
-			{ dataField: "", caption: "성공" },		
-			{ dataField: "", caption: "실패" },						
+			{ dataField: "status1", caption: "성공" },		
+			{ dataField: "status2", caption: "실패" },						
 		],
 		toolbar: {
 			items: [
@@ -159,6 +163,38 @@ $(function () {
 			}
 		},
 	});
+
+    //시간
+    $('#startTime').dxDateBox({
+        type: 'time',
+        value: startTime,
+    });
+
+    $('#endTime').dxDateBox({
+        type: 'time',
+        value: endTime,
+    });
 });
 
+document.getElementById("excel-btn").addEventListener('click',function(e){
+	e.preventDefault();
+	const grid = $("#statGrid").dxDataGrid("instance");
+	exportGridToExcel(grid);
+})
+
+//엑셀 다운로드
+function exportGridToExcel(gridInstance){
+	const workbook = new ExcelJS.Workbook();
+	const worksheet = workbook.addWorksheet('대량 발송 이력조회');
+	
+	DevExpress.excelExporter.exportDataGrid({
+		component: gridInstance,
+		worksheet: worksheet,
+		autoFilterEnabled: true,
+	}).then(() => {
+		workbook.xlsx.writeBuffer().then((buffer) => {
+			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '대량 발송 이력조회.xlsx');
+		});
+	});
+}
 
