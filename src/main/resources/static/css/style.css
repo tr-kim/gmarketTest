@@ -264,6 +264,159 @@ aside .psw_chg_btn:hover{
 #real_send_hist .content {
     min-height: 22rem;
 }
+/* send.html */
+#send > ul{
+    max-width: 760px;
+    margin: auto;
+}
+#send > ul > li{
+    display: flex;
+    margin-bottom: 2rem;    
+}
+#send .tab li{
+    margin-right: .5rem;
+    position: relative;
+}
+#send .tab li button{
+    background-color: #ddd;
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    padding-left: .8rem;
+    padding-right: .8rem;
+    position: relative;
+    z-index: 2;
+}
+#send .tab li.on::after{
+    content: "";
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    background-color:#0abb26;
+    bottom: -5px;
+    right: 0;
+    left: 0;
+    margin: auto;
+    transform: rotate(45deg);
+    z-index: 0;
+}
+#send .tab li.on button{
+    background-color:#0abb26;
+    border: 1px solid #0abb26;
+    color: #fff;
+}
+#send .callback_wrap{
+    display: none;
+}
+#send .grid{
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+}
+#send .grid .dx-bordered-bottom-view{
+    max-height: 10rem;
+}
+#send .msg_wrap_hd{
+    border-bottom: 1px solid #e5e7eb;
+}
+#send .msg_wrap textarea{
+    border: none;
+    resize: none;
+    height: 25rem;
+}
+#send .msg_type.sms{
+    background-color: #0d6efd;
+    color: #fff;
+    opacity: .9;
+}
+#send .msg_type.lms{
+    background-color: #0abb26;
+    color: #fff;
+    opacity: .9;
+}
+#send .msg_type.mms{
+    background-color: #dc3545;
+    color: #fff;
+    opacity: .9;
+}
+#send .msg_wrap{
+    border-right: 1px solid #e5e7eb;
+}
+.option_tab li{
+    border-bottom: 3px solid #ddd;
+    text-align: center;
+}
+.option_tab li.on{
+    border-bottom: 3px solid #0abb26
+}
+.option_tab li button{
+    width: 100%;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+}
+.option_wrap{
+    display: none;
+}
+.option_wrap li{
+    text-align: center;
+}
+#message::placeholder{
+    color: #ccc;
+    font-weight: 300;
+}
+#unicode ul li{
+    cursor: pointer;
+    padding: .5rem;
+    border: 1px solid transparent;
+    font-size: 1rem;
+    max-width: 36px;
+}
+#unicode ul li:hover{
+    border: 1px solid #0abb26;
+    box-shadow: 0 0 5px #00000020;
+}
+#dropzone-external {
+  background-color: rgb(183 183 183 / 10%);
+  padding: 10px;
+  border-color: var(--dx-color-border);
+  min-height: 10rem;
+}
+
+#dropzone-external > * {
+  pointer-events: none;
+}
+
+#dropzone-external.dropzone-active {
+  border-style: solid;
+  border-color: var(--dx-color-primary);
+}
+
+.widget-container > span {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+#dropzone-image {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+#dropzone-text > span {
+  font-weight: 100;
+  opacity: 0.5;
+}
+
+#upload-progress {
+  display: flex;
+  margin-top: 10px;
+}
+
+.flex-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 /* 모달 */
 /* passwordChg.html */
 .passwordChg .modal-wrap{
