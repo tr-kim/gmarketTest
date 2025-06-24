@@ -260,6 +260,10 @@ aside .psw_chg_btn:hover{
 #userGrid .dx-bordered-bottom-view {
     max-height: calc(100vh - 490px);
 }
+/* real_send_hist.html */
+#real_send_hist .content {
+    min-height: 22rem;
+}
 /* 모달 */
 /* passwordChg.html */
 .passwordChg .modal-wrap{
