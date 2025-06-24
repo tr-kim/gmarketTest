@@ -72,18 +72,18 @@ public class WebSecurityConfig {
                 		.requestMatchers("/view/user").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN")
                         .anyRequest().authenticated())
                 		.exceptionHandling(exception -> exception
-                				.accessDeniedHandler(accessDeniedHandler()) // 접근 거부 핸들러 설정
+                				.accessDeniedHandler(accessDeniedHandler()) 											// 접근 거부 핸들러 설정
                 		)
-//                		.sessionManagement(session -> session
-//            				.sessionFixation(sessionFixation -> sessionFixation
-//            		                .migrateSession()
-//            		        )
-//                			.sessionFixation().migrateSession()															// 세션 고정 공격(Session Fixation Attack) 방지
-//            		        .maximumSessions(1)																			// 세션 갯수 설정 최대 1명
-//            		        .expiredSessionStrategy(new CustomSessionExpiredStrategy())									// Spring Security에서 세션이 만료되었을 때 사용자 정의 동작을 실행할 수 있도록 해주는 전략 클래스
-//            		        .maxSessionsPreventsLogin(true)																// 기존 로그인 강제 종료, 새 로그인 허용
-//            		        .sessionRegistry(sessionRegistry())
-//            		    )
+                		.sessionManagement(session -> session
+            				.sessionFixation(sessionFixation -> sessionFixation
+            		                .migrateSession() 																	// 세션 고정 공격(Session Fixation Attack) 방지
+            		        )													
+            		        .maximumSessions(1)																			// 세션 갯수 설정 최대 1명
+            		        // .maxSessionsPreventsLogin(true)															// 새 로그인 거부 (기존 세션 유지)
+            		        .maxSessionsPreventsLogin(false)															// 새 로그인 간으 (기존 세션 삭제)
+            		        .expiredSessionStrategy(customSessionExpiredStrategy())																	// Spring Security에서 세션이 만료되었을 때 사용자 정의 동작을 실행할 수 있도록 해주는 전략 클래스
+            		        .sessionRegistry(sessionRegistry())															// 세션 레지스트리 설정
+            		    )
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)      		// 사용자 인증(커스텀 필터)
                 .formLogin((formLogin) ->
                 	formLogin
@@ -156,7 +156,7 @@ public class WebSecurityConfig {
      */
     @Bean
     public CustomAuthSuccessHandler customLoginSuccessHandler() {
-        return new CustomAuthSuccessHandler();
+        return new CustomAuthSuccessHandler(sessionRegistry());
     }
     
     /**
@@ -195,7 +195,17 @@ public class WebSecurityConfig {
      * @return ServletListenerRegistrationBean
      */
     @Bean
-    public static HttpSessionEventPublisher httpSessionEventPublisher() {
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
+    }
+    
+    /**
+     * 
+     *
+     * @return CustomSessionExpiredStrategy
+     */
+    @Bean
+    public CustomSessionExpiredStrategy customSessionExpiredStrategy() {
+        return new CustomSessionExpiredStrategy();
     }
 }

@@ -13,8 +13,10 @@
 <title>Gmarket</title>
 </head>
 <body>
-	<th:block th:if="${DUPLICATE_LOGIN eq 'true'}">
-		<script> alert("다른 기기에서 로그인되어 현재 로그인이 종료되었습니다.") </script>						
+	<th:block th:if="${duplicateLogin}">
+	    <script>
+	        alert("다른 기기에서 로그인되어 현재 로그인이 종료되었습니다.");
+	    </script>
 	</th:block>
 	<div id="gm_login" class="d-flex flex-column justify-content-center align-items-center">			    
         <form name='LoginForm' method="post" th:action="@{/login-process}" class="d-flex flex-column align-items-center rounded-3 bg-white">  

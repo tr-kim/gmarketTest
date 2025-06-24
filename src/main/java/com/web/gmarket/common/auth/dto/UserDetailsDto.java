@@ -127,6 +127,19 @@ public class UserDetailsDto implements UserDetails, Serializable {
         return false;
     }
     
+    @Override
+	public boolean equals(Object obj) {
+	    if (obj instanceof UserDetailsDto) {
+	        return this.getUserName().equals(((UserDetailsDto) obj).getUserName());
+	    }
+	    return false;
+	}
+	
+	@Override
+	public int hashCode() {
+	    return this.getUserName().hashCode();
+	}	
+    
     /**
      * 사용자의 아이디를 반환합니다.
      *
