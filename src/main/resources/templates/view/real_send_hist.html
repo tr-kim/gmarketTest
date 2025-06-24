@@ -4,23 +4,24 @@
 <!-- 폐쇄망일 경우 layout 라이브러리를 따로 설치해서 사용해야됨 -->
 
 <body>
-
 	<p class="font-sz-20 font-weight-600 pt-3 text-666">실시간 발송현황</p>
 	<div class="row h-100" id="real_send_hist">
 		<div class="col-6 mb-3 pe-2">
-			<div class="content"></div>
+			<canvas id="line_chart" class="content"></canvas>
 		</div>
 		<div class="col-6 mb-3 ps-2">
-			<div class="content"></div>
+			<canvas id="bar_chart" class="content"></canvas>
 		</div>
 		<div class="col-6 pe-2">
-			<div class="content"></div>
+			<canvas id="bar_line_chart" class="content"></canvas>
 		</div>
 		<div class="col-6 ps-2">
-			<div class="content"></div>
+			<canvas id="pie_chart" class="content"></canvas>
 		</div>
 	</div>
-	<!-- <script th:src="@{/js/view/real_send_hist.js}"></script> -->
+	
+	<script th:src="@{/js/chart/chart.umd.js}"></script>
+	<script th:src="@{/js/view/real_send_hist.js}"></script>
 </body>
 
 </html>
