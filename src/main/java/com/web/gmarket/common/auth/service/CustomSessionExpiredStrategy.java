@@ -19,7 +19,7 @@ public class CustomSessionExpiredStrategy implements SessionInformationExpiredSt
     @Override
     public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException, ServletException {
     	
-    	log.info("Session expired due to concurrent login: " + event.getSessionInformation().getSessionId());
+    	log.info("Session expired due to concurrent login");
     	
         HttpServletRequest request = event.getRequest();
         HttpServletResponse response = event.getResponse();
