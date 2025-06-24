@@ -80,7 +80,7 @@ public class WebSecurityConfig {
             		        )													
             		        .maximumSessions(1)																			// 세션 갯수 설정 최대 1명
             		        // .maxSessionsPreventsLogin(true)															// 새 로그인 거부 (기존 세션 유지)
-            		        .maxSessionsPreventsLogin(false)															// 새 로그인 간으 (기존 세션 삭제)
+            		        .maxSessionsPreventsLogin(false)															// 새 로그인 가능 (기존 세션 삭제)
             		        .expiredSessionStrategy(customSessionExpiredStrategy())																	// Spring Security에서 세션이 만료되었을 때 사용자 정의 동작을 실행할 수 있도록 해주는 전략 클래스
             		        .sessionRegistry(sessionRegistry())															// 세션 레지스트리 설정
             		    )
