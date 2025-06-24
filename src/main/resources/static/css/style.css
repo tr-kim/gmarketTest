@@ -227,33 +227,19 @@ aside li.active::before{
 aside li.active a{
     color: #333;
 }
-
 aside .psw_chg_btn{
-    /* bottom: 100%;
-    left: 50%;
-    width: 150px;
-    height: 100%; */
-    /* display: block; */
     position: unset;
     width: 100%;
     box-shadow: none;
     border-radius: 0px;
     background-color: #00000010;
-    border: 1px solid transparent;
-
-    
+    border: 1px solid transparent;    
 }
 aside .psw_chg_btn:hover{
     border: 1px solid transparent;
     background-color: #00000020;
 }
-/* passwordChg.html */
-.passwordChg{
-    display: none;
-}
-.passwordChg .modal-wrap{
-    margin: 15rem auto;
-}
+/* 페이지 */
 /* hist.html */
 #histGrid .dx-bordered-bottom-view {
     max-height: calc(100vh - 520px);
@@ -273,4 +259,13 @@ aside .psw_chg_btn:hover{
 /* user.html */
 #userGrid .dx-bordered-bottom-view {
     max-height: calc(100vh - 490px);
+}
+/* 모달 */
+/* passwordChg.html */
+.passwordChg .modal-wrap{
+    margin: 15rem auto;
+}
+/* addUser.html */
+.addUser .modal-wrap{
+    margin: 5rem auto;
 }

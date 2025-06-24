@@ -170,6 +170,37 @@ $(function () {
 			}
 		},
 	});
+
+	//사용자 등록 모달
+	const addUser = document.querySelector('.addUser');
+	const inputs = document.querySelectorAll('.addUser input');
+	const selects = document.querySelectorAll('.addUser select');
+
+	document.getElementById('add-btn').addEventListener('click', function(e){
+		e.preventDefault();
+		addUser.classList.add('d-block');
+	});
+
+	function addUserClear() {
+		inputs.forEach(input => {
+			input.value = "";
+		})
+		selects.forEach(select=> {
+			select.value = "0";
+		})
+	}
+
+	document.querySelector('.addUser .close_btn').addEventListener('click', function(e){
+		e.preventDefault();
+		addUser.classList.remove('d-block');
+		addUserClear();
+	});
+
+	document.querySelector('.clear_btn').addEventListener('click', function(e){
+		e.preventDefault();
+		addUserClear();
+	});
+
 });
 
 

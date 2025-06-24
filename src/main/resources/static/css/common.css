@@ -92,6 +92,7 @@ input, textarea{
     padding: 1rem;
 }
 .modal-bg{
+    display: none;
     position: fixed;
     background-color: #1f293740;
     top: 0;

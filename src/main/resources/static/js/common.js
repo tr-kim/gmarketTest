@@ -74,7 +74,7 @@ window.addEventListener('load', function() {
             }
         });
         psw_chg_btn.addEventListener('click', function(){
-            console.log(passwordChg)
+
             passwordChg.classList.add('d-block');
         });
       
@@ -92,7 +92,7 @@ window.addEventListener('load', function() {
         const pw1 = document.getElementById('new-psw');
         const pw2 = document.getElementById('new-psw2');
         const message = document.getElementById('psw-ck');
-        const closebtn = document.querySelector('.close_btn');
+        const closebtn = document.querySelector('.passwordChg .close_btn');
         const inputs = document.querySelectorAll('.passwordChg input');
 
         function checkPasswordMatch() {
