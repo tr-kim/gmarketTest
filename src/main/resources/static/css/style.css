@@ -374,6 +374,28 @@ aside .psw_chg_btn:hover{
     border: 1px solid #0abb26;
     box-shadow: 0 0 5px #00000020;
 }
+#tag button {
+    border: 1px solid #ccc;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 50px;
+    transition: border 0.2s;
+} 
+#tag button:hover{
+    border: 1px solid #0abb26;
+}
+.send_btn {
+    --bs-btn-color: #ddd;
+    --bs-btn-border-color: #dddddd;
+    --bs-btn-focus-shadow-rgb: 13, 110, 253;
+    --bs-btn-active-color: #0d6efd;
+    --bs-btn-active-border-color: #0d6efd;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    /* --bs-btn-disabled-color: #ddd; */
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: #0d6efd;
+    --bs-gradient: none;
+}
 #dropzone-external {
   background-color: rgb(183 183 183 / 10%);
   padding: 10px;
@@ -425,4 +447,14 @@ aside .psw_chg_btn:hover{
 /* addUser.html */
 .addUser .modal-wrap{
     margin: 5rem auto;
+}
+/* reserveSend.html */
+.reserveSend .modal-wrap{
+    width: 500px;
+    margin: 10rem auto;
+}
+.reserveSend #calendar{
+    margin: auto;
+    width: 450px;
+    height: 350px;
 }
