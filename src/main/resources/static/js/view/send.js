@@ -293,21 +293,31 @@ $(function () {
         return `<span class='${cssClass}'>${data.text}</span>`;
     }
 
+    //080수신거부
+    document.getElementById('checkDefault').addEventListener('change', function () {
+        const input = document.getElementById('reject_num');
+        input.disabled = !this.checked;
+    });
+
+
     //예약 발송 모달 열기,닫기
     const reserveModal = document.querySelector('.reserveSend');
-    const selects = document.querySelectorAll('select');
+    const selects = document.querySelectorAll('.reserveSend select');
     const reserveHour = document.getElementById('hour');
     const reserveMinute = document.getElementById('minute');
+    const final_send_btn = document.getElementById('final_send_btn');
 
     document.getElementById('send_time1').addEventListener('change',function(){
         if (this.checked) {
             document.getElementById('reserveDate').textContent = "";
+            final_send_btn.textContent = "즉시발송";
         }
     });
 
     document.getElementById('send_time2').addEventListener('click', function () {
         if (this.checked) {
             reserveModal.classList.add("d-block");
+            final_send_btn.textContent = "예약발송";
         }
     });
 
@@ -315,6 +325,8 @@ $(function () {
         reserveModal.classList.remove("d-block");
 
         document.getElementById('send_time1').checked = true;
+        document.getElementById('reserveDate').textContent = "";
+        final_send_btn.textContent = "즉시발송";
 
         document.querySelector('.date').textContent = '날짜를 선택해 주세요.';
         selects.forEach(select => {
