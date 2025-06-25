@@ -131,7 +131,8 @@ $(function () {
         onUploadStarted() {
             toggleImageVisible(false);
             uploadProgressBar.option('visible', true);
-        },
+        },        
+
         
     });
 
@@ -190,9 +191,15 @@ $(function () {
             }
         },
         onOptionChanged(data) {
-        if (data.name === 'zoomLevel') {
-            zoomLevel.option('value', data.value);
-        }
+            if (data.name === 'zoomLevel') {
+                zoomLevel.option('value', data.value);
+            }
+        },
+        disabledDates: function(data) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // 시간 초기화
+
+            return data.view === 'month' && data.date < today;
         },
         
     }).dxCalendar('instance');
@@ -289,8 +296,8 @@ $(function () {
     //예약 발송 모달 열기,닫기
     const reserveModal = document.querySelector('.reserveSend');
     const selects = document.querySelectorAll('select');
-    const reserveHour = document.getElementById('hour').value;
-    const reserveMinute = document.getElementById('minute').value;
+    const reserveHour = document.getElementById('hour');
+    const reserveMinute = document.getElementById('minute');
 
     document.getElementById('send_time1').addEventListener('change',function(){
         if (this.checked) {
@@ -320,13 +327,10 @@ $(function () {
             alert('날짜를 선택해 주세요.')
             return;
         }
-        document.getElementById('reserveDate').textContent = `예약시간: ${reserveDate} ${reserveHour}:${reserveMinute}`
+        document.getElementById('reserveDate').textContent = `예약시간: ${reserveDate} ${reserveHour.value}:${reserveMinute.value}`
 
         reserveModal.classList.remove("d-block");
         document.querySelector('.date').textContent = '날짜를 선택해 주세요.';
-        selects.forEach(select => {
-            select.value = "00";
-        })
     })
 });
     
