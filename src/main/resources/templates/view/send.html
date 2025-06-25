@@ -114,13 +114,20 @@
 						<div class="msg_wrap_hd d-flex">
 							<div class="msg_type col-3 sms py-2 px-2 text-center">
 								sms
-							</div>							
-							<button class="col-3 py-2 text-center text-nowrap bg-body-secondary font-sz-12" id="bookmark_btn" title="내문자함"><!--i class="bi bi-inboxes-fill"></i-->내문자함</button>
+							</div>	
 							<div class="msg_byte col text-end py-2 pe-2">
 								<span id="byte_ck">0</span>/<span id="byte_type">80</span> byte
 							</div>
 						</div>
 						<textarea name="" id="message" class="p-3 w-100" placeholder = '내용을 입력해주세요.80byte 초과 시 장문 문자로, 이미지 추가 시 포토 문자로 자동 전환 됩니다.'></textarea>
+						<div class="msg_wrap_ft d-flex">
+							<div class="col">
+								<button class="w-100 py-2 text-center text-nowrap font-sz-12" id="bookmark_btn">내문자함</button>
+							</div>
+							<div class="col">
+								<button class="w-100 py-2 text-center text-nowrap font-sz-12" id="bookmark_send_btn">문자저장</button>
+							</div>	
+						</div>
 					</div>
 					<div class="add_option col">
 						<ul class="option_tab d-flex px-3">
