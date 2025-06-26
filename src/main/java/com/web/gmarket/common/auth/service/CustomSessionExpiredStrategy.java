@@ -6,6 +6,8 @@ import org.springframework.security.web.session.SessionInformationExpiredEvent;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.stereotype.Component;
 
+import com.web.gmarket.common.utils.ConstantsUtils;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +27,7 @@ public class CustomSessionExpiredStrategy implements SessionInformationExpiredSt
         HttpServletResponse response = event.getResponse();
         HttpSession session = request.getSession();
 
-        session.setAttribute("DUPLICATE_LOGIN", true);
+        session.setAttribute(ConstantsUtils.DUPLICATE_LOGIN, true);
 
         response.sendRedirect("/login");
     }   

@@ -28,4 +28,9 @@ public class ConstantsUtils {
 	public static final String ROLE_USER = "ROLE_USER";
 	public static final String ROLE_OPERATOR = "ROLE_OPERATOR";
 	public static final String ROLE_COMMON = "ROLE_COMMON";
+	
+	public static final String DUPLICATE_LOGIN = "DUPLICATE_LOGIN";
+	public static final String PASSWORD_NOT_MATCH = "PASSWORD_NOT_MATCH";
+	public static final String NOT_USE = "NOT_USE";
+	public static final String NOT_USER = "NOT_USER";
 }

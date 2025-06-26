@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.web.gmarket.common.utils.ConstantsUtils;
+
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -18,10 +20,28 @@ public class LoginController{
 	        return "redirect:/index";
 	    }
 		
-		Boolean duplicated = (Boolean) session.getAttribute("DUPLICATE_LOGIN");
+		Boolean duplicated = (Boolean) session.getAttribute(ConstantsUtils.DUPLICATE_LOGIN);
 	    if (Boolean.TRUE.equals(duplicated)) {
-	        model.addAttribute("duplicateLogin", true);
-	        session.removeAttribute("DUPLICATE_LOGIN"); // 1회성 메시지
+	        model.addAttribute(ConstantsUtils.DUPLICATE_LOGIN, true);
+	        session.removeAttribute(ConstantsUtils.DUPLICATE_LOGIN); // 1회성 메시지
+	    }
+	    
+	    Boolean notUse = (Boolean) session.getAttribute(ConstantsUtils.NOT_USE);
+	    if (Boolean.TRUE.equals(notUse)) {
+	        model.addAttribute(ConstantsUtils.NOT_USE, true);
+	        session.removeAttribute(ConstantsUtils.NOT_USE);
+	    }
+	    
+	    Boolean notUser = (Boolean) session.getAttribute(ConstantsUtils.NOT_USER);
+	    if (Boolean.TRUE.equals(notUser)) {
+	        model.addAttribute(ConstantsUtils.NOT_USER, true);
+	        session.removeAttribute(ConstantsUtils.NOT_USER);
+	    }
+	    
+	    Boolean notMatch = (Boolean) session.getAttribute(ConstantsUtils.PASSWORD_NOT_MATCH);
+	    if (Boolean.TRUE.equals(notMatch)) {
+	        model.addAttribute(ConstantsUtils.PASSWORD_NOT_MATCH, true);
+	        session.removeAttribute(ConstantsUtils.PASSWORD_NOT_MATCH);
 	    }
 		
 		return "login";

@@ -3,13 +3,16 @@ package com.web.gmarket.common.auth.handler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.web.gmarket.common.auth.dto.UserDetailsDto;
+import com.web.gmarket.common.utils.ConstantsUtils;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +45,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         
         // Spring Security - UserDetailsService를 통해 DB에서 아이디로 사용자 조회
         UserDetailsDto userDetailsDto = (UserDetailsDto) userDetailsService.loadUserByUsername(userId);
-
-        if (!(passwordEncoder.matches(userPw, userDetailsDto.getUserPwd()))) {
-            throw new BadCredentialsException(userDetailsDto.getUserName() + " Invalid password");
-        }
+        
+        if(ConstantsUtils.FALG_Y.equals(userDetailsDto.getDelFlag())) {		 			// 계정 삭제 여부			
+        	throw new UsernameNotFoundException(ConstantsUtils.NOT_USER);
+        } else if(ConstantsUtils.FALG_N.equals(userDetailsDto.getUseYn())) {			// 계정 사용 여부		
+        	throw new DisabledException(ConstantsUtils.NOT_USE);
+        } else if (!(passwordEncoder.matches(userPw, userDetailsDto.getUserPwd()))) {	// 비밀번호 불일치
+            throw new BadCredentialsException(ConstantsUtils.PASSWORD_NOT_MATCH);
+        } 
         
         return new UsernamePasswordAuthenticationToken(userDetailsDto, userPw, userDetailsDto.getAuthorities());
 	}
