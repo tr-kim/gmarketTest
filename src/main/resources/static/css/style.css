@@ -318,6 +318,19 @@ aside .psw_chg_btn:hover{
 #send .msg_wrap_hd{
     border-bottom: 1px solid #e5e7eb;
 }
+#send .msg_wrap_ft{
+    border-top: 1px solid #e5e7eb;
+}
+#send .msg_wrap_ft .col:first-child{
+    border-right: 1px solid #ddd;
+}
+#send .msg_wrap_ft button{
+    color: #666;
+}
+#send .msg_wrap_ft button:hover{
+    background: #f0f0f0;
+    color: #333;
+}
 #send .msg_wrap textarea{
     border: none;
     resize: none;
