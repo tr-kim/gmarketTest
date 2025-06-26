@@ -453,18 +453,9 @@ aside .psw_chg_btn:hover{
   align-items: center;
 }
 /* 모달 */
-/* passwordChg.html */
-.passwordChg .modal-wrap{
-    margin: 15rem auto;
-}
-/* addUser.html */
-.addUser .modal-wrap{
-    margin: 5rem auto;
-}
 /* reserveSend.html */
 .reserveSend .modal-wrap{
     width: 500px;
-    margin: 10rem auto;
 }
 .reserveSend #calendar{
     margin: auto;
