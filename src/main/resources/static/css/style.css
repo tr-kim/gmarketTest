@@ -452,6 +452,37 @@ aside .psw_chg_btn:hover{
   justify-content: center;
   align-items: center;
 }
+.img-question::after{
+    background: #777;
+    position: absolute;
+    top:50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    right: calc(100% - 5px);
+    z-index: 0;
+    transition: .2s;
+}
+.img-question::before{
+    position: absolute;
+    background: #666;
+    color: #fff;
+    white-space: nowrap;
+    padding: .5rem;
+    top:50%;
+    transform: translateY(-50%);
+    right: 100%;
+    border-radius: 3px;
+    box-shadow: 0 0 20px #00000060;
+    z-index: 1;
+    transition: .2s;
+}
+.img-question:hover::after{
+    content: "";
+}
+.img-question:hover::before{
+    content: "이미지는 최대 3개 까지 가능합니다.";
+}
 /* 모달 */
 /* reserveSend.html */
 .reserveSend .modal-wrap{

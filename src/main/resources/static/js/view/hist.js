@@ -158,6 +158,78 @@ $(function () {
 			$("#totalCount").text(`총 ${totalCount}건`);
 		}
 	}).dxDataGrid("instance");
+
+	//대분류
+	$('#large-category').dxSelectBox({
+		dataSource: [{
+			Code: 0,
+			Name: '지마켓',
+		},{
+			Code: 1,
+			Name: '옥션',
+		}],
+			displayExpr: 'Name',
+			valueExpr: 'Code',
+			value: 0
+	});
+
+	//중분류
+	$('#middle-category').dxSelectBox({
+		dataSource: [{
+			Code: 0,
+			Name: '전체',
+		}, {
+			Code: 11,
+			Name: 'SMSCLI_TBL_EMG',
+		}, {
+			Code: 12,
+			Name: 'SMSCLI_TBL_ETC',
+		}, {
+			Code: 13,
+			Name: 'SMSCLI_TBL_ORDER',
+		}, {
+			Code: 14,
+			Name: 'SMSCLI_TBL_TRAN',
+		}, {
+			Code: 15,
+			Name: 'SMSCLI_TBL_EVENT',
+		}, {
+			Code: 16,
+			Name: 'SMSCLI_TBL_LARGE',
+		}, {
+			Code: 31,
+			Name: 'LMSCLI_TBL_EVENT',
+		}, {
+			Code: 32,
+			Name: 'LMSCLI_TBL_LARGE',
+		}, {
+			Code: 51,
+			Name: 'MMSCLI_TBL_EVENT',
+		}, {
+			Code: 52,
+			Name: 'MMSCLI_TBL_LARGE',
+		}, {
+			Code: 61,
+			Name: 'GMKT_SMSCLI_TBL_LARGE',
+		}, {
+			Code: 62,
+			Name: 'GMKT_LMSCLI_TBL_LARGE',
+		}, {
+			Code: 63,
+			Name: 'GMKT_MMSCLI_TBL_LARGE',
+		}, {
+			Code: 110,
+			Name: 'SFC_SMSCLI_TBL',
+		}],
+			displayExpr: 'Name',
+			valueExpr: 'Code',
+			value: 0
+	});
+
+	//수신자 번호
+	$('#receive-num').dxTextBox({
+		placeholder: '번호를 입력하세요.'
+	});
 });
 
 //엑셀 다운로드 버튼

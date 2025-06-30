@@ -179,6 +179,25 @@ $(function () {
 			$("#totalCount").text(`총 ${totalCount}건`);
 		}
 	}).dxDataGrid("instance");
+
+	//대분류
+	$('#large-category').dxSelectBox({
+		dataSource: [{
+			Code: 0,
+			Name: '지마켓',
+		},{
+			Code: 1,
+			Name: '옥션',
+		}],
+			displayExpr: 'Name',
+			valueExpr: 'Code',
+			value: 0
+	});
+
+	//제목
+	$('#bulk-title').dxTextBox({
+		placeholder: '제목을 입력하세요.'
+	});
 });
 
 //엑셀 다운로드 버튼
