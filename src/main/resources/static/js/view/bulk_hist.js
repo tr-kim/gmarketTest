@@ -3,81 +3,112 @@ $(function () {
 	const endDate = new Date();
 	endDate.setDate(endDate.getDate() + 7);
 	
+	//조회 기간
+	$("#startDate").dxDateBox({
+		type: "date",
+		value: startDate,
+		displayFormat: "yyyy-MM-dd",
+		onValueChanged(e) {
+			const date = e.value;
+			if (date instanceof Date && !isNaN(date)) {
+				const yyyy = date.getFullYear();
+				const mm = String(date.getMonth() + 1).padStart(2, '0');
+				const dd = String(date.getDate()).padStart(2, '0');
+				
+				console.log(`${yyyy}${mm}${dd}`);
+			}
+		},
+	});
+	
+	$("#endDate").dxDateBox({
+		type: "date",
+		value: endDate,
+		displayFormat: "yyyy-MM-dd",
+		onValueChanged(e) {
+			const date = e.value;
+			if (date instanceof Date && !isNaN(date)) {
+				const yyyy = date.getFullYear();
+				const mm = String(date.getMonth() + 1).padStart(2, '0');
+				const dd = String(date.getDate()).padStart(2, '0');
+				
+				console.log(`${yyyy}${mm}${dd}`);
+			}
+		},
+	});
+	
 	//조회 그리드
 	$("#bulkHistGrid").dxDataGrid({
 		dataSource: [
-			{ idx: 1, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 2, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 3, msg_key: "0000003", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 4, msg_key: "0000004", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 5, msg_key: "0000005", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 6, msg_key: "0000006", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 7, msg_key: "0000007", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 8, msg_key: "0000008", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 9, msg_key: "0000009", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 10, msg_key: "0000010", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 11, msg_key: "0000011", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 12, msg_key: "0000012", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 13, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 14, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 15, msg_key: "0000003", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 16, msg_key: "0000004", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 17, msg_key: "0000005", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 18, msg_key: "0000006", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 19, msg_key: "0000007", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 20, msg_key: "0000008", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 21, msg_key: "0000009", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 22, msg_key: "0000010", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 23, msg_key: "0000011", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 24, msg_key: "0000012", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 25, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 26, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 27, msg_key: "0000003", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 28, msg_key: "0000004", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 29, msg_key: "0000005", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 30, msg_key: "0000006", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 31, msg_key: "0000007", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 32, msg_key: "0000008", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 33, msg_key: "0000009", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 34, msg_key: "0000010", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 35, msg_key: "0000011", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 36, msg_key: "0000012", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 1, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 2, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 3, msg_key: "0000003", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 4, msg_key: "0000004", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 5, msg_key: "0000005", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 6, msg_key: "0000006", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 7, msg_key: "0000007", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 8, msg_key: "0000008", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 9, msg_key: "0000009", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 10, msg_key: "0000010", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 11, msg_key: "0000011", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 12, msg_key: "0000012", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 1, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 2, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 3, msg_key: "0000003", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 4, msg_key: "0000004", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 5, msg_key: "0000005", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 6, msg_key: "0000006", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 7, msg_key: "0000007", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 8, msg_key: "0000008", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 9, msg_key: "0000009", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 10, msg_key: "0000010", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 11, msg_key: "0000011", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 12, msg_key: "0000012", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 1, msg_key: "0000001", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 2, msg_key: "0000002", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 3, msg_key: "0000003", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 4, msg_key: "0000004", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 5, msg_key: "0000005", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 6, msg_key: "0000006", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 7, msg_key: "0000007", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 8, msg_key: "0000008", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 9, msg_key: "0000009", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 10, msg_key: "0000010", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 11, msg_key: "0000011", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
-			{ idx: 12, msg_key: "0000012", msg_type: "SMS", callback_no: "010-1234-5678", caller_no: "010-8765-4321", gubun1: "LG", gubun2: "LG", status1: "완료", status2: "기타오류(999)", msg_body: "SMS 발송 테스트입니다." },
+			{ b_msg_key: "0000001", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000002", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000003", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000004", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000005", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000006", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000007", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000008", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000009", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000010", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000011", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000012", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000013", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000014", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000015", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000016", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000017", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000018", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000019", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000020", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000021", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000022", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000023", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000024", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000025", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000026", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000027", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000028", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000029", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000030", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000031", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000032", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000033", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000034", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000035", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000036", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000037", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000038", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000039", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000040", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000041", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000042", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000043", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000044", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000045", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000046", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000047", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000048", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000049", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000050", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000051", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000052", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000053", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000054", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000055", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000056", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000057", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000058", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000059", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000060", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000061", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000062", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000063", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000064", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000065", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000066", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000067", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000068", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000069", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
+			{ b_msg_key: "0000070", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
 		],
 		headerFilter: {
 			visible: true
@@ -98,26 +129,37 @@ $(function () {
 		columnAutoWidth: true,
 		allowColumnResizing: true,
 		columnResizingMode: 'widget',
+		columnAutoWidth: true,
 		columns: [
-			{ dataField: "idx", caption: "NO" },
-			{ dataField: "", caption: "제목" },
-			{ dataField: "msg_body", caption: "내용" },
-			{ dataField: "", caption: "전체" },			
-			{ dataField: "", caption: "발송ID" },
-			{ dataField: "", caption: "TYPE" },
-			{ dataField: "status2", caption: "성공/실패" },		
-			{ 
-				dataField: "", 
-				caption: "상세" , 
-				type: 'buttons', 
-				width: 60,				
+			{ dataField: "title", caption: "제목", alignment: "left" },
+			{ dataField: "req_time", caption: "전송 일시", alignment: "center" },
+			{ dataField: "msg", caption: "메시지 내용", alignment: "left" },
+			{ dataField: "cnt", caption: "전체", alignment: "center" },
+			{
+				name: "detailBtn",
+				caption: "상세",
+				type: "buttons",
 				buttons: [{
-					icon: 'find',
+					icon: "find",
 					onClick(e) {
-						alert('test');
+						alert("상세조회");
 					},
 				}],
-			},				
+			},
+			{ dataField: "user_id", caption: "발송ID", alignment: "center" },
+			{ dataField: "svc_type", caption: "TYPE", alignment: "center" },
+			{ dataField: "send_cnt", caption: "성공/실패", alignment: "center" },
+			{
+				name: "textBtn",
+				caption: "text파일",
+				type: "buttons",
+				buttons: [{
+					icon: "download",
+					onClick(e) {
+						alert("다운로드");
+					},
+				}],
+			},
 		],
 		toolbar: {
 			items: [
@@ -135,43 +177,11 @@ $(function () {
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
 			$("#totalCount").text(`총 ${totalCount}건`);
-		}		
+		}
 	}).dxDataGrid("instance");
-
-	//달력
-	$("#startDate").dxDateBox({
-		type: "date",
-		value: startDate,
-		displayFormat: "yyyy-MM-dd",
-		onValueChanged(e) {
-			const date = e.value;
-			if (date instanceof Date && !isNaN(date)) {
-				const yyyy = date.getFullYear();
-				const mm = String(date.getMonth() + 1).padStart(2, '0');
-				const dd = String(date.getDate()).padStart(2, '0');
-				
-				console.log(`${yyyy}${mm}${dd}`);
-			}
-		},
-	});
-
-	$("#endDate").dxDateBox({
-		type: "date",
-		value: endDate,
-		displayFormat: "yyyy-MM-dd",
-		onValueChanged(e) {
-			const date = e.value;
-			if (date instanceof Date && !isNaN(date)) {
-				const yyyy = date.getFullYear();
-				const mm = String(date.getMonth() + 1).padStart(2, '0');
-				const dd = String(date.getDate()).padStart(2, '0');
-				
-				console.log(`${yyyy}${mm}${dd}`);
-			}
-		},
-	});
 });
 
+//엑셀 다운로드 버튼
 document.getElementById("excel-btn").addEventListener('click',function(e){
 	e.preventDefault();
 	const grid = $("#bulkHistGrid").dxDataGrid("instance");
@@ -181,7 +191,7 @@ document.getElementById("excel-btn").addEventListener('click',function(e){
 //엑셀 다운로드
 function exportGridToExcel(gridInstance){
 	const workbook = new ExcelJS.Workbook();
-	const worksheet = workbook.addWorksheet('대량 발송 이력조회');
+	const worksheet = workbook.addWorksheet('대량발송 이력');
 	
 	DevExpress.excelExporter.exportDataGrid({
 		component: gridInstance,
@@ -189,7 +199,7 @@ function exportGridToExcel(gridInstance){
 		autoFilterEnabled: true,
 	}).then(() => {
 		workbook.xlsx.writeBuffer().then((buffer) => {
-			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '대량 발송 이력조회.xlsx');
+			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '대량발송 이력.xlsx');
 		});
 	});
 }
