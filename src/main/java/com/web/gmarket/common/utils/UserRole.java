@@ -1,7 +1,7 @@
 package com.web.gmarket.common.utils;
 
 public enum UserRole {
-	SUPER(ConstantsUtils.ROLE_SUPER), 			// 슈터관리자 등급
+	SUPER(ConstantsUtils.ROLE_SUPER), 			// 슈퍼관리자 등급
 	ADMIN(ConstantsUtils.ROLE_ADMIN),			// 관리자 등급
     USER(ConstantsUtils.ROLE_USER),				// 사용자 등급
     OPERATOR(ConstantsUtils.ROLE_OPERATOR),		// 운영자 등급
