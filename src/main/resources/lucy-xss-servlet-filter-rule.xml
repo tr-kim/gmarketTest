@@ -42,6 +42,10 @@
             <param name="globalPrefixParameter" usePrefix="true" useDefender="false" />
         </params>
     </global>
+    
+    <except>
+	    <param>userPwd</param>
+	</except>
 
 <!--    &lt;!&ndash; url 별 필터링 룰 선언 &ndash;&gt;-->
 <!--    <url-rule-set>-->

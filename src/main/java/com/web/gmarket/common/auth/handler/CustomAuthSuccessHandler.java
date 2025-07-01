@@ -4,12 +4,15 @@ import java.io.IOException;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,8 +30,13 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
 		
 		log.debug("4.onAuthenticationSuccess :: SUCCESS");
 
-		// Spring Security Context Holder 인증 정보 set
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+		// SecurityContext 설정
+	    SecurityContext context = SecurityContextHolder.getContext();
+	    context.setAuthentication(authentication);
+		
+		// 세션에 SecurityContext 저장
+	    HttpSession session = request.getSession(true);
+	    session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
 		
 		// 세션 등록
 		sessionRegistry.registerNewSession(request.getSession().getId(), authentication.getPrincipal());
