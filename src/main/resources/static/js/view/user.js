@@ -95,12 +95,47 @@ $(function () {
 		columnResizingMode: 'widget',
 		columnAutoWidth: true,
 		columns: [
-			{ dataField: "user_seq", caption: "NO", alignment: "center" },
+			{ dataField: "user_seq", caption: "NO", alignment: "center"	},
 			{ dataField: "user_id", caption: "사용자 ID", alignment: "center" },
 			{ dataField: "user_name", caption: "이름", alignment: "center" },
-			{ dataField: "company_code", caption: "구분", alignment: "center" },			
-			{ dataField: "user_grade", caption: "등급", alignment: "center" },
-			{ dataField: "use_yn", caption: "사용 여부", alignment: "center" },
+			{ 
+				dataField: "company_code", 
+				caption: "구분", 
+				alignment: "center",
+				customizeText: function(cellInfo) {
+					switch (cellInfo.value) {
+						case "0" : return "옥션";
+						case "1" : return "지마켓";
+						default: return "";
+					}
+				} 
+			},			
+			{ 
+				dataField: "user_grade", 
+				caption: "등급", 
+				alignment: "center" ,
+				customizeText: function(cellInfo) {
+					switch (cellInfo.value) {
+						case "0" : return "슈퍼관리자";
+						case "1" : return "관리자";
+						case "2" : return "사용자";
+						case "3" : return "운영자";
+						default: return "";
+					}
+				} 
+			},
+			{ 
+				dataField: "use_yn", 
+				caption: "사용 여부", 
+				alignment: "center" ,
+				customizeText: function(cellInfo) {
+					switch (cellInfo.value) {
+						case "Y" : return "사용";
+						case "N" : return "일시정지";
+						default: return "";
+					}
+				} 
+			},
 			{
 				name: "editBtn",
 				caption: "수정" ,
@@ -131,6 +166,45 @@ $(function () {
 			$("#totalCount").text(`총 ${totalCount}건`);
 		}		
 	}).dxDataGrid("instance");
+
+	//구분
+	$('#large-category').dxSelectBox({
+		dataSource: [{
+			Code: 0,
+			Name: '옥션',
+		},{
+			Code: 1,
+			Name: '지마켓',
+		}],
+			displayExpr: 'Name',
+			valueExpr: 'Code',
+			value: 1
+	});
+
+	//사용자등급
+	$('#user_grade').dxSelectBox({
+		dataSource: [{
+			Grade: 0,
+			Name: '슈퍼관리자',
+		},{
+			Grade: 1,
+			Name: '관리자',
+		},{
+			Grade: 2,
+			Name: '사용자',
+		},{
+			Grade: 3,
+			Name: '운영자',
+		}],
+			displayExpr: 'Name',
+			valueExpr: 'Grade',
+			value: 0
+	});
+
+	//사용자ID
+	$('#user_id').dxTextBox({
+		placeholder: '아이디를 입력하세요.'
+	});
 });
 
 //사용자 등록 모달

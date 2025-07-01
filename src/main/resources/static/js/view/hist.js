@@ -163,14 +163,14 @@ $(function () {
 	$('#large-category').dxSelectBox({
 		dataSource: [{
 			Code: 0,
-			Name: '지마켓',
+			Name: '옥션',
 		},{
 			Code: 1,
-			Name: '옥션',
+			Name: '지마켓',
 		}],
 			displayExpr: 'Name',
 			valueExpr: 'Code',
-			value: 0
+			value: 1
 	});
 
 	//중분류
