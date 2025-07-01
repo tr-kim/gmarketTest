@@ -1,5 +1,7 @@
 package com.web.gmarket.common.auth.filter;
 
+import java.security.interfaces.RSAPrivateKey;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -8,10 +10,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
-import com.web.gmarket.user.dto.UserDto;
+import com.web.gmarket.common.utils.ConstantsUtils;
+import com.web.gmarket.common.utils.RsaUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -21,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-
+	
 	public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
         super.setAuthenticationManager(authenticationManager);
     }
@@ -32,7 +36,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
      */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        UsernamePasswordAuthenticationToken authRequest;
+    	UsernamePasswordAuthenticationToken authRequest;
+        
         try {
             authRequest = getAuthRequest(request);
             setDetails(request, authRequest);
@@ -47,16 +52,23 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
      * 
      */
     private UsernamePasswordAuthenticationToken getAuthRequest(HttpServletRequest request) throws Exception {
+    	
         try {
+        	
         	String username = request.getParameter("userId");
         	String userPwd = request.getParameter("userPwd");
         	
-        	UserDto user = UserDto.builder().userId(username).userPwd(userPwd).build();
-        	
-            log.debug("1.CustomAuthenticationFilter :: userId:" + user.getUserId());
+            log.debug("1.CustomAuthenticationFilter :: userId:" + username);
+            
+            // RSA 복호화
+            HttpSession session = request.getSession();
+            RSAPrivateKey privateKey = (RSAPrivateKey) session.getAttribute(ConstantsUtils.RSA_WEB_KEY);
+            String decodePwd = RsaUtil.decryptRsa(privateKey, userPwd);
+            
+            session.removeAttribute(ConstantsUtils.RSA_WEB_KEY);
 
             // ID와 암호화된 패스워드를 기반으로 토큰 발급
-            return new UsernamePasswordAuthenticationToken(user.getUserId(), user.getUserPwd());
+            return new UsernamePasswordAuthenticationToken(username, decodePwd);
         } catch (UsernameNotFoundException ae) {
             throw new UsernameNotFoundException(ae.getMessage());
         }
