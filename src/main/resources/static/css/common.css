@@ -107,10 +107,14 @@ input, textarea{
 }
 .modal-wrap {
     background-color: #fff;
-    box-shadow: 0 2px 4px 0 rgba(31,41,55,0.04);
-    border-radius: 8px;    
+    box-shadow: 0 2px 4px 0 rgba(31, 41, 55, 0.04);
+    border-radius: 8px;
     max-width: 720px;
     overflow: hidden;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 .modal-hd{
     padding: 0 0 0 1.5rem;

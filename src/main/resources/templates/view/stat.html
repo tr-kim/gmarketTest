@@ -2,7 +2,6 @@
 <html lagn="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{${layout}}" layout:fragment="content">
 
-<body>
 	<p class="font-sz-20 font-weight-600 pt-3 text-666">정산/통계 조회</p>
 	<form class="content row mx-0 mb-2" id="statHist">
 		<div class="col-6">
@@ -46,9 +45,7 @@
 					<label class="font-weight-500">대분류</label>
 				</div>
 				<div class="col">
-					<select name="" id="" class="form-select">
-						<option value="">G마켓</option> 								                               
-					</select>
+					<div id="large-category"></div>
 				</div>
 			</div>   
 			<div class="row d-flex align-items-center mb-2">
@@ -56,11 +53,9 @@
 					<label class="font-weight-500">중분류</label>
 				</div>
 				<div class="col">
-					<select name="" id="" class="form-select">
-						<option value="">G마켓</option> 								                               
-					</select>
+					<div id="middle-category"></div>					
 				</div>
-			</div>        
+			</div>
 			<div class="row d-flex align-items-center">
 				<div class="col d-flex justify-content-end">
 					<button class="btn btn-success font-sz-14 ms-2" id="excel-btn">엑셀 다운로드</button>
@@ -73,8 +68,5 @@
 		<div id="statGrid"></div>
 	</div>
 	
-	
 	<script th:src="@{/js/view/stat.js}"></script>
-</body>
-
 </html>
