@@ -2,16 +2,16 @@ $(function () {
 	//조회 그리드
 	$("#userGrid").dxDataGrid({
 		dataSource: [
-			{ user_seq: "0000001", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000002", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000003", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000004", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000005", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000006", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000007", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000008", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000009", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000010", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
+			{ user_seq: "0000001", user_id: "admin1", user_name: "관리자1", company_code: "1", user_grade: "1", use_yn: "Y" },
+			{ user_seq: "0000002", user_id: "admin2", user_name: "관리자2", company_code: "1", user_grade: "1", use_yn: "Y" },
+			{ user_seq: "0000003", user_id: "admin3", user_name: "관리자3", company_code: "1", user_grade: "1", use_yn: "Y" },
+			{ user_seq: "0000004", user_id: "admin4", user_name: "관리자4", company_code: "1", user_grade: "1", use_yn: "Y" },
+			{ user_seq: "0000005", user_id: "admin5", user_name: "관리자5", company_code: "1", user_grade: "1", use_yn: "Y" },
+			{ user_seq: "0000006", user_id: "admin6", user_name: "관리자6", company_code: "1", user_grade: "1", use_yn: "Y" },
+			{ user_seq: "0000007", user_id: "admin7", user_name: "관리자7", company_code: "1", user_grade: "1", use_yn: "Y" },
+			{ user_seq: "0000008", user_id: "admin8", user_name: "관리자8", company_code: "1", user_grade: "1", use_yn: "Y" },
+			{ user_seq: "0000009", user_id: "admin9", user_name: "관리자9", company_code: "1", user_grade: "1", use_yn: "Y" },
+			{ user_seq: "0000010", user_id: "admin10", user_name: "관리자10", company_code: "1", user_grade: "1", use_yn: "Y" },
 			{ user_seq: "0000011", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
 			{ user_seq: "0000012", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
 			{ user_seq: "0000013", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
@@ -77,6 +77,10 @@ $(function () {
 		headerFilter: {
 			visible: true
 		},
+		editing: {			
+			allowUpdating: true,
+  			allowAdding: true
+		},
 		searchPanel: {
 			visible: true,
 			width: 300
@@ -136,15 +140,13 @@ $(function () {
 					}
 				} 
 			},
-			{
-				name: "editBtn",
+			{				
 				caption: "수정" ,
 				type: "buttons",
 				buttons: [{
 					icon: "edit",
-					onClick(e) {
-						alert("수정하기");
-					},
+					name: "edit",	
+					text: '',				
 				}],
 			},
 		],
@@ -160,6 +162,14 @@ $(function () {
 				},
 				"searchPanel"
 			]
+		},
+		onEditingStart(e) {
+			e.cancel = true; // 기본 편집 막기
+			openCustomModal('edit', e.data); // 수정 모드
+		},
+		onInitNewRow(e) {
+			e.cancel = true; // 기본 추가 막기
+			openCustomModal('add'); // 추가 모드
 		},
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
@@ -212,10 +222,56 @@ const addUser = document.querySelector('.addUser');
 const inputs = document.querySelectorAll('.addUser input');
 const selects = document.querySelectorAll('.addUser select');
 
+let currentMode = ''; // 전역 변수로 모드 추적
+let currentKey = null;
+
+function openCustomModal(mode, data = {}) {
+  currentMode = mode;
+
+  if (mode === 'edit') {
+	document.querySelector('.modal-hd > span').textContent = '사용자 수정';
+	document.querySelector('.clear_btn').classList.add('d-block');
+
+    currentKey = data.user_seq; // keyExpr 기준
+    document.getElementById('user_grade_data').value = data.user_grade;
+    document.getElementById('company_code_data').value = data.company_code;
+	document.getElementById('user_id_data').value = data.user_id;
+    document.getElementById('user_psw_data').value = '';
+	document.getElementById('user_name_data').value = data.user_name;
+    document.getElementById('user_phone1_data').value = '';
+	document.getElementById('user_phone2_data').value = '';
+    document.getElementById('user_excel_data').value = '0';
+	document.getElementById('user_file_data').value = '0';
+    document.getElementById('user_DB_data').value = '0';
+	document.getElementById('user_LMS_data').value = '0';
+    document.getElementById('user_MMS_data').value = '0';
+	document.getElementById('user_yn_data').value = data.use_yn;
+  } else {
+	document.querySelector('.modal-hd > span').textContent = '사용자 등록';
+
+    currentKey = null;
+    document.getElementById('user_grade_data').value = '0';
+    document.getElementById('company_code_data').value = '0';
+	document.getElementById('user_id_data').value = '';
+    document.getElementById('user_psw_data').value = '';
+	document.getElementById('user_name_data').value = '';
+    document.getElementById('user_phone1_data').value = '';
+	document.getElementById('user_phone2_data').value = '';
+    document.getElementById('user_excel_data').value = '0';
+	document.getElementById('user_file_data').value = '0';
+    document.getElementById('user_DB_data').value = '0';
+	document.getElementById('user_LMS_data').value = '0';
+    document.getElementById('user_MMS_data').value = '0';
+	document.getElementById('user_yn_data').value = 'Y';
+  }
+
+  addUser.classList.add('d-block');
+}
+
 //등록 버튼
 document.getElementById('add-btn').addEventListener('click', function(e){
 	e.preventDefault();
-	addUser.classList.add('d-block');
+	openCustomModal('add');
 });
 
 function addUserClear() {
@@ -225,6 +281,7 @@ function addUserClear() {
 	selects.forEach(select=> {
 		select.value = "0";
 	})
+	document.getElementById('user_yn_data').value = 'Y';
 }
 
 //사용자 등록 모달 - 닫기 버튼
@@ -238,5 +295,10 @@ document.querySelector('.addUser .close_btn').addEventListener('click', function
 document.querySelector('.clear_btn').addEventListener('click', function(e){
 	e.preventDefault();
 	addUserClear();
+});
+
+$('.add_btn').on('click', function(){
+	const grid = $('#userGrid').dxDataGrid('instance');
+ 	grid.saveEditData();
 });
 
