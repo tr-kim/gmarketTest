@@ -81,8 +81,7 @@ $(function () {
         },
         onDropZoneLeave(e) {
             if (e.dropZoneElement.id === 'dropzone-external') { toggleDropZoneActive(e.dropZoneElement, false); }
-        },
-       
+        },       
         onUploaded(e) {
             const uploadedCount = document.querySelectorAll('#dropzone-image-list .col-4').length;
 
@@ -111,6 +110,17 @@ $(function () {
 
                 deleteBtn.addEventListener('click', () => {
                     colDiv.remove();
+
+                    const uploader = $("#file-uploader").dxFileUploader("instance");
+                    const currentFiles = uploader.option("value") || [];
+
+                    // 삭제할 파일 이름과 비교해서 제외한 새 배열 생성
+                    const newFiles = currentFiles.filter(f => f.name !== file.name);
+
+                    uploader.option("value", newFiles);
+
+                    // 변경된 상태 반영
+                    handleInput();
                 });
 
                 colDiv.appendChild(img);
@@ -129,11 +139,12 @@ $(function () {
             uploadProgressBar.option('value', (e.bytesLoaded / e.bytesTotal) * 100);
         },
         onUploadStarted() {
-            toggleImageVisible(false);
+            //toggleImageVisible(false);
             uploadProgressBar.option('visible', true);
         },        
-
-        
+        onValueChanged: function (e) {
+            handleInput(); // 이미지 업로드되면 즉시 처리
+        },  
     });
 
     const uploadProgressBar = $('#upload-progress').dxProgressBar({
@@ -148,10 +159,14 @@ $(function () {
         dropZone.classList.toggle('dropzone-active', isActive);
     }
 
-    function toggleImageVisible(visible) {
-        const dropZoneImage = document.getElementById('dropzone-image');
-        dropZoneImage.hidden = !visible;
-    }
+    // function toggleImageVisible(visible) {
+    //     const dropZoneImage = document.getElementById('dropzone-image');
+    //     if (dropZoneImage) {
+    //     dropZoneImage.hidden = !visible;
+    // } else {
+    //     console.warn("#dropzone-image 요소가 없습니다.");
+    // }
+    // }
 
     document.getElementById('dropzone-image-list').onload = function () { toggleImageVisible(true); };
 
@@ -209,7 +224,7 @@ $(function () {
         value: zoomLevels[0],
         inputAttr: { 'aria-label': 'Zoom Level' },
         onValueChanged(data) {
-        calendar.option('zoomLevel', data.value);
+            calendar.option('zoomLevel', data.value);
         },
     }).dxSelectBox('instance');
 
@@ -217,7 +232,7 @@ $(function () {
         value: new Date(),
         inputAttr: { 'aria-label': 'Date' },
         onValueChanged(data) {
-        calendar.option('value', data.value);
+            calendar.option('value', data.value);
         },
     }).dxDateBox('instance');
 
@@ -232,14 +247,14 @@ $(function () {
     $('#disabled').dxCheckBox({
         text: 'Disable the calendar',
         onValueChanged(data) {
-        calendar.option('disabled', data.value);
+            calendar.option('disabled', data.value);
         },
     });
 
     $('#week-numbers').dxCheckBox({
         text: 'Show week numbers',
         onValueChanged(data) {
-        calendar.option('showWeekNumbers', data.value);
+            calendar.option('showWeekNumbers', data.value);
         },
     });
 
@@ -250,7 +265,7 @@ $(function () {
         inputAttr: { 'aria-label': 'First Day of Week' },
         displayExpr: 'text',
         onValueChanged(data) {
-        calendar.option('firstDayOfWeek', data.value);
+            calendar.option('firstDayOfWeek', data.value);
         },
     });
 
@@ -259,7 +274,7 @@ $(function () {
         value: weekNumberRules[0],
         inputAttr: { 'aria-label': 'Week Number Rule' },
         onValueChanged(data) {
-        calendar.option('weekNumberRule', data.value);
+            calendar.option('weekNumberRule', data.value);
         },
     });
 
@@ -275,19 +290,19 @@ $(function () {
         let cssClass = '';
 
         if (data.view === 'month') {
-        if (!data.date) {
-            cssClass = 'week-number';
-        } else {
-            if (isWeekend(data.date)) { cssClass = 'weekend'; }
+            if (!data.date) {
+                cssClass = 'week-number';
+            } else {
+                if (isWeekend(data.date)) { cssClass = 'weekend'; }
 
-            $.each(holidays, (_, item) => {
-            if (data.date.getDate() === item[0] && data.date.getMonth() === item[1]) {
-                cssClass = 'holiday';
-                return false;
+                $.each(holidays, (_, item) => {
+                    if (data.date.getDate() === item[0] && data.date.getMonth() === item[1]) {
+                        cssClass = 'holiday';
+                        return false;
+                    }
+                    return true;
+                });
             }
-            return true;
-            });
-        }
         }
 
         return `<span class='${cssClass}'>${data.text}</span>`;
@@ -344,6 +359,111 @@ $(function () {
         reserveModal.classList.remove("d-block");
         document.querySelector('.date').textContent = '날짜를 선택해 주세요.';
     })
+
+
+    const msgTitle = document.getElementById('msgTitle');
+    const msgWrite = document.getElementById('msgWrite');
+    const msgTypes = document.querySelector('.msg_type');
+    const byte_ck = document.getElementById('byte_ck');
+    const byte_type = document.getElementById('byte_type');
+
+    //문자 타입, byte 표시
+    function getByteLength(str) {
+        let size = 0;
+        for(let i = 0; i < str.length; i++){
+                const byteSize = new Blob([str.charAt(i)]).size;
+                if( byteSize == 3 ) size += 2;
+                else if( byteSize == 2 ) size += 2;
+                else size += 1;
+        }
+
+        return size;
+    }
+
+    function setMsgType(idx, byteLength) {
+        const types = ['SMS', 'LMS', 'MMS'];
+        const classMap = ['sms', 'lms', 'mms'];
+        const byteNum = ['80', '2000', '2000'];
+
+        // 기존 sms/lms/mms 클래스만 제거
+        classMap.forEach(cls => msgTypes.classList.remove(cls));
+
+        // 유효한 인덱스일 때만 적용
+        if (idx >= 0 && idx < types.length) {
+            msgTypes.textContent = types[idx];
+            msgTypes.classList.add(classMap[idx]);
+            byte_type.textContent = byteNum[idx];
+        }
+
+        byte_ck.textContent = byteLength;
+    }
+    
+    //이미지 확인
+    function hasImage() {
+        const uploader = $("#file-uploader").dxFileUploader("instance");
+        const files = uploader?.option("value") || [];
+        console.log("Current uploader value:", files);
+        return files.length > 0;
+    }
+
+    //입력 이벤트 핸들링
+    function handleInput() {
+        const titleContent = msgTitle.value;
+        const titleByteLength = getByteLength(titleContent);
+
+        const writeContent = msgWrite.value;
+        const writeByteLength = getByteLength(writeContent);
+
+        const hasImg = hasImage();
+
+        console.log("hasImage():", hasImg);
+        console.log("title:", titleContent.trim(), "| byte:", writeByteLength);
+
+        if (hasImg) {
+            console.log("setMsgType(2) - MMS");
+            setMsgType(2, writeByteLength);
+        } else if (titleContent.trim() !== '' || writeByteLength > 80) {
+            console.log("setMsgType(1) - LMS");
+            setMsgType(1, writeByteLength);
+        } else {
+            console.log("setMsgType(0) - SMS");
+            setMsgType(0, writeByteLength);
+        }
+    }
+
+    msgTitle.addEventListener("input", handleInput); //제목
+    msgWrite.addEventListener("input", handleInput); //내용
+
+    //커서 위치에 특수문자 삽입
+    function insertAtCursor(textarea, text){
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const before = textarea.value.substring(0, start);
+            const after = textarea.value.substring(end);
+            textarea.value = before + text + after;
+            textarea.selectionStart = textarea.selectionEnd = start + text.length;
+            textarea.focus();
+    }
+
+    //특수문자
+    document.querySelectorAll('#unicode li').forEach(span => {
+            span.addEventListener('click', function () {
+                    if(msgWrite) {
+                            insertAtCursor(msgWrite, this.querySelector('span').textContent);
+                            msgWrite.dispatchEvent(new Event('input')); //byte 체크 등 다른 input 이벤트
+                    }
+            });
+    });
+
+    //변수추가
+    document.querySelectorAll('#tag li button').forEach((btn, idx)=>{
+            btn.addEventListener('click',() => {
+                    if(msgWrite) {
+                            insertAtCursor(msgWrite, `#TAG${idx + 1}#`);
+                            msgWrite.dispatchEvent(new Event('input'));
+                    }
+            })
+    });
 });
     
 

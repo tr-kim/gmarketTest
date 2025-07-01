@@ -336,6 +336,9 @@ aside .psw_chg_btn:hover{
     resize: none;
     height: 25rem;
 }
+#send .msg_wrap textarea::placeholder{
+    color: #ccc;
+}
 #send .msg_type.sms{
     background-color: #0d6efd;
     color: #fff;
