@@ -29,15 +29,7 @@
 	       <ImmediateFlush>true</ImmediateFlush>
 	    </encoder>
 	</appender>
-    
-    <logger name="jdbc" level="OFF" /> 
-    <logger name="jdbc.sqlonly" level="OFF" /> <!-- SQL문 보여주기 -->
-    <logger name="jdbc.sqltiming" level="INFO" /> <!-- SQL문과 SQL문 시간 보여주기 -->
-    <logger name="jdbc.audit" level="OFF" />
-    <logger name="jdbc.resultset" level="OFF" />
-    <logger name="jdbc.resultsettable" level="OFF" /> <!-- SQL 문 결과를 테이블 형태로 보여주기 -->
-    <logger name="jdbc.connection" level="OFF" />
-    
+	
     <root level="ERROR">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="ERROR" />

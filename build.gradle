@@ -54,6 +54,8 @@ dependencies {
 	// mssql
 	implementation 'com.microsoft.sqlserver:mssql-jdbc:10.2.3.jre17'
 	
+	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
+	
 	// security 
 	implementation 'org.springframework.boot:spring-boot-starter-security:3.3.4'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
