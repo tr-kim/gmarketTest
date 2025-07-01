@@ -18,8 +18,9 @@ spring:
       #username: reseller
       #password: dnvreseller
       #driver-class-name: org.mariadb.jdbc.Driver
-      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-      jdbc-url: jdbc:sqlserver://;serverName=192.168.0.122\SQLEXPRESS;databaseName=gmarket;encrypt=false # encrypt=false 운영 환경에서는 true
+      #driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      jdbc-url: jdbc:log4jdbc:sqlserver://;serverName=192.168.0.122\SQLEXPRESS;databaseName=gmarket;encrypt=false # encrypt=false 운영 환경에서는 true
       username: gmarket
       password: gmarket12#$
       maximum-pool-size: 10
