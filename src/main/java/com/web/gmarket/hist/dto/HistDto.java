@@ -1,14 +1,18 @@
 package com.web.gmarket.hist.dto;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.List;
 
-@Getter
-@Setter
+import lombok.Data;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HistDto {
-	
+	private String startDate;
+	private String endDate;
+	private String startTime;
+	private String endTime;
+	private String tranPhone;
+	private List<String> monthTables;
 }

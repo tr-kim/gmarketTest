@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.web.gmarket.hist.mapper.HistMapper">
+	<select id="selectHistList" resultType="com.web.gmarket.user.dto.UserDto">
+		<choose>
+			<when test="monthTables != null and monthTables.size() > 0">
+				<foreach collection="monthTables" item="tableName" separator=" UNION ALL ">
+					SELECT
+						TRAN_PR,
+						TRAN_PHONE,
+						TRAN_CALLBACK,
+						TRAN_STATUS,
+						REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') AS TRAN_DATE,
+						TRAN_RSLT,
+						TRAN_MSG,
+						CORP_RESERVED2
+					FROM ${tableName}
+						WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') &gt;= #{startTime}
+							AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') &lt;= #{endTime}
+							AND TRAN_PHONE = #{tranPhone}
+				</foreach>
+			</when>
+		</choose>
+	</select>
+</mapper>

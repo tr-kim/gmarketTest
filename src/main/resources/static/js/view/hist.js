@@ -1,40 +1,71 @@
+let startDateInstance;
+let endDateInstance;
+
 $(function () {
 	const startDate = new Date();
 	const endDate = new Date();
 	endDate.setDate(endDate.getDate() + 7);
 	
 	//조회 기간
-	$("#startDate").dxDateBox({
+	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
 		value: startDate,
 		displayFormat: "yyyy-MM-dd",
-		onValueChanged(e) {
-			const date = e.value;
-			if (date instanceof Date && !isNaN(date)) {
-				const yyyy = date.getFullYear();
-				const mm = String(date.getMonth() + 1).padStart(2, '0');
-				const dd = String(date.getDate()).padStart(2, '0');
-				
-				console.log(`${yyyy}${mm}${dd}`);
-			}
-		},
-	});
+		pickerType: "calendar",
+		calendarOptions: {
+			minZoomLevel: "year"
+		}
+	}).dxDateBox("instance");
 	
-	$("#endDate").dxDateBox({
+	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
 		value: endDate,
 		displayFormat: "yyyy-MM-dd",
-		onValueChanged(e) {
-			const date = e.value;
-			if (date instanceof Date && !isNaN(date)) {
-				const yyyy = date.getFullYear();
-				const mm = String(date.getMonth() + 1).padStart(2, '0');
-				const dd = String(date.getDate()).padStart(2, '0');
-				
-				console.log(`${yyyy}${mm}${dd}`);
-			}
-		},
-	});
+		pickerType: "calendar",
+		calendarOptions: {
+			minZoomLevel: "year"
+		}
+	}).dxDateBox("instance");
+	
+	//대분류
+	$('#large-category').dxSelectBox({
+		dataSource: [
+			{ code: 0, name: '옥션' },
+			{ code: 1, name: '지마켓' }
+		],
+		displayExpr: 'name',
+		valueExpr: 'code',
+		value: 0
+	}).dxSelectBox("instance");
+	
+	//중분류
+	$('#middle-category').dxSelectBox({
+		dataSource: [
+			{ code: 0, name: '전체' },
+			{ code: 11, name: 'SMSCLI_TBL_EMG' },
+			{ code: 12, name: 'SMSCLI_TBL_ETC' },
+			{ code: 13, name: 'SMSCLI_TBL_ORDER' },
+			{ code: 14, name: 'SMSCLI_TBL_TRAN' },
+			{ code: 15, name: 'SMSCLI_TBL_EVENT' },
+			{ code: 16, name: 'SMSCLI_TBL_LARGE' },
+			{ code: 31, name: 'LMSCLI_TBL_EVENT' },
+			{ code: 32, name: 'LMSCLI_TBL_LARGE' },
+			{ code: 51, name: 'MMSCLI_TBL_EVENT' },
+			{ code: 52, name: 'MMSCLI_TBL_LARGE' },
+			{ code: 61, name: 'GMKT_SMSCLI_TBL_LARGE' },
+			{ code: 62, name: 'GMKT_LMSCLI_TBL_LARGE' },
+			{ code: 63, name: 'GMKT_MMSCLI_TBL_LARGE' },
+			{ code: 110, name: 'SFC_SMSCLI_TBL'}
+		],
+		displayExpr: 'name',
+		valueExpr: 'code',
+		value: 0
+	}).dxSelectBox("instance");
+	
+	//수신자 번호
+	$('#receive-num').dxTextBox({
+		placeholder: '번호를 입력하세요.'
+	}).dxTextBox("instance");
 	
 	//조회 그리드
 	$("#histGrid").dxDataGrid({
@@ -158,78 +189,6 @@ $(function () {
 			$("#totalCount").text(`총 ${totalCount}건`);
 		}
 	}).dxDataGrid("instance");
-
-	//대분류
-	$('#large-category').dxSelectBox({
-		dataSource: [{
-			Code: 0,
-			Name: '옥션',
-		},{
-			Code: 1,
-			Name: '지마켓',
-		}],
-			displayExpr: 'Name',
-			valueExpr: 'Code',
-			value: 1
-	});
-
-	//중분류
-	$('#middle-category').dxSelectBox({
-		dataSource: [{
-			Code: 0,
-			Name: '전체',
-		}, {
-			Code: 11,
-			Name: 'SMSCLI_TBL_EMG',
-		}, {
-			Code: 12,
-			Name: 'SMSCLI_TBL_ETC',
-		}, {
-			Code: 13,
-			Name: 'SMSCLI_TBL_ORDER',
-		}, {
-			Code: 14,
-			Name: 'SMSCLI_TBL_TRAN',
-		}, {
-			Code: 15,
-			Name: 'SMSCLI_TBL_EVENT',
-		}, {
-			Code: 16,
-			Name: 'SMSCLI_TBL_LARGE',
-		}, {
-			Code: 31,
-			Name: 'LMSCLI_TBL_EVENT',
-		}, {
-			Code: 32,
-			Name: 'LMSCLI_TBL_LARGE',
-		}, {
-			Code: 51,
-			Name: 'MMSCLI_TBL_EVENT',
-		}, {
-			Code: 52,
-			Name: 'MMSCLI_TBL_LARGE',
-		}, {
-			Code: 61,
-			Name: 'GMKT_SMSCLI_TBL_LARGE',
-		}, {
-			Code: 62,
-			Name: 'GMKT_LMSCLI_TBL_LARGE',
-		}, {
-			Code: 63,
-			Name: 'GMKT_MMSCLI_TBL_LARGE',
-		}, {
-			Code: 110,
-			Name: 'SFC_SMSCLI_TBL',
-		}],
-			displayExpr: 'Name',
-			valueExpr: 'Code',
-			value: 0
-	});
-
-	//수신자 번호
-	$('#receive-num').dxTextBox({
-		placeholder: '번호를 입력하세요.'
-	});
 });
 
 //엑셀 다운로드 버튼
@@ -237,6 +196,60 @@ document.getElementById("excel-btn").addEventListener('click', function(e){
 	e.preventDefault();
 	const grid = $("#histGrid").dxDataGrid("instance");
 	exportGridToExcel(grid);
+})
+
+//조회 버튼
+document.getElementById("search-btn").addEventListener('click', function(e){
+	e.preventDefault();
+	
+	const startValue = startDateInstance.option("value");
+	const endValue = endDateInstance.option("value");
+	
+	let startDateFormatted = "", startTimeFormatted = "";
+	let endDateFormatted = "", endTimeFormatted = "";
+	
+	// 날짜가 Date 객체인지 확인
+	if (startValue instanceof Date && !isNaN(startValue)) {
+		const yyyy = startValue.getFullYear();
+		const mm = String(startValue.getMonth() + 1).padStart(2, '0');
+		const dd = String(startValue.getDate()).padStart(2, '0');
+		startDateFormatted = `${yyyy}${mm}`;
+		startTimeFormatted = `${yyyy}${mm}${dd}`;
+	}
+	
+	if (endValue instanceof Date && !isNaN(endValue)) {
+		const yyyy = endValue.getFullYear();
+		const mm = String(endValue.getMonth() + 1).padStart(2, '0');
+		const dd = String(endValue.getDate()).padStart(2, '0');
+		endDateFormatted = `${yyyy}${mm}`;
+		endTimeFormatted = `${yyyy}${mm}${dd}`;
+	}
+	
+	const params = {
+		startDate: startDateFormatted,
+		endDate: endDateFormatted,
+		startTime: startTimeFormatted+"000000",
+		endTime: endTimeFormatted+"235959",
+		tranPhone: ""
+	};
+	
+	//console.log(params);
+	
+	fetch('/api/v1/hist/list', {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(params)
+	})
+	.then(res => res.json())
+	.then(data => {
+		console.log(data);
+	})
+	.catch(error => {
+		console.error("데이터 로드 실패:", error);
+		alert("데이터를 불러오는 중 오류가 발생했습니다.");
+	});
 })
 
 //엑셀 다운로드
