@@ -293,7 +293,7 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 		endDate: endDateFormatted,
 		startTime: startTimeFormatted+"000000",
 		endTime: endTimeFormatted+"235959",
-		tranPhone: tranPhoneValue
+		phoneNum: tranPhoneValue
 	};
 	
 	//console.log(params);

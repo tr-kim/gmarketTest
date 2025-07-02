@@ -3,7 +3,18 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.web.gmarket.hist.mapper.HistMapper">
-	<select id="selectHistList" resultType="com.web.gmarket.user.dto.UserDto">
+	<resultMap id="HistResultMap" type="com.web.gmarket.hist.dto.HistDto">
+		<result property="tranPr" column="TRAN_PR" />
+		<result property="tranPhone" column="TRAN_PHONE" />
+		<result property="tranCallback" column="TRAN_CALLBACK" />
+		<result property="tranStatus" column="TRAN_STATUS" />
+		<result property="tranDate" column="TRAN_DATE" />
+		<result property="tranRslt" column="TRAN_RSLT" />
+		<result property="tranMsg" column="TRAN_MSG" />
+		<result property="corpReserved2" column="CORP_RESERVED2" />
+	</resultMap>
+	
+	<select id="selectHistList" resultMap="HistResultMap">
 		<choose>
 			<when test="monthTables != null and monthTables.size() > 0">
 				<foreach collection="monthTables" item="tableName" separator=" UNION ALL ">
@@ -17,9 +28,9 @@
 						TRAN_MSG,
 						CORP_RESERVED2
 					FROM ${tableName}
-						WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') &gt;= #{startTime}
-							AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') &lt;= #{endTime}
-							AND TRAN_PHONE = #{tranPhone}
+						WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}
+							AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}
+							AND TRAN_PHONE = #{phoneNum}
 				</foreach>
 			</when>
 		</choose>
