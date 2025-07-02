@@ -30,7 +30,9 @@
 					FROM ${tableName}
 						WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}
 							AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}
-							AND TRAN_PHONE = #{phoneNum}
+						<if test="phoneNum != null and phoneNum != ''">
+							AND TRAN_PHONE LIKE CONCAT('%', #{phoneNum}, '%')
+						</if>
 				</foreach>
 			</when>
 		</choose>

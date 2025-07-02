@@ -1,8 +1,9 @@
 let startDateInstance;
 let endDateInstance;
-let tranPhoneInstance;
+let phoneNumInstance;
 let largeCategoryInstance;
 let middleCategoryInstance;
+let histDataGrid;
 
 $(function () {
 	const startDate = new Date();
@@ -95,84 +96,72 @@ $(function () {
 	}).dxSelectBox("instance");
 	
 	//수신자 번호
-	tranPhoneInstance = $('#receive-num').dxTextBox({
+	phoneNumInstance = $('#phone-num').dxTextBox({
 		placeholder: '번호를 입력하세요.'
 	}).dxTextBox("instance");
 	
+    const histDataSource = new DevExpress.data.CustomStore({
+		
+		key: "tranPr",
+        load: async function(loadOptions) {
+
+			const startValue = startDateInstance.option("value");
+			const endValue = endDateInstance.option("value");
+			const phoneNumValue = phoneNumInstance.option("value");
+			
+			let startDateFormatted = "", startTimeFormatted = "";
+			let endDateFormatted = "", endTimeFormatted = "";
+
+			if (startValue instanceof Date && !isNaN(startValue)) {
+				const yyyy = startValue.getFullYear();
+				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
+				const dd = String(startValue.getDate()).padStart(2, '0');
+				startDateFormatted = `${yyyy}${mm}`;
+				startTimeFormatted = `${yyyy}${mm}${dd}`;
+			}
+
+			if (endValue instanceof Date && !isNaN(endValue)) {
+				const yyyy = endValue.getFullYear();
+				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
+				const dd = String(endValue.getDate()).padStart(2, '0');
+				endDateFormatted = `${yyyy}${mm}`;
+				endTimeFormatted = `${yyyy}${mm}${dd}`;
+			}
+
+			const params = {
+				startDate: startDateFormatted,
+				endDate: endDateFormatted,
+				startTime: startTimeFormatted + "000000",
+				endTime: endTimeFormatted + "235959",
+				phoneNum: phoneNumValue
+			};
+
+			try {
+				const res = await fetch('/api/v1/hist/list', {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(params)
+				});
+
+				if (!res.ok) {
+					throw new Error(`HTTP error! status: ${res.status}`);
+				}
+
+				const data = await res.json();
+
+				return {
+					data: data
+				};
+			} catch (error) {
+				console.error('데이터 로드 실패:', error);
+				alert('데이터를 불러오는 중 오류가 발생했습니다.');
+			}
+		}
+    });
+
 	//조회 그리드
-	$("#histGrid").dxDataGrid({
-		dataSource: [
-			{ tran_pr: 1, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 2, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 3, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 4, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 5, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 6, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 7, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 8, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 9, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 10, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 11, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 12, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 13, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 14, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 15, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 16, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 17, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 18, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 19, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 20, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 21, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 22, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 23, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 24, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 25, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 26, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 27, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 28, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 29, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 30, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 31, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 32, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 33, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 34, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 35, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 36, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 37, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 38, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 39, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 40, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 41, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 42, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 43, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 44, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 45, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 46, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 47, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 48, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 49, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 50, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 51, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 52, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 53, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 54, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 55, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 56, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 57, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 58, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 59, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 60, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 61, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 62, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 63, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 64, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 65, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 66, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 67, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 68, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 69, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-			{ tran_pr: 70, tran_callback: "010-1111-2222", tran_phone: "010-1234-5678", tran_date: "2025-07-01 09:00:00", corp_reserved2: "KT", tran_rslt: "성공", tran_msg: "SMS 발송 테스트입니다." },
-		],
+	histDataGrid = $("#histGrid").dxDataGrid({
+		dataSource: histDataSource,
 		headerFilter: {
 			visible: true
 		},
@@ -195,13 +184,49 @@ $(function () {
 		columnResizingMode: 'widget',
 		columnAutoWidth: true,
 		columns: [
-			{ dataField: "tran_pr", caption: "NO", alignment: "center" },
-			{ dataField: "tran_phone", caption: "수신 번호", alignment: "center" },
-			{ dataField: "tran_callback", caption: "발신 번호", alignment: "center" },
-			{ dataField: "tran_date", caption: "발송 일시", alignment: "center" },
-			{ dataField: "tran_msg", caption: "문자 내용", alignment: "left" },
-			{ dataField: "tran_rslt", caption: "결과", alignment: "center" },
-			{ dataField: "corp_reserved2", caption: "Flow #", alignment: "center" }
+			{ dataField: "tranPr", caption: "NO", alignment: "center" },
+			{ dataField: "tranPhone", caption: "수신 번호", alignment: "center" },
+			{ dataField: "tranCallback", caption: "발신 번호", alignment: "center" },
+			{ dataField: "tranDate", caption: "발송 일시", alignment: "center" },
+			{ dataField: "tranMsg", caption: "문자 내용", alignment: "left" },
+			{ 
+				dataField: "tranRslt", 
+				caption: "결과", 
+				alignment: "center" ,
+				customizeText: function(cellInfo) {
+
+					const value = String(cellInfo.value.trim());
+
+					switch (value) {
+						case "-2" : return "결과 대기";
+						case "-1" : return "대기";
+						case "0" : return "성공";
+						case "1" : return "지능형 SMS 전송 API 버전 오류";
+						case "2" : return "인증 실패";
+						case "3" : return "연결 실패";
+						case "4" : return "KT 지능형 시스템 오류";
+						case "5" : return "SMS 형식 오류";
+						case "6" : return "유효기간 만료";
+						case "7" : return "결번";
+						case "8" : return "단말기 전원 OFF";
+						case "9" : return "단말기 음영 지역";
+						case "A" : return "월별 전송 건수 초과";
+						case "B" : return "초당 전송 속도 초과";
+						case "C" : return "단말기 번호이동 관련 오류";
+						case "D" : return "단말기 번호이동 관련 오류";
+						case "E" : return "KT 지능형 시스템 호처리 실패";
+						case "F" : return "KT Ann 폰 관련 오류";
+						case "G" : return "파일 전송 오류";
+						case "H" : return "스팸 차단";
+						case "I" : return "스팸 차단(내부)";
+						case "Y" : return "중복 메시지";
+						case "Z" : return "기타 오류";
+						default: return "기타";
+					}
+					
+				} 
+			},
+			{ dataField: "corpReserved2", caption: "Flow #", alignment: "center" }
 		],
 		toolbar: {
 			items: [
@@ -236,7 +261,7 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 	
 	const startValue = startDateInstance.option("value");
 	const endValue = endDateInstance.option("value");
-	const tranPhoneValue = tranPhoneInstance.option("value");
+	const phoneNumValue = phoneNumInstance.option("value");
 	const largeCategoryValue = largeCategoryInstance.option("value");
 	
 	let startDateFormatted = "", startTimeFormatted = "";
@@ -293,7 +318,7 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 		endDate: endDateFormatted,
 		startTime: startTimeFormatted+"000000",
 		endTime: endTimeFormatted+"235959",
-		phoneNum: tranPhoneValue
+		phoneNum: phoneNumValue
 	};
 	
 	//console.log(params);
@@ -308,6 +333,8 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 	.then(res => res.json())
 	.then(data => {
 		console.log(data);
+		// histDataSource = data;
+		histDataGrid.option("dataSource", data);
 	})
 	.catch(error => {
 		console.error("데이터 로드 실패:", error);
