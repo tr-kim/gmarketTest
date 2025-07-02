@@ -1,5 +1,8 @@
 let startDateInstance;
 let endDateInstance;
+let tranPhoneInstance;
+let largeCategoryInstance;
+let middleCategoryInstance;
 
 $(function () {
 	const startDate = new Date();
@@ -28,19 +31,43 @@ $(function () {
 	}).dxDateBox("instance");
 	
 	//대분류
-	$('#large-category').dxSelectBox({
+	largeCategoryInstance = $('#large-category').dxSelectBox({
 		dataSource: [
 			{ code: 0, name: '옥션' },
 			{ code: 1, name: '지마켓' }
 		],
 		displayExpr: 'name',
 		valueExpr: 'code',
-		value: 0
+		value: 0,
+		onValueChanged: function (e) {
+			const selectedCode = e.value;
+			// middle-category 내용 업데이트
+			middleCategoryInstance.option('dataSource', middleCategoryData[selectedCode] || []);
+			middleCategoryInstance.option('value', 0); // 기본값 다시 설정
+		}
 	}).dxSelectBox("instance");
 	
-	//중분류
-	$('#middle-category').dxSelectBox({
-		dataSource: [
+	const middleCategoryData = {
+		0: [
+			{ code: 0, name: '전체' },
+			{ code: 1, name: 'SMSCLI_TBL_CHARGED' },
+			{ code: 2, name: 'SMSCLI_TBL_ESCROW' },
+			{ code: 3, name: 'SMSCLI_TBL_OUTBID' },
+			{ code: 4, name: 'SMSCLI_TBL_API' },
+			{ code: 5, name: 'SMSCLI_TBL_BATCH' },
+			{ code: 6, name: 'SMSCLI_TBL_MOTORS' },
+			{ code: 7, name: 'SMSCLI_TBL_PUMBL' },
+			{ code: 8, name: 'SMSCLI_TBL_EVENT' },
+			{ code: 9, name: 'SMSCLI_TBL_LARGE' },
+			{ code: 21, name: 'LMSCLI_TBL_EVENT' },
+			{ code: 22, name: 'LMSCLI_TBL_LARGE' },
+			{ code: 41, name: 'MMSCLI_TBL_EVENT' },
+			{ code: 42, name: 'MMSCLI_TBL_LARGE' },
+			{ code: 71, name: 'IAC_SMSCLI_TBL_LARGE' },
+			{ code: 72, name: 'IAC_LMSCLI_TBL_LARGE'},
+			{ code: 73, name: 'IAC_MMSCLI_TBL_LARGE'}
+		],
+		1: [
 			{ code: 0, name: '전체' },
 			{ code: 11, name: 'SMSCLI_TBL_EMG' },
 			{ code: 12, name: 'SMSCLI_TBL_ETC' },
@@ -56,14 +83,19 @@ $(function () {
 			{ code: 62, name: 'GMKT_LMSCLI_TBL_LARGE' },
 			{ code: 63, name: 'GMKT_MMSCLI_TBL_LARGE' },
 			{ code: 110, name: 'SFC_SMSCLI_TBL'}
-		],
+		]
+	};
+
+	//중분류
+	middleCategoryInstance = $('#middle-category').dxSelectBox({
+		dataSource: middleCategoryData[0],
 		displayExpr: 'name',
 		valueExpr: 'code',
 		value: 0
 	}).dxSelectBox("instance");
 	
 	//수신자 번호
-	$('#receive-num').dxTextBox({
+	tranPhoneInstance = $('#receive-num').dxTextBox({
 		placeholder: '번호를 입력하세요.'
 	}).dxTextBox("instance");
 	
@@ -204,6 +236,8 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 	
 	const startValue = startDateInstance.option("value");
 	const endValue = endDateInstance.option("value");
+	const tranPhoneValue = tranPhoneInstance.option("value");
+	const largeCategoryValue = largeCategoryInstance.option("value");
 	
 	let startDateFormatted = "", startTimeFormatted = "";
 	let endDateFormatted = "", endTimeFormatted = "";
@@ -225,12 +259,41 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 		endTimeFormatted = `${yyyy}${mm}${dd}`;
 	}
 	
+	// 조회기간 구하기
+	console.log('largeCategoryValue', largeCategoryValue);
+	if(largeCategoryValue != 0){
+		let start = new Date(
+			parseInt(startTimeFormatted.slice(0, 4)),
+			parseInt(startTimeFormatted.slice(4, 6)) - 1,
+			parseInt(startTimeFormatted.slice(6, 8))
+		);
+
+		let end = new Date(
+			parseInt(endTimeFormatted.slice(0, 4)),
+			parseInt(endTimeFormatted.slice(4, 6)) - 1,
+			parseInt(endTimeFormatted.slice(6, 8))
+		);
+
+		let diffMs = end - start;
+		let diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+		if (diffDays < 0) {
+			alert("조회 기간을 다시 입력하세요.");
+			return false;
+		}
+
+		if (diffDays > 30) {
+			alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
+			return false;
+		}
+	}	
+	
 	const params = {
 		startDate: startDateFormatted,
 		endDate: endDateFormatted,
 		startTime: startTimeFormatted+"000000",
 		endTime: endTimeFormatted+"235959",
-		tranPhone: ""
+		tranPhone: tranPhoneValue
 	};
 	
 	//console.log(params);

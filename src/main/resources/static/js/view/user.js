@@ -189,7 +189,7 @@ $(function () {
 			displayExpr: 'Name',
 			valueExpr: 'Code',
 			value: 1
-	});
+	}).dxSelectBox("instance");
 
 	//사용자등급
 	$('#user_grade').dxSelectBox({
@@ -209,12 +209,12 @@ $(function () {
 			displayExpr: 'Name',
 			valueExpr: 'Grade',
 			value: 0
-	});
+	}).dxSelectBox("instance");
 
 	//사용자ID
 	$('#user_id').dxTextBox({
 		placeholder: '아이디를 입력하세요.'
-	});
+	}).dxTextBox("instance");
 });
 
 //사용자 등록 모달
