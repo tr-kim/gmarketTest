@@ -1,10 +1,16 @@
+let startDateInstance;
+let endDateInstance;
+let largeCategoryInstance;
+let titleInstance;
+let bulkHistDataGrid;
+
 $(function () {
 	const startDate = new Date();
 	const endDate = new Date();
 	endDate.setDate(endDate.getDate() + 7);
 	
 	//조회 기간
-	$("#startDate").dxDateBox({
+	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
 		value: startDate,
 		displayFormat: "yyyy-MM-dd",
@@ -18,9 +24,9 @@ $(function () {
 				console.log(`${yyyy}${mm}${dd}`);
 			}
 		},
-	});
+	}).dxDateBox("instance");
 	
-	$("#endDate").dxDateBox({
+	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
 		value: endDate,
 		displayFormat: "yyyy-MM-dd",
@@ -34,10 +40,69 @@ $(function () {
 				console.log(`${yyyy}${mm}${dd}`);
 			}
 		},
-	});
+	}).dxDateBox("instance");
 	
+	const histDataSource = new DevExpress.data.CustomStore({
+		
+		key: "tranPr",
+        load: async function(loadOptions) {
+
+			const startValue = startDateInstance.option("value");
+			const endValue = endDateInstance.option("value");
+			const titleValue = titleInstance.option("value");
+			
+			let startDateFormatted = "", startTimeFormatted = "";
+			let endDateFormatted = "", endTimeFormatted = "";
+
+			if (startValue instanceof Date && !isNaN(startValue)) {
+				const yyyy = startValue.getFullYear();
+				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
+				const dd = String(startValue.getDate()).padStart(2, '0');
+				startDateFormatted = `${yyyy}${mm}`;
+				startTimeFormatted = `${yyyy}${mm}${dd}`;
+			}
+
+			if (endValue instanceof Date && !isNaN(endValue)) {
+				const yyyy = endValue.getFullYear();
+				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
+				const dd = String(endValue.getDate()).padStart(2, '0');
+				endDateFormatted = `${yyyy}${mm}`;
+				endTimeFormatted = `${yyyy}${mm}${dd}`;
+			}
+
+			const params = {
+				startDate: startDateFormatted,
+				endDate: endDateFormatted,
+				startTime: startTimeFormatted + "000000",
+				endTime: endTimeFormatted + "235959",
+				title: titleValue,
+			};
+
+			try {
+				const res = await fetch('/api/v1/hist/list', {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(params)
+				});
+
+				if (!res.ok) {
+					throw new Error(`HTTP error! status: ${res.status}`);
+				}
+
+				const data = await res.json();
+
+				return {
+					data: data
+				};
+			} catch (error) {
+				console.error('데이터 로드 실패:', error);
+				alert('데이터를 불러오는 중 오류가 발생했습니다.');
+			}
+		}
+    });
+
 	//조회 그리드
-	$("#bulkHistGrid").dxDataGrid({
+	bulkHistDataGrid = $("#bulkHistGrid").dxDataGrid({
 		dataSource: [
 			{ b_msg_key: "0000001", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
 			{ b_msg_key: "0000002", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL", send_cnt: "100/0" },
@@ -181,7 +246,7 @@ $(function () {
 	}).dxDataGrid("instance");
 
 	//대분류
-	$('#large-category').dxSelectBox({
+	largeCategoryInstance = $('#large-category').dxSelectBox({
 		dataSource: [{
 			Code: 0,
 			Name: '옥션',
@@ -192,12 +257,12 @@ $(function () {
 			displayExpr: 'Name',
 			valueExpr: 'Code',
 			value: 1
-	});
+	}).dxSelectBox("instance");
 
 	//제목
-	$('#bulk-title').dxTextBox({
+	titleInstance = $('#bulk-title').dxTextBox({
 		placeholder: '제목을 입력하세요.'
-	});
+	}).dxTextBox("instance");
 });
 
 //엑셀 다운로드 버튼
@@ -223,3 +288,88 @@ function exportGridToExcel(gridInstance){
 	});
 }
 
+//조회 버튼
+document.getElementById("search-btn").addEventListener('click', function(e){
+	e.preventDefault();
+	
+	const startValue = startDateInstance.option("value");
+	const endValue = endDateInstance.option("value");
+	const titleValue = titleInstance.option("value");
+	
+	let startDateFormatted = "", startTimeFormatted = "";
+	let endDateFormatted = "", endTimeFormatted = "";
+	
+	// 날짜가 Date 객체인지 확인
+	if (startValue instanceof Date && !isNaN(startValue)) {
+		const yyyy = startValue.getFullYear();
+		const mm = String(startValue.getMonth() + 1).padStart(2, '0');
+		const dd = String(startValue.getDate()).padStart(2, '0');
+		startDateFormatted = `${yyyy}${mm}`;
+		startTimeFormatted = `${yyyy}${mm}${dd}`;
+	}
+	
+	if (endValue instanceof Date && !isNaN(endValue)) {
+		const yyyy = endValue.getFullYear();
+		const mm = String(endValue.getMonth() + 1).padStart(2, '0');
+		const dd = String(endValue.getDate()).padStart(2, '0');
+		endDateFormatted = `${yyyy}${mm}`;
+		endTimeFormatted = `${yyyy}${mm}${dd}`;
+	}
+	
+	// 조회기간 구하기
+	console.log('largeCategoryValue', largeCategoryValue);
+	if(largeCategoryValue != 0){
+		let start = new Date(
+			parseInt(startTimeFormatted.slice(0, 4)),
+			parseInt(startTimeFormatted.slice(4, 6)) - 1,
+			parseInt(startTimeFormatted.slice(6, 8))
+		);
+
+		let end = new Date(
+			parseInt(endTimeFormatted.slice(0, 4)),
+			parseInt(endTimeFormatted.slice(4, 6)) - 1,
+			parseInt(endTimeFormatted.slice(6, 8))
+		);
+
+		let diffMs = end - start;
+		let diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+		if (diffDays < 0) {
+			alert("조회 기간을 다시 입력하세요.");
+			return false;
+		}
+
+		if (diffDays > 30) {
+			alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
+			return false;
+		}
+	}	
+	
+	const params = {
+		startDate: startDateFormatted,
+		endDate: endDateFormatted,
+		startTime: startTimeFormatted+"000000",
+		endTime: endTimeFormatted+"235959",
+		title: titleValue,
+	};
+	
+	//console.log(params);
+	
+	fetch('/api/v1/hist/list', {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(params)
+	})
+	.then(res => res.json())
+	.then(data => {
+		console.log(data);
+		// histDataSource = data;
+		histDataGrid.option("dataSource", data);
+	})
+	.catch(error => {
+		console.error("데이터 로드 실패:", error);
+		alert("데이터를 불러오는 중 오류가 발생했습니다.");
+	});
+})

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.web.gmarket.bulk.hist.mapper.BulkHistMapper">
+	<resultMap id="BulkHistResultMap" type="com.web.gmarket.hist.dto.HistDto">
+		<result property="tranPhone" column="TRAN_PHONE" />
+		<result property="tranDate" column="TRAN_DATE" />
+		<result property="tranRslt" column="TRAN_RSLT" />
+		<result property="tranMsg" column="TRAN_MSG" />
+	</resultMap>
+	
+	<select id="selectBulkHistList" resultMap="BulkHistResultMap">
+		<choose>
+			<when test="monthTables != null and monthTables.size() > 0">
+				(
+				<foreach collection="monthTables" item="tableName" separator=" UNION ALL ">
+						SELECT
+							TRAN_PR,
+							TRAN_STATUS,
+							REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') AS TRAN_DATE,
+							TRAN_RSLT,
+							TRAN_MSG,
+							CORP_RESERVED2
+						FROM ${tableName}
+						WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}
+							AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}
+					<if test="title != null and title != ''">
+								AND TRAN_PHONE LIKE CONCAT('%', #{title}, '%')
+					</if>
+				</foreach>
+				)
+				ORDER BY TRAN_DATE DESC
+			</when>
+		</choose>
+	</select>
+</mapper>
