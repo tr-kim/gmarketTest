@@ -22,13 +22,13 @@ public class BulkHistServiceImpl implements BulkHistService {
 	
 	@Override
 	public List<BulkHistDto> getHistList(BulkHistDto bulkHistDto) {
-		String startMonth = bulkHistDto.getStartDate();
-		String endMonth = bulkHistDto.getEndDate();
+		// String startMonth = bulkHistDto.getStartDate();
+		// String endMonth = bulkHistDto.getEndDate();
 		
-		//월별 리스트 생성
-		//List<String> tableList = TableNameUtil.getMonthTableNames(startMonth, endMonth, "SMSCLI_TBL_EVENT", jdbcTemplate);
+		// //월별 리스트 생성
+		// List<String> tableList = TableNameUtil.getMonthTableNames(startMonth, endMonth, "SMSCLI_TBL_EVENT", jdbcTemplate);
 		
-		//bulkHistDto.setMonthTables(tableList);
+		// bulkHistDto.setMonthTables(tableList);
 		
 		return bulkHistMapper.selectBulkHistList(bulkHistDto);
 	}
