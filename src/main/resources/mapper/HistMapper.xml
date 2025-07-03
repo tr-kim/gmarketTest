@@ -19,21 +19,21 @@
 			<when test="monthTables != null and monthTables.size() > 0">
 				(
 				<foreach collection="monthTables" item="tableName" separator=" UNION ALL ">
-						SELECT
-							TRAN_PR,
-							TRAN_PHONE,
-							TRAN_CALLBACK,
-							TRAN_STATUS,
-							REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') AS TRAN_DATE,
-							TRAN_RSLT,
-							TRAN_MSG,
-							CORP_RESERVED2
-						FROM ${tableName}
-						WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}
-							AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}
-				<if test="phoneNum != null and phoneNum != ''">
-							AND TRAN_PHONE LIKE CONCAT('%', #{phoneNum}, '%')
-				</if>
+					SELECT
+						TRAN_PR,
+						TRAN_PHONE,
+						TRAN_CALLBACK,
+						TRAN_STATUS,
+						REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') AS TRAN_DATE,
+						TRAN_RSLT,
+						TRAN_MSG,
+						CORP_RESERVED2
+					FROM ${tableName}
+					WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}
+						AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}
+					<if test="phoneNum != null and phoneNum != ''">
+						AND TRAN_PHONE LIKE CONCAT('%', #{phoneNum}, '%')
+					</if>
 				</foreach>
 				)
 				ORDER BY TRAN_DATE DESC

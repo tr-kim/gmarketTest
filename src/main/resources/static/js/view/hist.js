@@ -108,7 +108,7 @@ $(function () {
 			const startValue = startDateInstance.option("value");
 			const endValue = endDateInstance.option("value");
 			const phoneNumValue = phoneNumInstance.option("value");
-			const middleCategoryValue = middleCategoryInstance.option("value");
+			const middleItem = middleCategoryInstance.option("selectedItem");
 			
 			let startDateFormatted = "", startTimeFormatted = "";
 			let endDateFormatted = "", endTimeFormatted = "";
@@ -135,7 +135,8 @@ $(function () {
 				startTime: startTimeFormatted + "000000",
 				endTime: endTimeFormatted + "235959",
 				phoneNum: phoneNumValue,
-				mCategory: middleCategoryValue
+				//테스트 중. 전체 시 테이블명 수정 필요
+				tableName: (middleItem.name == "전체") ? "SMSCLI_TBL_EVENT" : middleItem.name
 			};
 
 			try {
@@ -281,7 +282,7 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 	const endValue = endDateInstance.option("value");
 	const phoneNumValue = phoneNumInstance.option("value");
 	const largeCategoryValue = largeCategoryInstance.option("value");
-	const middleCategoryValue = middleCategoryInstance.option("value");
+	const middleItem = middleCategoryInstance.option("selectedItem");
 	
 	let startDateFormatted = "", startTimeFormatted = "";
 	let endDateFormatted = "", endTimeFormatted = "";
@@ -304,7 +305,6 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 	}
 	
 	// 조회기간 구하기
-	console.log('largeCategoryValue', largeCategoryValue);
 	if(largeCategoryValue != 0){
 		let start = new Date(
 			parseInt(startTimeFormatted.slice(0, 4)),
@@ -338,7 +338,8 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 		startTime: startTimeFormatted+"000000",
 		endTime: endTimeFormatted+"235959",
 		phoneNum: phoneNumValue,
-		mCategory: middleCategoryValue
+		//테스트 중. 전체 시 테이블명 수정 필요
+		tableName: (middleItem.name == "전체") ? "SMSCLI_TBL_EVENT" : middleItem.name
 	};
 	
 	//console.log(params);
@@ -352,8 +353,6 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 	})
 	.then(res => res.json())
 	.then(data => {
-		console.log(data);
-		// histDataSource = data;
 		histDataGrid.option("dataSource", data);
 	})
 	.catch(error => {
