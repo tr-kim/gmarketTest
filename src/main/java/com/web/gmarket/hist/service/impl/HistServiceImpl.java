@@ -25,9 +25,13 @@ public class HistServiceImpl implements HistService {
 	public List<HistDto> getHistList(HistDto histDto) {
 		String startMonth = histDto.getStartDate();
 		String endMonth = histDto.getEndDate();
+
+		//String mCategory = histDto.getMCategory();
+		String mCategory = "SMSCLI_TBL_EVENT";
 		
 		//월별 리스트 생성
-		List<String> tableList = TableNameUtil.getMonthTableNames(startMonth, endMonth, "SMSCLI_TBL_EVENT", jdbcTemplate);
+		//List<String> tableList = TableNameUtil.getMonthTableNames(startMonth, endMonth, "SMSCLI_TBL_EVENT", jdbcTemplate);
+		List<String> tableList = TableNameUtil.getMonthTableNames(startMonth, endMonth, mCategory, jdbcTemplate);
 		histDto.setMonthTables(tableList);
 		
 		return histMapper.selectHistList(histDto);

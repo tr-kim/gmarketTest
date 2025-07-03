@@ -108,6 +108,7 @@ $(function () {
 			const startValue = startDateInstance.option("value");
 			const endValue = endDateInstance.option("value");
 			const phoneNumValue = phoneNumInstance.option("value");
+			const middleCategoryValue = middleCategoryInstance.option("value");
 			
 			let startDateFormatted = "", startTimeFormatted = "";
 			let endDateFormatted = "", endTimeFormatted = "";
@@ -133,7 +134,8 @@ $(function () {
 				endDate: endDateFormatted,
 				startTime: startTimeFormatted + "000000",
 				endTime: endTimeFormatted + "235959",
-				phoneNum: phoneNumValue
+				phoneNum: phoneNumValue,
+				mCategory: middleCategoryValue
 			};
 
 			try {
@@ -187,7 +189,23 @@ $(function () {
 			{ dataField: "tranPr", caption: "NO", alignment: "center" },
 			{ dataField: "tranPhone", caption: "수신 번호", alignment: "center" },
 			{ dataField: "tranCallback", caption: "발신 번호", alignment: "center" },
-			{ dataField: "tranDate", caption: "발송 일시", alignment: "center" },
+			{ 
+				dataField: "tranDate", 
+				caption: "발송 일시", 
+				alignment: "center" ,
+				customizeText: function(cellInfo) {
+
+					const value = cellInfo.value.trim();
+					
+					const yyyy = value.slice(0, 4);
+					const mm = value.slice(4, 6);
+					const dd = value.slice(6, 8);
+					const hh = value.slice(8, 10);
+					const mi = value.slice(10, 12);
+
+					return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
+				}
+			},
 			{ dataField: "tranMsg", caption: "문자 내용", alignment: "left" },
 			{ 
 				dataField: "tranRslt", 
@@ -263,6 +281,7 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 	const endValue = endDateInstance.option("value");
 	const phoneNumValue = phoneNumInstance.option("value");
 	const largeCategoryValue = largeCategoryInstance.option("value");
+	const middleCategoryValue = middleCategoryInstance.option("value");
 	
 	let startDateFormatted = "", startTimeFormatted = "";
 	let endDateFormatted = "", endTimeFormatted = "";
@@ -318,7 +337,8 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 		endDate: endDateFormatted,
 		startTime: startTimeFormatted+"000000",
 		endTime: endTimeFormatted+"235959",
-		phoneNum: phoneNumValue
+		phoneNum: phoneNumValue,
+		mCategory: middleCategoryValue
 	};
 	
 	//console.log(params);

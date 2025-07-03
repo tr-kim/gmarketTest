@@ -16,6 +16,7 @@ public class HistDto {
 	private String endTime;
 	private String phoneNum;
 	private List<String> monthTables;
+	private String mCategory;
 	
 	//조회 컬럼
 	private String tranPr;
