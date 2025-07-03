@@ -54,6 +54,7 @@ dependencies {
 	// mssql
 	implementation 'com.microsoft.sqlserver:mssql-jdbc:10.2.3.jre17'
 	
+	// sql log
 	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
 	
 	// security 
@@ -85,6 +86,9 @@ dependencies {
 	// XSS Filter
 	implementation("com.navercorp.lucy:lucy-xss-servlet:2.0.1")
 	implementation("org.apache.commons:commons-text:1.13.1")
+	
+	// validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {

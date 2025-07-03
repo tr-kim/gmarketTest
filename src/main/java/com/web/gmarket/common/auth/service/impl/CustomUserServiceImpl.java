@@ -18,7 +18,7 @@ public class CustomUserServiceImpl implements CustomUserService {
 
 	@Override
 	public Optional<UserDto> login(UserDto userDto) {
-		UserDto user  = userMapper.selectUserInfo(userDto.getUserId());
+		UserDto user  = userMapper.selectUserInfo(userDto);
 		
 		return Optional.ofNullable(user);
 	}

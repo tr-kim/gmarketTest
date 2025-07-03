@@ -11,6 +11,12 @@ public class ConstantsUtils {
 	public static final String SUCCESS = "success";
 	public static final String FAILD = "faild";
 	
+	public static final int SUCCESS_CODE = 1000;
+	public static final int ERROR_CODE = 9999;
+	public static final int VALIDATE_ERROR = 9001;
+	public static final int USER_DUPLICATION = 9002;	// 사용자 중복
+	public static final int USER_NON_EXISTENCE = 9003;	// 사용자 미존재
+	
 	public static final String CODE = "code";
 	public static final String LIST = "list";
 	public static final String JSON = "json";
@@ -22,17 +28,20 @@ public class ConstantsUtils {
 	public static final String APPLICATION_JSON = "application/json";
 	public static final String AUTHORIZATION = "Authorization";
 	
+	// User Role
 	public static final String ROLE_SUPER = "ROLE_SUPER";
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_USER = "ROLE_USER";
 	public static final String ROLE_OPERATOR = "ROLE_OPERATOR";
 	public static final String ROLE_COMMON = "ROLE_COMMON";
 	
+	// Login Error
 	public static final String DUPLICATE_LOGIN = "DUPLICATE_LOGIN";
 	public static final String PASSWORD_NOT_MATCH = "PASSWORD_NOT_MATCH";
 	public static final String NOT_USE = "NOT_USE";
 	public static final String NOT_USER = "NOT_USER";
 	
+	// RSA
 	public static final String RSA_WEB_KEY = "_RSA_WEB_Key_";
 	public static final String PUBLIC_KEY = "PUBLIC_KEY";
 	public static final String INTANCE_TYPE_RSA = "RSA";
