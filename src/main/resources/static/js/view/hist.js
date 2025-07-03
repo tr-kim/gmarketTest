@@ -4,6 +4,7 @@ let phoneNumInstance;
 let largeCategoryInstance;
 let middleCategoryInstance;
 let histDataGrid;
+let histDataSource;
 
 $(function () {
 	const startDate = new Date();
@@ -100,8 +101,7 @@ $(function () {
 		placeholder: '번호를 입력하세요.'
 	}).dxTextBox("instance");
 	
-    const histDataSource = new DevExpress.data.CustomStore({
-		
+    histDataSource = new DevExpress.data.CustomStore({
 		key: "tranPr",
         load: async function(loadOptions) {
 
@@ -277,12 +277,9 @@ document.getElementById("excel-btn").addEventListener('click', function(e){
 //조회 버튼
 document.getElementById("search-btn").addEventListener('click', function(e){
 	e.preventDefault();
-	
+
 	const startValue = startDateInstance.option("value");
 	const endValue = endDateInstance.option("value");
-	const phoneNumValue = phoneNumInstance.option("value");
-	const largeCategoryValue = largeCategoryInstance.option("value");
-	const middleItem = middleCategoryInstance.option("selectedItem");
 	
 	let startDateFormatted = "", startTimeFormatted = "";
 	let endDateFormatted = "", endTimeFormatted = "";
@@ -305,6 +302,7 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 	}
 	
 	// 조회기간 구하기
+	const largeCategoryValue = largeCategoryInstance.option("value");
 	if(largeCategoryValue != 0){
 		let start = new Date(
 			parseInt(startTimeFormatted.slice(0, 4)),
@@ -332,33 +330,7 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 		}
 	}	
 	
-	const params = {
-		startDate: startDateFormatted,
-		endDate: endDateFormatted,
-		startTime: startTimeFormatted+"000000",
-		endTime: endTimeFormatted+"235959",
-		phoneNum: phoneNumValue,
-		//테스트 중. 전체 시 테이블명 수정 필요
-		tableName: (middleItem.name == "전체") ? "SMSCLI_TBL_EVENT" : middleItem.name
-	};
-	
-	//console.log(params);
-	
-	fetch('/api/v1/hist/list', {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify(params)
-	})
-	.then(res => res.json())
-	.then(data => {
-		histDataGrid.option("dataSource", data);
-	})
-	.catch(error => {
-		console.error("데이터 로드 실패:", error);
-		alert("데이터를 불러오는 중 오류가 발생했습니다.");
-	});
+	histDataSource.load();
 })
 
 //엑셀 다운로드
