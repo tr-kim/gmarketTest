@@ -4,7 +4,6 @@ let phoneNumInstance;
 let largeCategoryInstance;
 let middleCategoryInstance;
 let histDataGrid;
-let histDataSource;
 
 $(function () {
 	const startDate = new Date();
@@ -101,18 +100,16 @@ $(function () {
 		placeholder: '번호를 입력하세요.'
 	}).dxTextBox("instance");
 	
-    histDataSource = new DevExpress.data.CustomStore({
+	const histDataSource = new DevExpress.data.CustomStore({
 		key: "tranPr",
-        load: async function(loadOptions) {
-
+		load: (loadOptions) => {
 			const startValue = startDateInstance.option("value");
 			const endValue = endDateInstance.option("value");
-			const phoneNumValue = phoneNumInstance.option("value");
-			const middleItem = middleCategoryInstance.option("selectedItem");
 			
 			let startDateFormatted = "", startTimeFormatted = "";
 			let endDateFormatted = "", endTimeFormatted = "";
-
+			
+			// 날짜가 Date 객체인지 확인
 			if (startValue instanceof Date && !isNaN(startValue)) {
 				const yyyy = startValue.getFullYear();
 				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
@@ -120,7 +117,7 @@ $(function () {
 				startDateFormatted = `${yyyy}${mm}`;
 				startTimeFormatted = `${yyyy}${mm}${dd}`;
 			}
-
+			
 			if (endValue instanceof Date && !isNaN(endValue)) {
 				const yyyy = endValue.getFullYear();
 				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
@@ -128,7 +125,10 @@ $(function () {
 				endDateFormatted = `${yyyy}${mm}`;
 				endTimeFormatted = `${yyyy}${mm}${dd}`;
 			}
-
+			
+			const phoneNumValue = phoneNumInstance.option("value");
+			const middleItem = middleCategoryInstance.option("selectedItem");
+			
 			const params = {
 				startDate: startDateFormatted,
 				endDate: endDateFormatted,
@@ -138,30 +138,25 @@ $(function () {
 				//테스트 중. 전체 시 테이블명 수정 필요
 				tableName: (middleItem.name == "전체") ? "SMSCLI_TBL_EVENT" : middleItem.name
 			};
-
-			try {
-				const res = await fetch('/api/v1/hist/list', {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(params)
-				});
-
-				if (!res.ok) {
-					throw new Error(`HTTP error! status: ${res.status}`);
-				}
-
-				const data = await res.json();
-
-				return {
-					data: data
-				};
-			} catch (error) {
-				console.error('데이터 로드 실패:', error);
-				alert('데이터를 불러오는 중 오류가 발생했습니다.');
-			}
+			
+			return fetch('/api/v1/hist/list', {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(params)
+			})
+			.then(response => {
+				if (!response.ok) throw new Error("서버 오류");
+				return response.json();
+			})
+			.catch(error => {
+				console.error("데이터 로드 실패:", error);
+				alert("데이터를 불러오는 중 오류가 발생했습니다.");
+			});
 		}
-    });
-
+	});
+	
 	//조회 그리드
 	histDataGrid = $("#histGrid").dxDataGrid({
 		dataSource: histDataSource,
@@ -195,7 +190,6 @@ $(function () {
 				caption: "발송 일시", 
 				alignment: "center" ,
 				customizeText: function(cellInfo) {
-
 					const value = cellInfo.value.trim();
 					
 					const yyyy = value.slice(0, 4);
@@ -203,8 +197,9 @@ $(function () {
 					const dd = value.slice(6, 8);
 					const hh = value.slice(8, 10);
 					const mi = value.slice(10, 12);
-
-					return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
+					const ss   = value.slice(12, 14);
+					
+					return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 				}
 			},
 			{ dataField: "tranMsg", caption: "문자 내용", alignment: "left" },
@@ -277,7 +272,7 @@ document.getElementById("excel-btn").addEventListener('click', function(e){
 //조회 버튼
 document.getElementById("search-btn").addEventListener('click', function(e){
 	e.preventDefault();
-
+	
 	const startValue = startDateInstance.option("value");
 	const endValue = endDateInstance.option("value");
 	
@@ -330,7 +325,8 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 		}
 	}	
 	
-	histDataSource.load();
+	//재조회
+	histDataGrid.getDataSource().reload();
 })
 
 //엑셀 다운로드
