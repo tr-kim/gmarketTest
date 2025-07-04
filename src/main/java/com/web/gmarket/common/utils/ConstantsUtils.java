@@ -40,6 +40,9 @@ public class ConstantsUtils {
 	public static final String PASSWORD_NOT_MATCH = "PASSWORD_NOT_MATCH";
 	public static final String NOT_USE = "NOT_USE";
 	public static final String NOT_USER = "NOT_USER";
+	public static final String USER_ID_EMPTY = "USER_ID_EMPTY";
+	public static final String USER_INFO_INCORRECT = "USER_INFO_INCORRECT";
+	public static final String USER_FAILD = "USER_FAILD";
 	
 	// RSA
 	public static final String RSA_WEB_KEY = "_RSA_WEB_Key_";
