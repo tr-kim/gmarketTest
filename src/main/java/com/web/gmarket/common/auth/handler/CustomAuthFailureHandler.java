@@ -25,7 +25,7 @@ public class CustomAuthFailureHandler implements AuthenticationFailureHandler {
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 		String message = exception.getMessage();
 		
-		log.info("[CustomLoginFailHandler] :: " + exception.getMessage());
+		log.info("[CustomLoginFailHandler] :: " + message);
 		
 		HttpSession session = request.getSession();
 		
@@ -35,6 +35,12 @@ public class CustomAuthFailureHandler implements AuthenticationFailureHandler {
 			session.setAttribute(ConstantsUtils.NOT_USE, true);
 		} else if(ConstantsUtils.PASSWORD_NOT_MATCH.equals(message)) {				// 비밀번호 불일치
 			session.setAttribute(ConstantsUtils.PASSWORD_NOT_MATCH, true);
+		} else if(ConstantsUtils.USER_ID_EMPTY.equals(message)) {					// 사용자 아이디 빈값 체크
+			session.setAttribute(ConstantsUtils.USER_ID_EMPTY, true);
+		} else if(ConstantsUtils.USER_INFO_INCORRECT.equals(message)) {				// 올바르지 않은 사용자 정보
+			session.setAttribute(ConstantsUtils.USER_INFO_INCORRECT, true);
+		} else {
+			session.setAttribute(ConstantsUtils.USER_FAILD, true);
 		}
 
 		response.sendRedirect("/login");

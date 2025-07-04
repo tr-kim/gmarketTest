@@ -1,85 +1,87 @@
-$(function () {
+let dataGrid;
+
+let currentMode = ''; // 전역 변수로 모드 추적
+let currentKey = null;
+
+$(function() {
+
+	//구분
+	$('#large-category').dxSelectBox({
+		dataSource: [{
+			Code: 0,
+			Name: '옥션',
+		}, {
+			Code: 1,
+			Name: '지마켓',
+		}],
+		displayExpr: 'Name',
+		valueExpr: 'Code',
+		value: 1
+		, inputAttr: {
+			name: "companyCode"
+		},
+		onValueChanged: function(e) {
+			dataGrid.option('editing.refreshMode', e.value);
+		}
+	});
+
+	//사용자등급
+	$('#user_grade').dxSelectBox({
+		dataSource: [{
+			Grade: 0,
+			Name: '슈퍼관리자',
+		}, {
+			Grade: 1,
+			Name: '관리자',
+		}, {
+			Grade: 2,
+			Name: '사용자',
+		}, {
+			Grade: 3,
+			Name: '운영자',
+		}],
+		displayExpr: 'Name',
+		valueExpr: 'Grade',
+		value: 0
+		, inputAttr: {
+			name: "userGrade"
+		},
+		onValueChanged: function(e) {
+			dataGrid.option('editing.refreshMode', e.value);
+		}
+	});
+
+	//사용자ID
+	$('#user_id').dxTextBox({
+		placeholder: '아이디를 입력하세요.'
+		, inputAttr: {
+			name: "userId"
+		}
+	});
+
+	let formData = new FormData(document.getElementById("userForm"));
+
 	//조회 그리드
-	$("#userGrid").dxDataGrid({
-		dataSource: [
-			{ user_seq: "0000001", user_id: "admin1", user_name: "관리자1", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000002", user_id: "admin2", user_name: "관리자2", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000003", user_id: "admin3", user_name: "관리자3", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000004", user_id: "admin4", user_name: "관리자4", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000005", user_id: "admin5", user_name: "관리자5", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000006", user_id: "admin6", user_name: "관리자6", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000007", user_id: "admin7", user_name: "관리자7", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000008", user_id: "admin8", user_name: "관리자8", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000009", user_id: "admin9", user_name: "관리자9", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000010", user_id: "admin10", user_name: "관리자10", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000011", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000012", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000013", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000014", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000015", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000016", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000017", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000018", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000019", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000020", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000021", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000022", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000023", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000024", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000025", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000026", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000027", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000028", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000029", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000030", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000031", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000032", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000033", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000034", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000035", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000036", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000037", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000038", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000039", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000040", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000041", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000042", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000043", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000044", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000045", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000046", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000047", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000048", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000049", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000050", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000051", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000052", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000053", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000054", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000055", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000056", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000057", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000058", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000059", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000060", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000061", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000062", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000063", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000064", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000065", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000066", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000067", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000068", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000069", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-			{ user_seq: "0000070", user_id: "admin", user_name: "관리자", company_code: "1", user_grade: "1", use_yn: "Y" },
-		],
-		keyExpr: "user_seq",
+	dataGrid = $("#userGrid").dxDataGrid({
+		dataSource: {
+			load: function() {
+				return $.ajax({
+					url: "/api/v1/user/list",
+					method: "POST",
+					data: formData,
+					processData: false,
+					contentType: false
+				});
+			}
+		},
+		keyExpr: "userSeq",
 		headerFilter: {
 			visible: true
 		},
-		editing: {			
+		editing: {
 			allowUpdating: true,
-  			allowAdding: true
+			allowDeleting: true,
+			allowAdding: true
 		},
 		searchPanel: {
 			visible: true,
@@ -99,55 +101,82 @@ $(function () {
 		columnResizingMode: 'widget',
 		columnAutoWidth: true,
 		columns: [
-			{ dataField: "user_seq", caption: "NO", alignment: "center"	},
-			{ dataField: "user_id", caption: "사용자 ID", alignment: "center" },
-			{ dataField: "user_name", caption: "이름", alignment: "center" },
-			{ 
-				dataField: "company_code", 
-				caption: "구분", 
+			{ dataField: "userSeq", caption: "NO", alignment: "center" },
+			{ dataField: "userId", caption: "사용자 ID", alignment: "center" },
+			{ dataField: "userName", caption: "이름", alignment: "center" },
+			{
+				dataField: "companyCode",
+				caption: "구분",
 				alignment: "center",
 				customizeText: function(cellInfo) {
 					switch (cellInfo.value) {
-						case "0" : return "옥션";
-						case "1" : return "지마켓";
-						default: return "";
+						case 0: return "옥션";
+						case 1: return "지마켓";
+						default: return "-";
 					}
-				} 
-			},			
-			{ 
-				dataField: "user_grade", 
-				caption: "등급", 
-				alignment: "center" ,
+				}
+			},
+			{
+				dataField: "userGrade",
+				caption: "등급",
+				alignment: "center",
 				customizeText: function(cellInfo) {
 					switch (cellInfo.value) {
-						case "0" : return "슈퍼관리자";
-						case "1" : return "관리자";
-						case "2" : return "사용자";
-						case "3" : return "운영자";
-						default: return "";
+						case 0: return "슈퍼관리자";
+						case 1: return "관리자";
+						case 2: return "사용자";
+						case 3: return "운영자";
+						default: return "일반";
 					}
-				} 
+				}
 			},
-			{ 
-				dataField: "use_yn", 
-				caption: "사용 여부", 
-				alignment: "center" ,
+			{
+				dataField: "useYn",
+				caption: "사용 여부",
+				alignment: "center",
 				customizeText: function(cellInfo) {
 					switch (cellInfo.value) {
-						case "Y" : return "사용";
-						case "N" : return "일시정지";
-						default: return "";
+						case "Y": return "사용";
+						case "N": return "일시정지";
+						default: return "-";
 					}
-				} 
+				}
 			},
-			{				
-				caption: "수정" ,
+			{
+				name: "edit_btn",
+				caption: "수정",
 				type: "buttons",
-				buttons: [{
-					icon: "edit",
-					name: "edit",	
-					text: '',				
-				}],
+				buttons: [
+					{
+						icon: "edit",
+						name: "edit",
+						text: '',
+					}, {
+						icon: "remove",
+						name: "delete",
+						text: '',
+						onClick: function(e) {
+							const rowData = e.row.data;
+							if (confirm(`${rowData.userId}을(를) 삭제하시겠습니까?`)) {
+								const param = { userId: rowData.userId };
+								
+								deleteAjax('/api/v1/user/delete', param, function callback(data) {
+									const code = data.code;
+									const result = data.result;
+									
+									if (code == 1000) {
+										alert("삭제에 성공하였습니다.");
+										search();
+									} else if(code == 9003) {
+										alert(result);
+									} else {
+										alert("삭제에 실패하였습니다.");
+									}
+								});
+							}
+						}
+					}
+				],
 			},
 		],
 		toolbar: {
@@ -155,9 +184,9 @@ $(function () {
 				{
 					location: "before",
 					template: function() {
-					return $("<div>")
-						.attr("id", "totalCount")
-						.css({ fontSize: "17px", color: "#333", padding: "0 5px" });
+						return $("<div>")
+							.attr("userSeq", "totalCount")
+							.css({ fontSize: "17px", color: "#333", padding: "0 5px" });
 					}
 				},
 				"searchPanel"
@@ -174,131 +203,186 @@ $(function () {
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
 			$("#totalCount").text(`총 ${totalCount}건`);
-		}		
+		}
 	}).dxDataGrid("instance");
-
-	//구분
-	$('#large-category').dxSelectBox({
-		dataSource: [{
-			Code: 0,
-			Name: '옥션',
-		},{
-			Code: 1,
-			Name: '지마켓',
-		}],
-			displayExpr: 'Name',
-			valueExpr: 'Code',
-			value: 1
-	}).dxSelectBox("instance");
-
-	//사용자등급
-	$('#user_grade').dxSelectBox({
-		dataSource: [{
-			Grade: 0,
-			Name: '슈퍼관리자',
-		},{
-			Grade: 1,
-			Name: '관리자',
-		},{
-			Grade: 2,
-			Name: '사용자',
-		},{
-			Grade: 3,
-			Name: '운영자',
-		}],
-			displayExpr: 'Name',
-			valueExpr: 'Grade',
-			value: 0
-	}).dxSelectBox("instance");
-
-	//사용자ID
-	$('#user_id').dxTextBox({
-		placeholder: '아이디를 입력하세요.'
-	}).dxTextBox("instance");
 });
 
-//사용자 등록 모달
-const addUser = document.querySelector('.addUser');
-const inputs = document.querySelectorAll('.addUser input');
-const selects = document.querySelectorAll('.addUser select');
+// 사용자 등록 모달 - 초기화
+function userModalReset() {
+	document.querySelectorAll('#user_modal input').forEach(input => {
+		input.value = "";
+	});
 
-let currentMode = ''; // 전역 변수로 모드 추적
-let currentKey = null;
+	document.querySelectorAll('#user_modal select.select_Y').forEach(select => {
+		select.value = "Y";
+	});
 
-function openCustomModal(mode, data = {}) {
-  currentMode = mode;
+	document.querySelectorAll('#user_modal select.select_N').forEach(select => {
+		select.value = "N";
+	});
 
-  if (mode === 'edit') {
-	document.querySelector('.modal-hd > span').textContent = '사용자 수정';
-	document.querySelector('.clear_btn').classList.add('d-block');
+	document.querySelectorAll('#user_modal select.select_0').forEach(select => {
+		select.value = "0";
+	});
 
-    currentKey = data.user_seq; // keyExpr 기준
-    document.getElementById('user_grade_data').value = data.user_grade;
-    document.getElementById('company_code_data').value = data.company_code;
-	document.getElementById('user_id_data').value = data.user_id;
-    document.getElementById('user_psw_data').value = '';
-	document.getElementById('user_name_data').value = data.user_name;
-    document.getElementById('user_phone1_data').value = '';
-	document.getElementById('user_phone2_data').value = '';
-    document.getElementById('user_excel_data').value = '0';
-	document.getElementById('user_file_data').value = '0';
-    document.getElementById('user_DB_data').value = '0';
-	document.getElementById('user_LMS_data').value = '0';
-    document.getElementById('user_MMS_data').value = '0';
-	document.getElementById('user_yn_data').value = data.use_yn;
-  } else {
-	document.querySelector('.modal-hd > span').textContent = '사용자 등록';
-
-    currentKey = null;
-    document.getElementById('user_grade_data').value = '0';
-    document.getElementById('company_code_data').value = '0';
-	document.getElementById('user_id_data').value = '';
-    document.getElementById('user_psw_data').value = '';
-	document.getElementById('user_name_data').value = '';
-    document.getElementById('user_phone1_data').value = '';
-	document.getElementById('user_phone2_data').value = '';
-    document.getElementById('user_excel_data').value = '0';
-	document.getElementById('user_file_data').value = '0';
-    document.getElementById('user_DB_data').value = '0';
-	document.getElementById('user_LMS_data').value = '0';
-    document.getElementById('user_MMS_data').value = '0';
-	document.getElementById('user_yn_data').value = 'Y';
-  }
-
-  addUser.classList.add('d-block');
+	document.querySelectorAll('#user_modal select.select_2').forEach(select => {
+		select.value = "2";
+	});
 }
 
-//등록 버튼
-document.getElementById('add-btn').addEventListener('click', function(e){
+// 검색
+function search() {
+
+	let formData = new FormData(document.getElementById("userForm"));
+
+	postFormAjax('/api/v1/user/list', formData, listCallback);
+}
+
+// 성공 함수
+function listCallback(data) {
+
+	dataGrid.option("dataSource", data);
+}
+
+// 등록 팝업창 및 수정 팝업창
+function openCustomModal(mode, data = {}) {
+	currentMode = mode;
+
+	const param = {};
+	postAjax('/api/v1/user/rsa', param, rsaCallback);
+
+	if (mode === 'edit') {
+		document.querySelector('#user_modal .modal-hd > span').textContent = '사용자 수정';
+		document.getElementById('reset_btn').classList.add('d-block');
+
+		currentKey = data.userSeq; // keyExpr 기준
+		document.getElementById('user_grade_data').value = data.userGrade;
+		document.getElementById('company_code_data').value = data.companyCode;
+		document.getElementById('user_id_data').value = data.userId;
+		document.getElementById('user_psw_data').value = '';
+		document.getElementById('user_name_data').value = data.userName;
+		document.getElementById('user_phone1_data').value = data.hpNo;
+		document.getElementById('user_phone2_data').value = data.telNo;
+		document.getElementById('user_sms_data').value = data.smsYn;
+		document.getElementById('user_excel_data').value = data.excelYn;
+		document.getElementById('user_file_data').value = data.fileYn;
+		document.getElementById('user_db_data').value = data.dbYn;
+		document.getElementById('user_lms_data').value = data.lmsYn;
+		document.getElementById('user_mms_data').value = data.mmsYn;
+		document.getElementById('use_yn_data').value = data.useYn;
+	} else {
+		document.querySelector('#user_modal .modal-hd > span').textContent = '사용자 등록';
+
+		currentKey = null;
+		document.getElementById('user_grade_data').value = "2";
+		document.getElementById('company_code_data').value = "0";
+		document.getElementById('user_id_data').value = '';
+		document.getElementById('user_psw_data').value = '';
+		document.getElementById('user_name_data').value = '';
+		document.getElementById('user_phone1_data').value = '';
+		document.getElementById('user_phone2_data').value = '';
+		document.getElementById('user_sms_data').value = 'Y';
+		document.getElementById('user_excel_data').value = 'N';
+		document.getElementById('user_file_data').value = 'N';
+		document.getElementById('user_db_data').value = 'N';
+		document.getElementById('user_lms_data').value = 'N';
+		document.getElementById('user_mms_data').value = 'N';
+		document.getElementById('use_yn_data').value = 'Y';
+	}
+
+	document.getElementById('user_modal').classList.add('d-block');
+}
+
+// 비밀번호 암호화 성공 함수
+function rsaCallback(data) {
+	$("#publicKeyModulus").val(data.RSA_MODULUS);
+	$("#publicKeyExponent").val(data.RSA_EXPONENT);
+}
+
+// 등록 버튼 이벤트
+document.getElementById('add_btn').addEventListener('click', function(e) {
 	e.preventDefault();
 	openCustomModal('add');
 });
 
-function addUserClear() {
-	inputs.forEach(input => {
-		input.value = "";
-	})
-	selects.forEach(select=> {
-		select.value = "0";
-	})
-	document.getElementById('user_yn_data').value = 'Y';
+// 사용자 등록 모달 - 닫기 버튼
+document.getElementById('close_btn').addEventListener('click', function(e) {
+	e.preventDefault();
+	document.getElementById('user_modal').classList.remove('d-block');
+	userModalReset();
+});
+
+// 사용자 등록 모달 - 초기화 버튼
+document.getElementById('reset_btn').addEventListener('click', function(e) {
+	e.preventDefault();
+	userModalReset();
+});
+
+// 저장 버튼 이벤트
+document.getElementById('save_btn').addEventListener('click', function(e) {
+	e.preventDefault();
+
+	const password = $("#user_psw_data").val();
+	const publicKeyModulus = $("#publicKeyModulus").val();
+	const publicKeyExponent = $("#publicKeyExponent").val();
+
+	// RSA 암호화
+	let rsa = new RSAKey();
+	rsa.setPublic(publicKeyModulus, publicKeyExponent);
+
+	const encrypted = rsa.encrypt(password);
+	const base64 = hex2b64(encrypted);
+
+	let formData = new FormData();
+	formData.append("userId", $("#user_id_data").val());
+	formData.append("userPwd", encodeURIComponent(base64));
+	formData.append("userName", $("#user_name_data").val());
+	formData.append("userGrade", $("#user_grade_data").val());
+	formData.append("companyCode", $("#company_code_data").val());
+	formData.append("hpNo", $("#user_phone1_data").val());
+	formData.append("telNo", $("#user_phone2_data").val());
+	formData.append("email", $("#user_email_data").val());
+	formData.append("smsYn", $("#user_sms_data").val());
+	formData.append("excelYn", $("#user_excel_data").val());
+	formData.append("fileYn", $("#user_file_data").val());
+	formData.append("dbYn", $("#user_db_data").val());
+	formData.append("lmsYn", $("#user_lms_data").val());
+	formData.append("mmsYn", $("#user_mms_data").val());
+	formData.append("useYn", $("#use_yn_data").val());
+
+	if (currentMode === 'edit') {
+		putFormAjax("/api/v1/user/update", formData, successCallback);
+	} else if (currentMode === 'add') {
+		postFormAjax("/api/v1/user/insert", formData, successCallback);
+	}
+
+	const grid = $('#userGrid').dxDataGrid('instance');
+	grid.saveEditData();
+});
+
+// 성공 함수
+function successCallback(data) {
+	let code = data.code;
+	let result = data.result;
+
+	if (code == 1000) {
+		alert(currentMode === 'edit' ? "수정에 성공하였습니다." : "등록에 성공하였습니다.");
+		document.getElementById('user_modal').classList.remove('d-block');
+		userModalReset();
+		search();
+	} else if (code == 9001) {
+		alert(result);
+	} else if (code == 9002) {
+		alert(result);
+	} else if (code == 9003) {
+		alert(result);
+	} else {
+		alert(currentMode === 'edit' ? "수정에 실패하였습니다." : "등록에 실패하였습니다.");
+	}
 }
 
-//사용자 등록 모달 - 닫기 버튼
-document.querySelector('.addUser .close_btn').addEventListener('click', function(e){
+// 검색 버튼 이벤트
+document.getElementById('search_btn').addEventListener('click', function(e) {
 	e.preventDefault();
-	addUser.classList.remove('d-block');
-	addUserClear();
+	search();
 });
-
-//사용자 등록 모달 - 초기화 버튼
-document.querySelector('.clear_btn').addEventListener('click', function(e){
-	e.preventDefault();
-	addUserClear();
-});
-
-$('.add_btn').on('click', function(){
-	const grid = $('#userGrid').dxDataGrid('instance');
- 	grid.saveEditData();
-});
-

@@ -2,19 +2,26 @@
 <html lagn="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{${layout}}" layout:fragment="content">
 
+<script th:src="@{/js/rsa/jsbn.js}"></script>
+<script th:src="@{/js/rsa/rsa.js}"></script>
+<script th:src="@{/js/rsa/prng4.js}"></script>
+<script th:src="@{/js/rsa/rng.js}"></script>
+
+<script th:src="@{/js/rsa/jsrsasign-all-min.js}"></script>
+
 <body>
-<p class="font-sz-20 font-weight-600 pt-3 text-666">사용자 관리</p>
-	<form class="content row mx-0 mb-2" id="user">
+	<p class="font-sz-20 font-weight-600 pt-3 text-666">사용자 관리</p>
+	<form class="content row mx-0 mb-2" id="userForm">
 		<div class="col-6">
 			<div class="row d-flex align-items-center mb-2">
 				<div class="col-3">
-			 		<label class="font-weight-500">사용자 등급</label>
+					<label class="font-weight-500">사용자 등급</label>
 				</div>
 				<div class="col">
 					<div id="user_grade"></div>
 				</div>
-			</div>		
-			
+			</div>
+
 			<div class="row d-flex align-items-center mb-2">
 				<div class="col-3">
 					<label class="font-weight-500">사용자 ID</label>
@@ -22,21 +29,21 @@
 				<div class="col">
 					<div id="user_id"></div>
 				</div>
-			</div>			
+			</div>
 		</div>
 		<div class="col-6">
 			<div class="row d-flex align-items-center mb-2">
 				<div class="col-3">
-			 		<label class="font-weight-500">구분</label>
+					<label class="font-weight-500">구분</label>
 				</div>
 				<div class="col">
 					<div id="large-category"></div>
 				</div>
-			</div>			
+			</div>
 			<div class="row d-flex align-items-center">
 				<div class="col d-flex justify-content-end">
-					<button class="btn btn-outline-primary font-sz-14 ms-2" id="add-btn">등록</button>
-					<button class="btn btn-primary font-sz-14 ms-2">조회</button>
+					<button type="button" class="btn btn-outline-primary font-sz-14 ms-2" id="add_btn">등록</button>
+					<button class="btn btn-primary font-sz-14 ms-2" id="search_btn">조회</button>
 				</div>
 			</div>
 		</div>
