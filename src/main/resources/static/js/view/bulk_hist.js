@@ -42,7 +42,6 @@ $(function () {
 		},
 	}).dxDateBox("instance");
 	
-	
 	//대분류
 	largeCategoryInstance = $('#large-category').dxSelectBox({
 		dataSource: [{
@@ -56,24 +55,22 @@ $(function () {
 			valueExpr: 'Code',
 			value: 1
 	}).dxSelectBox("instance");
-
+	
 	//제목
 	titleInstance = $('#bulk-title').dxTextBox({
 		placeholder: '제목을 입력하세요.'
 	}).dxTextBox("instance");
-
+	
+	//조회 요청
 	const bulkHistDataSource = new DevExpress.data.CustomStore({
-		
 		key: "bulkMsgKey",
         load: (loadOptions) => {
-
 			const startValue = startDateInstance.option("value");
 			const endValue = endDateInstance.option("value");
-
 			
 			let startDateFormatted = "", startTimeFormatted = "";
 			let endDateFormatted = "", endTimeFormatted = "";
-
+			
 			if (startValue instanceof Date && !isNaN(startValue)) {
 				const yyyy = startValue.getFullYear();
 				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
@@ -81,7 +78,7 @@ $(function () {
 				startDateFormatted = `${yyyy}${mm}`;
 				startTimeFormatted = `${yyyy}${mm}${dd}`;
 			}
-
+			
 			if (endValue instanceof Date && !isNaN(endValue)) {
 				const yyyy = endValue.getFullYear();
 				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
@@ -89,9 +86,9 @@ $(function () {
 				endDateFormatted = `${yyyy}${mm}`;
 				endTimeFormatted = `${yyyy}${mm}${dd}`;
 			}
-
+			
 			const titleValue = titleInstance.option("value");
-
+			
 			const params = {
 				startDate: startDateFormatted,
 				endDate: endDateFormatted,
@@ -99,7 +96,7 @@ $(function () {
 				endTime: endTimeFormatted + "235959",
 				title: titleValue,
 			};
-
+			
 			return fetch('/api/v1/bulkHist/list', {
 				method: "POST",
 				headers: {
@@ -115,10 +112,9 @@ $(function () {
 				console.error("데이터 로드 실패:", error);
 				alert("데이터를 불러오는 중 오류가 발생했습니다.");
 			});
-			
 		}
     });
-
+	
 	//조회 그리드
 	bulkHistDataGrid = $("#bulkHistGrid").dxDataGrid({
 		dataSource: bulkHistDataSource ,
@@ -182,18 +178,14 @@ $(function () {
 				caption: "성공/실패", 
 				alignment: "center",
 				customizeText: function(cellInfo) {
-
 					const value = String(cellInfo.value.trim());
-
+					
 					switch (value) {						
 						case "0" : return "성공";
 						case "1" : return "실패";
 						default: return "기타";
 					}
-					
 				} 
-
-
 			},
 			{
 				name: "textBtn",
@@ -235,29 +227,12 @@ document.getElementById("excel-btn").addEventListener('click',function(e){
 	exportGridToExcel(grid);
 })
 
-//엑셀 다운로드
-function exportGridToExcel(gridInstance){
-	const workbook = new ExcelJS.Workbook();
-	const worksheet = workbook.addWorksheet('대량발송 이력');
-	
-	DevExpress.excelExporter.exportDataGrid({
-		component: gridInstance,
-		worksheet: worksheet,
-		autoFilterEnabled: true,
-	}).then(() => {
-		workbook.xlsx.writeBuffer().then((buffer) => {
-			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '대량발송 이력.xlsx');
-		});
-	});
-}
-
 //조회 버튼
 document.getElementById("search-btn").addEventListener('click', function(e){
 	e.preventDefault();
 	
 	const startValue = startDateInstance.option("value");
 	const endValue = endDateInstance.option("value");
-	const largeCategoryValue = largeCategoryInstance;
 	
 	let startDateFormatted = "", startTimeFormatted = "";
 	let endDateFormatted = "", endTimeFormatted = "";
@@ -280,8 +255,8 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 	}
 	
 	// 조회기간 구하기
-	console.log('largeCategoryValue', largeCategoryValue);
-
+	const largeCategoryValue = largeCategoryInstance;
+	
 	if(largeCategoryValue != 0){
 		let start = new Date(
 			parseInt(startTimeFormatted.slice(0, 4)),
@@ -312,3 +287,20 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 	//재조회
 	bulkHistDataGrid.getDataSource().reload();
 })
+
+//엑셀 다운로드
+function exportGridToExcel(gridInstance){
+	const workbook = new ExcelJS.Workbook();
+	const worksheet = workbook.addWorksheet('대량발송 이력');
+	
+	DevExpress.excelExporter.exportDataGrid({
+		component: gridInstance,
+		worksheet: worksheet,
+		autoFilterEnabled: true,
+	}).then(() => {
+		workbook.xlsx.writeBuffer().then((buffer) => {
+			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '대량발송 이력.xlsx');
+		});
+	});
+}
+
