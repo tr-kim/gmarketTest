@@ -1,6 +1,8 @@
 package com.web.gmarket.bulk.hist.controller;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +30,22 @@ public class RestBulkHistController {
 	public ResponseEntity<?> getHistList(@RequestBody BulkHistDto bulkHistDto) {
 		try {
 			List<BulkHistDto> result = bulkHistService.getHistList(bulkHistDto);
-			return ResponseEntity.ok(result);
+			int totalCount = bulkHistService.getHistCount(bulkHistDto);
+			
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("data", result);
+	        response.put("totalCount", totalCount);
+	        
+			return ResponseEntity.ok(response);
 			
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body("이력 조회 실패: " + e.getMessage());
+			Map<String, Object> error = new HashMap<>();
+	        error.put("message", "이력 조회 실패");
+	        error.put("error", e.getMessage());
+	        
+			return ResponseEntity
+				.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(error);
 		}
 	}
 	

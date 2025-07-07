@@ -18,6 +18,7 @@
 	</resultMap>
 	
 	<select id="selectBulkHistList" resultMap="BulkHistResultMap">
+		(
 		SELECT
 			B_MSG_KEY,
 			LOGIN_ID,
@@ -37,5 +38,23 @@
 		<if test="title != null and title != ''">
 			AND TITLE LIKE CONCAT('%', #{title}, '%')
 		</if>
+		)
+		ORDER BY B_SEQ DESC
+		<if test="take != null and skip != null">
+			OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
+		</if>
 	</select>
+
+	<select id="selectBulkHistCount" resultType="int">
+		SELECT COUNT(*) FROM (			
+			SELECT 1 AS CNT
+			FROM T_BROADCAST_MSG
+			WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}
+				AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}
+			<if test="title != null and title != ''">
+				AND TITLE LIKE CONCAT('%', #{title}, '%')
+			</if>		
+		) TOTAL
+	</select>
+
 </mapper>
