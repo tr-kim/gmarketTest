@@ -10,4 +10,6 @@ import com.web.gmarket.bulk.hist.dto.BulkHistDto;
 public interface BulkHistMapper {
     List<BulkHistDto> selectBulkHistList(BulkHistDto bulkHistDto);	
 
+    int selectBulkHistCount(BulkHistDto bulkHistDto);
+
 }

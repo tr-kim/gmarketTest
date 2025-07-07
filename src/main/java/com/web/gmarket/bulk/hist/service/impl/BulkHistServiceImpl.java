@@ -6,18 +6,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.web.gmarket.bulk.hist.service.BulkHistService;
-import com.web.gmarket.common.utils.TableNameUtil;
 import com.web.gmarket.bulk.hist.dto.BulkHistDto;
 import com.web.gmarket.bulk.hist.mapper.BulkHistMapper;
 
 @Service
 public class BulkHistServiceImpl implements BulkHistService {
     private final BulkHistMapper bulkHistMapper;
-	private final JdbcTemplate jdbcTemplate;
+	//private final JdbcTemplate jdbcTemplate;
 	
 	public BulkHistServiceImpl(BulkHistMapper bulkHistMapper, JdbcTemplate jdbcTemplate) {
 		this.bulkHistMapper = bulkHistMapper;
-		this.jdbcTemplate = jdbcTemplate;
+		//this.jdbcTemplate = jdbcTemplate;
 	}
 	
 	@Override
@@ -31,5 +30,10 @@ public class BulkHistServiceImpl implements BulkHistService {
 		// bulkHistDto.setMonthTables(tableList);
 		
 		return bulkHistMapper.selectBulkHistList(bulkHistDto);
+	}
+
+	@Override
+	public int getHistCount(BulkHistDto bulkHistDto) {
+		return bulkHistMapper.selectBulkHistCount(bulkHistDto);
 	}
 }

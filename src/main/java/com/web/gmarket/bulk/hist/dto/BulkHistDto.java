@@ -16,6 +16,8 @@ public class BulkHistDto {
 	private String startTime;
 	private String endTime;
     private String bulkTitle;
+	private Integer skip;
+	private Integer take;
 
     //조회 컬럼
     private String bulkMsgKey;
