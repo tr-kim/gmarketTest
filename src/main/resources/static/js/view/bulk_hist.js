@@ -94,7 +94,7 @@ $(function () {
 				endDate: endDateFormatted,
 				startTime: startTimeFormatted + "000000",
 				endTime: endTimeFormatted + "235959",
-				title: titleValue,
+				bulkTitle: titleValue,
 			};
 			
 			return fetch('/api/v1/bulkHist/list', {
@@ -140,9 +140,9 @@ $(function () {
 		columnResizingMode: 'widget',
 		columnAutoWidth: true,
 		columns: [
-			{ dataField: "bulkTitle", caption: "제목", alignment: "left" },
+			{ dataField: "title", caption: "제목", alignment: "left" },
 			{ 
-				dataField: "bulkReqTime", 
+				dataField: "reqTime", 
 				caption: "전송 일시", 
 				alignment: "center",
 				customizeText: function(cellInfo) {
@@ -158,8 +158,8 @@ $(function () {
 					return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 				}
 			},
-			{ dataField: "bulkMsg", caption: "메시지 내용", alignment: "left" },
-			{ dataField: "bulkCnt", caption: "전체", alignment: "center" },
+			{ dataField: "msg", caption: "메시지 내용", alignment: "left" },
+			{ dataField: "cnt", caption: "전체", alignment: "center" },
 			{
 				name: "detailBtn",
 				caption: "상세",
@@ -171,10 +171,10 @@ $(function () {
 					},
 				}],
 			},
-			{ dataField: "bulkUserID", caption: "발송ID", alignment: "center" },
-			{ dataField: "bulkSvcType", caption: "TYPE", alignment: "center" },
+			{ dataField: "userID", caption: "발송ID", alignment: "center" },
+			{ dataField: "svcType", caption: "TYPE", alignment: "center" },
 			{ 
-				dataField: "bulkStatus", 
+				dataField: "status", 
 				caption: "성공/실패", 
 				alignment: "center",
 				customizeText: function(cellInfo) {

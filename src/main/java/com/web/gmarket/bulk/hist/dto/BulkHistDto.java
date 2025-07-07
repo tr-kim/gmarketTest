@@ -15,19 +15,19 @@ public class BulkHistDto {
 	private String endDate;
 	private String startTime;
 	private String endTime;
-    private String title;
+    private String bulkTitle;
 
     //조회 컬럼
     private String bulkMsgKey;
-	private String bulkLoginID;
-	private String bulkUserID;
-	private String bulkTitle;
-	private String bulkMsg;
-	private String bulkInTime;
-	private String bulkReqTime;
-	private String bulkCnt;
-    private String bulkStatus;
-    private String bulkSvcType;
+	private String loginID;
+	private String userID;
+	private String title;
+	private String msg;
+	private String inTime;
+	private String reqTime;
+	private String cnt;
+    private String status;
+    private String svcType;
     private String bulkSeq;
 
     public String getStartDate() {
@@ -62,12 +62,12 @@ public class BulkHistDto {
 		this.endTime = endTime;
 	}
 	
-	public String getTitle() {
-		return title;
+	public String getBulkTitle() {
+		return bulkTitle;
 	}
 	
-	public void setTitle(String title) {
-		this.title = title;
+	public void setBulkTitle(String bulkTitle) {
+		this.bulkTitle = bulkTitle;
 	}
 	
 	public String getBulkMsgKey() {
@@ -78,76 +78,76 @@ public class BulkHistDto {
 		this.bulkMsgKey = bulkMsgKey;
 	}
 	
-	public String getBulkLoginID() {
-		return bulkLoginID;
+	public String getLoginID() {
+		return loginID;
 	}
 	
-	public void setBulkLoginID(String bulkLoginID) {
-		this.bulkLoginID = bulkLoginID;
+	public void setLoginID(String loginID) {
+		this.loginID = loginID;
 	}
 	
-	public String getBulkUserID() {
-		return bulkUserID;
+	public String getUserID() {
+		return userID;
 	}
 	
-	public void setBulkUserID(String bulkUserID) {
-		this.bulkUserID = bulkUserID;
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 	
-	public String getBulkTitle() {
-		return bulkTitle;
+	public String getTitle() {
+		return title;
 	}
 	
-	public void setBulkTitle(String bulkTitle) {
-		this.bulkTitle = bulkTitle;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	
-	public String getBulkMsg() {
-		return bulkMsg;
+	public String getMsg() {
+		return msg;
 	}
 	
-	public void setBulkMsg(String bulkMsg) {
-		this.bulkMsg = bulkMsg;
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 	
-	public String getBulkInTime() {
-		return bulkInTime;
+	public String getInTime() {
+		return inTime;
 	}
 	
-	public void setBulkInTime(String bulkInTime) {
-		this.bulkInTime = bulkInTime;
+	public void setInTime(String inTime) {
+		this.inTime = inTime;
 	}
 	
-	public String getBulkReqTime() {
-		return bulkReqTime;
+	public String getReqTime() {
+		return reqTime;
 	}
 	
-	public void setBulkReqTime(String bulkReqTime) {
-		this.bulkReqTime = bulkReqTime;
+	public void setReqTime(String reqTime) {
+		this.reqTime = reqTime;
 	}
 	
-	public String getBulkCnt() {
-		return bulkCnt;
+	public String getCnt() {
+		return cnt;
 	}
 	
-	public void setBulkCnt(String bulkCnt) {
-		this.bulkCnt = bulkCnt;
+	public void setCnt(String cnt) {
+		this.cnt = cnt;
 	}
 
-    public String getBulkStatus() {
-		return bulkStatus;
+    public String getStatus() {
+		return status;
 	}
 	
-	public void setBulkStatus(String bulkStatus) {
-		this.bulkStatus = bulkStatus;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
-	public String getBulkSvcType() {
-		return bulkSvcType;
+	public String getSvcType() {
+		return svcType;
 	}
 	
-	public void setBulkSvcType(String bulkSvcType) {
-		this.bulkSvcType = bulkSvcType;
+	public void setSvcType(String svcType) {
+		this.svcType = svcType;
 	}
 	
 	public String getBulkSeq() {

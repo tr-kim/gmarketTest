@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="bulkHistDetail">
+	<div id="bulk_hist_modal" class="modal-bg bulkHistDetail d-block">
+		<div class="modal-wrap">
+			<div class="modal-hd">
+				<span class="font-sz-16 font-weight-600">상세 보기</span>
+				<button class="close_btn" id="close_btn">
+					<i class="bi bi-x-lg"></i>
+					<span class="visually-hidden">닫기</span>
+				</button>
+			</div>
+			<div class="modal-con">
+				<div class="mb-3 row">
+					<div class="col-12 mb-3">
+						<label class="d-block mb-1">제목</label>
+						<input type="text" class="form-control" name="title" id="title" readonly>
+					</div>
+					<div class="col-6 mb-3">
+						<label class="d-block mb-1">등록 일시</label>
+						<input type="text" class="form-control" name="in_time" id="in_time" readonly>
+					</div>
+					<div class="col-6 mb-3">
+						<label class="d-block mb-1">전송 일시</label>
+						<input type="text" class="form-control" name="req_time" id="req_time" readonly>
+					</div>
+					<div class="col-6 mb-3">
+						<label class="d-block mb-1">사용자 ID</label>
+						<input type="text" class="form-control" name="user_id" id="user_id" readonly>
+					</div>
+					<div class="col-6 mb-3">
+						<label class="d-block mb-1">전송 대상</label>
+						<input type="text" class="form-control" name="send_info" id="send_info" readonly>
+					</div>
+					<div class="col-6 mb-3">
+						<label class="d-block mb-1">전체</label>
+						<input type="text" class="form-control" name="total" id="total" eadonly>
+					</div>
+					<div class="col-6 mb-3">
+						<label class="d-block mb-1">등록 성공</label>
+						<input type="text" class="form-control" name="insert_succ" id="insert_succ" readonly>
+					</div>					
+					<div class="col-6 mb-3">
+						<label class="d-block mb-1">미등록</label>
+						<input type="text" class="form-control" name="insert_fail" id="insert_fail" readonly>
+					</div>
+					<div class="col-6 mb-3">
+						<label class="d-block mb-1">대기 건수</label>
+						<input type="text" class="form-control" name="stanby" id="stanby" readonly>
+					</div>
+					<div class="col-6 mb-3">
+						<label class="d-block mb-1">전송중</label>
+						<input type="text" class="form-control" name="tran" id="tran" readonly>
+					</div>
+					<div class="col-6 mb-3">
+						<label class="d-block mb-1">성공/실패</label>
+						<input type="text" class="form-control" name="succ_fail" id="succ_fail" readonly>
+					</div>
+					<div class="col-12 mb-3">
+						<label class="d-block mb-1">SMS내용</label>
+						<textarea type="text" class="form-control" name="msg" id="msg" readonly></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="modal-ft">
+				<button type="button" class="sub-bg close_btn">확인</button>
+			</div>
+		</div>
+	</div>
+</th:block>
+
+</html>

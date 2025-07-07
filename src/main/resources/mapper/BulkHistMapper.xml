@@ -5,15 +5,15 @@
 <mapper namespace="com.web.gmarket.bulk.hist.mapper.BulkHistMapper">
 	<resultMap id="BulkHistResultMap" type="com.web.gmarket.bulk.hist.dto.BulkHistDto">
 		<result property="bulkMsgKey" column="B_MSG_KEY" />
-		<result property="bulkLoginID" column="LOGIN_ID" />
-		<result property="bulkUserID" column="USER_ID" />
-		<result property="bulkTitle" column="TITLE" />
-		<result property="bulkMsg" column="MSG" />
-		<result property="bulkInTime" column="IN_TIME"/>
-		<result property="bulkReqTime" column="REQ_TIME" />
-		<result property="bulkCnt" column="CNT" />
-		<result property="bulkStatus" column="STATUS" />
-		<result property="bulkSvcType" column="SVC_TYPE"/>
+		<result property="loginID" column="LOGIN_ID" />
+		<result property="userID" column="USER_ID" />
+		<result property="title" column="TITLE" />
+		<result property="msg" column="MSG" />
+		<result property="inTime" column="IN_TIME"/>
+		<result property="reqTime" column="REQ_TIME" />
+		<result property="cnt" column="CNT" />
+		<result property="status" column="STATUS" />
+		<result property="svcType" column="SVC_TYPE"/>
 		<result property="bulkSeq" column="B_SEQ" />
 	</resultMap>
 	
