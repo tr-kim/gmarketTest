@@ -1,176 +1,178 @@
 $(function () {
 	
-    //수신자 탭버튼
-    const tabButtons = document.querySelectorAll('.tab li button');
-    const tabs = document.querySelectorAll('.tab li');
-    const callbacks = document.querySelectorAll('.callback_wrap');
-
-    tabButtons.forEach((button, index) => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            // .tab li에 on 클래스 조정
-            tabs.forEach((li, liIdx) => {
-                if (liIdx === index) {
-                    li.classList.add('on');
-                } else {
-                    li.classList.remove('on');
-                }
-            });
-
-            // .callback_wrap에 d-block 클래스 조정
-            callbacks.forEach((wrap, wrapIdx) => {
-                if (wrapIdx === index) {
-                    wrap.classList.add('d-block');
-                } else {
-                    wrap.classList.remove('d-block');
-                }
-            });
-        });
-    });
-
-    //옵션탭버튼
-    const optabButtons = document.querySelectorAll('.option_tab li button');
-    const optabs = document.querySelectorAll('.option_tab li');
-    const options = document.querySelectorAll('.option_wrap');
-
-    optabButtons.forEach((button, index) => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            // .tab li에 on 클래스 조정
-            optabs.forEach((li, liIdx) => {
-                if (liIdx === index) {
-                    li.classList.add('on');
-                } else {
-                    li.classList.remove('on');
-                }
-            });
-
-            options.forEach((wrap, wrapIdx) => {
-                if (wrapIdx === index) {
-                    wrap.classList.add('d-block');
-                } else {
-                    wrap.classList.remove('d-block');
-                }
-            });
-        });
-    });
-     
-    //이미지 등록
-    $('#file-uploader').dxFileUploader({
-        dialogTrigger: '#dropzone-external',
-        dropZone: '#dropzone-external',
-        multiple: true,
-        allowedFileExtensions: ['.jpg', '.jpeg', '.gif', '.png'],
-        uploadMode: 'instantly',
-        uploadUrl: 'https://js.devexpress.com/Demos/NetCore/FileUploader/Upload',
-        visible: false,
-        onDropZoneEnter({ component, dropZoneElement, event }) {
-            if (dropZoneElement.id === 'dropzone-external') {
-                const items = event.originalEvent.dataTransfer.items;
-
-                const allowedFileExtensions = component.option('allowedFileExtensions');
-                const draggedFileExtension = `.${items[0].type.replace(/^image\//, '')}`;
-
-                const isSingleFileDragged = items.length === 1;
-                const isValidFileExtension = allowedFileExtensions.includes(draggedFileExtension);
-
-                if (isSingleFileDragged && isValidFileExtension) {
-                toggleDropZoneActive(dropZoneElement, true);
-                }
-            }
-        },
-        onDropZoneLeave(e) {
-            if (e.dropZoneElement.id === 'dropzone-external') { toggleDropZoneActive(e.dropZoneElement, false); }
-        },       
-        onUploaded(e) {
-            const uploadedCount = document.querySelectorAll('#dropzone-image-list .col-4').length;
-
-            if (uploadedCount >= 3) {
-                alert('이미지는 최대 3개까지만 업로드할 수 있습니다.');
-                return;
-            }
-
-            const { file } = e;
-            const fileReader = new FileReader();
-
-            fileReader.onload = function () {
-                toggleDropZoneActive(document.getElementById('dropzone-external'), false);
-
-                const colDiv = document.createElement('div');
-                colDiv.className = 'col-4 position-relative';
-
-                const img = document.createElement('img');
-                img.src = fileReader.result;
-                img.classList.add('img-fluid', 'rounded');
-
-                const deleteBtn = document.createElement('button');
-                deleteBtn.innerHTML = '&times;';
-                deleteBtn.className = 'btn btn-sm btn-dark position-absolute top-0 end-0 m-1';
-                deleteBtn.style.zIndex = '10';
-
-                deleteBtn.addEventListener('click', () => {
-                    colDiv.remove();
-
-                    const uploader = $("#file-uploader").dxFileUploader("instance");
-                    const currentFiles = uploader.option("value") || [];
-
-                    // 삭제할 파일 이름과 비교해서 제외한 새 배열 생성
-                    const newFiles = currentFiles.filter(f => f.name !== file.name);
-
-                    uploader.option("value", newFiles);
-
-                    // 변경된 상태 반영
-                    handleInput();
-                });
-
-                colDiv.appendChild(img);
-                colDiv.appendChild(deleteBtn);
-                document.getElementById('dropzone-image-list').appendChild(colDiv);
-            };
-
-            fileReader.readAsDataURL(file);
-
-            uploadProgressBar.option({
-                visible: false,
-                value: 0,
-            });
-        },
-        onProgress(e) {
-            uploadProgressBar.option('value', (e.bytesLoaded / e.bytesTotal) * 100);
-        },
-        onUploadStarted() {
-            //toggleImageVisible(false);
-            uploadProgressBar.option('visible', true);
-        },        
-        onValueChanged: function (e) {
-            handleInput(); // 이미지 업로드되면 즉시 처리
-        },  
-    });
-
-    const uploadProgressBar = $('#upload-progress').dxProgressBar({
-        min: 0,
-        max: 100,
-        width: '30%',
-        showStatus: false,
-        visible: false,
-    }).dxProgressBar('instance');
-
-    function toggleDropZoneActive(dropZone, isActive) {
-        dropZone.classList.toggle('dropzone-active', isActive);
-    }
-
-    // function toggleImageVisible(visible) {
-    //     const dropZoneImage = document.getElementById('dropzone-image');
-    //     if (dropZoneImage) {
-    //     dropZoneImage.hidden = !visible;
-    // } else {
-    //     console.warn("#dropzone-image 요소가 없습니다.");
-    // }
-    // }
-
-    document.getElementById('dropzone-image-list').onload = function () { toggleImageVisible(true); };
-
-    //예약 발송 캘린더
+	const msgTitle = document.getElementById('msgTitle');
+	const msgWrite = document.getElementById('msgWrite');
+	const msgTypes = document.querySelector('.msg_type');
+	const byte_ck = document.getElementById('byte_ck');
+	const byte_type = document.getElementById('byte_type');
+	
+	msgWrite.placeholder = "내용을 입력해 주세요.\n80byte 초과 시 장문 문자로,\n이미지 추가 시 포토 문자로 자동 전환 됩니다.";
+	
+	
+	//수신번호 옵션(직접입력, 주소록, 엑셀파일)
+	const tabButtons = document.querySelectorAll('.tab li button');
+	const tabs = document.querySelectorAll('.tab li');
+	const callbacks = document.querySelectorAll('.callback_wrap');
+	
+	tabButtons.forEach((button, index) => {
+		button.addEventListener('click', (e) => {
+			e.preventDefault();
+			// .tab li에 on 클래스 조정
+			tabs.forEach((li, liIdx) => {
+				if (liIdx === index) {
+					li.classList.add('on');
+				} else {
+					li.classList.remove('on');
+				}
+			});
+			
+			// .callback_wrap에 d-block 클래스 조정
+			callbacks.forEach((wrap, wrapIdx) => {
+				if (wrapIdx === index) {
+					wrap.classList.add('d-block');
+				} else {
+					wrap.classList.remove('d-block');
+				}
+			});
+		});
+	});
+	
+	
+	//내용 옵션(이미지, 변수선택, 특수문자)
+	const optabButtons = document.querySelectorAll('.option_tab li button');
+	const optabs = document.querySelectorAll('.option_tab li');
+	const options = document.querySelectorAll('.option_wrap');
+	
+	optabButtons.forEach((button, index) => {
+		button.addEventListener('click', (e) => {
+			e.preventDefault();
+			// .tab li에 on 클래스 조정
+			optabs.forEach((li, liIdx) => {
+				if (liIdx === index) {
+					li.classList.add('on');
+				} else {
+					li.classList.remove('on');
+				}
+			});
+			
+			options.forEach((wrap, wrapIdx) => {
+				if (wrapIdx === index) {
+					wrap.classList.add('d-block');
+				} else {
+					wrap.classList.remove('d-block');
+				}
+			});
+		});
+	});
+	
+	
+	//이미지 등록	
+	$('#file-uploader').dxFileUploader({
+		dialogTrigger: '#dropzone-external',
+		dropZone: '#dropzone-external',
+		multiple: true,
+		allowedFileExtensions: ['.jpg', '.jpeg', '.gif', '.png'],
+		uploadMode: 'instantly',
+		uploadUrl: 'https://js.devexpress.com/Demos/NetCore/FileUploader/Upload',
+		visible: false,
+		onDropZoneEnter({ component, dropZoneElement, event }) {
+			if (dropZoneElement.id === 'dropzone-external') {
+				const items = event.originalEvent.dataTransfer.items;
+				
+				const allowedFileExtensions = component.option('allowedFileExtensions');
+				const draggedFileExtension = `.${items[0].type.replace(/^image\//, '')}`;
+				
+				const isSingleFileDragged = items.length === 1;
+				const isValidFileExtension = allowedFileExtensions.includes(draggedFileExtension);
+				
+				if (isSingleFileDragged && isValidFileExtension) {
+					toggleDropZoneActive(dropZoneElement, true);
+				}
+			}
+		},
+		onDropZoneLeave(e) {
+			if (e.dropZoneElement.id === 'dropzone-external') {
+				toggleDropZoneActive(e.dropZoneElement, false);
+			}
+		},       
+		onUploaded(e) {
+			const uploadedCount = document.querySelectorAll('#dropzone-image-list .col-4').length;
+			
+			if (uploadedCount >= 3) {
+				alert('이미지는 최대 3개까지만 업로드할 수 있습니다.');
+				return;
+			}
+			
+			const { file } = e;
+			const fileReader = new FileReader();
+			
+			fileReader.onload = function () {
+				toggleDropZoneActive(document.getElementById('dropzone-external'), false);
+				
+				const colDiv = document.createElement('div');
+				colDiv.className = 'col-4 position-relative';
+				
+				const img = document.createElement('img');
+				img.src = fileReader.result;
+				img.classList.add('img-fluid', 'rounded');
+				
+				const deleteBtn = document.createElement('button');
+				deleteBtn.innerHTML = '&times;';
+				deleteBtn.className = 'btn btn-sm btn-dark position-absolute top-0 end-0 m-1';
+				deleteBtn.style.zIndex = '10';
+				
+				deleteBtn.addEventListener('click', () => {
+					colDiv.remove();
+					
+					const uploader = $("#file-uploader").dxFileUploader("instance");
+					const currentFiles = uploader.option("value") || [];
+					
+					// 삭제할 파일 이름과 비교해서 제외한 새 배열 생성
+					const newFiles = currentFiles.filter(f => f.name !== file.name);
+					
+					uploader.option("value", newFiles);
+					
+					// 변경된 상태 반영
+					handleInput();
+				});
+				
+				colDiv.appendChild(img);
+				colDiv.appendChild(deleteBtn);
+				document.getElementById('dropzone-image-list').appendChild(colDiv);
+			};
+			
+			fileReader.readAsDataURL(file);
+			
+			uploadProgressBar.option({
+				visible: false,
+				value: 0,
+			});
+		},
+		onProgress(e) {
+			uploadProgressBar.option('value', (e.bytesLoaded / e.bytesTotal) * 100);
+		},
+		onUploadStarted() {
+			uploadProgressBar.option('visible', true);
+		},
+		onValueChanged: function (e) {
+			handleInput(); // 이미지 업로드되면 즉시 처리
+		},
+	});
+	
+	const uploadProgressBar = $('#upload-progress').dxProgressBar({
+		min: 0,
+		max: 100,
+		width: '30%',
+		showStatus: false,
+		visible: false,
+	}).dxProgressBar('instance');
+	
+	function toggleDropZoneActive(dropZone, isActive) {
+		dropZone.classList.toggle('dropzone-active', isActive);
+	}
+	
+	
+	//예약 발송 캘린더
     const zoomLevels = ['month', 'year', 'decade', 'century'];
     const weekDays = [
         { id: 0, text: 'Sunday' },
@@ -360,12 +362,6 @@ $(function () {
         document.querySelector('.date').textContent = '날짜를 선택해 주세요.';
     })
 
-
-    const msgTitle = document.getElementById('msgTitle');
-    const msgWrite = document.getElementById('msgWrite');
-    const msgTypes = document.querySelector('.msg_type');
-    const byte_ck = document.getElementById('byte_ck');
-    const byte_type = document.getElementById('byte_type');
 
     //문자 타입, byte 표시
     function getByteLength(str) {
