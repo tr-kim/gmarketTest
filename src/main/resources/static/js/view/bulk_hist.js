@@ -95,7 +95,6 @@ $(function () {
 				startTime: startTimeFormatted + "000000",
 				endTime: endTimeFormatted + "235959",
 				bulkTitle: titleValue,
-
 				//페이징 서버사이드 처리
 				skip: loadOptions.skip ?? 0, //offset: 앞에서 건너뛸 레코드 수
 				take: loadOptions.take ?? 50, //limit: 가져올 레코드 수
@@ -131,12 +130,11 @@ $(function () {
 	
 	//조회 그리드
 	bulkHistDataGrid = $("#bulkHistGrid").dxDataGrid({
-		dataSource: bulkHistDataSource ,
-		//페이징 서버사이드 처리
+		dataSource: bulkHistDataSource,
+		loadMode: "raw", //서버사이드 처리
 		remoteOperations: {
-			paging: true
+			paging: true //페이징 서버사이드 처리
 		},
-		loadMode: "raw", //processed: 클라이언트 처리, raw: 서버 처리
 		headerFilter: {
 			visible: true
 		},
