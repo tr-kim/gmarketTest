@@ -41,8 +41,8 @@ $(function () {
 		valueExpr: 'code',
 		value: 0,
 		onValueChanged: function (e) {
+			//중분류 업데이트
 			const selectedCode = e.value;
-			// middle-category 내용 업데이트
 			middleCategoryInstance.option('dataSource', middleCategoryData[selectedCode] || []);
 			middleCategoryInstance.option('value', 0); // 기본값 다시 설정
 		}
@@ -100,6 +100,7 @@ $(function () {
 		placeholder: '번호를 입력하세요.'
 	}).dxTextBox("instance");
 	
+	//조회 요청
 	const histDataSource = new DevExpress.data.CustomStore({
 		key: "tranPr",
 		load: (loadOptions) => {
@@ -208,9 +209,8 @@ $(function () {
 				caption: "결과", 
 				alignment: "center" ,
 				customizeText: function(cellInfo) {
-
 					const value = String(cellInfo.value.trim());
-
+					
 					switch (value) {
 						case "-2" : return "결과 대기";
 						case "-1" : return "대기";
@@ -237,7 +237,6 @@ $(function () {
 						case "Z" : return "기타 오류";
 						default: return "기타";
 					}
-					
 				} 
 			},
 			{ dataField: "corpReserved2", caption: "Flow #", alignment: "center" }
@@ -298,6 +297,7 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 	
 	// 조회기간 구하기
 	const largeCategoryValue = largeCategoryInstance.option("value");
+	
 	if(largeCategoryValue != 0){
 		let start = new Date(
 			parseInt(startTimeFormatted.slice(0, 4)),

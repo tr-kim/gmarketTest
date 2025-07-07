@@ -27,7 +27,7 @@
             Close: "Close",
             Clear: "Clear",
             Done: "Done",
-            Loading: "Loading...",
+            Loading: "조회 중입니다.",
             Select: "Select...",
             Search: "Search",
             Back: "Back",
