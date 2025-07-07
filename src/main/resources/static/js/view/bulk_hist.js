@@ -146,29 +146,20 @@ $(function () {
 				caption: "전송 일시", 
 				alignment: "center",
 				customizeText: function(cellInfo) {
-					const value = cellInfo.value.trim();
-					
-					const yyyy = value.slice(0, 4);
-					const mm = value.slice(4, 6);
-					const dd = value.slice(6, 8);
-					const hh = value.slice(8, 10);
-					const mi = value.slice(10, 12);
-					const ss   = value.slice(12, 14);
-					
-					return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+					return formatTimestamp(cellInfo.value);
 				}
 			},
 			{ dataField: "msg", caption: "메시지 내용", alignment: "left" },
 			{ dataField: "cnt", caption: "전체", alignment: "center" },
 			{
-				name: "detailBtn",
+				name: "detail",
 				caption: "상세",
 				type: "buttons",
 				buttons: [{
 					icon: "find",
-					onClick(e) {
-						alert("상세조회");
-					},
+					onClick: function(e) {
+                    openBulkDetailModal(e.row.data);
+                }					
 				}],
 			},
 			{ dataField: "userID", caption: "발송ID", alignment: "center" },
@@ -215,7 +206,7 @@ $(function () {
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
 			$("#totalCount").text(`총 ${totalCount}건`);
-		}
+		},
 	}).dxDataGrid("instance");
 
 });
@@ -304,3 +295,55 @@ function exportGridToExcel(gridInstance){
 	});
 }
 
+// 상세보기
+let inTimeValue = "";
+let reqTimeValue = "";
+
+function formatTimestamp(str) {
+	str = str.trim();
+	const yyyy = str.slice(0, 4);
+	const mm = str.slice(4, 6);
+	const dd = str.slice(6, 8);
+	const hh = str.slice(8, 10);
+	const mi = str.slice(10, 12);
+	const ss = str.slice(12, 14);
+	return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+}
+
+function openBulkDetailModal(data = {}) {
+
+	// const param = {};
+	// postAjax('/api/v1/bulkHist', param, rsaCallback);
+	
+	if (data.inTime) {
+		inTimeValue = formatTimestamp(data.inTime);
+	}
+
+	if (data.reqTime) {
+		reqTimeValue = formatTimestamp(data.reqTime);
+	}
+
+	currentKey = data.bulkMsgKey; 
+	document.getElementById('title').value = data.title;
+	document.getElementById('in_time').value = inTimeValue;
+	document.getElementById('req_time').value = reqTimeValue;
+	document.getElementById('user_id').value = data.userID;
+	document.getElementById('send_info').value = '전송 대상';
+	document.getElementById('total').value = '전체';
+	document.getElementById('insert_succ').value = '등록 성공';
+	document.getElementById('insert_fail').value = '등록 실패';
+	document.getElementById('stanby').value = '대기중';
+	document.getElementById('tran').value = '전송중';
+	document.getElementById('succ_fail').value = '성공/실패';
+	document.getElementById('msg').value = data.msg;
+
+	document.getElementById('bulk_hist_modal').classList.add('d-block');
+}
+
+// 상세 보기 모달 - 닫기 버튼
+const close_btns = document.querySelectorAll('.close_btn');
+close_btns.forEach(close_btn => {
+	close_btn.addEventListener('click', function() {
+		document.getElementById('bulk_hist_modal').classList.remove('d-block');
+	})
+})

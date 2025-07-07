@@ -17,8 +17,10 @@ public class HistDto {
 	private String startTime;
 	private String endTime;
 	private String phoneNum;
-	private List<String> monthTables;
 	private String tableName;
+	private List<String> monthTables;
+	private Integer skip;
+	private Integer take;
 	
 	// 조회 컬럼
 	private String tranPr;
