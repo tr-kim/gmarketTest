@@ -33,4 +33,9 @@ public class HistServiceImpl implements HistService {
 		
 		return histMapper.selectHistList(histDto);
 	}
+	
+	@Override
+	public int getHistCount(HistDto histDto) {
+		return histMapper.selectHistCount(histDto);
+	}
 }

@@ -137,7 +137,10 @@ $(function () {
 				endTime: endTimeFormatted + "235959",
 				phoneNum: phoneNumValue,
 				//테스트 중. 전체 시 테이블명 수정 필요
-				tableName: (middleItem.name == "전체") ? "SMSCLI_TBL_EVENT" : middleItem.name
+				tableName: (middleItem.name == "전체") ? "SMSCLI_TBL_EVENT" : middleItem.name,
+				//페이징 서버사이드 처리
+				skip: loadOptions.skip ?? 0, //offset: 앞에서 건너뛸 레코드 수
+				take: loadOptions.take ?? 50, //limit: 가져올 레코드 수
 			};
 			
 			return fetch('/api/v1/hist/list', {
@@ -151,9 +154,19 @@ $(function () {
 				if (!response.ok) throw new Error("서버 오류");
 				return response.json();
 			})
+			.then(data => {
+				return {
+					data: data.data,
+					totalCount: data.totalCount
+				};
+			})
 			.catch(error => {
 				console.error("데이터 로드 실패:", error);
 				alert("데이터를 불러오는 중 오류가 발생했습니다.");
+				return {
+					data: [],
+					totalCount: 0
+				};
 			});
 		}
 	});
@@ -161,6 +174,12 @@ $(function () {
 	//조회 그리드
 	histDataGrid = $("#histGrid").dxDataGrid({
 		dataSource: histDataSource,
+		//페이징 서버사이드 처리
+		remoteOperations: {
+			paging: true
+		},
+		//remoteOperations: true, //paging, sorting, filtering 등 전체
+		loadMode: "raw", //processed: 클라이언트 처리, raw: 서버 처리
 		headerFilter: {
 			visible: true
 		},

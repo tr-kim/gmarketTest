@@ -11,4 +11,5 @@ public interface HistMapper {
 	
 	List<HistDto> selectHistList(HistDto histDto);
 	
+	int selectHistCount(HistDto histDto);
 }
