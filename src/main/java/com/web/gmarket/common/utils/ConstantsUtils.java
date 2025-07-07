@@ -50,4 +50,9 @@ public class ConstantsUtils {
 	public static final String INTANCE_TYPE_RSA = "RSA";
 	public static final String RSA_MODULUS = "RSA_MODULUS";
 	public static final String RSA_EXPONENT = "RSA_EXPONENT";
+	
+	// Real Send Hist
+	public static final int TOTAL_MON_TIME = 1; // ex) 5분 => 5
+	public static final int ALARM_FLAG = 2; // 알람에 대한 데이터를 가져오는 기준 => 1 -> 현재시간부터 (현재시간 - TOTAL_MON_TIME(분)) 까지의 데이터, 2 -> 최근전송시간부터 (최근전송시간 - TOTAL_MON_TIME(분)) 까지의 데이터
+	public static final int TOTAL_GRAPH_TIME = 60; // Graph Reload 시간 간격(초단위, ex) 1분 => 60)
 }

@@ -5,20 +5,43 @@
 <body>
 	<p class="font-sz-20 font-weight-600 pt-3 text-666">실시간 발송현황</p>
 	<div class="row h-100" id="real_send_hist">
+
+		<button type="button" id="totalToggle">시작/중지</button>
 		<div class="col-6 mb-3 pe-2">
-			<canvas id="line_chart" class="content"></canvas>
+			<canvas id="total_chart" class="content" width="640" height="300"></canvas>
 		</div>
 		<div class="col-6 mb-3 ps-2">
-			<canvas id="bar_chart" class="content"></canvas>
+			<canvas id="gmarket_total_chart" class="content" width="640" height="300"></canvas>
 		</div>
-		<div class="col-6 pe-2">
-			<canvas id="bar_line_chart" class="content"></canvas>
+		<div class="col-6 mb-3 ps-2">
+			<canvas id="auction_total_chart" class="content" width="640" height="300"></canvas>
 		</div>
-		<div class="col-6 ps-2">
-			<canvas id="pie_chart" class="content"></canvas>
+		<div class="col-6 mb-3 ps-2">
+			<canvas id="gmarket_chart01" class="content" width="640" height="300"></canvas>
+		</div>
+		<div class="col-6 mb-3 ps-2">
+			<canvas id="auction_chart01" class="content" width="640" height="300"></canvas>
+		</div>
+		<div class="col-6 mb-3 ps-2">
+			<canvas id="gmarket_chart02" class="content" width="640" height="300"></canvas>
+		</div>
+		<div class="col-6 mb-3 ps-2">
+			<canvas id="auction_chart02" class="content" width="640" height="300"></canvas>
+		</div>
+		<div class="col-6 mb-3 ps-2">
+			<canvas id="gmarket_chart03" class="content" width="640" height="300"></canvas>
+		</div>
+		<div class="col-6 mb-3 ps-2">
+			<canvas id="auction_chart03" class="content" width="640" height="300"></canvas>
+		</div>
+		<div class="col-6 mb-3 ps-2">
+			<canvas id="gmarket_chart04" class="content" width="640" height="300"></canvas>
+		</div>
+		<div class="col-6 mb-3 ps-2">
+			<canvas id="auction_chart04" class="content" width="640" height="300"></canvas>
 		</div>
 	</div>
-	
+
 	<script th:src="@{/js/chart/chart.umd.js}"></script>
 	<script th:src="@{/js/view/real_send_hist.js}"></script>
 </body>
