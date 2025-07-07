@@ -1,5 +1,8 @@
 package com.web.gmarket.real.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,8 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,7 +37,7 @@ public class RestRealSendHistController {
 	@ResponseBody
 	@PostMapping("/totalList")
 	public ResponseEntity<?> totalList() {
-		RealDto dto = new RealDto();
+		List<RealDto> dto = new ArrayList<RealDto>();
 		
 		try {
 			
@@ -56,13 +59,13 @@ public class RestRealSendHistController {
 	 */
 	@ResponseBody
 	@PostMapping("/list")
-	public ResponseEntity<?> list(Authentication authentication, @RequestBody int companyCode) {
+	public ResponseEntity<?> list(Authentication authentication,  @RequestParam("code") int code) {
 		RealDto dto = new RealDto();
 		
 		try {
 			
 			// 0이면 옥션, 1이면 지마켓
-			dto = realService.selectRealHistList(companyCode);
+			dto = realService.selectRealHistList(code);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -79,12 +82,13 @@ public class RestRealSendHistController {
 	 */
 	@ResponseBody
 	@PostMapping("/tableList")
-	public ResponseEntity<?> tableList(Authentication authentication, @RequestBody int tableCode) {
+	public ResponseEntity<?> tableList(Authentication authentication,  @RequestParam("code") int code) {
 		RealDto dto = new RealDto();
 		
 		try {
 			
-			dto = realService.selectRealHistTableList(tableCode);
+			// 테이블별 코드
+			dto = realService.selectRealHistTableList(code);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

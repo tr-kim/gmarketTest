@@ -1,5 +1,7 @@
 package com.web.gmarket.real.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +16,7 @@ public class RealServiceImpl implements RealService {
 	private RealMapper realMapper;
 	
 	@Override
-	public RealDto selectRealHistTotalList(int totalMonTime, int alarmFlag) {
+	public List<RealDto> selectRealHistTotalList(int totalMonTime, int alarmFlag) {
 		return realMapper.selectRealHistTotalList(totalMonTime, alarmFlag);
 	}
 

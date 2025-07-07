@@ -1,5 +1,7 @@
 package com.web.gmarket.real.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,7 +16,7 @@ public interface RealMapper {
 	 * @param totalMonTime
 	 * @return
 	 */
-	public RealDto selectRealHistTotalList(@Param(value = "totalMonTime") int totalMonTime, @Param(value = "alarmFlag") int alarmFlag);
+	public List<RealDto> selectRealHistTotalList(@Param(value = "totalMonTime") int totalMonTime, @Param(value = "alarmFlag") int alarmFlag);
 	
 	/**
 	 * 옥션 및 지마켓 전체 테이블 현황
