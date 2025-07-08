@@ -460,6 +460,20 @@ $(function () {
                     }
             })
     });
+
+    //내 문자함    
+    const bookmarkMsg = document.querySelector('.bookmarkMsg');
+    document.getElementById('bookmark_btn').addEventListener('click', function(){
+        bookmarkMsg.classList.add('d-block');
+    });
+
+    const close_btns = document.querySelectorAll('.bookmarkMsg .close_btn');
+    close_btns.forEach(close_btn => {
+        close_btn.addEventListener('click', function() {
+            bookmarkMsg.classList.remove('d-block');
+        })
+    })
+    
 });
     
 
