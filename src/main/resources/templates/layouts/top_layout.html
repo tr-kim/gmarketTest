@@ -29,11 +29,11 @@
 	<header>
         <div class="container d-flex justify-content-between align-items-center position-relative">
             <div class="logo">
-                <a href="/" th:href="@{/}">
+                <a th:href="@{/}">
                     <img th:src="@{/images/logo.png}" alt="지마켓로고">
                 </a>
             </div>
-            <a href="#" class="user_profile d-flex align-items-center">
+            <a href="javascript:void(0);" class="user_profile d-flex align-items-center">
                 <div class="user_img">
                     <img th:src="@{/images/user.png}" alt="사용자 이미지">
                 </div>
@@ -42,7 +42,7 @@
 						<span sec:authentication="principal.username"></span>
                     </div>
                     <div class="user_grade ">
-						<span sec:authentication="principal.userGrade"></span>
+						<span sec:authentication="principal.userGradeName"></span>
                     </div>
                 </div>
             </a>
@@ -109,7 +109,7 @@
             <th:block layout:fragment="content"></th:block>
         </div>
     </section>
-    <th:block th:replace="~{/passwordChg :: passwordChg}"></th:block>
+    <th:block th:replace="~{/view/popup/passwordChg :: passwordChg}"></th:block>
 	
 	
 	

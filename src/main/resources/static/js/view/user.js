@@ -5,18 +5,41 @@ let currentKey = null;
 
 $(function() {
 
-	//구분
-	$('#large-category').dxSelectBox({
-		dataSource: [{
+	console.log(userGrade);
+	console.log(companyCode);
+
+	let categoryData;
+	let categoryValue;
+
+	if (userGrade == 0) {
+		categoryData = [{
 			Code: 0,
 			Name: '옥션',
 		}, {
 			Code: 1,
 			Name: '지마켓',
-		}],
+		}];
+		categoryValue = 1;
+	} else if (userGrade == 1 && companyCode == 0) {
+		categoryData = [{
+			Code: 0,
+			Name: '옥션',
+		}];
+		categoryValue = 0;
+	} else if (userGrade == 1 && companyCode == 1) {
+		categoryData = [{
+			Code: 1,
+			Name: '지마켓',
+		}];
+		categoryValue = 1;
+	}
+
+	//구분
+	$('#large-category').dxSelectBox({
+		dataSource: categoryData,
 		displayExpr: 'Name',
 		valueExpr: 'Code',
-		value: 1
+		value: categoryValue
 		, inputAttr: {
 			name: "companyCode"
 		},
@@ -25,9 +48,11 @@ $(function() {
 		}
 	});
 
-	//사용자등급
-	$('#user_grade').dxSelectBox({
-		dataSource: [{
+	let userGradeData;
+	let userGradeValue;
+
+	if (userGrade == 0) {
+		userGradeData = [{
 			Grade: 0,
 			Name: '슈퍼관리자',
 		}, {
@@ -39,10 +64,28 @@ $(function() {
 		}, {
 			Grade: 3,
 			Name: '운영자',
-		}],
+		}];
+		userGradeValue = 0;
+	} else {
+		userGradeData = [{
+			Grade: 1,
+			Name: '관리자',
+		}, {
+			Grade: 2,
+			Name: '사용자',
+		}, {
+			Grade: 3,
+			Name: '운영자',
+		}];
+		userGradeValue = 1;
+	};
+
+	//사용자등급
+	$('#user_grade').dxSelectBox({
+		dataSource: userGradeData,
 		displayExpr: 'Name',
 		valueExpr: 'Grade',
-		value: 0
+		value: userGradeValue
 		, inputAttr: {
 			name: "userGrade"
 		},
@@ -101,7 +144,18 @@ $(function() {
 		columnResizingMode: 'widget',
 		columnAutoWidth: true,
 		columns: [
-			{ dataField: "userSeq", caption: "NO", alignment: "center" },
+			{
+				dataField: "no"
+				, caption: "NO"
+				, alignment: "center"
+				, cellTemplate: function(container, options) {
+					const pageIndex = options.component.pageIndex();
+					const pageSize = options.component.pageSize();
+					const globalIndex = pageIndex * pageSize + options.rowIndex + 1;
+
+					container.text(globalIndex);
+				}
+			},
 			{ dataField: "userId", caption: "사용자 ID", alignment: "center" },
 			{ dataField: "userName", caption: "이름", alignment: "center" },
 			{
@@ -157,17 +211,17 @@ $(function() {
 						text: '',
 						onClick: function(e) {
 							const rowData = e.row.data;
-							if (confirm(`${rowData.userId}을(를) 삭제하시겠습니까?`)) {
+							if (confirm('계정을 삭제 하시겠습니까?')) {
 								const param = { userId: rowData.userId };
-								
+
 								deleteAjax('/api/v1/user/delete', param, function callback(data) {
 									const code = data.code;
 									const result = data.result;
-									
+
 									if (code == 1000) {
 										alert("삭제에 성공하였습니다.");
 										search();
-									} else if(code == 9003) {
+									} else if (code == 9003) {
 										alert(result);
 									} else {
 										alert("삭제에 실패하였습니다.");
@@ -209,23 +263,23 @@ $(function() {
 
 // 사용자 등록 모달 - 초기화
 function userModalReset() {
-	document.querySelectorAll('#user_modal input').forEach(input => {
+	document.querySelectorAll('#user_add_modal input').forEach(input => {
 		input.value = "";
 	});
 
-	document.querySelectorAll('#user_modal select.select_Y').forEach(select => {
+	document.querySelectorAll('#user_add_modal select.select_Y').forEach(select => {
 		select.value = "Y";
 	});
 
-	document.querySelectorAll('#user_modal select.select_N').forEach(select => {
+	document.querySelectorAll('#user_add_modal select.select_N').forEach(select => {
 		select.value = "N";
 	});
 
-	document.querySelectorAll('#user_modal select.select_0').forEach(select => {
+	document.querySelectorAll('#user_add_modal select.select_0').forEach(select => {
 		select.value = "0";
 	});
 
-	document.querySelectorAll('#user_modal select.select_2').forEach(select => {
+	document.querySelectorAll('#user_add_modal select.select_2').forEach(select => {
 		select.value = "2";
 	});
 }
@@ -252,7 +306,7 @@ function openCustomModal(mode, data = {}) {
 	postAjax('/api/v1/user/rsa', param, rsaCallback);
 
 	if (mode === 'edit') {
-		document.querySelector('#user_modal .modal-hd > span').textContent = '사용자 수정';
+		document.querySelector('#user_add_modal .modal-hd > span').textContent = '사용자 수정';
 		document.getElementById('reset_btn').classList.add('d-block');
 
 		currentKey = data.userSeq; // keyExpr 기준
@@ -270,8 +324,10 @@ function openCustomModal(mode, data = {}) {
 		document.getElementById('user_lms_data').value = data.lmsYn;
 		document.getElementById('user_mms_data').value = data.mmsYn;
 		document.getElementById('use_yn_data').value = data.useYn;
+		
+		document.getElementById('user_id_data').readOnly = true;
 	} else {
-		document.querySelector('#user_modal .modal-hd > span').textContent = '사용자 등록';
+		document.querySelector('#user_add_modal .modal-hd > span').textContent = '사용자 등록';
 
 		currentKey = null;
 		document.getElementById('user_grade_data').value = "2";
@@ -290,7 +346,7 @@ function openCustomModal(mode, data = {}) {
 		document.getElementById('use_yn_data').value = 'Y';
 	}
 
-	document.getElementById('user_modal').classList.add('d-block');
+	document.getElementById('user_add_modal').classList.add('d-block');
 }
 
 // 비밀번호 암호화 성공 함수
@@ -308,7 +364,7 @@ document.getElementById('add_btn').addEventListener('click', function(e) {
 // 사용자 등록 모달 - 닫기 버튼
 document.getElementById('close_btn').addEventListener('click', function(e) {
 	e.preventDefault();
-	document.getElementById('user_modal').classList.remove('d-block');
+	document.getElementById('user_add_modal').classList.remove('d-block');
 	userModalReset();
 });
 
@@ -367,7 +423,7 @@ function successCallback(data) {
 
 	if (code == 1000) {
 		alert(currentMode === 'edit' ? "수정에 성공하였습니다." : "등록에 성공하였습니다.");
-		document.getElementById('user_modal').classList.remove('d-block');
+		document.getElementById('user_add_modal').classList.remove('d-block');
 		userModalReset();
 		search();
 	} else if (code == 9001) {

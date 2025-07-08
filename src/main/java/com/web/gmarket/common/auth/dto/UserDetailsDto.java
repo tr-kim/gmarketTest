@@ -75,7 +75,6 @@ public class UserDetailsDto implements UserDetails, Serializable {
         return userDto.getUserPwd();
     }
 
-
     /**
      * 사용자의 이름을 반환합니다.
      *
@@ -154,28 +153,41 @@ public class UserDetailsDto implements UserDetails, Serializable {
      *
      * @return String
      */
-    public String getUserGrade() {
+    public int getUserGrade() {
+        return userDto.getUserGrade();
+    }
+    
+    /**
+     * 사용자의 회사코드를 반환합니다.
+     *
+     * @return String
+     */
+    public int getCompanyCode() {
+        return userDto.getCompanyCode();
+    }
+    
+    /**
+     * 사용자의 권한 이름을 반환합니다.
+     *
+     * @return String
+     */
+    public String getUserGradeName() {
     	
     	int userGrade = userDto.getUserGrade();
     	String str = "슈퍼관리자";
     	
-    	switch (userGrade) {
-			case 0:
-				str = "슈퍼관리자";	// 슈퍼관리자
-				break;
-			case 1:
-				str = "관리자";		// 관리자
-				break;
-			case 2:
-				str = "사용자";		// 사용자
-				break;
-			case 3:
-				str = "운영자";		// 운영자
-				break;
-			default:
-				str = "일반";			// 일반
-				break;
+    	if(userGrade == UserRole.SUPER.getCode()) {				// 슈퍼관리자
+    		str = "슈퍼관리자";
+    	} else if(userGrade == UserRole.ADMIN.getCode()) {		// 관리자
+    		str = "관리자";
+    	} else if(userGrade == UserRole.USER.getCode()) {		// 사용자
+    		str = "사용자";
+    	} else if(userGrade == UserRole.OPERATOR.getCode()) {	// 운영자
+    		str = "운영자";
+    	} else {												// 일반
+    		str = "일반";	
     	}
+    	
         return str;
     }
     

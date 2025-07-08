@@ -273,3 +273,10 @@ const isEmpty = (input) => {
 	}
 	else return false;
 }
+
+function click() {
+	if (event.button == 2) {
+		alert('마우스 오른쪽 버튼은 사용할 수 없습니다.');
+	}
+}
+document.onmousedown = click
