@@ -14,46 +14,31 @@ $(function () {
 		type: "date",
 		value: startDate,
 		displayFormat: "yyyy-MM-dd",
-		onValueChanged(e) {
-			const date = e.value;
-			if (date instanceof Date && !isNaN(date)) {
-				const yyyy = date.getFullYear();
-				const mm = String(date.getMonth() + 1).padStart(2, '0');
-				const dd = String(date.getDate()).padStart(2, '0');
-				
-				console.log(`${yyyy}${mm}${dd}`);
-			}
-		},
+		pickerType: "calendar",
+		calendarOptions: {
+			minZoomLevel: "year"
+		}
 	}).dxDateBox("instance");
 	
 	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
 		value: endDate,
 		displayFormat: "yyyy-MM-dd",
-		onValueChanged(e) {
-			const date = e.value;
-			if (date instanceof Date && !isNaN(date)) {
-				const yyyy = date.getFullYear();
-				const mm = String(date.getMonth() + 1).padStart(2, '0');
-				const dd = String(date.getDate()).padStart(2, '0');
-				
-				console.log(`${yyyy}${mm}${dd}`);
-			}
-		},
+		pickerType: "calendar",
+		calendarOptions: {
+			minZoomLevel: "year"
+		}
 	}).dxDateBox("instance");
 	
 	//대분류
 	largeCategoryInstance = $('#large-category').dxSelectBox({
-		dataSource: [{
-			Code: 0,
-			Name: '옥션',
-		},{
-			Code: 1,
-			Name: '지마켓',
-		}],
-			displayExpr: 'Name',
-			valueExpr: 'Code',
-			value: 1
+		dataSource: [
+			{ code: 0, name: '옥션' },
+			{ code: 1, name: '지마켓' }
+		],
+		displayExpr: 'name',
+		valueExpr: 'code',
+		value: 0
 	}).dxSelectBox("instance");
 	
 	//제목
@@ -71,6 +56,7 @@ $(function () {
 			let startDateFormatted = "", startTimeFormatted = "";
 			let endDateFormatted = "", endTimeFormatted = "";
 			
+			// 날짜가 Date 객체인지 확인
 			if (startValue instanceof Date && !isNaN(startValue)) {
 				const yyyy = startValue.getFullYear();
 				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
@@ -95,7 +81,6 @@ $(function () {
 				startTime: startTimeFormatted + "000000",
 				endTime: endTimeFormatted + "235959",
 				bulkTitle: titleValue,
-
 				//페이징 서버사이드 처리
 				skip: loadOptions.skip ?? 0, //offset: 앞에서 건너뛸 레코드 수
 				take: loadOptions.take ?? 50, //limit: 가져올 레코드 수
@@ -131,12 +116,11 @@ $(function () {
 	
 	//조회 그리드
 	bulkHistDataGrid = $("#bulkHistGrid").dxDataGrid({
-		dataSource: bulkHistDataSource ,
-		//페이징 서버사이드 처리
+		dataSource: bulkHistDataSource,
+		loadMode: "raw", //서버사이드 처리
 		remoteOperations: {
-			paging: true
+			paging: true //페이징 서버사이드 처리
 		},
-		loadMode: "raw", //processed: 클라이언트 처리, raw: 서버 처리
 		headerFilter: {
 			visible: true
 		},
@@ -177,8 +161,8 @@ $(function () {
 				buttons: [{
 					icon: "find",
 					onClick: function(e) {
-                    openBulkDetailModal(e.row.data);
-                }					
+						openBulkDetailModal(e.row.data);
+					}
 				}],
 			},
 			{ dataField: "userID", caption: "발송ID", alignment: "center" },
@@ -195,7 +179,7 @@ $(function () {
 						case "1" : return "실패";
 						default: return "기타";
 					}
-				} 
+				}
 			},
 			{
 				name: "textBtn",
@@ -330,18 +314,14 @@ function formatTimestamp(str) {
 }
 
 function openBulkDetailModal(data = {}) {
-
-	// const param = {};
-	// postAjax('/api/v1/bulkHist', param, rsaCallback);
-	
 	if (data.inTime) {
 		inTimeValue = formatTimestamp(data.inTime);
 	}
-
+	
 	if (data.reqTime) {
 		reqTimeValue = formatTimestamp(data.reqTime);
 	}
-
+	
 	currentKey = data.bulkMsgKey; 
 	document.getElementById('title').value = data.title;
 	document.getElementById('in_time').value = inTimeValue;
@@ -355,7 +335,7 @@ function openBulkDetailModal(data = {}) {
 	document.getElementById('tran').value = '전송중';
 	document.getElementById('succ_fail').value = '성공/실패';
 	document.getElementById('msg').value = data.msg;
-
+	
 	document.getElementById('bulk_hist_modal').classList.add('d-block');
 }
 

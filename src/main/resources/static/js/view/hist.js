@@ -174,12 +174,10 @@ $(function () {
 	//조회 그리드
 	histDataGrid = $("#histGrid").dxDataGrid({
 		dataSource: histDataSource,
-		//페이징 서버사이드 처리
+		loadMode: "raw", //서버사이드 처리
 		remoteOperations: {
-			paging: true
+			paging: true //페이징 서버사이드 처리
 		},
-		//remoteOperations: true, //paging, sorting, filtering 등 전체
-		loadMode: "raw", //processed: 클라이언트 처리, raw: 서버 처리
 		headerFilter: {
 			visible: true
 		},
