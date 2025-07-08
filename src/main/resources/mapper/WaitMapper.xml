@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-<mapper namespace="com.web.gmarket.bulk.hist.mapper.BulkHistMapper">
-	<resultMap id="BulkHistResultMap" type="com.web.gmarket.bulk.hist.dto.BulkHistDto">
+<mapper namespace="com.web.gmarket.wait.mapper.WaitMapper">
+	<resultMap id="WaitResultMap" type="com.web.gmarket.wait.dto.WaitDto">
 		<result property="bulkMsgKey" column="B_MSG_KEY" />
 		<result property="loginID" column="LOGIN_ID" />
 		<result property="userID" column="USER_ID" />
@@ -17,7 +17,7 @@
 		<result property="bulkSeq" column="B_SEQ" />
 	</resultMap>
 	
-	<select id="selectBulkHistList" resultMap="BulkHistResultMap">
+	<select id="selectWaitList" resultMap="WaitResultMap">
 		(
 		SELECT
 			B_MSG_KEY,
@@ -35,8 +35,8 @@
 			T_BROADCAST_MSG
 		WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}
 			AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}
-		<if test="bulkTitle != null and bulkTitle != ''">
-			AND TITLE LIKE CONCAT('%', #{bulkTitle}, '%')
+		<if test="waitTitle != null and waitTitle != ''">
+			AND TITLE LIKE CONCAT('%', #{waitTitle}, '%')
 		</if>
 		)
 		ORDER BY B_SEQ DESC
@@ -45,14 +45,14 @@
 		</if>
 	</select>
 
-	<select id="selectBulkHistCount" resultType="int">
+	<select id="selectWaitCount" resultType="int">
 		SELECT COUNT(*) FROM (			
 			SELECT 1 AS CNT
 			FROM T_BROADCAST_MSG
 			WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}
 				AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}
-			<if test="bulkTitle != null and bulkTitle != ''">
-				AND TITLE LIKE CONCAT('%', #{bulkTitle}, '%')
+			<if test="waitTitle != null and waitTitle != ''">
+				AND TITLE LIKE CONCAT('%', #{waitTitle}, '%')
 			</if>		
 		) TOTAL
 	</select>
