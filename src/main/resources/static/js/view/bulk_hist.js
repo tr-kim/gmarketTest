@@ -14,46 +14,31 @@ $(function () {
 		type: "date",
 		value: startDate,
 		displayFormat: "yyyy-MM-dd",
-		onValueChanged(e) {
-			const date = e.value;
-			if (date instanceof Date && !isNaN(date)) {
-				const yyyy = date.getFullYear();
-				const mm = String(date.getMonth() + 1).padStart(2, '0');
-				const dd = String(date.getDate()).padStart(2, '0');
-				
-				console.log(`${yyyy}${mm}${dd}`);
-			}
-		},
+		pickerType: "calendar",
+		calendarOptions: {
+			minZoomLevel: "year"
+		}
 	}).dxDateBox("instance");
 	
 	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
 		value: endDate,
 		displayFormat: "yyyy-MM-dd",
-		onValueChanged(e) {
-			const date = e.value;
-			if (date instanceof Date && !isNaN(date)) {
-				const yyyy = date.getFullYear();
-				const mm = String(date.getMonth() + 1).padStart(2, '0');
-				const dd = String(date.getDate()).padStart(2, '0');
-				
-				console.log(`${yyyy}${mm}${dd}`);
-			}
-		},
+		pickerType: "calendar",
+		calendarOptions: {
+			minZoomLevel: "year"
+		}
 	}).dxDateBox("instance");
 	
 	//대분류
 	largeCategoryInstance = $('#large-category').dxSelectBox({
-		dataSource: [{
-			Code: 0,
-			Name: '옥션',
-		},{
-			Code: 1,
-			Name: '지마켓',
-		}],
-			displayExpr: 'Name',
-			valueExpr: 'Code',
-			value: 1
+		dataSource: [
+			{ code: 0, name: '옥션' },
+			{ code: 1, name: '지마켓' }
+		],
+		displayExpr: 'name',
+		valueExpr: 'code',
+		value: 0
 	}).dxSelectBox("instance");
 	
 	//제목
@@ -71,6 +56,7 @@ $(function () {
 			let startDateFormatted = "", startTimeFormatted = "";
 			let endDateFormatted = "", endTimeFormatted = "";
 			
+			// 날짜가 Date 객체인지 확인
 			if (startValue instanceof Date && !isNaN(startValue)) {
 				const yyyy = startValue.getFullYear();
 				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
@@ -175,8 +161,8 @@ $(function () {
 				buttons: [{
 					icon: "find",
 					onClick: function(e) {
-                    openBulkDetailModal(e.row.data);
-                }					
+						openBulkDetailModal(e.row.data);
+					}
 				}],
 			},
 			{ dataField: "userID", caption: "발송ID", alignment: "center" },
@@ -193,7 +179,7 @@ $(function () {
 						case "1" : return "실패";
 						default: return "기타";
 					}
-				} 
+				}
 			},
 			{
 				name: "textBtn",
@@ -328,18 +314,14 @@ function formatTimestamp(str) {
 }
 
 function openBulkDetailModal(data = {}) {
-
-	// const param = {};
-	// postAjax('/api/v1/bulkHist', param, rsaCallback);
-	
 	if (data.inTime) {
 		inTimeValue = formatTimestamp(data.inTime);
 	}
-
+	
 	if (data.reqTime) {
 		reqTimeValue = formatTimestamp(data.reqTime);
 	}
-
+	
 	currentKey = data.bulkMsgKey; 
 	document.getElementById('title').value = data.title;
 	document.getElementById('in_time').value = inTimeValue;
@@ -353,7 +335,7 @@ function openBulkDetailModal(data = {}) {
 	document.getElementById('tran').value = '전송중';
 	document.getElementById('succ_fail').value = '성공/실패';
 	document.getElementById('msg').value = data.msg;
-
+	
 	document.getElementById('bulk_hist_modal').classList.add('d-block');
 }
 
