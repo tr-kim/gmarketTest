@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,7 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -46,40 +46,42 @@ public class RestUserController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	/**
 	 * 사용자 등록 시 비밀번호가 암호화된 상태로 넘어오기 떄문에 검증(@Validated)하기 전 복호화 작업 검증 진행
 	 * 
 	 */
 	@InitBinder
-    public void initBinder(WebDataBinder binder, HttpServletRequest request) {
-        binder.registerCustomEditor(String.class, "userPwd", new PropertyEditorSupport() {
-            @Override
-            public void setAsText(String encryptedPassword) {
-            	
-                HttpSession session = request.getSession();
-                
-                if (session == null) {
-                    setValue(encryptedPassword); // 복호화 못하면 원본 그대로
-                    return;
-                }
-                
-                RSAPrivateKey privateKey = (RSAPrivateKey) session.getAttribute(ConstantsUtils.RSA_WEB_KEY);
-                
-                if (privateKey == null) {
-                    setValue(encryptedPassword);
-                    return;
-                }
-                
-                try {
-                    String decrypted = RsaUtil.decryptRsa(privateKey, encryptedPassword);
-                    setValue(decrypted);
-                } catch (Exception e) {
-                    throw new IllegalArgumentException("비밀번호 복호화 실패", e);
-                }
-            }
-        });
-    }
+	public void initBinder(WebDataBinder binder, HttpServletRequest request) {
+		binder.registerCustomEditor(String.class, "userPwd", new PropertyEditorSupport() {
+			@Override
+			public void setAsText(String encryptedPassword) {
+
+				HttpSession session = request.getSession();
+
+				if (session == null) {
+					setValue(encryptedPassword); // 복호화 못하면 원본 그대로
+					return;
+				}
+
+				RSAPrivateKey privateKey = (RSAPrivateKey) session.getAttribute(ConstantsUtils.RSA_WEB_KEY);
+
+				if (privateKey == null) {
+					setValue(encryptedPassword);
+					return;
+				}
+
+				try {
+					String decrypted = RsaUtil.decryptRsa(privateKey, encryptedPassword);
+					setValue(decrypted);
+				} catch (Exception e) {
+					log.error(e.getLocalizedMessage());
+					e.printStackTrace();
+					throw new IllegalArgumentException("비밀번호 복호화 실패", e);
+				}
+			}
+		});
+	}
 
 	/**
 	 * 사용자 목록 조회
@@ -92,9 +94,19 @@ public class RestUserController {
 	@PostMapping("/list")
 	public ResponseEntity<?> list(Authentication authentication, UserDto userDto) {
 
-		List<UserDto> list = userService.selectUserInfoList(userDto);
-
-		return new ResponseEntity<>(list, HttpStatus.OK);
+		List<UserDto> list = new ArrayList<>();
+		
+		try {
+			
+			list = userService.selectUserInfoList(userDto);
+			
+			return new ResponseEntity<>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			e.printStackTrace();
+			
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(list);
+		}
 	}
 
 	/**
@@ -106,129 +118,216 @@ public class RestUserController {
 	 */
 	@ResponseBody
 	@PostMapping("/insert")
-	public ResponseEntity<?> insert(Authentication authentication, @Validated(ValidationSequence.class) UserDto userDto, Errors errors) {
-		
-		Map<String, Object> result = new  HashMap<>();
+	public ResponseEntity<?> insert(Authentication authentication, @Validated(ValidationSequence.class) UserDto userDto,
+			Errors errors) {
 
-		if (errors.hasErrors()) {
-			LinkedHashMap<String, String> validatorResult = userService.validateHandling(errors);
-			
-			for (String key : validatorResult.keySet()) {
-				result.put(ConstantsUtils.CODE, ConstantsUtils.VALIDATE_ERROR);
-				result.put(ConstantsUtils.RESULT, validatorResult.get(key));
-				break;
+		Map<String, Object> result = new HashMap<>();
+		
+		try {
+			if (errors.hasErrors()) {
+				LinkedHashMap<String, String> validatorResult = userService.validateHandling(errors);
+
+				for (String key : validatorResult.keySet()) {
+					result.put(ConstantsUtils.CODE, ConstantsUtils.VALIDATE_ERROR);
+					result.put(ConstantsUtils.RESULT, validatorResult.get(key));
+					break;
+				}
+
+				return ResponseEntity.status(HttpStatus.OK).body(result);
 			}
-			
+
+			UserDto info = userService.selectUserInfo(userDto.getUserId(), null);
+
+			if (info == null) {
+				int cnt = userService.insertUserInfo(userDto);
+				result.put(ConstantsUtils.CODE, cnt > 0 ? ConstantsUtils.SUCCESS_CODE : ConstantsUtils.ERROR_CODE);
+			} else {
+				result.put(ConstantsUtils.CODE, ConstantsUtils.USER_DUPLICATION);
+				result.put(ConstantsUtils.RESULT, "동일한 사용자 정보가 존재합니다.");
+			}
+
 			return ResponseEntity.status(HttpStatus.OK).body(result);
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			e.printStackTrace();
+			result.put(ConstantsUtils.CODE, ConstantsUtils.ERROR_CODE);
+			
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
+
 		
-		UserDto info = userService.selectUserInfo(userDto.getUserId(), null);
-
-		if (info == null) {
-			int cnt = userService.insertUserInfo(userDto);
-			result.put(ConstantsUtils.CODE, cnt > 0 ? ConstantsUtils.SUCCESS_CODE : ConstantsUtils.ERROR_CODE);
-		} else {
-			result.put(ConstantsUtils.CODE, ConstantsUtils.USER_DUPLICATION);
-			result.put(ConstantsUtils.RESULT, "동일한 사용자 정보가 존재합니다.");
-		}
-
-		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 
+	/**
+	 * 사용자 정보 수정
+	 * 
+	 * @param authentication
+	 * @param userDto
+	 * @param errors
+	 * @return
+	 */
 	@ResponseBody
 	@PutMapping("/update")
 	public ResponseEntity<?> update(Authentication authentication, @Validated(ValidationSequence.class) UserDto userDto, Errors errors) {
-		
-		Map<String, Object> result = new  HashMap<>();
 
-		if (errors.hasErrors()) {
-			LinkedHashMap<String, String> validatorResult = userService.validateHandling(errors);
+		Map<String, Object> result = new HashMap<>();
+		
+		try {
 			
-			for (String key : validatorResult.keySet()) {
-				result.put(ConstantsUtils.CODE, ConstantsUtils.VALIDATE_ERROR);
-				result.put(ConstantsUtils.RESULT, validatorResult.get(key));
-				break;
+			if (errors.hasErrors()) {
+				LinkedHashMap<String, String> validatorResult = userService.validateHandling(errors);
+
+				for (String key : validatorResult.keySet()) {
+					result.put(ConstantsUtils.CODE, ConstantsUtils.VALIDATE_ERROR);
+					result.put(ConstantsUtils.RESULT, validatorResult.get(key));
+					break;
+				}
+
+				return ResponseEntity.status(HttpStatus.OK).body(result);
+			}
+
+			UserDto info = userService.selectUserInfo(userDto.getUserId(), null);
+
+			if (info != null) {
+				int cnt = userService.updateUserInfo(userDto);
+				result.put(ConstantsUtils.CODE, cnt > 0 ? ConstantsUtils.SUCCESS_CODE : ConstantsUtils.ERROR_CODE);
+			} else {
+				result.put(ConstantsUtils.CODE, ConstantsUtils.USER_NON_EXISTENCE);
+				result.put(ConstantsUtils.RESULT, "사용자 정보가 존재하지 않습니다");
+			}
+
+			return ResponseEntity.status(HttpStatus.OK).body(result);
+			
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			e.printStackTrace();
+			result.put(ConstantsUtils.CODE, ConstantsUtils.ERROR_CODE);
+			
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+		}
+
+		
+	}
+
+	/**
+	 * 사용자 정보 삭제
+	 * 
+	 * @param authentication
+	 * @param userDto
+	 * @return
+	 */
+	@ResponseBody
+	@PutMapping("/delete")
+	public ResponseEntity<?> delete(Authentication authentication, @RequestBody UserDto userDto) {
+
+		Map<String, Object> result = new HashMap<>();
+		
+		try {
+			
+			String userId = userDto.getUserId();
+
+			UserDto info = userService.selectUserInfo(userId, ConstantsUtils.FALG_N);
+
+			if (info != null) {
+				int cnt = userService.deleteUserInfo(userId);
+				result.put(ConstantsUtils.CODE, cnt > 0 ? ConstantsUtils.SUCCESS_CODE : ConstantsUtils.ERROR_CODE);
+			} else {
+				result.put(ConstantsUtils.CODE, ConstantsUtils.USER_NON_EXISTENCE);
+				result.put(ConstantsUtils.RESULT, "사용자 정보가 존재하지 않습니다");
+			}
+
+			return ResponseEntity.status(HttpStatus.OK).body(result);
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			e.printStackTrace();
+			result.put(ConstantsUtils.CODE, ConstantsUtils.ERROR_CODE);
+			
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+		}
+	}
+
+	/**
+	 * 사용자 비밀번호 변경
+	 * 
+	 * @param authentication
+	 * @param request
+	 * @param userDto
+	 * @return
+	 */
+	@ResponseBody
+	@PutMapping("/passwordChg")
+	public ResponseEntity<?> passwordChg(Authentication authentication, HttpServletRequest request, UserDto userDto) {
+
+		Map<String, Object> result = new HashMap<>();
+
+		try {
+
+			UserDto info = userService.selectUserInfo(userDto.getUserId(), ConstantsUtils.FALG_N);
+
+			if (info != null) {
+				int cnt = userService.updateUserPassword(userDto);
+				result.put(ConstantsUtils.CODE, cnt > 0 ? ConstantsUtils.SUCCESS_CODE : ConstantsUtils.ERROR_CODE);
+			} else {
+				result.put(ConstantsUtils.CODE, ConstantsUtils.USER_NON_EXISTENCE);
+				result.put(ConstantsUtils.RESULT, "사용자 정보가 존재하지 않습니다");
 			}
 			
 			return ResponseEntity.status(HttpStatus.OK).body(result);
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			e.printStackTrace();
+			result.put(ConstantsUtils.CODE, ConstantsUtils.ERROR_CODE);
+			
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
+
 		
-		UserDto info = userService.selectUserInfo(userDto.getUserId(), null);
-
-		if (info != null) {
-			int cnt = userService.updateUserInfo(userDto);
-			result.put(ConstantsUtils.CODE, cnt > 0 ? ConstantsUtils.SUCCESS_CODE : ConstantsUtils.ERROR_CODE);
-		} else {
-			result.put(ConstantsUtils.CODE, ConstantsUtils.USER_NON_EXISTENCE);
-			result.put(ConstantsUtils.RESULT, "사용자 정보가 존재하지 않습니다");
-		}
-
-		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 
-	@ResponseBody
-	@DeleteMapping("/delete")
-	public ResponseEntity<?> delete(Authentication authentication, @RequestBody UserDto userDto) {
-		
-		Map<String, Object> result = new  HashMap<>();
-		
-		String userId = userDto.getUserId();
-		
-		UserDto info = userService.selectUserInfo(userId, ConstantsUtils.FALG_N);
-
-		if (info != null) {
-			int cnt = userService.deleteUserInfo(userId);
-			result.put(ConstantsUtils.CODE, cnt > 0 ? ConstantsUtils.SUCCESS_CODE : ConstantsUtils.ERROR_CODE);
-		} else {
-			result.put(ConstantsUtils.CODE, ConstantsUtils.USER_NON_EXISTENCE);
-			result.put(ConstantsUtils.RESULT, "사용자 정보가 존재하지 않습니다");
-		}
-
-		return ResponseEntity.status(HttpStatus.OK).body(result);
-	}
-	
 	/**
 	 * 비밀번호 암호화
 	 * 
 	 * @param authentication
 	 * @param userDto
 	 * @return
-	 * @throws NoSuchAlgorithmException 
-	 * @throws InvalidKeySpecException 
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeySpecException
 	 */
 	@ResponseBody
 	@PostMapping("/rsa")
 	public ResponseEntity<?> passwordRsa(Authentication authentication, HttpServletRequest request, HttpServletResponse reponse, HttpSession session, Model model) {
-		
-		Map<String, Object> result = new  HashMap<>();
-		
+
+		Map<String, Object> result = new HashMap<>();
+
 		// Private Key 삭제
 		request.getSession().removeAttribute(ConstantsUtils.RSA_WEB_KEY);
-		
-		// PrivateKey, PublicKey 생성
-		KeyPair keyPair;
+
 		try {
-			keyPair = RsaUtil.generateKeypair();
-		
-		RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-		RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-		
-		// PrivateKey Session 저장
-		session.setAttribute(ConstantsUtils.RSA_WEB_KEY, privateKey);
-		
-		// PublicKey input hidden 저장
-		result.put(ConstantsUtils.RSA_MODULUS, RsaUtil.getRSAPublicModulus(publicKey));
-		result.put(ConstantsUtils.RSA_EXPONENT, RsaUtil.getRSAPublicExponent(publicKey));
-		
-		} catch(InvalidKeySpecException e) {
+			
+			// PrivateKey, PublicKey 생성
+			KeyPair keyPair = RsaUtil.generateKeypair();
+
+			RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+			RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+
+			// PrivateKey Session 저장
+			session.setAttribute(ConstantsUtils.RSA_WEB_KEY, privateKey);
+
+			// PublicKey input hidden 저장
+			result.put(ConstantsUtils.RSA_MODULUS, RsaUtil.getRSAPublicModulus(publicKey));
+			result.put(ConstantsUtils.RSA_EXPONENT, RsaUtil.getRSAPublicExponent(publicKey));
+			
+			return ResponseEntity.status(HttpStatus.OK).body(result);
+
+		} catch (Exception e) {
 			log.error(e.getLocalizedMessage());
-		} catch (NoSuchAlgorithmException e) {
-			log.error(e.getLocalizedMessage());
-		} catch(Exception e) {
 			e.printStackTrace();
-			log.error(e.getLocalizedMessage());
+			result.put(ConstantsUtils.RSA_MODULUS, "");
+			result.put(ConstantsUtils.RSA_EXPONENT, "");
+			
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
 
-		return ResponseEntity.status(HttpStatus.OK).body(result);
+		
 	}
 }

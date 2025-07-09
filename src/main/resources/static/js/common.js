@@ -42,8 +42,76 @@ window.addEventListener('load', function() {
 			}
 		});
 		psw_chg_btn.addEventListener('click', function() {
-			console.log(passwordChg)
 			passwordChg.classList.add('d-block');
+		});
+
+		// 비밀번호 변겅
+		const password_chg_save = document.getElementById("password_chg_save");
+
+		password_chg_save.addEventListener('click', function(e) {
+			e.preventDefault();
+
+			const pw1 = document.getElementById('new-psw');
+			const pw2 = document.getElementById('new-psw2');
+			const reg = /^[A-Za-z0-9_]+$/;
+
+			if (isEmpty(pw1)) {
+				alert("비밀번호를 입력해주세요.");
+				return;
+			}
+
+			if (isEmpty(pw2)) {
+				alert("비밀번호 확인을 입력해주세요.");
+				return;
+			}
+
+			if (!(pw1.value === pw2.value)) {
+				alert("비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
+				return;
+			}
+
+			if (!(reg.test(pw1.value))) {
+				alert("비밀번호에 허용할 수 없는 문자가 입력되었습니다.");
+				return;
+			}
+
+			let formData = new FormData();
+			const param = {};
+			postAjax('/api/v1/user/rsa', param, function callback(data) {
+
+				const password = pw1.value;
+				const publicKeyModulus = data.RSA_MODULUS;
+				const publicKeyExponent = data.RSA_EXPONENT;
+
+				// RSA 암호화
+				let rsa = new RSAKey();
+				rsa.setPublic(publicKeyModulus, publicKeyExponent);
+
+				const encrypted = rsa.encrypt(password);
+				const base64 = hex2b64(encrypted);
+
+				formData.append("userId", $("#pwd_chg_user_id").val());
+				formData.append("userPwd", encodeURIComponent(base64));
+
+				putFormAjax("/api/v1/user/passwordChg", formData, function callback(data) {
+					const code = data.code;
+					const result = data.result;
+
+					if (code == 1000) {
+						alert("비밀번호이 변경되었습니다.");
+						pw1.value = '';
+						pw2.value = '';
+						document.getElementById('psw-ck').textContent = '';
+
+						document.querySelector('.passwordChg').classList.remove('d-block');
+
+					} else if (code == 9003) {
+						alert(result);
+					} else {
+						alert("비밀번호이 변경에 실패하였습니다.");
+					}
+				});
+			});
 		});
 
 	}
@@ -74,7 +142,6 @@ window.addEventListener('load', function() {
 			}
 		});
 		psw_chg_btn.addEventListener('click', function() {
-
 			passwordChg.classList.add('d-block');
 		});
 
@@ -113,9 +180,14 @@ window.addEventListener('load', function() {
 		pw2.addEventListener('input', checkPasswordMatch);
 
 		closebtn.addEventListener('click', function() {
-			inputs.forEach(input => {
-				input.value = "";
-			});
+			//			inputs.forEach(input => {
+			//				input.value = "";
+			//			});
+
+			pw1.value = '';
+			pw2.value = '';
+			message.textContent = '';
+
 			passwordChg.classList.remove('d-block');
 		});
 	}

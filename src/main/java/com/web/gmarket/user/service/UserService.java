@@ -19,6 +19,8 @@ public interface UserService {
 	
 	int deleteUserInfo(String userId);
 	
+	int updateUserPassword(UserDto userDto);
+	
 	public LinkedHashMap<String, String> validateHandling(Errors errors);
 	
 }
