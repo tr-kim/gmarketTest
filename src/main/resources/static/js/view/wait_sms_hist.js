@@ -1,10 +1,16 @@
+let startDateInstance;
+let endDateInstance;
+let largeCategoryInstance;
+let titleInstance;
+let waitDataGrid;
+
 $(function () {
 	const startDate = new Date();
 	const endDate = new Date();
 	endDate.setDate(endDate.getDate() + 7);
 	
 	//조회 기간
-	$("#startDate").dxDateBox({
+	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
 		value: startDate,
 		displayFormat: "yyyy-MM-dd",
@@ -18,9 +24,9 @@ $(function () {
 				console.log(`${yyyy}${mm}${dd}`);
 			}
 		},
-	});
+	}).dxDateBox("instance");
 
-	$("#endDate").dxDateBox({
+	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
 		value: endDate,
 		displayFormat: "yyyy-MM-dd",
@@ -34,83 +40,111 @@ $(function () {
 				console.log(`${yyyy}${mm}${dd}`);
 			}
 		},
-	});
-	
-	//조회 그리드
-	$("#waitHistGrid").dxDataGrid({
+	}).dxDateBox("instance");
+
+	//대분류
+	largeCategoryInstance = $('#large-category').dxSelectBox({
 		dataSource: [
-			{ b_msg_key: "0000001", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000002", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000003", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000004", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000005", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000006", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000007", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000008", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000009", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000010", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000011", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000012", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000013", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000014", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000015", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000016", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000017", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000018", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000019", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000020", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000021", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000022", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000023", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000024", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000025", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000026", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000027", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000028", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000029", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000030", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000031", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000032", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000033", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000034", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000035", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000036", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000037", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000038", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000039", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000040", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000041", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000042", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000043", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000044", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000045", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000046", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000047", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000048", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000049", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000050", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000051", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000052", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000053", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000054", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000055", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000056", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000057", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000058", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000059", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000060", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000061", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000062", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000063", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000064", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000065", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000066", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000067", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000068", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000069", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
-			{ b_msg_key: "0000070", user_id: "admin", title: "SMS 발송 테스트", msg: "SMS 발송 테스트입니다.", req_time: "2025-07-01 09:00:00", cnt: "100", svc_type: "EXCEL" },
+			{ code: 0, name: '옥션' },
+			{ code: 1, name: '지마켓' }
 		],
-		keyExpr: "b_msg_key",
+		displayExpr: 'name',
+		valueExpr: 'code',
+		value: 1
+	}).dxSelectBox("instance");
+
+	//제목
+	titleInstance = $('#wait_title').dxTextBox({
+		placeholder: '제목을 입력하세요.'
+	}).dxTextBox("instance");
+	
+	//조회 요청
+	const waitDataSource = new DevExpress.data.CustomStore({
+		key: "bulkMsgKey",
+        load: (loadOptions) => {
+			const startValue = startDateInstance.option("value");
+			const endValue = endDateInstance.option("value");
+			
+			let startDateFormatted = "", startTimeFormatted = "";
+			let endDateFormatted = "", endTimeFormatted = "";
+			
+			// 날짜가 Date 객체인지 확인
+			if (startValue instanceof Date && !isNaN(startValue)) {
+				const yyyy = startValue.getFullYear();
+				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
+				const dd = String(startValue.getDate()).padStart(2, '0');
+				startDateFormatted = `${yyyy}${mm}`;
+				startTimeFormatted = `${yyyy}${mm}${dd}`;
+			}
+			
+			if (endValue instanceof Date && !isNaN(endValue)) {
+				const yyyy = endValue.getFullYear();
+				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
+				const dd = String(endValue.getDate()).padStart(2, '0');
+				endDateFormatted = `${yyyy}${mm}`;
+				endTimeFormatted = `${yyyy}${mm}${dd}`;
+			}
+			
+			const titleValue = titleInstance.option("value");
+			
+			const params = {
+				startDate: startDateFormatted,
+				endDate: endDateFormatted,
+				startTime: startTimeFormatted + "000000",
+				endTime: endTimeFormatted + "235959",
+				waitTitle: titleValue,
+				//페이징 서버사이드 처리
+				skip: loadOptions.skip ?? 0, //offset: 앞에서 건너뛸 레코드 수
+				take: loadOptions.take ?? 50, //limit: 가져올 레코드 수
+			};
+			
+			return fetch('/api/v1/wait/list', {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(params)
+			})
+			.then(response => {
+				if (!response.ok) throw new Error("서버 오류");
+				return response.json();
+			})
+			.then(data => {
+				return {
+					data: data.data,
+					totalCount: data.totalCount
+				};
+			})
+			.catch(error => {
+				console.error("데이터 로드 실패:", error);
+				alert("데이터를 불러오는 중 오류가 발생했습니다.");
+				return {
+					data: [],
+					totalCount: 0
+				};
+			});
+		}
+    });
+
+	//날짜 포맷팅
+	function formatTimestamp(str) {
+		str = str.trim();
+		const yyyy = str.slice(0, 4);
+		const mm = str.slice(4, 6);
+		const dd = str.slice(6, 8);
+		const hh = str.slice(8, 10);
+		const mi = str.slice(10, 12);
+		const ss = str.slice(12, 14);
+		return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+	}
+
+	//조회 그리드
+	waitDataGrid = $("#waitHistGrid").dxDataGrid({
+		dataSource: waitDataSource,
+		loadMode: "raw", //서버사이드 처리
+		remoteOperations: {
+			paging: true //페이징 서버사이드 처리
+		},
 		headerFilter: {
 			visible: true
 		},
@@ -123,6 +157,7 @@ $(function () {
 		},
 		pager: {
 			visible: true,
+			showInfo: true,
 			showNavigationButtons: true,
 			showPageSizeSelector: true,
 			allowedPageSizes: [50, 100, 200]
@@ -137,11 +172,28 @@ $(function () {
 		columns: [
 			{ type: "selection" },
 			{ dataField: "title", caption: "제목", alignment: "left" },
-			{ dataField: "req_time", caption: "전송 일시", alignment: "center" },
+			{ 
+				dataField: "reqTime", 
+				caption: "전송 일시", 
+				alignment: "center",
+				customizeText: function(cellInfo) {
+					return formatTimestamp(cellInfo.value);
+				}
+			},
 			{ dataField: "msg", caption: "메시지 내용", alignment: "left" },
 			{ dataField: "cnt", caption: "전체", alignment: "center" },
-			{ dataField: "svc_type", caption: "상세", alignment: "center" },
-			{ dataField: "user_id", caption: "발송ID", alignment: "center" },
+			{
+				name: "detail",
+				caption: "상세",
+				type: "buttons",
+				buttons: [{
+					icon: "find",
+					onClick: function(e) {
+						alert('상세보기')
+					}
+				}],
+			},
+			{ dataField: "userID", caption: "발송ID", alignment: "center" },
 		],
 		toolbar: {
 			items: [
@@ -161,24 +213,62 @@ $(function () {
 			$("#totalCount").text(`총 ${totalCount}건`);
 		}
 	}).dxDataGrid("instance");
-
-	//대분류
-	$('#large-category').dxSelectBox({
-		dataSource: [{
-			Code: 0,
-			Name: '옥션',
-		},{
-			Code: 1,
-			Name: '지마켓',
-		}],
-			displayExpr: 'Name',
-			valueExpr: 'Code',
-			value: 1
-	});
-
-	//수신자 번호
-	$('#wait_title').dxTextBox({
-		placeholder: '번호를 입력하세요.'
-	});
+	
 });
 
+//조회 버튼
+document.getElementById("search-btn").addEventListener('click', function(e){
+	e.preventDefault();
+	
+	const startValue = startDateInstance.option("value");
+	const endValue = endDateInstance.option("value");
+	
+	let startDateFormatted = "", startTimeFormatted = "";
+	let endDateFormatted = "", endTimeFormatted = "";
+	
+	// 날짜가 Date 객체인지 확인
+	if (startValue instanceof Date && !isNaN(startValue)) {
+		const yyyy = startValue.getFullYear();
+		const mm = String(startValue.getMonth() + 1).padStart(2, '0');
+		const dd = String(startValue.getDate()).padStart(2, '0');
+		startDateFormatted = `${yyyy}${mm}`;
+		startTimeFormatted = `${yyyy}${mm}${dd}`;
+	}
+	
+	if (endValue instanceof Date && !isNaN(endValue)) {
+		const yyyy = endValue.getFullYear();
+		const mm = String(endValue.getMonth() + 1).padStart(2, '0');
+		const dd = String(endValue.getDate()).padStart(2, '0');
+		endDateFormatted = `${yyyy}${mm}`;
+		endTimeFormatted = `${yyyy}${mm}${dd}`;
+	}
+	
+	// 조회기간 구하기
+	let start = new Date(
+		parseInt(startTimeFormatted.slice(0, 4)),
+		parseInt(startTimeFormatted.slice(4, 6)) - 1,
+		parseInt(startTimeFormatted.slice(6, 8))
+	);
+
+	let end = new Date(
+		parseInt(endTimeFormatted.slice(0, 4)),
+		parseInt(endTimeFormatted.slice(4, 6)) - 1,
+		parseInt(endTimeFormatted.slice(6, 8))
+	);
+
+	let diffMs = end - start;
+	let diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+	if (diffDays < 0) {
+		alert("조회 기간을 다시 입력하세요.");
+		return false;
+	}
+
+	if (diffDays > 30) {
+		alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
+		return false;
+	}		
+
+	//재조회
+	waitDataGrid.getDataSource().reload();
+})
