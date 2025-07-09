@@ -176,13 +176,13 @@ public class UserDetailsDto implements UserDetails, Serializable {
     	int userGrade = userDto.getUserGrade();
     	String str = "슈퍼관리자";
     	
-    	if(userGrade == UserRole.SUPER.getCode()) {				// 슈퍼관리자
+    	if(UserRole.SUPER.getCode() == userGrade) {				// 슈퍼관리자
     		str = "슈퍼관리자";
-    	} else if(userGrade == UserRole.ADMIN.getCode()) {		// 관리자
+    	} else if(UserRole.ADMIN.getCode() == userGrade) {		// 관리자
     		str = "관리자";
-    	} else if(userGrade == UserRole.USER.getCode()) {		// 사용자
+    	} else if(UserRole.USER.getCode() == userGrade) {		// 사용자
     		str = "사용자";
-    	} else if(userGrade == UserRole.OPERATOR.getCode()) {	// 운영자
+    	} else if(UserRole.OPERATOR.getCode() == userGrade) {	// 운영자
     		str = "운영자";
     	} else {												// 일반
     		str = "일반";	

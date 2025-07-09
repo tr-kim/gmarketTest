@@ -1,15 +1,12 @@
 package com.web.gmarket.real.controller;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,18 +34,17 @@ public class RestRealSendHistController {
 	@ResponseBody
 	@PostMapping("/totalList")
 	public ResponseEntity<?> totalList() {
-		List<RealDto> dto = new ArrayList<RealDto>();
-		
 		try {
 			
-			dto = realService.selectRealHistTotalList(ConstantsUtils.TOTAL_MON_TIME, ConstantsUtils.ALARM_FLAG);
-			
+			return new ResponseEntity<>(realService.selectRealHistTotalList(ConstantsUtils.TOTAL_MON_TIME, ConstantsUtils.ALARM_FLAG), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(e.getLocalizedMessage());
+			
+			return new ResponseEntity<>(new ArrayList<RealDto>(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		return new ResponseEntity<>(dto, HttpStatus.OK);
+		
 	}
 	
 
@@ -59,20 +55,20 @@ public class RestRealSendHistController {
 	 */
 	@ResponseBody
 	@PostMapping("/list")
-	public ResponseEntity<?> list(Authentication authentication,  @RequestParam("code") int code) {
-		RealDto dto = new RealDto();
+	public ResponseEntity<?> list(Authentication authentication,  @RequestParam(name = "code", defaultValue = "1") int code) {
 		
 		try {
 			
 			// 0이면 옥션, 1이면 지마켓
-			dto = realService.selectRealHistList(code);
-			
+			return new ResponseEntity<>(realService.selectRealHistList(code), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(e.getLocalizedMessage());
+			
+			return new ResponseEntity<>(new RealDto(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		return new ResponseEntity<>(dto, HttpStatus.OK);
+		
 	}
 	
 	/**
@@ -82,27 +78,17 @@ public class RestRealSendHistController {
 	 */
 	@ResponseBody
 	@PostMapping("/tableList")
-	public ResponseEntity<?> tableList(Authentication authentication,  @RequestParam("code") int code) {
+	public ResponseEntity<?> tableList(Authentication authentication,  @RequestParam(name = "code", defaultValue = "11") int code) {
 		RealDto dto = new RealDto();
 		
 		try {
-			
 			// 테이블별 코드
-			dto = realService.selectRealHistTableList(code);
-			
+			return new ResponseEntity<>(realService.selectRealHistTableList(code), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(e.getLocalizedMessage());
+			
+			return new ResponseEntity<>(new RealDto(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-		return new ResponseEntity<>(dto, HttpStatus.OK);
-	}
-	
-	@PutMapping("/update")
-	public void update() {
-	}
-	
-	@DeleteMapping("/delete")
-	public void delete() {
 	}
 }

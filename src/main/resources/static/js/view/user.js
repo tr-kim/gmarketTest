@@ -5,32 +5,17 @@ let currentKey = null;
 
 $(function() {
 
-	console.log(userGrade);
-	console.log(companyCode);
-
 	let categoryData;
 	let categoryValue;
 
 	if (userGrade == 0) {
-		categoryData = [{
-			Code: 0,
-			Name: '옥션',
-		}, {
-			Code: 1,
-			Name: '지마켓',
-		}];
+		categoryData = [{ Code: 0, Name: '옥션', }, { Code: 1, Name: '지마켓' }];
 		categoryValue = 1;
 	} else if (userGrade == 1 && companyCode == 0) {
-		categoryData = [{
-			Code: 0,
-			Name: '옥션',
-		}];
+		categoryData = [{ Code: 0, Name: '옥션' }];
 		categoryValue = 0;
 	} else if (userGrade == 1 && companyCode == 1) {
-		categoryData = [{
-			Code: 1,
-			Name: '지마켓',
-		}];
+		categoryData = [{ Code: 1, Name: '지마켓' }];
 		categoryValue = 1;
 	}
 
@@ -40,10 +25,8 @@ $(function() {
 		displayExpr: 'Name',
 		valueExpr: 'Code',
 		value: categoryValue
-		, inputAttr: {
-			name: "companyCode"
-		},
-		onValueChanged: function(e) {
+		, inputAttr: { name: "companyCode" }
+		, onValueChanged: function(e) {
 			dataGrid.option('editing.refreshMode', e.value);
 		}
 	});
@@ -86,10 +69,8 @@ $(function() {
 		displayExpr: 'Name',
 		valueExpr: 'Grade',
 		value: userGradeValue
-		, inputAttr: {
-			name: "userGrade"
-		},
-		onValueChanged: function(e) {
+		, inputAttr: { name: "userGrade" }
+		, onValueChanged: function(e) {
 			dataGrid.option('editing.refreshMode', e.value);
 		}
 	});
@@ -97,13 +78,9 @@ $(function() {
 	//사용자ID
 	$('#user_id').dxTextBox({
 		placeholder: '아이디를 입력하세요.'
-		, inputAttr: {
-			name: "userId"
-		}
+		, inputAttr: { name: "userId" }
 	});
-
-	let formData = new FormData(document.getElementById("userForm"));
-
+	
 	//조회 그리드
 	dataGrid = $("#userGrid").dxDataGrid({
 		dataSource: {
@@ -111,7 +88,7 @@ $(function() {
 				return $.ajax({
 					url: "/api/v1/user/list",
 					method: "POST",
-					data: formData,
+					data: new FormData(document.getElementById("userForm")),
 					processData: false,
 					contentType: false
 				});
@@ -286,15 +263,11 @@ function userModalReset() {
 
 // 검색
 function search() {
-
-	let formData = new FormData(document.getElementById("userForm"));
-
-	postFormAjax('/api/v1/user/list', formData, listCallback);
+	postFormAjax('/api/v1/user/list', new FormData(document.getElementById("userForm")), listCallback);
 }
 
 // 성공 함수
 function listCallback(data) {
-
 	dataGrid.option("dataSource", data);
 }
 
@@ -324,7 +297,7 @@ function openCustomModal(mode, data = {}) {
 		document.getElementById('user_lms_data').value = data.lmsYn;
 		document.getElementById('user_mms_data').value = data.mmsYn;
 		document.getElementById('use_yn_data').value = data.useYn;
-		
+
 		document.getElementById('user_id_data').readOnly = true;
 	} else {
 		document.querySelector('#user_add_modal .modal-hd > span').textContent = '사용자 등록';
@@ -426,11 +399,7 @@ function successCallback(data) {
 		document.getElementById('user_add_modal').classList.remove('d-block');
 		userModalReset();
 		search();
-	} else if (code == 9001) {
-		alert(result);
-	} else if (code == 9002) {
-		alert(result);
-	} else if (code == 9003) {
+	} else if (code == 9001 || code == 9002 || code == 9003) {
 		alert(result);
 	} else {
 		alert(currentMode === 'edit' ? "수정에 실패하였습니다." : "등록에 실패하였습니다.");
