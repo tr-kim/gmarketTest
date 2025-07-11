@@ -27,10 +27,10 @@ public class RestBulkHistController {
 	}
 	
 	@PostMapping("/list")
-	public ResponseEntity<?> getHistList(@RequestBody BulkHistDto bulkHistDto) {
+	public ResponseEntity<?> getBulkHistList(@RequestBody BulkHistDto bulkHistDto) {
 		try {
-			List<BulkHistDto> result = bulkHistService.getHistList(bulkHistDto);
-			int totalCount = bulkHistService.getHistCount(bulkHistDto);
+			List<BulkHistDto> result = bulkHistService.getBulkHistList(bulkHistDto);
+			int totalCount = bulkHistService.getBulkHistCount(bulkHistDto);
 			
 	        Map<String, Object> response = new HashMap<>();
 	        response.put("data", result);

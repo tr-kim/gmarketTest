@@ -5,8 +5,8 @@ import java.util.List;
 import com.web.gmarket.bulk.hist.dto.BulkHistDto;
 
 public interface BulkHistService {
-
-    List<BulkHistDto> getHistList(BulkHistDto bulkHistDto);
-
-    int getHistCount(BulkHistDto bulkHistDto);
+	
+	List<BulkHistDto> getBulkHistList(BulkHistDto bulkHistDto);
+	
+	int getBulkHistCount(BulkHistDto bulkHistDto);
 }

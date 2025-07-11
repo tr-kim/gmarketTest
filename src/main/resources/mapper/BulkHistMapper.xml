@@ -3,6 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.web.gmarket.bulk.hist.mapper.BulkHistMapper">
+
 	<resultMap id="BulkHistResultMap" type="com.web.gmarket.bulk.hist.dto.BulkHistDto">
 		<result property="bulkMsgKey" column="B_MSG_KEY" />
 		<result property="loginID" column="LOGIN_ID" />
@@ -44,7 +45,7 @@
 			OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 		</if>
 	</select>
-
+	
 	<select id="selectBulkHistCount" resultType="int">
 		SELECT COUNT(*) FROM (			
 			SELECT 1 AS CNT
@@ -56,5 +57,28 @@
 			</if>		
 		) TOTAL
 	</select>
-
+	
+	<select id="selectBulkHistStatusCount" resultType="map">
+		<choose>
+			<when test="monthTables != null and monthTables.size() > 0">
+				SELECT
+					COUNT(CASE WHEN TRAN_STATUS = 1 THEN 1 END) AS cntStanby,
+					COUNT(CASE WHEN TRAN_STATUS IN (2, 3) THEN 1 END) AS cntTran,
+					COUNT(CASE WHEN TRAN_STATUS = 4 AND TRAN_RSLT = '0' THEN 1 END) AS cntSucc,
+					COUNT(CASE WHEN TRAN_STATUS = 5 THEN 1 END) AS cntDup,
+					COUNT(CASE WHEN TRAN_STATUS = 4 AND <![CDATA[TRAN_RSLT <> '0']]> THEN 1 END) AS cntSendFail
+				FROM (
+				<foreach collection="monthTables" item="tableName" separator=" UNION ALL ">
+					SELECT
+						TRAN_STATUS,
+						TRAN_RSLT,
+						B_MSG_KEY
+					FROM ${tableName}
+					WHERE B_MSG_KEY = #{bulkMsgKey}
+				</foreach>
+				) T_BROADCAST
+			</when>
+		</choose>
+	</select>
+	
 </mapper>
