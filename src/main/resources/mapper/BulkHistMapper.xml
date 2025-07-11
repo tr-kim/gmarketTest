@@ -16,6 +16,8 @@
 		<result property="status" column="STATUS" />
 		<result property="svcType" column="SVC_TYPE"/>
 		<result property="bulkSeq" column="B_SEQ" />
+		<result property="succCnt" column="SUCC_CNT" />
+		<result property="failCnt" column="FAIL_CNT" />
 	</resultMap>
 	
 	<select id="selectBulkHistList" resultMap="BulkHistResultMap">
@@ -31,7 +33,9 @@
 			CNT,
 			STATUS,
 			SVC_TYPE,
-			B_SEQ
+			B_SEQ,
+			SUCC_CNT,
+			FAIL_CNT
 		FROM
 			T_BROADCAST_MSG
 		WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}

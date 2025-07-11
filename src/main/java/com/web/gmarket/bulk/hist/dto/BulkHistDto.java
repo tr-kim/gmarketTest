@@ -34,6 +34,8 @@ public class BulkHistDto {
 	private String status;
 	private String svcType;
 	private String bulkSeq;
+	private String succCnt;
+	private String failCnt;
 	private Integer cntStanby;
 	private Integer cntTran;
 	private Integer cntSucc;
@@ -176,6 +178,22 @@ public class BulkHistDto {
 		this.bulkSeq = bulkSeq;
 	}
 	
+	public String getSuccCnt() {
+		return succCnt;
+	}
+	
+	public void setSuccCnt(String succCnt) {
+		this.succCnt = succCnt;
+	}
+	
+	public String getFailCnt() {
+		return failCnt;
+	}
+	
+	public void setFailCnt(String failCnt) {
+		this.failCnt = failCnt;
+	}
+
 	public Integer getCntStanby() {
 		return cntStanby;
 	}

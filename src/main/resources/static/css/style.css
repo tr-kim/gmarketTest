@@ -531,3 +531,6 @@ aside .psw_chg_btn:hover{
     background: #0d6efd;
     color: #fff;
 }
+.dx-datagrid-rowsview .dx-row:hover {
+  background-color: #e8eff3 !important;  
+}

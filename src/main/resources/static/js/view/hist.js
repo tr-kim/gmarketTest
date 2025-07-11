@@ -226,7 +226,8 @@ $(function () {
 				caption: "결과", 
 				alignment: "center" ,
 				customizeText: function(cellInfo) {
-					const value = String(cellInfo.value.trim());
+					const raw = cellInfo.value;
+					const value = raw != null ? String(raw).trim() : "";
 					
 					switch (value) {
 						case "-2" : return "결과 대기";
