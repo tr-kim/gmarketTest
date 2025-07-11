@@ -178,6 +178,12 @@ $(function () {
 		remoteOperations: {
 			paging: true //페이징 서버사이드 처리
 		},
+		//행 선택 시
+		selection: {
+			mode: 'single',
+		},
+		//행 마우스오버 시
+		hoverStateEnabled: true,
 		headerFilter: {
 			visible: true
 		},
