@@ -121,6 +121,12 @@ $(function () {
 		remoteOperations: {
 			paging: true //페이징 서버사이드 처리
 		},
+		//행 선택 시
+		selection: {
+			mode: 'single',
+		},
+		//행 마우스오버 시
+		hoverStateEnabled: true,
 		headerFilter: {
 			visible: true
 		},
@@ -167,18 +173,11 @@ $(function () {
 			},
 			{ dataField: "userID", caption: "발송ID", alignment: "center" },
 			{ dataField: "svcType", caption: "TYPE", alignment: "center" },
-			{ 
-				dataField: "status", 
+			{ 				
 				caption: "성공/실패", 
 				alignment: "center",
-				customizeText: function(cellInfo) {
-					const value = String(cellInfo.value.trim());
-					
-					switch (value) {						
-						case "0" : return "성공";
-						case "1" : return "실패";
-						default: return "기타";
-					}
+				calculateCellValue: function(rowData) {
+					return `${rowData.cntSucc}/${rowData.cntDup + rowData.cntSendFail}`;
 				}
 			},
 			{
@@ -328,12 +327,12 @@ function openBulkDetailModal(data = {}) {
 	document.getElementById('req_time').value = reqTimeValue;
 	document.getElementById('user_id').value = data.userID;
 	document.getElementById('send_info').value = '전송 대상';
-	document.getElementById('total').value = '전체';
-	document.getElementById('insert_succ').value = '등록 성공';
-	document.getElementById('insert_fail').value = '등록 실패';
-	document.getElementById('stanby').value = '대기중';
-	document.getElementById('tran').value = '전송중';
-	document.getElementById('succ_fail').value = '성공/실패';
+	document.getElementById('total').value = data.cnt;
+	document.getElementById('insert_succ').value = data.succCnt;
+	document.getElementById('insert_fail').value = data.failCnt;
+	document.getElementById('stanby').value = data.cntStanby;
+	document.getElementById('tran').value = data.cntTran;
+	document.getElementById('succ_fail').value = `${data.cntSucc}/${data.cntDup + data.cntSendFail}`;
 	document.getElementById('msg').value = data.msg;
 	
 	document.getElementById('bulk_hist_modal').classList.add('d-block');

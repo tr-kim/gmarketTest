@@ -3,6 +3,8 @@ package com.web.gmarket.bulk.hist.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -15,12 +17,13 @@ public class BulkHistDto {
 	private String endDate;
 	private String startTime;
 	private String endTime;
-    private String bulkTitle;
+	private String bulkTitle;
+	private List<String> monthTables;
 	private Integer skip;
 	private Integer take;
-
-    //조회 컬럼
-    private String bulkMsgKey;
+	
+	//조회 컬럼
+	private String bulkMsgKey;
 	private String loginID;
 	private String userID;
 	private String title;
@@ -28,11 +31,18 @@ public class BulkHistDto {
 	private String inTime;
 	private String reqTime;
 	private String cnt;
-    private String status;
-    private String svcType;
-    private String bulkSeq;
-
-    public String getStartDate() {
+	private String status;
+	private String svcType;
+	private String bulkSeq;
+	private String succCnt;
+	private String failCnt;
+	private Integer cntStanby;
+	private Integer cntTran;
+	private Integer cntSucc;
+	private Integer cntDup;
+	private Integer cntSendFail;
+	
+	public String getStartDate() {
 		return startDate;
 	}
 	
@@ -70,6 +80,14 @@ public class BulkHistDto {
 	
 	public void setBulkTitle(String bulkTitle) {
 		this.bulkTitle = bulkTitle;
+	}
+	
+	public List<String> getMonthTables() {
+		return monthTables;
+	}
+	
+	public void setMonthTables(List<String> monthTables) {
+		this.monthTables = monthTables;
 	}
 	
 	public String getBulkMsgKey() {
@@ -158,6 +176,62 @@ public class BulkHistDto {
 	
 	public void setBulkSeq(String bulkSeq) {
 		this.bulkSeq = bulkSeq;
+	}
+	
+	public String getSuccCnt() {
+		return succCnt;
+	}
+	
+	public void setSuccCnt(String succCnt) {
+		this.succCnt = succCnt;
+	}
+	
+	public String getFailCnt() {
+		return failCnt;
+	}
+	
+	public void setFailCnt(String failCnt) {
+		this.failCnt = failCnt;
+	}
+
+	public Integer getCntStanby() {
+		return cntStanby;
+	}
+	
+	public void setCntStanby(Integer cntStanby) {
+		this.cntStanby = cntStanby;
+	}
+	
+	public Integer getCntTran() {
+		return cntTran;
+	}
+	
+	public void setCntTran(Integer cntTran) {
+		this.cntTran = cntTran;
+	}
+	
+	public Integer getCntSucc() {
+		return cntSucc;
+	}
+	
+	public void setCntSucc(Integer cntSucc) {
+		this.cntSucc = cntSucc;
+	}
+	
+	public Integer getCntDup() {
+		return cntDup;
+	}
+	
+	public void setCntDup(Integer cntDup) {
+		this.cntDup = cntDup;
+	}
+	
+	public Integer getCntSendFail() {
+		return cntSendFail;
+	}
+	
+	public void setCntSendFail(Integer cntSendFail) {
+		this.cntSendFail = cntSendFail;
 	}
 }
 

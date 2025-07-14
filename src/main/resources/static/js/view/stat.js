@@ -224,6 +224,12 @@ $(function () {
 		headerFilter: {
 			visible: true
 		},
+		//행 선택 시
+		selection: {
+			mode: 'single',
+		},
+		//행 마우스오버 시
+		hoverStateEnabled: true,
 		searchPanel: {
 			visible: true,
 			width: 300

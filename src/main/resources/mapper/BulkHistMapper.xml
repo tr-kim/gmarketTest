@@ -3,6 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.web.gmarket.bulk.hist.mapper.BulkHistMapper">
+
 	<resultMap id="BulkHistResultMap" type="com.web.gmarket.bulk.hist.dto.BulkHistDto">
 		<result property="bulkMsgKey" column="B_MSG_KEY" />
 		<result property="loginID" column="LOGIN_ID" />
@@ -15,6 +16,8 @@
 		<result property="status" column="STATUS" />
 		<result property="svcType" column="SVC_TYPE"/>
 		<result property="bulkSeq" column="B_SEQ" />
+		<result property="succCnt" column="SUCC_CNT" />
+		<result property="failCnt" column="FAIL_CNT" />
 	</resultMap>
 	
 	<select id="selectBulkHistList" resultMap="BulkHistResultMap">
@@ -30,7 +33,9 @@
 			CNT,
 			STATUS,
 			SVC_TYPE,
-			B_SEQ
+			B_SEQ,
+			SUCC_CNT,
+			FAIL_CNT
 		FROM
 			T_BROADCAST_MSG
 		WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}
@@ -44,7 +49,7 @@
 			OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 		</if>
 	</select>
-
+	
 	<select id="selectBulkHistCount" resultType="int">
 		SELECT COUNT(*) FROM (			
 			SELECT 1 AS CNT
@@ -56,5 +61,28 @@
 			</if>		
 		) TOTAL
 	</select>
-
+	
+	<select id="selectBulkHistStatusCount" resultType="map">
+		<choose>
+			<when test="monthTables != null and monthTables.size() > 0">
+				SELECT
+					COUNT(CASE WHEN TRAN_STATUS = 1 THEN 1 END) AS cntStanby,
+					COUNT(CASE WHEN TRAN_STATUS IN (2, 3) THEN 1 END) AS cntTran,
+					COUNT(CASE WHEN TRAN_STATUS = 4 AND TRAN_RSLT = '0' THEN 1 END) AS cntSucc,
+					COUNT(CASE WHEN TRAN_STATUS = 5 THEN 1 END) AS cntDup,
+					COUNT(CASE WHEN TRAN_STATUS = 4 AND <![CDATA[TRAN_RSLT <> '0']]> THEN 1 END) AS cntSendFail
+				FROM (
+				<foreach collection="monthTables" item="tableName" separator=" UNION ALL ">
+					SELECT
+						TRAN_STATUS,
+						TRAN_RSLT,
+						B_MSG_KEY
+					FROM ${tableName}
+					WHERE B_MSG_KEY = #{bulkMsgKey}
+				</foreach>
+				) T_BROADCAST
+			</when>
+		</choose>
+	</select>
+	
 </mapper>

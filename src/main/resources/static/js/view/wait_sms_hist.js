@@ -167,8 +167,10 @@ $(function () {
 		columnResizingMode: 'widget',
 		columnAutoWidth: true,
 		selection: {
-			mode: "multiple"
+			 mode: 'multiple',
 		},
+		//행 마우스오버 시
+		hoverStateEnabled: true,
 		columns: [
 			{ type: "selection" },
 			{ dataField: "title", caption: "제목", alignment: "left" },

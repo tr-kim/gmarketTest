@@ -95,6 +95,12 @@ $(function() {
 			}
 		},
 		keyExpr: "userSeq",
+		//행 선택 시
+		selection: {
+			mode: 'single',
+		},
+		//행 마우스오버 시
+		hoverStateEnabled: true,
 		headerFilter: {
 			visible: true
 		},
