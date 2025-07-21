@@ -55,10 +55,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     	
         try {
         	
-        	String username = request.getParameter("userId");
+        	String userName = request.getParameter("userId");
         	String userPwd = request.getParameter("userPwd");
         	
-            log.debug("1.CustomAuthenticationFilter :: userId:" + username);
+            log.debug("1.CustomAuthenticationFilter :: userId:" + userName);
             
             // RSA 복호화
             HttpSession session = request.getSession();
@@ -68,7 +68,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             session.removeAttribute(ConstantsUtils.RSA_WEB_KEY);
 
             // ID와 암호화된 패스워드를 기반으로 토큰 발급
-            return new UsernamePasswordAuthenticationToken(username, decodePwd);
+            return new UsernamePasswordAuthenticationToken(userName, decodePwd);
         } catch (UsernameNotFoundException ae) {
             throw new UsernameNotFoundException(ae.getMessage());
         }

@@ -15,7 +15,6 @@ import com.web.gmarket.common.validation.ValidationGroups.SizeGroup1;
 import com.web.gmarket.common.validation.ValidationGroups.SizeGroup2;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -68,11 +67,11 @@ public class UserDto implements Serializable {
 	private String email;
 
 	// 회사코드(default : 0) - 0 : 옥션 - 1 : Gmarket
-	@NotNull(message = "회사코드는 필수입니다.")
+	@NotBlank(message = "회사코드는 필수입니다.")
 	private Integer companyCode = 0;
 
 	// 사용자 등급(Default : 2) - 0 : 관리자 등급 - 1 : 사용자 등급 - 2 : 운영자 등급
-	@NotNull(message = "사용자 등급은 필수입니다.")
+	@NotBlank(message = "사용자 등급은 필수입니다.")
 	private Integer userGrade = 2;
 
 	// SMS 사용 여부(Default : Y) - Y / N

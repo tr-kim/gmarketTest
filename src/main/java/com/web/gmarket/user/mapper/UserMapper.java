@@ -49,4 +49,12 @@ public interface UserMapper {
 	 * @return
 	 */
 	public int deleteUserInfo(String userId);
+	
+	/**
+	 * 사용자 비밀번호 변경
+	 * 
+	 * @param userDto
+	 * @return
+	 */
+	public int updateUserPassword(UserDto userDto);
 }

@@ -2,14 +2,7 @@
 <html lagn="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{${layout}}" layout:fragment="content">
 
-<script th:src="@{/js/rsa/jsbn.js}"></script>
-<script th:src="@{/js/rsa/rsa.js}"></script>
-<script th:src="@{/js/rsa/prng4.js}"></script>
-<script th:src="@{/js/rsa/rng.js}"></script>
-
-<script th:src="@{/js/rsa/jsrsasign-all-min.js}"></script>
-
-<body th:data-username="${#authentication.name}" >
+<body>
 	<p class="font-sz-20 font-weight-600 pt-3 text-666">사용자 관리</p>
 	<form class="content row mx-0 mb-2" id="userForm">
 		<div class="col-6">

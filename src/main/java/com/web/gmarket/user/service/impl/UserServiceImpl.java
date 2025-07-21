@@ -15,6 +15,9 @@ import com.web.gmarket.user.dto.UserDto;
 import com.web.gmarket.user.mapper.UserMapper;
 import com.web.gmarket.user.service.UserService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -26,6 +29,7 @@ public class UserServiceImpl implements UserService {
 		UserDto userDto = new UserDto();
 		userDto.setUserId(userId);
 		userDto.setDelFlag(delFlag);
+		
 		return userMapper.selectUserInfo(userDto);
 	}
 
@@ -37,38 +41,15 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public int insertUserInfo(UserDto userDto) {
 		// 비밀번호 암호화 및 hash 값 넣기
-
-		try {
-
-			PasswordEncoder encoder = new BCryptPasswordEncoder();
-
-			String password = userDto.getUserPwd();
-
-			userDto.setEnc1Pa(createHash(password));
-			userDto.setUserPwd(encoder.encode(password));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		passwordEncode(userDto);
 
 		return userMapper.insertUserInfo(userDto);
 	}
 
 	@Override
 	public int updateUserInfo(UserDto userDto) {
-
-		try {
-
-			PasswordEncoder encoder = new BCryptPasswordEncoder();
-
-			String password = userDto.getUserPwd();
-
-			userDto.setEnc1Pa(createHash(password));
-			userDto.setUserPwd(encoder.encode(password));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// 비밀번호 암호화 및 hash 값 넣기
+		passwordEncode(userDto);
 
 		return userMapper.updateUserInfo(userDto);
 	}
@@ -76,6 +57,26 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public int deleteUserInfo(String userId) {
 		return userMapper.deleteUserInfo(userId);
+	}
+
+	@Override
+	public int updateUserPassword(UserDto userDto) {
+		// 비밀번호 암호화 및 hash 값 넣기
+		passwordEncode(userDto);
+		
+		return userMapper.updateUserPassword(userDto);
+	}
+
+	@Override
+	public LinkedHashMap<String, String> validateHandling(Errors errors) {
+		LinkedHashMap<String, String> validatorResult = new LinkedHashMap<String, String>();
+
+		for (FieldError error : errors.getFieldErrors()) {
+			String validKeyName = String.format("valid_%s", error.getField());
+			validatorResult.put(validKeyName, error.getDefaultMessage());
+		}
+
+		return validatorResult;
 	}
 
 	public static String createHash(String data) throws Exception {
@@ -93,15 +94,22 @@ public class UserServiceImpl implements UserService {
 		return result.toString();
 	}
 
-	@Override
-	public LinkedHashMap<String, String> validateHandling(Errors errors) {
-		LinkedHashMap<String, String> validatorResult = new LinkedHashMap<String, String>();
+	public static UserDto passwordEncode(UserDto userDto) {
 
-		for (FieldError error : errors.getFieldErrors()) {
-			String validKeyName = String.format("valid_%s", error.getField());
-			validatorResult.put(validKeyName, error.getDefaultMessage());
+		try {
+			
+			PasswordEncoder encoder = new BCryptPasswordEncoder();
+			String password = userDto.getUserPwd();
+
+			userDto.setEnc1Pa(createHash(password));
+			userDto.setUserPwd(encoder.encode(password));
+
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			e.printStackTrace();
 		}
 
-		return validatorResult;
+		return userDto;
 	}
+
 }
