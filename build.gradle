@@ -36,8 +36,7 @@ war.enabled = false		// 외장 톰캣을 사용
 
 dependencies {
 	// implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'	
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'

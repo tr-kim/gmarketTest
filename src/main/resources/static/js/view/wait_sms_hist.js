@@ -167,9 +167,15 @@ $(function () {
 		columnResizingMode: 'widget',
 		columnAutoWidth: true,
 		selection: {
-			mode: 'multiple',
-			//allowSelectAll: false
+			mode: "multiple",
+			allowSelectAll: false,
+			showCheckBoxesMode: "always",
 		},
+		selectedRowKeys: [],
+		// selection: { //원본
+		// 	mode: 'multiple',
+		// 	//allowSelectAll: false
+		// },
 		//행 마우스오버 시
 		hoverStateEnabled: true,
 		columns: [
@@ -215,7 +221,88 @@ $(function () {
 			const totalCount = e.component.totalCount();
 			$("#totalCount").text(`총 ${totalCount}건`);
 		},
-		onSelectionChanged: function(e) {
+		// onToolbarPreparing: function(e) {
+		// 	e.toolbarOptions.items.push({
+		// 		location: "center",
+		// 		widget: "dxButton",
+		// 		options: {
+		// 			text: "전체 선택/해제",
+		// 			onClick: function() {
+		// 				const grid = e.component;
+		// 				const nowPlus30 = getAfterTime(30);
+		// 				const allItems = grid.getDataSource().items();
+		// 				const allowedKeys = allItems
+		// 					.filter(row => row.reqTime > nowPlus30)
+		// 					.map(row => row.bulkMsgKey);
+
+		// 				const selectedKeys = grid.getSelectedRowKeys();
+		// 				const isAlreadySelected =
+		// 					allowedKeys.length === selectedKeys.length &&
+		// 					allowedKeys.every(key => selectedKeys.includes(key));
+
+		// 				if (isAlreadySelected) {
+		// 					grid.clearSelection();
+		// 				} else {
+		// 					grid.selectRows(allowedKeys, false);
+		// 				}
+		// 			}
+		// 		}
+		// 	});
+		// },
+		onToolbarPreparing: function (e) {
+	const toolbarItems = e.toolbarOptions.items;
+
+	// SearchPanel 항목 찾기
+	const searchIndex = toolbarItems.findIndex(item => item.name === "searchPanel");
+
+	if (searchIndex !== -1) {
+		// "전체 선택/해제" 버튼
+		const selectAllToggleBtn = {
+			location: "after",
+			widget: "dxButton",
+			options: {
+				text: "전체 선택/해제",
+				stylingMode: 'outlined',
+				type: 'default',
+				onClick: function () {
+					const grid = e.component;
+					const nowPlus30 = getAfterTime(30);
+					const allItems = grid.getDataSource().items();
+					const allowedKeys = allItems
+						.filter(row => row.reqTime > nowPlus30)
+						.map(row => row.bulkMsgKey);
+
+					const selectedKeys = grid.getSelectedRowKeys();
+					const isAlreadySelected =
+						allowedKeys.length === selectedKeys.length &&
+						allowedKeys.every(key => selectedKeys.includes(key));
+
+					if (isAlreadySelected) {
+						grid.clearSelection();
+					} else {
+						grid.selectRows(allowedKeys, false);
+					}
+				}
+			}
+		};
+
+		// "선택 삭제" 버튼
+		const deleteBtn = {
+			location: "after",
+			widget: "dxButton",
+			options: {
+				text: "선택 삭제",
+				stylingMode: 'contained',
+				type: 'default',
+			}
+		};
+
+		// "전체 선택/해제" 먼저, 그다음 "선택 삭제"
+		toolbarItems.splice(searchIndex, 0, deleteBtn);
+		toolbarItems.splice(searchIndex, 0, selectAllToggleBtn);
+	}
+},
+		onSelectionChanged: function(e) { //원본
 			const allowedRows = [];
 			const nowPlus30 = getAfterTime(30); //현재시간+30분
 			
@@ -233,6 +320,10 @@ $(function () {
 	}).dxDataGrid("instance");
 	
 });
+function getAfterTime(minutes) {
+    const now = new Date();
+    return new Date(now.getTime() + minutes * 60000);
+}
 
 //조회 버튼
 document.getElementById("search-btn").addEventListener('click', function(e){

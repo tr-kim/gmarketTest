@@ -242,29 +242,30 @@ aside .psw_chg_btn:hover{
 /* 페이지 */
 /* hist.html */
 #histGrid .dx-bordered-bottom-view {
-    max-height: calc(100vh - 520px);
+    max-height: calc(100vh - 560px);
 }
 /* bulk_hist.html */
 #bulkHistGrid .dx-bordered-bottom-view {
-    max-height: calc(100vh - 480px);
+    max-height: calc(100vh - 520px);
 }
 /* wait_sms_hist.html */
 #waitHistGrid .dx-bordered-bottom-view {
-    max-height: calc(100vh - 490px);
+    max-height: calc(100vh - 530px);
 }
 /* stat.html */
 #statGrid .dx-bordered-bottom-view {
-    max-height: calc(100vh - 525px);
+    max-height: calc(100vh - 560px);
 }
 /* user.html */
 #userGrid .dx-bordered-bottom-view {
-    max-height: calc(100vh - 490px);
+    max-height: calc(100vh - 540px);
 }
 /* real_send_hist.html */
 #real_send_hist .content {
     min-height: 22rem;
 }
 /* send.html */
+
 #send > ul{
     max-width: 760px;
     margin: auto;
