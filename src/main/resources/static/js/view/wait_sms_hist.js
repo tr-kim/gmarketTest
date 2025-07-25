@@ -167,7 +167,8 @@ $(function () {
 		columnResizingMode: 'widget',
 		columnAutoWidth: true,
 		selection: {
-			 mode: 'multiple',
+			mode: 'multiple',
+			//allowSelectAll: false
 		},
 		//행 마우스오버 시
 		hoverStateEnabled: true,
@@ -213,6 +214,21 @@ $(function () {
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
 			$("#totalCount").text(`총 ${totalCount}건`);
+		},
+		onSelectionChanged: function(e) {
+			const allowedRows = [];
+			const nowPlus30 = getAfterTime(30); //현재시간+30분
+			
+			for (const row of e.selectedRowsData) {
+				if (nowPlus30 < row.reqTime) {
+					allowedRows.push(row.bulkMsgKey); //dataSource key
+				} else {
+					DevExpress.ui.notify("전송 임박 항목은 선택되지 않습니다.", "warning", 2000);
+				}
+			}
+			
+			//허용된 행만 다시 선택 처리
+			e.component.selectRows(allowedRows, false);
 		}
 	}).dxDataGrid("instance");
 	
@@ -273,4 +289,82 @@ document.getElementById("search-btn").addEventListener('click', function(e){
 
 	//재조회
 	waitDataGrid.getDataSource().reload();
-})
+});
+
+//삭제 버튼
+document.getElementById("del-btn").addEventListener('click', function(e){
+	e.preventDefault();
+	
+	//선택된 행 체크
+	const selectedRows = waitDataGrid.getSelectedRowsData();
+	
+	if (selectedRows.length === 0) {
+		DevExpress.ui.dialog.custom({
+			showTitle: false,
+			messageHtml: "<div style='text-align: center;'>삭제할 메시지를 선택하세요.</div>",
+			buttons: [{
+				text: "확인",
+				onClick: function () {
+					return { result: "ok" }; //done()으로 넘어가는 값
+				}
+			}]
+		}).show();
+		
+		return;
+	}
+	
+	const confirmDialog = DevExpress.ui.dialog.custom({
+		showTitle: false,
+		messageHtml: "<div style='text-align: center;'>삭제하시겠습니까?</div>",
+		buttons: [
+			{
+				text: "확인",
+				type: "default",
+				onClick: function(e) {
+					const selectedKeys = waitDataGrid.getSelectedRowKeys();
+					
+					console.log("삭제할 키:", selectedKeys);
+					
+					//삭제 로직 실행
+					
+					
+					
+					
+					
+					
+					
+					return { result: "ok" };
+				}
+			}, {
+				text: "취소",
+				onClick: function(e) {
+					return { result: "cancel" };
+				}
+			}
+		]
+	});
+	
+	confirmDialog.show().done(function(dialogResult) {
+		if (dialogResult.result === "ok") {
+			console.log("삭제 완료");
+			
+		} else {
+			console.log("취소");
+		}
+	});
+});
+
+//시간 구하기
+function getAfterTime(minute) {
+	const now = new Date();
+	now.setMinutes(now.getMinutes() + minute);
+	
+	const yyyy = now.getFullYear();
+	const MM = String(now.getMonth() + 1).padStart(2, '0');
+	const dd = String(now.getDate()).padStart(2, '0');
+	const HH = String(now.getHours()).padStart(2, '0');
+	const mm = String(now.getMinutes()).padStart(2, '0');
+	const ss = String(now.getSeconds()).padStart(2, '0');
+	
+	return `${yyyy}${MM}${dd}${HH}${mm}${ss}`;
+}

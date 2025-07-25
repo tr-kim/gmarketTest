@@ -208,3 +208,6 @@ input, textarea{
 .dx-calendar-body thead th {
     text-align: center;
 }
+.dx-dialog .dx-popup-title {
+	display: none;
+}

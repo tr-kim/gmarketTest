@@ -21,8 +21,8 @@
 }(0, (function(localization) {
     localization.loadMessages({
         en: {
-            Yes: "Yes",
-            No: "No",
+            Yes: "확인",
+            No: "취소",
             Cancel: "Cancel",
             Close: "Close",
             Clear: "Clear",
@@ -31,7 +31,7 @@
             Select: "Select...",
             Search: "Search",
             Back: "Back",
-            OK: "OK",
+            OK: "확인",
             "dxCollectionWidget-noDataText": "No data to display",
             "dxDropDownEditor-selectLabel": "Select",
             "validation-required": "Required",
@@ -571,8 +571,8 @@
             "dxDiagram-unitIn": "in",
             "dxDiagram-unitCm": "cm",
             "dxDiagram-unitPx": "px",
-            "dxDiagram-dialogButtonOK": "OK",
-            "dxDiagram-dialogButtonCancel": "Cancel",
+            "dxDiagram-dialogButtonOK": "확인",
+            "dxDiagram-dialogButtonCancel": "취소",
             "dxDiagram-dialogInsertShapeImageTitle": "Insert Image",
             "dxDiagram-dialogEditShapeImageTitle": "Change Image",
             "dxDiagram-dialogEditShapeImageSelectButton": "Select image",
