@@ -339,9 +339,9 @@ const searchBtn = $('#search-btn').dxButton({
 		}
 		
 		// 조회기간 구하기
-		const largeCategoryValue = largeCategoryInstance.option("value");
+		//const largeCategoryValue = largeCategoryInstance.option("value");
 		
-		if(largeCategoryValue != 0){
+		//if(largeCategoryValue){
 			let start = new Date(
 				parseInt(startTimeFormatted.slice(0, 4)),
 				parseInt(startTimeFormatted.slice(4, 6)) - 1,
@@ -376,7 +376,8 @@ const searchBtn = $('#search-btn').dxButton({
 				DevExpress.ui.dialog.custom({
 					showTitle: false,
 					messageHtml: `<div style='text-align: center;' class="pt-3">
-					조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : ${Math.floor(diffDays)}일
+					조회 기간을 다시 입력하세요. (30일 이내)<br><br>
+					<span class="text-black-50">현재 입력한 조회 기간 : ${Math.floor(diffDays)}일</span>
 					</div>`,
 					buttons: [{
 						text: "확인",
@@ -388,7 +389,7 @@ const searchBtn = $('#search-btn').dxButton({
 				// alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
 				// return false;
 			}
-		}	
+		//}	
 		
 		//재조회
 		histDataGrid.getDataSource().reload();

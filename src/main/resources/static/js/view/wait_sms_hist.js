@@ -474,8 +474,9 @@ function getAfterTime(minutes) {
 			DevExpress.ui.dialog.custom({
 				showTitle: false,
 				messageHtml: `<div style='text-align: center;' class="pt-3">
-				조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : ${Math.floor(diffDays)}일
-				</div>`,
+					조회 기간을 다시 입력하세요. (30일 이내)<br><br>
+					<span class="text-black-50">현재 입력한 조회 기간 : ${Math.floor(diffDays)}일</span>
+					</div>`,
 				buttons: [{
 					text: "확인",
 					onClick: function () {
