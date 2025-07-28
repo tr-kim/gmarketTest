@@ -35,8 +35,10 @@
 			</div>
 			<div class="row d-flex align-items-center">
 				<div class="col d-flex justify-content-end">
-					<button class="btn btn-success font-sz-14 ms-2" id="excel-btn">엑셀 다운로드</button>
-					<button class="btn btn-primary font-sz-14 ms-2" id="search-btn">조회</button>	
+					<div id="excel-btn" class="me-2"></div>
+					<div id="search-btn"></div>
+					<!-- <button class="btn btn-success font-sz-14 ms-2" id="excel-btn">엑셀 다운로드</button>
+					<button class="btn btn-primary font-sz-14 ms-2" id="search-btn">조회</button>	 -->
 				</div>
 			</div>
 		</div>
@@ -44,6 +46,6 @@
 	<div class="content">
 		<div id="bulkHistGrid"></div>
 	</div>
-	<th:block th:replace="~{/bulkHistDetail :: bulkHistDetail}"></th:block>
+	<th:block th:replace="~{/popup/bulkHistDetail :: bulkHistDetail}"></th:block>
 	<script th:src="@{/js/view/bulk_hist.js}"></script>
 </html>

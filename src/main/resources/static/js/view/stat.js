@@ -344,12 +344,27 @@ $(function () {
 
 });
 
+const searchBtn = $('#search-btn').dxButton({
+    stylingMode: 'contained',
+    text: '조회',
+    type: 'default',
+    width: 60,
+    onClick() {
+		
+    },
+}).dxButton('instance');
+
 //엑셀 다운로드 버튼
-document.getElementById("excel-btn").addEventListener('click',function(e){
-	e.preventDefault();
-	const grid = $("#statGrid").dxDataGrid("instance");
-	exportGridToExcel(grid);
-})
+const excelBtn = $('#excel-btn').dxButton({
+    stylingMode: 'contained',
+    text: '엑셀 다운로드',
+    type: 'success',
+    width: 120,
+    onClick() {
+		const grid = $("#statGrid").dxDataGrid("instance");
+		exportGridToExcel(grid);
+    },
+}).dxButton('instance');
 
 //엑셀 다운로드
 function exportGridToExcel(gridInstance){

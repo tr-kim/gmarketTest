@@ -192,7 +192,7 @@ $(function() {
 						icon: "remove",
 						name: "delete",
 						text: '',
-						onClick: function(e) {
+						onClick: function(e) {							
 							const rowData = e.row.data;
 							if (confirm('계정을 삭제 하시겠습니까?')) {
 								const param = { userId: rowData.userId };
@@ -230,6 +230,8 @@ $(function() {
 			]
 		},
 		onEditingStart(e) {
+			document.getElementById('reset_btn').classList.add('d-none');
+			console.log(document.getElementById('reset_btn'));
 			e.cancel = true; // 기본 편집 막기
 			openCustomModal('edit', e.data); // 수정 모드
 		},
@@ -335,10 +337,23 @@ function rsaCallback(data) {
 }
 
 // 등록 버튼 이벤트
-document.getElementById('add_btn').addEventListener('click', function(e) {
-	e.preventDefault();
-	openCustomModal('add');
-});
+const addBtn = $('#add_btn').dxButton({
+    stylingMode: 'outlined',
+    text: '등록',
+    type: 'default',
+    width: 60,
+    onClick() {
+		openCustomModal('add');
+		if(document.getElementById('reset_btn').classList.contains('d-none')){
+			document.getElementById('reset_btn').classList.remove('d-none');
+		}		
+    },
+}).dxButton('instance');
+
+// document.getElementById('add_btn').addEventListener('click', function(e) {
+// 	e.preventDefault();
+// 	openCustomModal('add');
+// });
 
 // 사용자 등록 모달 - 닫기 버튼
 document.getElementById('close_btn').addEventListener('click', function(e) {
@@ -348,52 +363,107 @@ document.getElementById('close_btn').addEventListener('click', function(e) {
 });
 
 // 사용자 등록 모달 - 초기화 버튼
-document.getElementById('reset_btn').addEventListener('click', function(e) {
-	e.preventDefault();
-	userModalReset();
-});
+const closeBtn = $('#reset_btn').dxButton({
+    stylingMode: 'outlined',
+    text: '초기화',
+    type: 'default',
+    width: 65,
+    onClick() {
+		userModalReset();
+    },
+}).dxButton('instance');
+
+// document.getElementById('reset_btn').addEventListener('click', function(e) {
+// 	e.preventDefault();
+// 	userModalReset();
+// });
 
 // 저장 버튼 이벤트
-document.getElementById('save_btn').addEventListener('click', function(e) {
-	e.preventDefault();
+const saveBtn = $('#save_btn').dxButton({
+    stylingMode: 'default',
+    text: '저장',
+    type: 'default',
+    width: 60,
+    onClick() {
+		const password = $("#user_psw_data").val();
+		const publicKeyModulus = $("#publicKeyModulus").val();
+		const publicKeyExponent = $("#publicKeyExponent").val();
 
-	const password = $("#user_psw_data").val();
-	const publicKeyModulus = $("#publicKeyModulus").val();
-	const publicKeyExponent = $("#publicKeyExponent").val();
+		// RSA 암호화
+		let rsa = new RSAKey();
+		rsa.setPublic(publicKeyModulus, publicKeyExponent);
 
-	// RSA 암호화
-	let rsa = new RSAKey();
-	rsa.setPublic(publicKeyModulus, publicKeyExponent);
+		const encrypted = rsa.encrypt(password);
+		const base64 = hex2b64(encrypted);
 
-	const encrypted = rsa.encrypt(password);
-	const base64 = hex2b64(encrypted);
+		let formData = new FormData();
+		formData.append("userId", $("#user_id_data").val());
+		formData.append("userPwd", encodeURIComponent(base64));
+		formData.append("userName", $("#user_name_data").val());
+		formData.append("userGrade", $("#user_grade_data").val());
+		formData.append("companyCode", $("#company_code_data").val());
+		formData.append("hpNo", $("#user_phone1_data").val());
+		formData.append("telNo", $("#user_phone2_data").val());
+		formData.append("email", $("#user_email_data").val());
+		formData.append("smsYn", $("#user_sms_data").val());
+		formData.append("excelYn", $("#user_excel_data").val());
+		formData.append("fileYn", $("#user_file_data").val());
+		formData.append("dbYn", $("#user_db_data").val());
+		formData.append("lmsYn", $("#user_lms_data").val());
+		formData.append("mmsYn", $("#user_mms_data").val());
+		formData.append("useYn", $("#use_yn_data").val());
 
-	let formData = new FormData();
-	formData.append("userId", $("#user_id_data").val());
-	formData.append("userPwd", encodeURIComponent(base64));
-	formData.append("userName", $("#user_name_data").val());
-	formData.append("userGrade", $("#user_grade_data").val());
-	formData.append("companyCode", $("#company_code_data").val());
-	formData.append("hpNo", $("#user_phone1_data").val());
-	formData.append("telNo", $("#user_phone2_data").val());
-	formData.append("email", $("#user_email_data").val());
-	formData.append("smsYn", $("#user_sms_data").val());
-	formData.append("excelYn", $("#user_excel_data").val());
-	formData.append("fileYn", $("#user_file_data").val());
-	formData.append("dbYn", $("#user_db_data").val());
-	formData.append("lmsYn", $("#user_lms_data").val());
-	formData.append("mmsYn", $("#user_mms_data").val());
-	formData.append("useYn", $("#use_yn_data").val());
+		if (currentMode === 'edit') {
+			putFormAjax("/api/v1/user/update", formData, successCallback);
+		} else if (currentMode === 'add') {
+			postFormAjax("/api/v1/user/insert", formData, successCallback);
+		}
 
-	if (currentMode === 'edit') {
-		putFormAjax("/api/v1/user/update", formData, successCallback);
-	} else if (currentMode === 'add') {
-		postFormAjax("/api/v1/user/insert", formData, successCallback);
-	}
+		const grid = $('#userGrid').dxDataGrid('instance');
+		grid.saveEditData();
+    },
+}).dxButton('instance');
 
-	const grid = $('#userGrid').dxDataGrid('instance');
-	grid.saveEditData();
-});
+// document.getElementById('save_btn').addEventListener('click', function(e) {
+// 	e.preventDefault();
+
+// 	const password = $("#user_psw_data").val();
+// 	const publicKeyModulus = $("#publicKeyModulus").val();
+// 	const publicKeyExponent = $("#publicKeyExponent").val();
+
+// 	// RSA 암호화
+// 	let rsa = new RSAKey();
+// 	rsa.setPublic(publicKeyModulus, publicKeyExponent);
+
+// 	const encrypted = rsa.encrypt(password);
+// 	const base64 = hex2b64(encrypted);
+
+// 	let formData = new FormData();
+// 	formData.append("userId", $("#user_id_data").val());
+// 	formData.append("userPwd", encodeURIComponent(base64));
+// 	formData.append("userName", $("#user_name_data").val());
+// 	formData.append("userGrade", $("#user_grade_data").val());
+// 	formData.append("companyCode", $("#company_code_data").val());
+// 	formData.append("hpNo", $("#user_phone1_data").val());
+// 	formData.append("telNo", $("#user_phone2_data").val());
+// 	formData.append("email", $("#user_email_data").val());
+// 	formData.append("smsYn", $("#user_sms_data").val());
+// 	formData.append("excelYn", $("#user_excel_data").val());
+// 	formData.append("fileYn", $("#user_file_data").val());
+// 	formData.append("dbYn", $("#user_db_data").val());
+// 	formData.append("lmsYn", $("#user_lms_data").val());
+// 	formData.append("mmsYn", $("#user_mms_data").val());
+// 	formData.append("useYn", $("#use_yn_data").val());
+
+// 	if (currentMode === 'edit') {
+// 		putFormAjax("/api/v1/user/update", formData, successCallback);
+// 	} else if (currentMode === 'add') {
+// 		postFormAjax("/api/v1/user/insert", formData, successCallback);
+// 	}
+
+// 	const grid = $('#userGrid').dxDataGrid('instance');
+// 	grid.saveEditData();
+// });
 
 // 성공 함수
 function successCallback(data) {
@@ -413,7 +483,16 @@ function successCallback(data) {
 }
 
 // 검색 버튼 이벤트
-document.getElementById('search_btn').addEventListener('click', function(e) {
-	e.preventDefault();
-	search();
-});
+const searchBtn = $('#search-btn').dxButton({
+    stylingMode: 'contained',
+    text: '조회',
+    type: 'default',
+    width: 60,
+    onClick() {
+		search();
+    },
+}).dxButton('instance');
+// document.getElementById('search_btn').addEventListener('click', function(e) {
+// 	e.preventDefault();
+// 	search();
+// });

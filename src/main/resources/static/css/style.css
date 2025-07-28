@@ -340,20 +340,19 @@ aside .psw_chg_btn:hover{
 #send .msg_wrap textarea::placeholder{
     color: #ccc;
 }
-#send .msg_type.sms{
-    background-color: #0d6efd;
+#send .msg_type{
+    border-radius: 6px 0 0 0;
     color: #fff;
     opacity: .9;
+}
+#send .msg_type.sms{
+    background-color: #0d6efd;    
 }
 #send .msg_type.lms{
     background-color: #0abb26;
-    color: #fff;
-    opacity: .9;
 }
 #send .msg_type.mms{
     background-color: #dc3545;
-    color: #fff;
-    opacity: .9;
 }
 #send .msg_wrap{
     border-right: 1px solid #e5e7eb;

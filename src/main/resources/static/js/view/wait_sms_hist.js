@@ -263,7 +263,7 @@ $(function () {
 			options: {
 				text: "전체 선택/해제",
 				stylingMode: 'outlined',
-				type: 'default',
+				type: 'danger',
 				onClick: function () {
 					const grid = e.component;
 					const nowPlus30 = getAfterTime(30);
@@ -293,7 +293,10 @@ $(function () {
 			options: {
 				text: "선택 삭제",
 				stylingMode: 'contained',
-				type: 'default',
+				type: 'danger',
+				elementAttr: {
+					id: "del-btn"
+				}
 			}
 		};
 
@@ -325,62 +328,122 @@ function getAfterTime(minutes) {
     return new Date(now.getTime() + minutes * 60000);
 }
 
+ const searchBtn = $('#search-btn').dxButton({
+    stylingMode: 'contained',
+    text: '조회',
+    type: 'default',
+    width: 60,
+    onClick() {
+		const startValue = startDateInstance.option("value");
+		const endValue = endDateInstance.option("value");
+		
+		let startDateFormatted = "", startTimeFormatted = "";
+		let endDateFormatted = "", endTimeFormatted = "";
+		
+		// 날짜가 Date 객체인지 확인
+		if (startValue instanceof Date && !isNaN(startValue)) {
+			const yyyy = startValue.getFullYear();
+			const mm = String(startValue.getMonth() + 1).padStart(2, '0');
+			const dd = String(startValue.getDate()).padStart(2, '0');
+			startDateFormatted = `${yyyy}${mm}`;
+			startTimeFormatted = `${yyyy}${mm}${dd}`;
+		}
+		
+		if (endValue instanceof Date && !isNaN(endValue)) {
+			const yyyy = endValue.getFullYear();
+			const mm = String(endValue.getMonth() + 1).padStart(2, '0');
+			const dd = String(endValue.getDate()).padStart(2, '0');
+			endDateFormatted = `${yyyy}${mm}`;
+			endTimeFormatted = `${yyyy}${mm}${dd}`;
+		}
+		
+		// 조회기간 구하기
+		let start = new Date(
+			parseInt(startTimeFormatted.slice(0, 4)),
+			parseInt(startTimeFormatted.slice(4, 6)) - 1,
+			parseInt(startTimeFormatted.slice(6, 8))
+		);
+
+		let end = new Date(
+			parseInt(endTimeFormatted.slice(0, 4)),
+			parseInt(endTimeFormatted.slice(4, 6)) - 1,
+			parseInt(endTimeFormatted.slice(6, 8))
+		);
+
+		let diffMs = end - start;
+		let diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+		if (diffDays < 0) {
+			alert("조회 기간을 다시 입력하세요.");
+			return false;
+		}
+
+		if (diffDays > 30) {
+			alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
+			return false;
+		}		
+
+		//재조회
+		waitDataGrid.getDataSource().reload();
+    },
+  }).dxButton('instance');
+
 //조회 버튼
-document.getElementById("search-btn").addEventListener('click', function(e){
-	e.preventDefault();
+// document.getElementById("search-btn").addEventListener('click', function(e){
+// 	e.preventDefault();
 	
-	const startValue = startDateInstance.option("value");
-	const endValue = endDateInstance.option("value");
+// 	const startValue = startDateInstance.option("value");
+// 	const endValue = endDateInstance.option("value");
 	
-	let startDateFormatted = "", startTimeFormatted = "";
-	let endDateFormatted = "", endTimeFormatted = "";
+// 	let startDateFormatted = "", startTimeFormatted = "";
+// 	let endDateFormatted = "", endTimeFormatted = "";
 	
-	// 날짜가 Date 객체인지 확인
-	if (startValue instanceof Date && !isNaN(startValue)) {
-		const yyyy = startValue.getFullYear();
-		const mm = String(startValue.getMonth() + 1).padStart(2, '0');
-		const dd = String(startValue.getDate()).padStart(2, '0');
-		startDateFormatted = `${yyyy}${mm}`;
-		startTimeFormatted = `${yyyy}${mm}${dd}`;
-	}
+// 	// 날짜가 Date 객체인지 확인
+// 	if (startValue instanceof Date && !isNaN(startValue)) {
+// 		const yyyy = startValue.getFullYear();
+// 		const mm = String(startValue.getMonth() + 1).padStart(2, '0');
+// 		const dd = String(startValue.getDate()).padStart(2, '0');
+// 		startDateFormatted = `${yyyy}${mm}`;
+// 		startTimeFormatted = `${yyyy}${mm}${dd}`;
+// 	}
 	
-	if (endValue instanceof Date && !isNaN(endValue)) {
-		const yyyy = endValue.getFullYear();
-		const mm = String(endValue.getMonth() + 1).padStart(2, '0');
-		const dd = String(endValue.getDate()).padStart(2, '0');
-		endDateFormatted = `${yyyy}${mm}`;
-		endTimeFormatted = `${yyyy}${mm}${dd}`;
-	}
+// 	if (endValue instanceof Date && !isNaN(endValue)) {
+// 		const yyyy = endValue.getFullYear();
+// 		const mm = String(endValue.getMonth() + 1).padStart(2, '0');
+// 		const dd = String(endValue.getDate()).padStart(2, '0');
+// 		endDateFormatted = `${yyyy}${mm}`;
+// 		endTimeFormatted = `${yyyy}${mm}${dd}`;
+// 	}
 	
-	// 조회기간 구하기
-	let start = new Date(
-		parseInt(startTimeFormatted.slice(0, 4)),
-		parseInt(startTimeFormatted.slice(4, 6)) - 1,
-		parseInt(startTimeFormatted.slice(6, 8))
-	);
+// 	// 조회기간 구하기
+// 	let start = new Date(
+// 		parseInt(startTimeFormatted.slice(0, 4)),
+// 		parseInt(startTimeFormatted.slice(4, 6)) - 1,
+// 		parseInt(startTimeFormatted.slice(6, 8))
+// 	);
 
-	let end = new Date(
-		parseInt(endTimeFormatted.slice(0, 4)),
-		parseInt(endTimeFormatted.slice(4, 6)) - 1,
-		parseInt(endTimeFormatted.slice(6, 8))
-	);
+// 	let end = new Date(
+// 		parseInt(endTimeFormatted.slice(0, 4)),
+// 		parseInt(endTimeFormatted.slice(4, 6)) - 1,
+// 		parseInt(endTimeFormatted.slice(6, 8))
+// 	);
 
-	let diffMs = end - start;
-	let diffDays = diffMs / (1000 * 60 * 60 * 24);
+// 	let diffMs = end - start;
+// 	let diffDays = diffMs / (1000 * 60 * 60 * 24);
 
-	if (diffDays < 0) {
-		alert("조회 기간을 다시 입력하세요.");
-		return false;
-	}
+// 	if (diffDays < 0) {
+// 		alert("조회 기간을 다시 입력하세요.");
+// 		return false;
+// 	}
 
-	if (diffDays > 30) {
-		alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
-		return false;
-	}		
+// 	if (diffDays > 30) {
+// 		alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
+// 		return false;
+// 	}		
 
-	//재조회
-	waitDataGrid.getDataSource().reload();
-});
+// 	//재조회
+// 	waitDataGrid.getDataSource().reload();
+// });
 
 //삭제 버튼
 document.getElementById("del-btn").addEventListener('click', function(e){
