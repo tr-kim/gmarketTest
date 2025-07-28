@@ -117,11 +117,24 @@ $(function () {
 			})
 			.catch(error => {
 				console.error("데이터 로드 실패:", error);
-				alert("데이터를 불러오는 중 오류가 발생했습니다.");
-				return {
-					data: [],
-					totalCount: 0
-				};
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `<div style='text-align: center;' class="pt-3">데이터를 불러오는 중 오류가 발생했습니다.</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return {
+								data: [],
+								totalCount: 0
+							};
+						}
+					}]
+				}).show();
+				//alert("데이터를 불러오는 중 오류가 발생했습니다.");
+				// return {
+				// 	data: [],
+				// 	totalCount: 0
+				// };
 			});
 		}
     });
@@ -198,7 +211,16 @@ $(function () {
 				buttons: [{
 					icon: "find",
 					onClick: function(e) {
-						alert('상세보기')
+						DevExpress.ui.dialog.custom({
+							showTitle: false,
+							messageHtml: "<div style='text-align: center;' class='pt-3'>상세보기</div>",
+							buttons: [{
+								text: "확인",
+								onClick: function () {
+									return { result: "ok" }; //done()으로 넘어가는 값
+								}
+							}]
+						}).show();
 					}
 				}],
 			},
@@ -296,6 +318,65 @@ $(function () {
 				type: 'danger',
 				elementAttr: {
 					id: "del-btn"
+				},
+				onClick:function (){
+					//선택된 행 체크
+					const selectedRows = waitDataGrid.getSelectedRowsData();
+					
+					if (selectedRows.length === 0) {
+						DevExpress.ui.dialog.custom({
+							showTitle: false,
+							messageHtml: "<div style='text-align: center;'>삭제할 메시지를 선택하세요.</div>",
+							buttons: [{
+								text: "확인",
+								onClick: function () {
+									return { result: "ok" }; //done()으로 넘어가는 값
+								}
+							}]
+						}).show();
+						
+						return;
+					}
+					
+					const confirmDialog = DevExpress.ui.dialog.custom({
+						showTitle: false,
+						messageHtml: "<div style='text-align: center;'>삭제하시겠습니까?</div>",
+						buttons: [
+							{
+								text: "확인",
+								type: "default",
+								onClick: function(e) {
+									const selectedKeys = waitDataGrid.getSelectedRowKeys();
+									
+									console.log("삭제할 키:", selectedKeys);
+									
+									//삭제 로직 실행
+									
+									
+									
+									
+									
+									
+									
+									return { result: "ok" };
+								}
+							}, {
+								text: "취소",
+								onClick: function(e) {
+									return { result: "cancel" };
+								}
+							}
+						]
+					});
+					
+					confirmDialog.show().done(function(dialogResult) {
+						if (dialogResult.result === "ok") {
+							console.log("삭제 완료");
+							
+						} else {
+							console.log("취소");
+						}
+					});
 				}
 			}
 		};
@@ -374,13 +455,36 @@ function getAfterTime(minutes) {
 		let diffDays = diffMs / (1000 * 60 * 60 * 24);
 
 		if (diffDays < 0) {
-			alert("조회 기간을 다시 입력하세요.");
-			return false;
+			DevExpress.ui.dialog.custom({
+				showTitle: false,
+				messageHtml: `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요.</div>`,
+				buttons: [{
+					text: "확인",
+					onClick: function () {
+						return false;
+						//return { result: "ok" }; 
+					}
+				}]
+			}).show();
+			//alert("조회 기간을 다시 입력하세요.");
+			
 		}
 
 		if (diffDays > 30) {
-			alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
-			return false;
+			DevExpress.ui.dialog.custom({
+				showTitle: false,
+				messageHtml: `<div style='text-align: center;' class="pt-3">
+				조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : ${Math.floor(diffDays)}일
+				</div>`,
+				buttons: [{
+					text: "확인",
+					onClick: function () {
+						return false;
+					}
+				}]
+			}).show();
+			//alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
+			//return false;
 		}		
 
 		//재조회
@@ -446,67 +550,67 @@ function getAfterTime(minutes) {
 // });
 
 //삭제 버튼
-document.getElementById("del-btn").addEventListener('click', function(e){
-	e.preventDefault();
+// document.getElementById("del-btn").addEventListener('click', function(e){
+// 	e.preventDefault();
 	
-	//선택된 행 체크
-	const selectedRows = waitDataGrid.getSelectedRowsData();
+// 	//선택된 행 체크
+// 	const selectedRows = waitDataGrid.getSelectedRowsData();
 	
-	if (selectedRows.length === 0) {
-		DevExpress.ui.dialog.custom({
-			showTitle: false,
-			messageHtml: "<div style='text-align: center;'>삭제할 메시지를 선택하세요.</div>",
-			buttons: [{
-				text: "확인",
-				onClick: function () {
-					return { result: "ok" }; //done()으로 넘어가는 값
-				}
-			}]
-		}).show();
+// 	if (selectedRows.length === 0) {
+// 		DevExpress.ui.dialog.custom({
+// 			showTitle: false,
+// 			messageHtml: "<div style='text-align: center;'>삭제할 메시지를 선택하세요.</div>",
+// 			buttons: [{
+// 				text: "확인",
+// 				onClick: function () {
+// 					return { result: "ok" }; //done()으로 넘어가는 값
+// 				}
+// 			}]
+// 		}).show();
 		
-		return;
-	}
+// 		return;
+// 	}
 	
-	const confirmDialog = DevExpress.ui.dialog.custom({
-		showTitle: false,
-		messageHtml: "<div style='text-align: center;'>삭제하시겠습니까?</div>",
-		buttons: [
-			{
-				text: "확인",
-				type: "default",
-				onClick: function(e) {
-					const selectedKeys = waitDataGrid.getSelectedRowKeys();
+// 	const confirmDialog = DevExpress.ui.dialog.custom({
+// 		showTitle: false,
+// 		messageHtml: "<div style='text-align: center;'>삭제하시겠습니까?</div>",
+// 		buttons: [
+// 			{
+// 				text: "확인",
+// 				type: "default",
+// 				onClick: function(e) {
+// 					const selectedKeys = waitDataGrid.getSelectedRowKeys();
 					
-					console.log("삭제할 키:", selectedKeys);
+// 					console.log("삭제할 키:", selectedKeys);
 					
-					//삭제 로직 실행
-					
-					
+// 					//삭제 로직 실행
 					
 					
 					
 					
 					
-					return { result: "ok" };
-				}
-			}, {
-				text: "취소",
-				onClick: function(e) {
-					return { result: "cancel" };
-				}
-			}
-		]
-	});
+					
+					
+// 					return { result: "ok" };
+// 				}
+// 			}, {
+// 				text: "취소",
+// 				onClick: function(e) {
+// 					return { result: "cancel" };
+// 				}
+// 			}
+// 		]
+// 	});
 	
-	confirmDialog.show().done(function(dialogResult) {
-		if (dialogResult.result === "ok") {
-			console.log("삭제 완료");
+// 	confirmDialog.show().done(function(dialogResult) {
+// 		if (dialogResult.result === "ok") {
+// 			console.log("삭제 완료");
 			
-		} else {
-			console.log("취소");
-		}
-	});
-});
+// 		} else {
+// 			console.log("취소");
+// 		}
+// 	});
+// });
 
 //시간 구하기
 function getAfterTime(minute) {

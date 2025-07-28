@@ -202,12 +202,42 @@ $(function() {
 									const result = data.result;
 
 									if (code == 1000) {
-										alert("삭제에 성공하였습니다.");
+										DevExpress.ui.dialog.custom({
+											showTitle: false,
+											messageHtml: `<div style='text-align: center;' class="pt-3">삭제에 성공하였습니다.</div>`,
+											buttons: [{
+												text: "확인",
+												onClick: function () {
+													return; 
+												}
+											}]
+										}).show();
+										//alert("삭제에 성공하였습니다.");
 										search();
 									} else if (code == 9003) {
-										alert(result);
+										DevExpress.ui.dialog.custom({
+											showTitle: false,
+											messageHtml: `<div style='text-align: center;' class="pt-3">${result}</div>`,
+											buttons: [{
+												text: "확인",
+												onClick: function () {
+													return; 
+												}
+											}]
+										}).show();
+										//alert(result);
 									} else {
-										alert("삭제에 실패하였습니다.");
+										DevExpress.ui.dialog.custom({
+											showTitle: false,
+											messageHtml: `<div style='text-align: center;' class="pt-3">삭제에 실패하였습니다.</div>`,
+											buttons: [{
+												text: "확인",
+												onClick: function () {
+													return; 
+												}
+											}]
+										}).show();
+										//alert("삭제에 실패하였습니다.");
 									}
 								});
 							}
@@ -471,14 +501,46 @@ function successCallback(data) {
 	let result = data.result;
 
 	if (code == 1000) {
-		alert(currentMode === 'edit' ? "수정에 성공하였습니다." : "등록에 성공하였습니다.");
+		const successMsg = currentMode === 'edit' ? "수정에 성공하였습니다." : "등록에 성공하였습니다.";
+		DevExpress.ui.dialog.custom({
+			showTitle: false,
+			messageHtml: `<div style='text-align: center;' class="pt-3">${successMsg}</div>`,
+			buttons: [{
+				text: "확인",
+				onClick: function () {
+					return; 
+				}
+			}]
+		}).show();
+		//alert(currentMode === 'edit' ? "수정에 성공하였습니다." : "등록에 성공하였습니다.");
 		document.getElementById('user_add_modal').classList.remove('d-block');
 		userModalReset();
 		search();
 	} else if (code == 9001 || code == 9002 || code == 9003) {
-		alert(result);
+		DevExpress.ui.dialog.custom({
+			showTitle: false,
+			messageHtml: `<div style='text-align: center;' class="pt-3">${result}</div>`,
+			buttons: [{
+				text: "확인",
+				onClick: function () {
+					return; 
+				}
+			}]
+		}).show();
+		//alert(result);
 	} else {
-		alert(currentMode === 'edit' ? "수정에 실패하였습니다." : "등록에 실패하였습니다.");
+		const failMsg = currentMode === 'edit' ? "수정에 실패하였습니다." : "등록에 실패하였습니다.";
+		DevExpress.ui.dialog.custom({
+			showTitle: false,
+			messageHtml: `<div style='text-align: center;' class="pt-3">${failMsg}</div>`,
+			buttons: [{
+				text: "확인",
+				onClick: function () {
+					return; 
+				}
+			}]
+		}).show();
+		//alert(currentMode === 'edit' ? "수정에 실패하였습니다." : "등록에 실패하였습니다.");
 	}
 }
 

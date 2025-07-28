@@ -105,11 +105,24 @@ $(function () {
 			})
 			.catch(error => {
 				console.error("데이터 로드 실패:", error);
-				alert("데이터를 불러오는 중 오류가 발생했습니다.");
-				return {
-					data: [],
-					totalCount: 0
-				};
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `<div style='text-align: center;' class="pt-3">데이터를 불러오는 중 오류가 발생했습니다.</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return {
+								data: [],
+								totalCount: 0
+							};
+						}
+					}]
+				}).show();
+				// alert("데이터를 불러오는 중 오류가 발생했습니다.");
+				// return {
+				// 	data: [],
+				// 	totalCount: 0
+				// };
 			});
 		}
     });
@@ -273,13 +286,35 @@ const searchBtn = $('#search-btn').dxButton({
 			let diffDays = diffMs / (1000 * 60 * 60 * 24);
 
 			if (diffDays < 0) {
-				alert("조회 기간을 다시 입력하세요.");
-				return false;
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요.</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return false;
+						}
+					}]
+				}).show();
+				// alert("조회 기간을 다시 입력하세요.");
+				// return false;
 			}
 
 			if (diffDays > 30) {
-				alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
-				return false;
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `<div style='text-align: center;' class="pt-3">
+					조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : ${Math.floor(diffDays)}일
+					</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return false;
+						}
+					}]
+				}).show();
+				// alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
+				// return false;
 			}
 		}	
 		

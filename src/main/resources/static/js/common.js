@@ -56,7 +56,17 @@ window.addEventListener('load', function() {
 			const reg = /^[A-Za-z0-9_]+$/;
 
 			if (isEmpty(pw1)) {
-				alert("비밀번호를 입력해주세요.");
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `<div style='text-align: center;' class="pt-3" >비밀번호를 입력해주세요</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return { result: "ok" }; 
+						}
+					}]
+				}).show();
+				//alert("비밀번호를 입력해주세요.");
 				return;
 			}
 
