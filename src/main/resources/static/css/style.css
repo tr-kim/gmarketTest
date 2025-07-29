@@ -464,7 +464,7 @@ aside .psw_chg_btn:hover{
   align-items: center;
 }
 .img-question::after{
-    background: #777;
+    background: #aaa;
     position: absolute;
     top:50%;
     transform: translateY(-50%) rotate(45deg);
@@ -476,7 +476,7 @@ aside .psw_chg_btn:hover{
 }
 .img-question::before{
     position: absolute;
-    background: #666;
+    background: #999;
     color: #fff;
     white-space: nowrap;
     padding: .5rem;
@@ -484,9 +484,10 @@ aside .psw_chg_btn:hover{
     transform: translateY(-50%);
     right: 100%;
     border-radius: 3px;
-    box-shadow: 0 0 20px #00000060;
+    box-shadow: 0 0 15px #00000030;
     z-index: 1;
     transition: .2s;
+    font-size: 12px;
 }
 .img-question:hover::after{
     content: "";
