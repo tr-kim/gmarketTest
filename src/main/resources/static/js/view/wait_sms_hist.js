@@ -326,7 +326,7 @@ $(function () {
 					if (selectedRows.length === 0) {
 						DevExpress.ui.dialog.custom({
 							showTitle: false,
-							messageHtml: "<div style='text-align: center;'>삭제할 메시지를 선택하세요.</div>",
+							messageHtml: "<div style='text-align: center;' class='pt-3'>삭제할 메시지를 선택하세요.</div>",
 							buttons: [{
 								text: "확인",
 								onClick: function () {
@@ -340,7 +340,7 @@ $(function () {
 					
 					const confirmDialog = DevExpress.ui.dialog.custom({
 						showTitle: false,
-						messageHtml: "<div style='text-align: center;'>삭제하시겠습니까?</div>",
+						messageHtml: "<div style='text-align: center;' class='pt-3'>삭제하시겠습니까?</div>",
 						buttons: [
 							{
 								text: "확인",

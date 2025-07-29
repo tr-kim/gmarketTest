@@ -185,13 +185,14 @@ $(function () {
 		onValueChanged(data) {
 			const date = data.value;
 			if (date instanceof Date && !isNaN(date)) {
-				const yy = String(date.getFullYear()).slice(2);
+				const yyyy = String(date.getFullYear());
+				//const yy = String(date.getFullYear()).slice(2);
 				const mm = String(date.getMonth() + 1).padStart(2, '0');
-				const dd = String(date.getDate()).padStart(2, '0');
+				const dd = String(date.getDate()).padStart(2, '0');		
 				
-				document.querySelector('.reserveSend .date').textContent=`${yy}-${mm}-${dd}`
-				
-				reserveDate = `${yy}-${mm}-${dd}`
+				reserveDate = `${yyyy}-${mm}-${dd}`
+
+				reserveDateTextContent();
 			}
 		},
 		disabledDates: function(data) {
@@ -201,7 +202,20 @@ $(function () {
 		},
 	}).dxCalendar('instance');
 	
+	// 초기화 시에도 한 번 실행
+	(function initReserveDate() {
+		const today = new Date();
+		const yyyy = String(today.getFullYear());
+		const mm = String(today.getMonth() + 1).padStart(2, '0');
+		const dd = String(today.getDate()).padStart(2, '0');
+		reserveDate = `${yyyy}-${mm}-${dd}`;
+		reserveDateTextContent();
+	})();
 	
+	function reserveDateTextContent(){
+		document.querySelector('.reserveSend .date').textContent= reserveDate;
+	}
+
 	//080 수신거부
 	document.getElementById('checkDefault').addEventListener('change', function () {
 		const input = document.getElementById('rejectNum');
@@ -225,6 +239,7 @@ $(function () {
 	document.getElementById('send_time2').addEventListener('click', function () {
 		if (this.checked) {
 			reserveModal.classList.add("d-block");
+			
 			FINAL_SEND_BTN.textContent = "예약발송";
 		}
 	});
@@ -236,22 +251,56 @@ $(function () {
 		document.getElementById('reserveDate').textContent = "";
 		FINAL_SEND_BTN.textContent = "즉시발송";
 		
-		document.querySelector('.date').textContent = '날짜를 선택해 주세요.';
+		//document.querySelector('.date').textContent = '날짜를 선택해 주세요.';
 		selects.forEach(select => {
 			select.value = "00";
 		})
 	})
 	
 	document.querySelector('.reserveSend .modal-ft button').addEventListener('click', function(){
-		if(reserveDate == ""){
-			alert('날짜를 선택해 주세요.')
-			return;
-		}
+		const selectedDate = new Date(reserveDate);
+		const hour = parseInt(reserveHour.value, 10);
+		const minute = parseInt(reserveMinute.value, 10);
+
+		// 사용자가 선택한 시간을 설정
+		selectedDate.setHours(hour);
+		selectedDate.setMinutes(minute);
+		selectedDate.setSeconds(0);
+		selectedDate.setMilliseconds(0);
+
+		const now = new Date();
+		const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; // 'YYYY-MM-DD'
+		const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`; // 'HH:MM'
+
+
+		if (selectedDate >= now) {
+			// 예약 가능한 시간
+			document.getElementById('reserveDate').textContent = 
+				`예약시간: ${reserveDate} ${reserveHour.value.padStart(2, '0')}:${reserveMinute.value.padStart(2, '0')}`;
+			reserveModal.classList.remove("d-block");
+		} else {
+			// 예약 불가 (지나간 시간)
+			document.getElementById('reserveDate').textContent = '';
+			DevExpress.ui.dialog.custom({
+				showTitle: false,
+				messageHtml: `<div style='text-align: center;' class="pt-3">
+				과거 시간은 예약할 수 없습니다.
+				<br>
+				<br>
+				<span class="text-666"> 현재시간 : ${date} ${time} </span>
+				</div>`,
+				buttons: [{
+					text: "확인",
+					onClick: function () {
+						return; //done()으로 넘어가는 값
+					}
+				}]
+			}).show();
+
+			
+		}		
 		
-		document.getElementById('reserveDate').textContent = `예약시간: ${reserveDate} ${reserveHour.value}:${reserveMinute.value}`
-		
-		reserveModal.classList.remove("d-block");
-		document.querySelector('.date').textContent = '날짜를 선택해 주세요.';
+		//document.querySelector('.date').textContent = '날짜를 선택해 주세요.';
 	})
 	
 	
@@ -368,22 +417,51 @@ $(function () {
 		bookmarkMsg.classList.add('d-block');
 	});
 	
-	
 	const close_btns = document.querySelectorAll('.bookmarkMsg .close_btn');
 	close_btns.forEach(close_btn => {
 		close_btn.addEventListener('click', function() {
 			bookmarkMsg.classList.remove('d-block');
 		})
 	})
+	//내 문자 선택
+	const bookmarkMsgtext = document.querySelectorAll('.bookmarkMsg ul li textarea');
+	bookmarkMsgtext.forEach( text => {
+		text.addEventListener('click', function(){
+			const msg = text.textContent;
+			if(MSG_WRITE) {
+				MSG_WRITE.value="";
+				insertAtCursor(MSG_WRITE, msg );
+				MSG_WRITE.dispatchEvent(new Event('input')); //byte 체크 등 다른 input 이벤트
+			}	
+			bookmarkMsg.classList.remove('d-block');
+		})
+	})
 
-	
-
+	//내 문자 삭제
+	const bookmarkDelBtns = document.querySelectorAll('.bookmarkMsg .x_btn');
+	bookmarkDelBtns.forEach( btn =>{
+		btn.addEventListener('click',function(){
+			DevExpress.ui.dialog.custom({
+				showTitle: false,
+				messageHtml: "<div style='text-align: center;' class='pt-3'>삭제하시겠습니까?</div>",
+				buttons: [{
+					text: "확인",
+					type: "default",
+					onClick: function(e) {
+						return { result: "ok" };
+					}					
+				}, {
+					text: "취소",
+					onClick: function(e) {
+						return { result: "cancel" };
+					}
+				}]
+			}).show();
+		})
+	})
 	
 	
 });
-
-
-
 
 
 //공통 alert
@@ -437,7 +515,10 @@ function addDirectNumber(){
 		<td>${directName}</td>
 		<td class="phoneNum">${directNumber}</td>
 		<td>
-			<button type="button" class="custom_btn gray_btn" onclick="delDirectNumber(this)">삭제</button>
+			<button type="button" class="numDelBtn" onclick="delDirectNumber(this)">
+			<i class="dx-icon-close"></i>
+			<span class="visually-hidden">삭제</span>
+			</button>
 		</td>
 	`;
 	

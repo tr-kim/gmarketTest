@@ -311,10 +311,18 @@ aside .psw_chg_btn:hover{
 #send .grid{
     border: 1px solid #e5e7eb;
     border-radius: 6px;
-    overflow: hidden;
+    max-height: 500px;
+    overflow-y: auto;
+}
+#send .grid table tbody tr:last-child{
+    border-bottom: #fff;
 }
 #send .grid .dx-bordered-bottom-view{
     max-height: 10rem;
+}
+#send .numDelBtn:hover {
+    background: #eee;
+    border-radius: 2px;
 }
 #send .msg_wrap_hd{
     border-bottom: 1px solid #e5e7eb;

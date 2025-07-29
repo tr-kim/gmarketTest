@@ -27,7 +27,7 @@
 							<button type="button" class="btn btn-primary text-nowrap" onclick="addDirectNumber()">추가</button>
 						</div>
 						<div id="directGrid" class="grid">
-							<table class="table w-100 text-center">
+							<table class="table w-100 text-center mb-0">
 								<colgroup>
 									<col style="width:40%;">
 									<col style="width:40%;">
@@ -48,7 +48,7 @@
                             </table>
 						</div>
 						<div class="count text-end"></div>
-						<div class="duplication_filter">
+						<div class="duplication_filter text-end">
 							<span>입력 수신번호 <span class="direct_input_num">0</span> 건 / 중복 수신번호 <span class="direct_dup_num">0</span> 건</span>
 						</div>
 					</div>
@@ -61,7 +61,7 @@
 							</select>
 						</div>
 						<div id="addressGrid" class="grid">
-							<table class="table w-100 text-center">
+							<table class="table w-100 text-center mb-0">
 								<colgroup>
 									<col style="width:40%;">
 									<col style="width:40%;">
@@ -275,8 +275,8 @@
 			</li>
 		</ul>
 	</form>	
-	<th:block th:replace="~{/reserveSend :: reserveSend}"></th:block>
-	<th:block th:replace="~{/bookmarkMsg :: bookmarkMsg}"></th:block>
+	<th:block th:replace="~{/view/popup/reserveSend :: reserveSend}"></th:block>
+	<th:block th:replace="~{/view/popup/bookmarkMsg :: bookmarkMsg}"></th:block>
 	<script th:src="@{/js/view/send.js}"></script>
 </body>
 
