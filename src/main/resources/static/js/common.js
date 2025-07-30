@@ -62,7 +62,7 @@ window.addEventListener('load', function() {
 					buttons: [{
 						text: "확인",
 						onClick: function () {
-							return { result: "ok" }; 
+							return; 
 						}
 					}]
 				}).show();
@@ -71,17 +71,47 @@ window.addEventListener('load', function() {
 			}
 
 			if (isEmpty(pw2)) {
-				alert("비밀번호 확인을 입력해주세요.");
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `<div style='text-align: center;' class='pt-3'>비밀번호 확인을 입력해주세요.</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return ; 
+						}
+					}]
+				}).show();
+				// alert("비밀번호 확인을 입력해주세요.");
 				return;
 			}
 
 			if (!(pw1.value === pw2.value)) {
-				alert("비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `<div style='text-align: center;' class='pt-3'>비밀번호가 일치하지 않습니다. 다시 입력해주세요.</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return ; 
+						}
+					}]
+				}).show();
+				//alert("비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
 				return;
 			}
 
 			if (!(reg.test(pw1.value))) {
-				alert("비밀번호에 허용할 수 없는 문자가 입력되었습니다.");
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `<div style='text-align: center;' class='pt-3'>비밀번호에 허용할 수 없는 문자가 입력되었습니다.</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return ; 
+						}
+					}]
+				}).show();
+				//alert("비밀번호에 허용할 수 없는 문자가 입력되었습니다.");
 				return;
 			}
 
@@ -116,9 +146,29 @@ window.addEventListener('load', function() {
 						document.querySelector('.passwordChg').classList.remove('d-block');
 
 					} else if (code == 9003) {
-						alert(result);
+						DevExpress.ui.dialog.custom({
+							showTitle: false,
+							messageHtml: `<div style='text-align: center;' class='pt-3'>${result}</div>`,
+							buttons: [{
+								text: "확인",
+								onClick: function () {
+									return; 
+								}
+							}]
+						}).show();
+						//alert(result);
 					} else {
-						alert("비밀번호이 변경에 실패하였습니다.");
+						DevExpress.ui.dialog.custom({
+							showTitle: false,
+							messageHtml: `<div style='text-align: center;' class='pt-3'>비밀번호이 변경에 실패하였습니다.</div>`,
+							buttons: [{
+								text: "확인",
+								onClick: function () {
+									return; 
+								}
+							}]
+						}).show();
+						//alert("비밀번호이 변경에 실패하였습니다.");
 					}
 				});
 			});
@@ -220,7 +270,17 @@ function getAjax(url, param, successCallback, errorCallback) {
 				errorCallback(xhr, status, error);
 			} else {
 				console.error("Ajax 요청 실패:", status, error); // 기본 에러 처리
-				alert("예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `<div style='text-align: center;' class='pt-3'>예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return; 
+						}
+					}]
+				}).show();
+				//alert("예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
 			}
 		}
 	});
@@ -243,7 +303,17 @@ function postAjax(url, param, successCallback, errorCallback) {
 				errorCallback(xhr, status, error);
 			} else {
 				console.error("Ajax 요청 실패:", status, error); // 기본 에러 처리
-				alert("예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `<div style='text-align: center;' class='pt-3'>예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return; 
+						}
+					}]
+				}).show();
+				//alert("예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
 			}
 		}
 	});
@@ -266,7 +336,17 @@ function putAjax(url, param, successCallback, errorCallback) {
 				errorCallback(xhr, status, error);
 			} else {
 				console.error("Ajax 요청 실패:", status, error); // 기본 에러 처리
-				alert("예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `<div style='text-align: center;' class='pt-3'>예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return; 
+						}
+					}]
+				}).show();
+				//alert("예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
 			}
 		}
 	});
@@ -289,7 +369,17 @@ function deleteAjax(url, param, successCallback, errorCallback) {
 				errorCallback(xhr, status, error);
 			} else {
 				console.error("Ajax 요청 실패:", status, error); // 기본 에러 처리
-				alert("예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `<div style='text-align: center;' class='pt-3'>예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return; 
+						}
+					}]
+				}).show();
+				//alert("예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
 			}
 		}
 	});
@@ -313,7 +403,17 @@ function postFormAjax(url, formData, successCallback, errorCallback) {
 				errorCallback(xhr, status, error);
 			} else {
 				console.error("Ajax 요청 실패:", status, error); // 기본 에러 처리
-				alert("예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `<div style='text-align: center;' class='pt-3'>예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return; 
+						}
+					}]
+				}).show();
+				//alert("예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
 			}
 		}
 	});
@@ -336,7 +436,17 @@ function putFormAjax(url, formData, successCallback, errorCallback) {
 				errorCallback(xhr, status, error);
 			} else {
 				console.error("Ajax 요청 실패:", status, error); // 기본 에러 처리
-				alert("예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `<div style='text-align: center;' class='pt-3'>예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return; 
+						}
+					}]
+				}).show();
+				//alert("예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
 			}
 		}
 	});
@@ -356,9 +466,33 @@ const isEmpty = (input) => {
 	else return false;
 }
 
-function click() {
-	if (event.button == 2) {
-		alert('마우스 오른쪽 버튼은 사용할 수 없습니다.');
-	}
-}
-document.onmousedown = click
+// function click() {
+// 	if (event.button == 2) {
+		
+// 		alert('마우스 오른쪽 버튼은 사용할 수 없습니다.');
+		 
+// 	}
+// }
+// document.onmousedown = click
+
+let isDialogOpen = false; 
+
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+
+    if (isDialogOpen) return; // 이미 떠 있으면 무시
+
+    isDialogOpen = true; // 다이얼로그 띄운 상태로 설정
+
+    DevExpress.ui.dialog.custom({
+      showTitle: false,
+      messageHtml: `<div style='text-align: center;' class='pt-3'>마우스 오른쪽 버튼은 사용할 수 없습니다.</div>`,
+      buttons: [{
+        text: "확인",
+        onClick: function () {
+          isDialogOpen = false; // 닫을 때 다시 false로
+          return;
+        }
+      }]
+    }).show();
+  });

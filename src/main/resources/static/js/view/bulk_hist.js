@@ -111,18 +111,15 @@ $(function () {
 					buttons: [{
 						text: "확인",
 						onClick: function () {
-							return {
-								data: [],
-								totalCount: 0
-							};
+							return;
 						}
 					}]
 				}).show();
 				// alert("데이터를 불러오는 중 오류가 발생했습니다.");
-				// return {
-				// 	data: [],
-				// 	totalCount: 0
-				// };
+				return {
+				 	data: [],
+				 	totalCount: 0
+				};
 			});
 		}
     });
@@ -292,12 +289,12 @@ const searchBtn = $('#search-btn').dxButton({
 					buttons: [{
 						text: "확인",
 						onClick: function () {
-							return false;
+							return;
 						}
 					}]
 				}).show();
 				// alert("조회 기간을 다시 입력하세요.");
-				// return false;
+				return false;
 			}
 
 			if (diffDays > 30) {
@@ -310,12 +307,12 @@ const searchBtn = $('#search-btn').dxButton({
 					buttons: [{
 						text: "확인",
 						onClick: function () {
-							return false;
+							return;
 						}
 					}]
 				}).show();
 				// alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
-				// return false;
+				return false;
 			}
 		}	
 		
