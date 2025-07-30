@@ -540,3 +540,13 @@ aside .psw_chg_btn:hover{
     background: #0d6efd;
     color: #fff;
 }
+/* passwordChg.html */
+.passwordChg .modal-wrap{
+    width: 600px;
+}
+.passwordChg  .modal-con{
+    height: 175px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
