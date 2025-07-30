@@ -58,6 +58,81 @@ $(function () {
 		placeholder: '제목을 입력하세요.'
 	}).dxTextBox("instance");
 	
+	//조회 버튼
+	$('#search-btn').dxButton({
+		stylingMode: 'contained',
+		text: '조회',
+		type: 'default',
+		width: 60,
+		onClick() {
+			const startValue = startDateInstance.option("value");
+			const endValue = endDateInstance.option("value");
+			
+			let startDateFormatted = "", startTimeFormatted = "";
+			let endDateFormatted = "", endTimeFormatted = "";
+			
+			// 날짜가 Date 객체인지 확인
+			if (startValue instanceof Date && !isNaN(startValue)) {
+				const yyyy = startValue.getFullYear();
+				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
+				const dd = String(startValue.getDate()).padStart(2, '0');
+				startDateFormatted = `${yyyy}${mm}`;
+				startTimeFormatted = `${yyyy}${mm}${dd}`;
+			}
+			
+			if (endValue instanceof Date && !isNaN(endValue)) {
+				const yyyy = endValue.getFullYear();
+				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
+				const dd = String(endValue.getDate()).padStart(2, '0');
+				endDateFormatted = `${yyyy}${mm}`;
+				endTimeFormatted = `${yyyy}${mm}${dd}`;
+			}
+			
+			// 조회기간 구하기
+			let start = new Date(
+				parseInt(startTimeFormatted.slice(0, 4)),
+				parseInt(startTimeFormatted.slice(4, 6)) - 1,
+				parseInt(startTimeFormatted.slice(6, 8))
+			);
+			
+			let end = new Date(
+				parseInt(endTimeFormatted.slice(0, 4)),
+				parseInt(endTimeFormatted.slice(4, 6)) - 1,
+				parseInt(endTimeFormatted.slice(6, 8))
+			);
+			
+			let diffMs = end - start;
+			let diffDays = diffMs / (1000 * 60 * 60 * 24);
+			
+			let errorMessage = "";
+			
+			if (diffDays < 0) {
+				errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요.</div>`;
+			} else if (diffDays > 30) {
+				errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요. (30일 이내)
+				<br><br><span class="text-black-50">현재 입력한 조회 기간 : ${Math.floor(diffDays)}일</span></div>`;
+			}
+			
+			if (errorMessage) {
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: errorMessage,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return false;
+						}
+					}]
+				}).show();
+				
+				return false;
+			}
+			
+			//재조회
+			waitDataGrid.getDataSource().reload();
+		}
+	}).dxButton('instance');
+	
 	//조회 요청
 	const waitDataSource = new DevExpress.data.CustomStore({
 		key: "bulkMsgKey",
@@ -117,6 +192,8 @@ $(function () {
 			})
 			.catch(error => {
 				console.error("데이터 로드 실패:", error);
+				//alert("데이터를 불러오는 중 오류가 발생했습니다.");
+				
 				DevExpress.ui.dialog.custom({
 					showTitle: false,
 					messageHtml: `<div style='text-align: center;' class="pt-3">데이터를 불러오는 중 오류가 발생했습니다.</div>`,
@@ -127,7 +204,7 @@ $(function () {
 						}
 					}]
 				}).show();
-				//alert("데이터를 불러오는 중 오류가 발생했습니다.");
+				
 				return {
 					data: [],
 					totalCount: 0
@@ -178,14 +255,8 @@ $(function () {
 		columnAutoWidth: true,
 		selection: {
 			mode: "multiple",
-			allowSelectAll: false,
-			showCheckBoxesMode: "always",
+			allowSelectAll: false, //전체선택 체크박스 방지
 		},
-		selectedRowKeys: [],
-		// selection: { //원본
-		// 	mode: 'multiple',
-		// 	//allowSelectAll: false
-		// },
 		//행 마우스오버 시
 		hoverStateEnabled: true,
 		columns: [
@@ -240,149 +311,109 @@ $(function () {
 			const totalCount = e.component.totalCount();
 			$("#totalCount").text(`총 ${totalCount}건`);
 		},
-		// onToolbarPreparing: function(e) {
-		// 	e.toolbarOptions.items.push({
-		// 		location: "center",
-		// 		widget: "dxButton",
-		// 		options: {
-		// 			text: "전체 선택/해제",
-		// 			onClick: function() {
-		// 				const grid = e.component;
-		// 				const nowPlus30 = getAfterTime(30);
-		// 				const allItems = grid.getDataSource().items();
-		// 				const allowedKeys = allItems
-		// 					.filter(row => row.reqTime > nowPlus30)
-		// 					.map(row => row.bulkMsgKey);
-
-		// 				const selectedKeys = grid.getSelectedRowKeys();
-		// 				const isAlreadySelected =
-		// 					allowedKeys.length === selectedKeys.length &&
-		// 					allowedKeys.every(key => selectedKeys.includes(key));
-
-		// 				if (isAlreadySelected) {
-		// 					grid.clearSelection();
-		// 				} else {
-		// 					grid.selectRows(allowedKeys, false);
-		// 				}
-		// 			}
-		// 		}
-		// 	});
-		// },
 		onToolbarPreparing: function (e) {
-	const toolbarItems = e.toolbarOptions.items;
-
-	// SearchPanel 항목 찾기
-	const searchIndex = toolbarItems.findIndex(item => item.name === "searchPanel");
-
-	if (searchIndex !== -1) {
-		// "전체 선택/해제" 버튼
-		const selectAllToggleBtn = {
-			location: "after",
-			widget: "dxButton",
-			options: {
-				text: "전체 선택/해제",
-				stylingMode: 'outlined',
-				type: 'danger',
-				onClick: function () {
-					const grid = e.component;
-					const nowPlus30 = getAfterTime(30);
-					const allItems = grid.getDataSource().items();
-					const allowedKeys = allItems
-						.filter(row => row.reqTime > nowPlus30)
-						.map(row => row.bulkMsgKey);
-
-					const selectedKeys = grid.getSelectedRowKeys();
-					const isAlreadySelected =
-						allowedKeys.length === selectedKeys.length &&
-						allowedKeys.every(key => selectedKeys.includes(key));
-
-					if (isAlreadySelected) {
-						grid.clearSelection();
-					} else {
-						grid.selectRows(allowedKeys, false);
-					}
-				}
-			}
-		};
-
-		// "선택 삭제" 버튼
-		const deleteBtn = {
-			location: "after",
-			widget: "dxButton",
-			options: {
-				text: "선택 삭제",
-				stylingMode: 'contained',
-				type: 'danger',
-				elementAttr: {
-					id: "del-btn"
-				},
-				onClick:function (){
-					//선택된 행 체크
-					const selectedRows = waitDataGrid.getSelectedRowsData();
-					
-					if (selectedRows.length === 0) {
-						DevExpress.ui.dialog.custom({
-							showTitle: false,
-							messageHtml: "<div style='text-align: center;' class='pt-3'>삭제할 메시지를 선택하세요.</div>",
-							buttons: [{
-								text: "확인",
-								onClick: function () {
-									return { result: "ok" }; 
-								}
-							}]
-						}).show();
-						
-						return;
-					}
-					
-					const confirmDialog = DevExpress.ui.dialog.custom({
-						showTitle: false,
-						messageHtml: "<div style='text-align: center;' class='pt-3'>삭제하시겠습니까?</div>",
-						buttons: [
-							{
-								text: "확인",
-								type: "default",
-								onClick: function(e) {
-									const selectedKeys = waitDataGrid.getSelectedRowKeys();
-									
-									console.log("삭제할 키:", selectedKeys);
-									
-									//삭제 로직 실행
-									
-									
-									
-									
-									
-									
-									
-									return { result: "ok" };
-								}
-							}, {
-								text: "취소",
-								onClick: function(e) {
-									return { result: "cancel" };
-								}
-							}
-						]
-					});
-					
-					confirmDialog.show().done(function(dialogResult) {
-						if (dialogResult.result === "ok") {
-							console.log("삭제 완료");
+			const toolbarItems = e.toolbarOptions.items;
+			
+			// SearchPanel 항목 찾기
+			const searchIndex = toolbarItems.findIndex(item => item.name === "searchPanel");
+			
+			if (searchIndex !== -1) {
+				// "전체 선택/해제" 버튼
+				const selectAllToggleBtn = {
+					location: "after",
+					widget: "dxButton",
+					options: {
+						text: "전체 선택/해제",
+						stylingMode: 'outlined',
+						type: 'danger',
+						onClick: function () {
+							const grid = e.component;
+							const nowPlus30 = getAfterTime(30);
+							const allItems = grid.getDataSource().items();
+							const allowedKeys = allItems.filter(row => row.reqTime > nowPlus30).map(row => row.bulkMsgKey);
 							
-						} else {
-							console.log("취소");
+							const selectedKeys = grid.getSelectedRowKeys();
+							const isAlreadySelected = allowedKeys.length === selectedKeys.length && allowedKeys.every(key => selectedKeys.includes(key));
+							
+							if (isAlreadySelected) {
+								grid.clearSelection();
+							} else {
+								grid.selectRows(allowedKeys, false);
+							}
 						}
-					});
-				}
+					}
+				};
+				
+				// "선택 삭제" 버튼
+				const deleteBtn = {
+					location: "after",
+					widget: "dxButton",
+					options: {
+						text: "선택 삭제",
+						stylingMode: 'contained',
+						type: 'danger',
+						elementAttr: {
+							id: "del-btn"
+						},
+						onClick:function (){
+							//선택된 행 체크
+							const selectedRows = waitDataGrid.getSelectedRowsData();
+							
+							if (selectedRows.length === 0) {
+								DevExpress.ui.dialog.custom({
+									showTitle: false,
+									messageHtml: "<div style='text-align: center;' class='pt-3'>삭제할 메시지를 선택하세요.</div>",
+									buttons: [{
+										text: "확인",
+										onClick: function () {
+											return { result: "ok" }; 
+										}
+									}]
+								}).show();
+								
+								return;
+							}
+							
+							const confirmDialog = DevExpress.ui.dialog.custom({
+								showTitle: false,
+								messageHtml: "<div style='text-align: center;' class='pt-3'>삭제하시겠습니까?</div>",
+								buttons: [{
+									text: "확인",
+									type: "default",
+									onClick: function(e) {
+										const selectedKeys = waitDataGrid.getSelectedRowKeys();
+										console.log("삭제할 키:", selectedKeys);
+										
+										//삭제 로직 실행
+										
+										
+										
+										return { result: "ok" };
+									}
+								}, {
+									text: "취소",
+									onClick: function(e) {
+										return { result: "cancel" };
+									}
+								}]
+							});
+							
+							confirmDialog.show().done(function(dialogResult) {
+								if (dialogResult.result === "ok") {
+									console.log("삭제 완료");
+								} else {
+									console.log("취소");
+								}
+							});
+						}
+					}
+				};
+				
+				// "전체 선택/해제" 먼저, 그다음 "선택 삭제"
+				toolbarItems.splice(searchIndex, 0, deleteBtn);
+				toolbarItems.splice(searchIndex, 0, selectAllToggleBtn);
 			}
-		};
-
-		// "전체 선택/해제" 먼저, 그다음 "선택 삭제"
-		toolbarItems.splice(searchIndex, 0, deleteBtn);
-		toolbarItems.splice(searchIndex, 0, selectAllToggleBtn);
-	}
-},
+		},
 		onSelectionChanged: function(e) { //원본
 			const allowedRows = [];
 			const nowPlus30 = getAfterTime(30); //현재시간+30분
@@ -399,216 +430,8 @@ $(function () {
 			e.component.selectRows(allowedRows, false);
 		}
 	}).dxDataGrid("instance");
-	
 });
-function getAfterTime(minutes) {
-    const now = new Date();
-    return new Date(now.getTime() + minutes * 60000);
-}
 
- const searchBtn = $('#search-btn').dxButton({
-    stylingMode: 'contained',
-    text: '조회',
-    type: 'default',
-    width: 60,
-    onClick() {
-		const startValue = startDateInstance.option("value");
-		const endValue = endDateInstance.option("value");
-		
-		let startDateFormatted = "", startTimeFormatted = "";
-		let endDateFormatted = "", endTimeFormatted = "";
-		
-		// 날짜가 Date 객체인지 확인
-		if (startValue instanceof Date && !isNaN(startValue)) {
-			const yyyy = startValue.getFullYear();
-			const mm = String(startValue.getMonth() + 1).padStart(2, '0');
-			const dd = String(startValue.getDate()).padStart(2, '0');
-			startDateFormatted = `${yyyy}${mm}`;
-			startTimeFormatted = `${yyyy}${mm}${dd}`;
-		}
-		
-		if (endValue instanceof Date && !isNaN(endValue)) {
-			const yyyy = endValue.getFullYear();
-			const mm = String(endValue.getMonth() + 1).padStart(2, '0');
-			const dd = String(endValue.getDate()).padStart(2, '0');
-			endDateFormatted = `${yyyy}${mm}`;
-			endTimeFormatted = `${yyyy}${mm}${dd}`;
-		}
-		
-		// 조회기간 구하기
-		let start = new Date(
-			parseInt(startTimeFormatted.slice(0, 4)),
-			parseInt(startTimeFormatted.slice(4, 6)) - 1,
-			parseInt(startTimeFormatted.slice(6, 8))
-		);
-
-		let end = new Date(
-			parseInt(endTimeFormatted.slice(0, 4)),
-			parseInt(endTimeFormatted.slice(4, 6)) - 1,
-			parseInt(endTimeFormatted.slice(6, 8))
-		);
-
-		let diffMs = end - start;
-		let diffDays = diffMs / (1000 * 60 * 60 * 24);
-
-		if (diffDays < 0) {
-			DevExpress.ui.dialog.custom({
-				showTitle: false,
-				messageHtml: `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요.</div>`,
-				buttons: [{
-					text: "확인",
-					onClick: function () {
-						return ;
-						//return { result: "ok" }; 
-					}
-				}]
-			}).show();
-			//alert("조회 기간을 다시 입력하세요.");
-			return false;
-		}
-
-		if (diffDays > 30) {
-			DevExpress.ui.dialog.custom({
-				showTitle: false,
-				messageHtml: `<div style='text-align: center;' class="pt-3">
-					조회 기간을 다시 입력하세요. (30일 이내)<br><br>
-					<span class="text-black-50">현재 입력한 조회 기간 : ${Math.floor(diffDays)}일</span>
-					</div>`,
-				buttons: [{
-					text: "확인",
-					onClick: function () {
-						return;
-					}
-				}]
-			}).show();
-			//alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
-			return false;
-		}		
-
-		//재조회
-		waitDataGrid.getDataSource().reload();
-    },
-  }).dxButton('instance');
-
-//조회 버튼
-// document.getElementById("search-btn").addEventListener('click', function(e){
-// 	e.preventDefault();
-	
-// 	const startValue = startDateInstance.option("value");
-// 	const endValue = endDateInstance.option("value");
-	
-// 	let startDateFormatted = "", startTimeFormatted = "";
-// 	let endDateFormatted = "", endTimeFormatted = "";
-	
-// 	// 날짜가 Date 객체인지 확인
-// 	if (startValue instanceof Date && !isNaN(startValue)) {
-// 		const yyyy = startValue.getFullYear();
-// 		const mm = String(startValue.getMonth() + 1).padStart(2, '0');
-// 		const dd = String(startValue.getDate()).padStart(2, '0');
-// 		startDateFormatted = `${yyyy}${mm}`;
-// 		startTimeFormatted = `${yyyy}${mm}${dd}`;
-// 	}
-	
-// 	if (endValue instanceof Date && !isNaN(endValue)) {
-// 		const yyyy = endValue.getFullYear();
-// 		const mm = String(endValue.getMonth() + 1).padStart(2, '0');
-// 		const dd = String(endValue.getDate()).padStart(2, '0');
-// 		endDateFormatted = `${yyyy}${mm}`;
-// 		endTimeFormatted = `${yyyy}${mm}${dd}`;
-// 	}
-	
-// 	// 조회기간 구하기
-// 	let start = new Date(
-// 		parseInt(startTimeFormatted.slice(0, 4)),
-// 		parseInt(startTimeFormatted.slice(4, 6)) - 1,
-// 		parseInt(startTimeFormatted.slice(6, 8))
-// 	);
-
-// 	let end = new Date(
-// 		parseInt(endTimeFormatted.slice(0, 4)),
-// 		parseInt(endTimeFormatted.slice(4, 6)) - 1,
-// 		parseInt(endTimeFormatted.slice(6, 8))
-// 	);
-
-// 	let diffMs = end - start;
-// 	let diffDays = diffMs / (1000 * 60 * 60 * 24);
-
-// 	if (diffDays < 0) {
-// 		alert("조회 기간을 다시 입력하세요.");
-// 		return false;
-// 	}
-
-// 	if (diffDays > 30) {
-// 		alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
-// 		return false;
-// 	}		
-
-// 	//재조회
-// 	waitDataGrid.getDataSource().reload();
-// });
-
-//삭제 버튼
-// document.getElementById("del-btn").addEventListener('click', function(e){
-// 	e.preventDefault();
-	
-// 	//선택된 행 체크
-// 	const selectedRows = waitDataGrid.getSelectedRowsData();
-	
-// 	if (selectedRows.length === 0) {
-// 		DevExpress.ui.dialog.custom({
-// 			showTitle: false,
-// 			messageHtml: "<div style='text-align: center;'>삭제할 메시지를 선택하세요.</div>",
-// 			buttons: [{
-// 				text: "확인",
-// 				onClick: function () {
-// 					return { result: "ok" }; //done()으로 넘어가는 값
-// 				}
-// 			}]
-// 		}).show();
-		
-// 		return;
-// 	}
-	
-// 	const confirmDialog = DevExpress.ui.dialog.custom({
-// 		showTitle: false,
-// 		messageHtml: "<div style='text-align: center;'>삭제하시겠습니까?</div>",
-// 		buttons: [
-// 			{
-// 				text: "확인",
-// 				type: "default",
-// 				onClick: function(e) {
-// 					const selectedKeys = waitDataGrid.getSelectedRowKeys();
-					
-// 					console.log("삭제할 키:", selectedKeys);
-					
-// 					//삭제 로직 실행
-					
-					
-					
-					
-					
-					
-					
-// 					return { result: "ok" };
-// 				}
-// 			}, {
-// 				text: "취소",
-// 				onClick: function(e) {
-// 					return { result: "cancel" };
-// 				}
-// 			}
-// 		]
-// 	});
-	
-// 	confirmDialog.show().done(function(dialogResult) {
-// 		if (dialogResult.result === "ok") {
-// 			console.log("삭제 완료");
-			
-// 		} else {
-// 			console.log("취소");
-// 		}
-// 	});
-// });
 
 //시간 구하기
 function getAfterTime(minute) {
@@ -624,3 +447,4 @@ function getAfterTime(minute) {
 	
 	return `${yyyy}${MM}${dd}${HH}${mm}${ss}`;
 }
+

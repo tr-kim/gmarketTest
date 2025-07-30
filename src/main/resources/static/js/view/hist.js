@@ -100,6 +100,97 @@ $(function () {
 		placeholder: '번호를 입력하세요.'
 	}).dxTextBox("instance");
 	
+	//엑셀 다운로드 버튼
+	$('#excel-btn').dxButton({
+		stylingMode: 'contained',
+		text: '엑셀 다운로드',
+		type: 'success',
+		width: 120,
+		onClick() {
+			const grid = $("#histGrid").dxDataGrid("instance");
+			exportGridToExcel(grid);
+		}
+	}).dxButton('instance');
+	
+	//조회 버튼
+	$('#search-btn').dxButton({
+		stylingMode: 'contained',
+		text: '조회',
+		type: 'default',
+		width: 60,
+		onClick() {
+			const startValue = startDateInstance.option("value");
+			const endValue = endDateInstance.option("value");
+			
+			let startDateFormatted = "", startTimeFormatted = "";
+			let endDateFormatted = "", endTimeFormatted = "";
+			
+			// 날짜가 Date 객체인지 확인
+			if (startValue instanceof Date && !isNaN(startValue)) {
+				const yyyy = startValue.getFullYear();
+				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
+				const dd = String(startValue.getDate()).padStart(2, '0');
+				startDateFormatted = `${yyyy}${mm}`;
+				startTimeFormatted = `${yyyy}${mm}${dd}`;
+			}
+			
+			if (endValue instanceof Date && !isNaN(endValue)) {
+				const yyyy = endValue.getFullYear();
+				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
+				const dd = String(endValue.getDate()).padStart(2, '0');
+				endDateFormatted = `${yyyy}${mm}`;
+				endTimeFormatted = `${yyyy}${mm}${dd}`;
+			}
+			
+			// 조회기간 구하기
+			//const largeCategoryValue = largeCategoryInstance.option("value");
+			
+			//if(largeCategoryValue){
+				let start = new Date(
+					parseInt(startTimeFormatted.slice(0, 4)),
+					parseInt(startTimeFormatted.slice(4, 6)) - 1,
+					parseInt(startTimeFormatted.slice(6, 8))
+				);
+				
+				let end = new Date(
+					parseInt(endTimeFormatted.slice(0, 4)),
+					parseInt(endTimeFormatted.slice(4, 6)) - 1,
+					parseInt(endTimeFormatted.slice(6, 8))
+				);
+				
+				let diffMs = end - start;
+				let diffDays = diffMs / (1000 * 60 * 60 * 24);
+				
+				let errorMessage = "";
+				
+				if (diffDays < 0) {
+					errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요.</div>`;
+				} else if (diffDays > 30) {
+					errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요. (30일 이내)
+					<br><br><span class="text-black-50">현재 입력한 조회 기간 : ${Math.floor(diffDays)}일</span></div>`;
+				}
+				
+				if (errorMessage) {
+					DevExpress.ui.dialog.custom({
+						showTitle: false,
+						messageHtml: errorMessage,
+						buttons: [{
+							text: "확인",
+							onClick: function () {
+								return false;
+							}
+						}]
+					}).show();
+					
+					return false;
+				}
+			//}
+			
+			//재조회
+			histDataGrid.getDataSource().reload();
+		}
+	}).dxButton('instance');
+	
 	//조회 요청
 	const histDataSource = new DevExpress.data.CustomStore({
 		key: "tranPr",
@@ -162,6 +253,8 @@ $(function () {
 			})
 			.catch(error => {
 				console.error("데이터 로드 실패:", error);
+				// alert("데이터를 불러오는 중 오류가 발생했습니다.");
+				
 				DevExpress.ui.dialog.custom({
 					showTitle: false,
 					messageHtml: `<div style='text-align: center;' class="pt-3">데이터를 불러오는 중 오류가 발생했습니다.</div>`,
@@ -172,10 +265,10 @@ $(function () {
 						}
 					}]
 				}).show();
-				// alert("데이터를 불러오는 중 오류가 발생했습니다.");
+				
 				return {
-					data: [],
-					totalCount: 0
+				 	data: [],
+				 	totalCount: 0
 				};
 			});
 		}
@@ -295,171 +388,6 @@ $(function () {
 	}).dxDataGrid("instance");
 });
 
-const excelBtn = $('#excel-btn').dxButton({
-    stylingMode: 'contained',
-    text: '엑셀 다운로드',
-    type: 'success',
-    width: 120,
-    onClick() {
-     	const grid = $("#histGrid").dxDataGrid("instance");
-		exportGridToExcel(grid);
-    },
-  }).dxButton('instance');
-
-const searchBtn = $('#search-btn').dxButton({
-    stylingMode: 'contained',
-    text: '조회',
-    type: 'default',
-    width: 60,
-    onClick() {
-		const startValue = startDateInstance.option("value");
-		const endValue = endDateInstance.option("value");
-		
-		let startDateFormatted = "", startTimeFormatted = "";
-		let endDateFormatted = "", endTimeFormatted = "";
-		
-		// 날짜가 Date 객체인지 확인
-		if (startValue instanceof Date && !isNaN(startValue)) {
-			const yyyy = startValue.getFullYear();
-			const mm = String(startValue.getMonth() + 1).padStart(2, '0');
-			const dd = String(startValue.getDate()).padStart(2, '0');
-			startDateFormatted = `${yyyy}${mm}`;
-			startTimeFormatted = `${yyyy}${mm}${dd}`;
-		}
-		
-		if (endValue instanceof Date && !isNaN(endValue)) {
-			const yyyy = endValue.getFullYear();
-			const mm = String(endValue.getMonth() + 1).padStart(2, '0');
-			const dd = String(endValue.getDate()).padStart(2, '0');
-			endDateFormatted = `${yyyy}${mm}`;
-			endTimeFormatted = `${yyyy}${mm}${dd}`;
-		}
-		
-		// 조회기간 구하기
-		//const largeCategoryValue = largeCategoryInstance.option("value");
-		
-		//if(largeCategoryValue){
-			let start = new Date(
-				parseInt(startTimeFormatted.slice(0, 4)),
-				parseInt(startTimeFormatted.slice(4, 6)) - 1,
-				parseInt(startTimeFormatted.slice(6, 8))
-			);
-
-			let end = new Date(
-				parseInt(endTimeFormatted.slice(0, 4)),
-				parseInt(endTimeFormatted.slice(4, 6)) - 1,
-				parseInt(endTimeFormatted.slice(6, 8))
-			);
-
-			let diffMs = end - start;
-			let diffDays = diffMs / (1000 * 60 * 60 * 24);
-
-			if (diffDays < 0) {
-				DevExpress.ui.dialog.custom({
-					showTitle: false,
-					messageHtml: `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요.</div>`,
-					buttons: [{
-						text: "확인",
-						onClick: function () {
-							return false;
-						}
-					}]
-				}).show();
-				// alert("조회 기간을 다시 입력하세요.");
-				 return false;
-			}
-
-			if (diffDays > 30) {
-				DevExpress.ui.dialog.custom({
-					showTitle: false,
-					messageHtml: `<div style='text-align: center;' class="pt-3">
-					조회 기간을 다시 입력하세요. (30일 이내)<br><br>
-					<span class="text-black-50">현재 입력한 조회 기간 : ${Math.floor(diffDays)}일</span>
-					</div>`,
-					buttons: [{
-						text: "확인",
-						onClick: function () {
-							return false;
-						}
-					}]
-				}).show();
-				// alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
-				 return false;
-			}
-		//}	
-		
-		//재조회
-		histDataGrid.getDataSource().reload();
-		},
-  }).dxButton('instance');
-
-//엑셀 다운로드 버튼
-// document.getElementById("excel-btn").addEventListener('click', function(e){
-// 	e.preventDefault();
-// 	const grid = $("#histGrid").dxDataGrid("instance");
-// 	exportGridToExcel(grid);
-// })
-
-//조회 버튼
-// document.getElementById("search-btn").addEventListener('click', function(e){
-// 	e.preventDefault();
-	
-// 	const startValue = startDateInstance.option("value");
-// 	const endValue = endDateInstance.option("value");
-	
-// 	let startDateFormatted = "", startTimeFormatted = "";
-// 	let endDateFormatted = "", endTimeFormatted = "";
-	
-// 	// 날짜가 Date 객체인지 확인
-// 	if (startValue instanceof Date && !isNaN(startValue)) {
-// 		const yyyy = startValue.getFullYear();
-// 		const mm = String(startValue.getMonth() + 1).padStart(2, '0');
-// 		const dd = String(startValue.getDate()).padStart(2, '0');
-// 		startDateFormatted = `${yyyy}${mm}`;
-// 		startTimeFormatted = `${yyyy}${mm}${dd}`;
-// 	}
-	
-// 	if (endValue instanceof Date && !isNaN(endValue)) {
-// 		const yyyy = endValue.getFullYear();
-// 		const mm = String(endValue.getMonth() + 1).padStart(2, '0');
-// 		const dd = String(endValue.getDate()).padStart(2, '0');
-// 		endDateFormatted = `${yyyy}${mm}`;
-// 		endTimeFormatted = `${yyyy}${mm}${dd}`;
-// 	}
-	
-// 	// 조회기간 구하기
-// 	const largeCategoryValue = largeCategoryInstance.option("value");
-	
-// 	if(largeCategoryValue != 0){
-// 		let start = new Date(
-// 			parseInt(startTimeFormatted.slice(0, 4)),
-// 			parseInt(startTimeFormatted.slice(4, 6)) - 1,
-// 			parseInt(startTimeFormatted.slice(6, 8))
-// 		);
-
-// 		let end = new Date(
-// 			parseInt(endTimeFormatted.slice(0, 4)),
-// 			parseInt(endTimeFormatted.slice(4, 6)) - 1,
-// 			parseInt(endTimeFormatted.slice(6, 8))
-// 		);
-
-// 		let diffMs = end - start;
-// 		let diffDays = diffMs / (1000 * 60 * 60 * 24);
-
-// 		if (diffDays < 0) {
-// 			alert("조회 기간을 다시 입력하세요.");
-// 			return false;
-// 		}
-
-// 		if (diffDays > 30) {
-// 			alert("조회 기간을 다시 입력하세요. (30일 이내)\n\n현재 입력한 조회 기간 : " + Math.floor(diffDays) + "일");
-// 			return false;
-// 		}
-// 	}	
-	
-// 	//재조회
-// 	histDataGrid.getDataSource().reload();
-// })
 
 //엑셀 다운로드
 function exportGridToExcel(gridInstance){

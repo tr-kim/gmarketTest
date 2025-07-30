@@ -225,11 +225,11 @@ function chartData(url, code, chart) {
 		},
 		error: function(xhr, status, error) {
 			console.error("Ajax 요청 실패:", xhr, status, error); // 기본 에러 처리
+			//alert("예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
+			
 			DevExpress.ui.dialog.custom({
 				showTitle: false,
-				messageHtml: `<div style='text-align: center;' class="pt-3">
-				예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.
-				</div>`,
+				messageHtml: `<div style='text-align: center;' class="pt-3">예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.</div>`,
 				buttons: [{
 					text: "확인",
 					onClick: function () {
@@ -237,7 +237,6 @@ function chartData(url, code, chart) {
 					}
 				}]
 			}).show();
-			//alert("예기치 못한 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
 		}
 	});
 };
