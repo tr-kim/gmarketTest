@@ -94,7 +94,7 @@ $(function() {
 				});
 			}
 		},
-		keyExpr: "userSeq",
+		key: "userSeq", //keyExpr
 		//행 선택 시
 		selection: {
 			mode: 'single',
@@ -183,42 +183,63 @@ $(function() {
 				name: "edit_btn",
 				caption: "수정",
 				type: "buttons",
-				buttons: [
-					{
-						icon: "edit",
-						name: "edit",
-						text: '',
-					}, {
-						icon: "remove",
-						name: "delete",
-						text: '',
-						onClick: function(e) {							
-							const rowData = e.row.data;
-							if (confirm('계정을 삭제 하시겠습니까?')) {
-								const param = { userId: rowData.userId };
+				buttons: [{
+					icon: "edit",
+					name: "edit",
+					text: '',
+				}, {
+					icon: "remove",
+					name: "delete",
+					text: '',
+					onClick: function(e) {
+						const rowData = e.row.data;
+						
+						const confirmDialog = DevExpress.ui.dialog.custom({
+							showTitle: false,
+							messageHtml: "<div style='text-align: center;' class='pt-3'>삭제하시겠습니까?</div>",
+							buttons: [{
+								text: "확인",
+								type: "default",
+								onClick: function(e) {
+									const param = { userId: rowData.userId };
+									
+									deleteAjax('/api/v1/user/delete', param, function callback(data) {
+										const code = data.code;
+										const result = data.result;
+										
+										if (code == 1000) {
+											const successMsg = '삭제되었습니다.';
+											showDialogCustom(successMsg, function (){
+												search();
+											});
+											
+										} else if (code == 9003) {
+											showDialogCustom(result);
+											
+										} else {
+											const failMsg = '삭제에 실패했습니다.';
+											showDialogCustom(failMsg);
+										}
+									});
+									return { result: "ok" };
+								}
+							}, {
+								text: "취소",
+								onClick: function(e) {
+									return { result: "cancel" };
+								}
+							}]
+						});
 
-								deleteAjax('/api/v1/user/delete', param, function callback(data) {
-									const code = data.code;
-									const result = data.result;
-
-									if (code == 1000) {
-										const successMsg = '삭제에 성공하였습니다.';
-										userDialogCustom(successMsg);										
-										//alert("삭제에 성공하였습니다.");
-										search();
-									} else if (code == 9003) {
-										userDialogCustom(result);										
-										//alert(result);
-									} else {
-										const failMsg = '삭제에 실패하였습니다.';
-										userDialogCustom(failMsg);											
-										//alert("삭제에 실패하였습니다.");
-									}
-								});
+						confirmDialog.show().done(function(dialogResult) {
+							if (dialogResult.result === "ok") {
+								console.log("삭제 완료");
+							} else {
+								console.log("취소");
 							}
-						}
+						});
 					}
-				],
+				}],
 			},
 		],
 		toolbar: {
@@ -341,7 +362,18 @@ function rsaCallback(data) {
 	$("#publicKeyExponent").val(data.RSA_EXPONENT);
 }
 
-// 등록 버튼 이벤트
+// 조회 버튼
+const searchBtn = $('#search-btn').dxButton({
+    stylingMode: 'contained',
+    text: '조회',
+    type: 'default',
+    width: 60,
+    onClick() {
+		search();
+    },
+}).dxButton('instance');
+
+// 등록 버튼
 const addBtn = $('#add_btn').dxButton({
     stylingMode: 'outlined',
     text: '등록',
@@ -355,14 +387,10 @@ const addBtn = $('#add_btn').dxButton({
     },
 }).dxButton('instance');
 
-// document.getElementById('add_btn').addEventListener('click', function(e) {
-// 	e.preventDefault();
-// 	openCustomModal('add');
-// });
-
 // 사용자 등록 모달 - 닫기 버튼
 document.getElementById('close_btn').addEventListener('click', function(e) {
 	e.preventDefault();
+	
 	document.getElementById('user_add_modal').classList.remove('d-block');
 	userModalReset();
 });
@@ -378,12 +406,7 @@ const closeBtn = $('#reset_btn').dxButton({
     },
 }).dxButton('instance');
 
-// document.getElementById('reset_btn').addEventListener('click', function(e) {
-// 	e.preventDefault();
-// 	userModalReset();
-// });
-
-// 저장 버튼 이벤트
+// 사용자 등록 모달 - 저장 버튼
 const saveBtn = $('#save_btn').dxButton({
     stylingMode: 'default',
     text: '저장',
@@ -429,94 +452,24 @@ const saveBtn = $('#save_btn').dxButton({
     },
 }).dxButton('instance');
 
-// document.getElementById('save_btn').addEventListener('click', function(e) {
-// 	e.preventDefault();
-
-// 	const password = $("#user_psw_data").val();
-// 	const publicKeyModulus = $("#publicKeyModulus").val();
-// 	const publicKeyExponent = $("#publicKeyExponent").val();
-
-// 	// RSA 암호화
-// 	let rsa = new RSAKey();
-// 	rsa.setPublic(publicKeyModulus, publicKeyExponent);
-
-// 	const encrypted = rsa.encrypt(password);
-// 	const base64 = hex2b64(encrypted);
-
-// 	let formData = new FormData();
-// 	formData.append("userId", $("#user_id_data").val());
-// 	formData.append("userPwd", encodeURIComponent(base64));
-// 	formData.append("userName", $("#user_name_data").val());
-// 	formData.append("userGrade", $("#user_grade_data").val());
-// 	formData.append("companyCode", $("#company_code_data").val());
-// 	formData.append("hpNo", $("#user_phone1_data").val());
-// 	formData.append("telNo", $("#user_phone2_data").val());
-// 	formData.append("email", $("#user_email_data").val());
-// 	formData.append("smsYn", $("#user_sms_data").val());
-// 	formData.append("excelYn", $("#user_excel_data").val());
-// 	formData.append("fileYn", $("#user_file_data").val());
-// 	formData.append("dbYn", $("#user_db_data").val());
-// 	formData.append("lmsYn", $("#user_lms_data").val());
-// 	formData.append("mmsYn", $("#user_mms_data").val());
-// 	formData.append("useYn", $("#use_yn_data").val());
-
-// 	if (currentMode === 'edit') {
-// 		putFormAjax("/api/v1/user/update", formData, successCallback);
-// 	} else if (currentMode === 'add') {
-// 		postFormAjax("/api/v1/user/insert", formData, successCallback);
-// 	}
-
-// 	const grid = $('#userGrid').dxDataGrid('instance');
-// 	grid.saveEditData();
-// });
-
 // 성공 함수
 function successCallback(data) {
 	let code = data.code;
 	let result = data.result;
 
 	if (code == 1000) {		
-		const successMsg = currentMode === 'edit' ? "수정에 성공하였습니다." : "등록에 성공하였습니다.";
-		userDialogCustom(successMsg);			
-		//alert(currentMode === 'edit' ? "수정에 성공하였습니다." : "등록에 성공하였습니다.");
-		document.getElementById('user_add_modal').classList.remove('d-block');
-		userModalReset();
-		search();
+		const message = currentMode === 'edit' ? "수정되었습니다." : "등록되었습니다.";
+		showDialogCustom(message, function (){
+			document.getElementById('user_add_modal').classList.remove('d-block');
+			userModalReset();
+			search();
+		});
+		
 	} else if (code == 9001 || code == 9002 || code == 9003) {
-		userDialogCustom(result);			
-		//alert(result);
+		showDialogCustom(result);
+		
 	} else {
-		const failMsg = currentMode === 'edit' ? "수정에 실패하였습니다." : "등록에 실패하였습니다.";
-		userDialogCustom(failMsg);		
-		//alert(currentMode === 'edit' ? "수정에 실패하였습니다." : "등록에 실패하였습니다.");
+		const message = currentMode === 'edit' ? "수정에 실패했습니다." : "등록에 실패했습니다.";
+		showDialogCustom(message);		
 	}
-}
-
-// 검색 버튼 이벤트
-const searchBtn = $('#search-btn').dxButton({
-    stylingMode: 'contained',
-    text: '조회',
-    type: 'default',
-    width: 60,
-    onClick() {
-		search();
-    },
-}).dxButton('instance');
-// document.getElementById('search_btn').addEventListener('click', function(e) {
-// 	e.preventDefault();
-// 	search();
-// });
-
-//팝업
-function userDialogCustom(message){
-	DevExpress.ui.dialog.custom({
-		showTitle: false,
-		messageHtml: `<div style='text-align: center;' class="pt-3">${message}</div>`,
-		buttons: [{
-			text: "확인",
-			onClick: function () {
-				return; 
-			}
-		}]
-	}).show();
 }
