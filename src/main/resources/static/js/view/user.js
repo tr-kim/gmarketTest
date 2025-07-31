@@ -36,6 +36,9 @@ $(function() {
 
 	if (userGrade == 0) {
 		userGradeData = [{
+			Grade: -1,
+			Name: '전체',
+		},{
 			Grade: 0,
 			Name: '슈퍼관리자',
 		}, {
@@ -48,9 +51,12 @@ $(function() {
 			Grade: 3,
 			Name: '운영자',
 		}];
-		userGradeValue = 0;
+		userGradeValue = -1;
 	} else {
 		userGradeData = [{
+			Grade: -1,
+			Name: '전체',
+		},{
 			Grade: 1,
 			Name: '관리자',
 		}, {
@@ -60,7 +66,7 @@ $(function() {
 			Grade: 3,
 			Name: '운영자',
 		}];
-		userGradeValue = 1;
+		userGradeValue = -1;
 	};
 
 	//사용자등급
@@ -180,6 +186,22 @@ $(function() {
 				}
 			},
 			{
+				dataField: "regDate",
+				caption: "최초 등록일",
+				alignment: "center",
+				customizeText: function(cellInfo) {
+					return formatTimestamp(cellInfo.value);
+				}
+			},
+			{
+				dataField: "chgDate",
+				caption: "최종 수정일",
+				alignment: "center",
+				customizeText: function(cellInfo) {
+					return formatTimestamp(cellInfo.value);
+				}
+			},
+			{
 				name: "edit_btn",
 				caption: "수정",
 				type: "buttons",
@@ -248,13 +270,14 @@ $(function() {
 					location: "before",
 					template: function() {
 						return $("<div>")
-							.attr("userSeq", "totalCount")
+							.attr("id", "totalCount")
 							.css({ fontSize: "17px", color: "#333", padding: "0 5px" });
 					}
 				},
 				"searchPanel"
 			]
 		},
+		
 		onEditingStart(e) {
 			document.getElementById('reset_btn').classList.add('d-none');
 			console.log(document.getElementById('reset_btn'));
@@ -472,4 +495,15 @@ function successCallback(data) {
 		const message = currentMode === 'edit' ? "수정에 실패했습니다." : "등록에 실패했습니다.";
 		showDialogCustom(message);		
 	}
+}
+
+function formatTimestamp(str) {
+	str = str.trim();
+	const yyyy = str.slice(0, 4);
+	const mm = str.slice(4, 6);
+	const dd = str.slice(6, 8);
+	const hh = str.slice(8, 10);
+	const mi = str.slice(10, 12);
+	const ss = str.slice(12, 14);
+	return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 }

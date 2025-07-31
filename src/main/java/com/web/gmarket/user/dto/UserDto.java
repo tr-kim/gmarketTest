@@ -73,6 +73,7 @@ public class UserDto implements Serializable {
 	// 사용자 등급(Default : 2) - 0 : 관리자 등급 - 1 : 사용자 등급 - 2 : 운영자 등급
 	@NotBlank(message = "사용자 등급은 필수입니다.")
 	private Integer userGrade = 2;
+	//private String userGrade;
 
 	// SMS 사용 여부(Default : Y) - Y / N
 	@NotBlank(message = "SMS 사용 여부는 필수 입력 값입니다.")

@@ -115,7 +115,21 @@ $(function () {
 			const uploadedCount = document.querySelectorAll('#dropzone-image-list .col-4').length;
 			
 			if (uploadedCount >= 3) {
-				alert('이미지는 최대 3개까지만 업로드할 수 있습니다.');
+				DevExpress.ui.dialog.custom({
+					showTitle: false,
+					messageHtml: `
+					<div style='text-align: center;' class="pt-3">
+						이미지는 최대 3개까지만 업로드할 수 있습니다.
+					</div>`,
+					buttons: [{
+						text: "확인",
+						onClick: function () {
+							return; 
+						}
+					}]
+				}).show();
+
+				//alert('이미지는 최대 3개까지만 업로드할 수 있습니다.');
 				return;
 			}
 			
