@@ -242,29 +242,30 @@ aside .psw_chg_btn:hover{
 /* 페이지 */
 /* hist.html */
 #histGrid .dx-bordered-bottom-view {
-    max-height: calc(100vh - 520px);
+    max-height: calc(100vh - 560px);
 }
 /* bulk_hist.html */
 #bulkHistGrid .dx-bordered-bottom-view {
-    max-height: calc(100vh - 480px);
+    max-height: calc(100vh - 520px);
 }
 /* wait_sms_hist.html */
 #waitHistGrid .dx-bordered-bottom-view {
-    max-height: calc(100vh - 490px);
+    max-height: calc(100vh - 530px);
 }
 /* stat.html */
 #statGrid .dx-bordered-bottom-view {
-    max-height: calc(100vh - 525px);
+    max-height: calc(100vh - 560px);
 }
 /* user.html */
 #userGrid .dx-bordered-bottom-view {
-    max-height: calc(100vh - 490px);
+    max-height: calc(100vh - 540px);
 }
 /* real_send_hist.html */
 #real_send_hist .content {
     min-height: 22rem;
 }
 /* send.html */
+
 #send > ul{
     max-width: 760px;
     margin: auto;
@@ -310,10 +311,18 @@ aside .psw_chg_btn:hover{
 #send .grid{
     border: 1px solid #e5e7eb;
     border-radius: 6px;
-    overflow: hidden;
+    max-height: 500px;
+    overflow-y: auto;
+}
+#send .grid table tbody tr:last-child{
+    border-bottom: #fff;
 }
 #send .grid .dx-bordered-bottom-view{
     max-height: 10rem;
+}
+#send .numDelBtn:hover {
+    background: #eee;
+    border-radius: 2px;
 }
 #send .msg_wrap_hd{
     border-bottom: 1px solid #e5e7eb;
@@ -339,20 +348,19 @@ aside .psw_chg_btn:hover{
 #send .msg_wrap textarea::placeholder{
     color: #ccc;
 }
-#send .msg_type.sms{
-    background-color: #0d6efd;
+#send .msg_type{
+    border-radius: 6px 0 0 0;
     color: #fff;
     opacity: .9;
+}
+#send .msg_type.sms{
+    background-color: #0d6efd;    
 }
 #send .msg_type.lms{
     background-color: #0abb26;
-    color: #fff;
-    opacity: .9;
 }
 #send .msg_type.mms{
     background-color: #dc3545;
-    color: #fff;
-    opacity: .9;
 }
 #send .msg_wrap{
     border-right: 1px solid #e5e7eb;
@@ -456,7 +464,7 @@ aside .psw_chg_btn:hover{
   align-items: center;
 }
 .img-question::after{
-    background: #777;
+    background: #aaa;
     position: absolute;
     top:50%;
     transform: translateY(-50%) rotate(45deg);
@@ -468,7 +476,7 @@ aside .psw_chg_btn:hover{
 }
 .img-question::before{
     position: absolute;
-    background: #666;
+    background: #999;
     color: #fff;
     white-space: nowrap;
     padding: .5rem;
@@ -476,9 +484,10 @@ aside .psw_chg_btn:hover{
     transform: translateY(-50%);
     right: 100%;
     border-radius: 3px;
-    box-shadow: 0 0 20px #00000060;
+    box-shadow: 0 0 15px #00000030;
     z-index: 1;
     transition: .2s;
+    font-size: 12px;
 }
 .img-question:hover::after{
     content: "";
@@ -530,4 +539,14 @@ aside .psw_chg_btn:hover{
 .x_btn:hover{
     background: #0d6efd;
     color: #fff;
+}
+/* passwordChg.html */
+.passwordChg .modal-wrap{
+    width: 600px;
+}
+.passwordChg  .modal-con{
+    height: 175px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

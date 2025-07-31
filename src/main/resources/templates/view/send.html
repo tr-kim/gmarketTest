@@ -9,25 +9,25 @@
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">발신번호</div>
 				<div class="col">
-					<input type="text" name="" id="" class="form-control" placeholder="발신번호를 입력하세요.">
+					<input type="text" name="callbackNo" id="callbackNo" class="form-control" placeholder="발신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
 				</div>
 			</li>
 			<li>
 				<div class="col-2 font-weight-500">수신번호</div>
 				<div class="col">
 					<ul class="tab d-flex align-items-center mb-3">
-						<li class="on"><button>직접입력</button></li>
-						<li><button>주소록</button></li>
-						<li><button>엑셀파일</button></li>
+						<li class="on"><button type="button">직접입력</button></li>
+						<li><button type="button">주소록</button></li>
+						<li><button type="button">엑셀파일</button></li>
 					</ul>
 					<div class="callback_wrap d-block" id="direct_wrap">
 						<div class="d-flex mb-3">
-							<input type="text" name="" id="" class="form-control me-2" placeholder="이름을 입력하세요.">
-							<input type="text" name="" id="" class="form-control me-2" placeholder="번호를 입력하세요.">
-							<button class="btn btn-primary text-nowrap">추가</button>
+							<input type="text" name="directName" id="directName" class="form-control me-2" placeholder="이름을 입력하세요." maxlength="20">
+							<input type="text" name="directNumber" id="directNumber" class="form-control me-2" placeholder="번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
+							<button type="button" class="btn btn-primary text-nowrap" onclick="addDirectNumber()">추가</button>
 						</div>
 						<div id="directGrid" class="grid">
-							<table class="table w-100 text-center">
+							<table class="table w-100 text-center mb-0">
 								<colgroup>
 									<col style="width:40%;">
 									<col style="width:40%;">
@@ -48,30 +48,35 @@
                             </table>
 						</div>
 						<div class="count text-end"></div>
+						<div class="duplication_filter text-end mt-1">
+							<span>입력 수신번호 <span class="direct_input_num">0</span> 건 / 중복 수신번호 <span class="direct_dup_num">0</span> 건</span>
+						</div>
 					</div>
-					<div class="callback_wrap" id="address_wrap ">
+					<div class="callback_wrap" id="address_wrap">
 						<div class="d-flex mb-3">
-							<select name="" id="" class="form-select">
-								<option value="">그룹1(10명)</option>
-								<option value="">그룹2(10명)</option>
-								<option value="">그룹3(10명)</option>								                               
+							<select name="addressGroup" id="addressGroup" class="form-select">
+								<option value="01">그룹1(10명)</option>
+								<option value="02">그룹2(10명)</option>
+								<option value="03">그룹3(10명)</option>								                               
 							</select>
 						</div>
 						<div id="addressGrid" class="grid">
-							<table class="table w-100 text-center">
+							<table class="table w-100 text-center mb-0">
 								<colgroup>
-									<col style="width:50%;">
-									<col style="width:50%;">
+									<col style="width:40%;">
+									<col style="width:40%;">
+									<col style="width:20%;">
 								</colgroup>
 								<thead>
 									<tr>
 										<th>이름</th>
 										<th>전화번호</th>
+										<th>삭제</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr class="no-data">
-										<td class="py-3" colspan="2">주소록 목록이 없습니다.</td>
+										<td class="py-3" colspan="3">주소록 목록이 없습니다.</td>
 									</tr>
 								</tbody>
                             </table>
@@ -80,7 +85,7 @@
 					</div>
 					<div class="callback_wrap" id="excel_wrap">
 						<div class="d-flex align-items-center mb-3">
-							<input type="file" name="" id="" class="form-control me-2" >
+							<input type="file" name="" id="" class="form-control me-2">
 							<a href="" download class="text-nowrap font-weight-500 mx-2"><i class="bi bi-download me-1"></i>양식다운로드</a>
 						</div>
 						<div id="excelGrid" class="grid">
@@ -93,13 +98,13 @@
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">사용자ID</div>
 				<div class="col">
-					<input type="text" name="" id="" class="form-control" placeholder="사용자ID를 입력하세요.">
+					<input type="text" name="userId" id="userId" class="form-control" placeholder="사용자ID를 입력하세요." maxlength="100" th:value="${#authentication.principal.userId}">
 				</div>
 			</li>
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">제목</div>
 				<div class="col">
-					<input type="text" name="msgTitle" id="msgTitle" class="form-control" placeholder="제목을 입력하면 장문으로 변경됩니다.">
+					<input type="text" name="msgTitle" id="msgTitle" class="form-control" maxlength="100" placeholder="제목을 입력하면 장문으로 변경됩니다.">
 				</div>
 			</li>
 			<li>
@@ -112,7 +117,7 @@
 								SMS
 							</div>	
 							<div class="msg_byte col text-end py-2 pe-2">
-								<span id="byte_ck">0</span>/<span id="byte_type">80</span> byte
+								<span id="input_byte">0</span>/<span id="total_byte">80</span> byte
 							</div>
 						</div>
 						<textarea name="msgWrite" id="msgWrite" class="p-3 w-100"></textarea>
@@ -121,15 +126,15 @@
 								<button type="button" class="w-100 py-2 text-center text-nowrap font-sz-12" id="bookmark_btn">내문자함</button>
 							</div>
 							<div class="col">
-								<button type="button" class="w-100 py-2 text-center text-nowrap font-sz-12" id="bookmark_send_btn">문자저장</button>
+								<button type="button" class="w-100 py-2 text-center text-nowrap font-sz-12" id="bookmark_save_btn">문자저장</button>
 							</div>	
 						</div>
 					</div>
 					<div class="add_option col position-relative">
 						<ul class="option_tab d-flex px-3">
-							<li class="col on"><button>이미지</button></li>
-							<li class="col"><button>변수선택</button></li>
-							<li class="col"><button>특수문자</button></li>
+							<li class="col on"><button type="button">이미지</button></li>
+							<li class="col"><button type="button">변수선택</button></li>
+							<li class="col"><button type="button">특수문자</button></li>
 						</ul>
 						<div class="option_wrap px-3 py-2 d-block">
 							<div id="dropzone-external" class="flex-box">
@@ -228,13 +233,13 @@
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">전송대상</div>
 				<div class="col">
-					<input type="text" name="" id="" class="form-control" placeholder="전송대상을 입력하세요.">
+					<input type="text" name="sendInfo" id="sendInfo" class="form-control" placeholder="전송대상을 입력하세요." maxlength="100">
 				</div>
 			</li>
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">SMS 수신여부</div>
 				<div class="col">
-					<select name="" id="" class="form-select">
+					<select name="reserved3" id="reserved3" class="form-select">
 						<option value="0">확인</option>
 						<option value="1">미확인</option>
 					</select>
@@ -249,7 +254,7 @@
 						080 수신거부 번호
 						</label>
 					</div>
-					<input type="text" name="" id="reject_num" class="form-control" value="(거부)0800002004" disabled>
+					<input type="text" name="rejectNum" id="rejectNum" class="form-control" value="(거부)0800002004" maxlength="100" disabled>
 				</div>
 			</li>
 			<li class="align-items-center">
@@ -266,12 +271,12 @@
 				</div>					
 			</li>
 			<li class="d-flex align-items-center justify-content-center">
-				<button class="btn btn-primary px-5" id="final_send_btn">즉시발송</button>
+				<button type="button" class="btn btn-primary px-5" id="final_send_btn" onclick="sendMessage()">즉시발송</button>
 			</li>
 		</ul>
 	</form>	
-	<th:block th:replace="~{/reserveSend :: reserveSend}"></th:block>
-	<th:block th:replace="~{/bookmarkMsg :: bookmarkMsg}"></th:block>
+	<th:block th:replace="~{/view/popup/reserveSend :: reserveSend}"></th:block>
+	<th:block th:replace="~{/view/popup/bookmarkMsg :: bookmarkMsg}"></th:block>
 	<script th:src="@{/js/view/send.js}"></script>
 </body>
 
