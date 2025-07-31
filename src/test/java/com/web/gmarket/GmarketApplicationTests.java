@@ -7,7 +7,13 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.crypto.Cipher;
 
@@ -17,8 +23,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.web.gmarket.common.utils.RsaUtil;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @ExtendWith(MockitoExtension.class)
 class GmarketApplicationTests {
 	
@@ -32,15 +39,23 @@ class GmarketApplicationTests {
 	@Test
 	void contextLoads() {
 		
-		String password = "dinnovan1234";
-
-		String encodedPassword = encoder.encode(password);
-		System.out.println(encodedPassword);
+//		String password = "dinnovan1234";
+//
+//		String encodedPassword = encoder.encode(password);
+//		System.out.println(encodedPassword);
 		
+		SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date date = new Date();
+        
+        String str = "20250714100009";
+        System.out.println(String.valueOf(Integer.valueOf(str) - Integer.valueOf(inputFormat.format(date))));
+        
+        List<String> list = new ArrayList<>();
+        
 	}
 	
 	
-	@Test
+//	@Test
 	void rsaTest() throws Exception {
 		
 		String password = "dinnovan1234";

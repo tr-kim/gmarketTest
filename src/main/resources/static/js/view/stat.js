@@ -1,129 +1,175 @@
-$(function () {
+const middleCategoryData = {
+	0: [
+		{ code: 0, name: '전체' },
+		{ code: 1, name: 'SMSCLI_TBL_CHARGED' },
+		{ code: 2, name: 'SMSCLI_TBL_ESCROW' },
+		{ code: 3, name: 'SMSCLI_TBL_OUTBID' },
+		{ code: 4, name: 'SMSCLI_TBL_API' },
+		{ code: 5, name: 'SMSCLI_TBL_BATCH' },
+		{ code: 6, name: 'SMSCLI_TBL_MOTORS' },
+		{ code: 7, name: 'SMSCLI_TBL_PUMBL' },
+		{ code: 8, name: 'SMSCLI_TBL_EVENT' },
+		{ code: 9, name: 'SMSCLI_TBL_LARGE' },
+		{ code: 21, name: 'LMSCLI_TBL_EVENT' },
+		{ code: 22, name: 'LMSCLI_TBL_LARGE' },
+		{ code: 41, name: 'MMSCLI_TBL_EVENT' },
+		{ code: 42, name: 'MMSCLI_TBL_LARGE' },
+		{ code: 71, name: 'IAC_SMSCLI_TBL_LARGE' },
+		{ code: 72, name: 'IAC_LMSCLI_TBL_LARGE' },
+		{ code: 73, name: 'IAC_MMSCLI_TBL_LARGE' }
+	],
+	1: [
+		{ code: 0, name: '전체' },
+		{ code: 11, name: 'SMSCLI_TBL_EMG' },
+		{ code: 12, name: 'SMSCLI_TBL_ETC' },
+		{ code: 13, name: 'SMSCLI_TBL_ORDER' },
+		{ code: 14, name: 'SMSCLI_TBL_TRAN' },
+		{ code: 15, name: 'SMSCLI_TBL_EVENT' },
+		{ code: 16, name: 'SMSCLI_TBL_LARGE' },
+		{ code: 31, name: 'LMSCLI_TBL_EVENT' },
+		{ code: 32, name: 'LMSCLI_TBL_LARGE' },
+		{ code: 51, name: 'MMSCLI_TBL_EVENT' },
+		{ code: 52, name: 'MMSCLI_TBL_LARGE' },
+		{ code: 61, name: 'GMKT_SMSCLI_TBL_LARGE' },
+		{ code: 62, name: 'GMKT_LMSCLI_TBL_LARGE' },
+		{ code: 63, name: 'GMKT_MMSCLI_TBL_LARGE' },
+		{ code: 110, name: 'SFC_SMSCLI_TBL' }
+	]
+};
+
+$(function() {
 	const startDate = new Date();
 	const endDate = new Date();
-    endDate.setDate(endDate.getDate() + 7);
-	
+	endDate.setDate(endDate.getDate() + 7);
+
 	//라디오
 	const radios = document.querySelectorAll('input[name="stat-radio"]');
-	
+
 	radios.forEach(radio => {
-		radio.addEventListener('change', function () {
+		radio.addEventListener('change', function() {
 			//시간
-	        if(this.value == "1"){
-	            recreateDateBox("#startDate", {
-	                type: 'datetime',
-	                //displayFormat: "yyyy-MM-dd a h:mm",
-	                value: startDate,
-	                onValueChanged(e) {
-	                    const date = e.value;
-	                    if (date instanceof Date && !isNaN(date)) {
-	                        const yyyy = date.getFullYear();
-	                        const mm = String(date.getMonth() + 1).padStart(2, '0');
-	                        const dd = String(date.getDate()).padStart(2, '0');
-	                        const hh = String(date.getHours()).padStart(2, '0');
-	                        const min = String(date.getMinutes()).padStart(2, '0');
+			if (this.value == "1") {
+				recreateDateBox("#startDate", {
+					type: 'datetime',
+					//displayFormat: "yyyy-MM-dd a h:mm",
+					value: startDate,
+					onValueChanged(e) {
+						const date = e.value;
+						if (date instanceof Date && !isNaN(date)) {
+							const yyyy = date.getFullYear();
+							const mm = String(date.getMonth() + 1).padStart(2, '0');
+							const dd = String(date.getDate()).padStart(2, '0');
+							const hh = String(date.getHours()).padStart(2, '0');
+							const min = String(date.getMinutes()).padStart(2, '0');
 
-	                        console.log(`${yyyy}${mm}${dd}${hh}${min}`);
-	                    }
-	                }
-	            });
-	            
-	            recreateDateBox("#endDate", {
-	                type: 'datetime',
-	                //displayFormat: "yyyy-MM-dd a h:mm",
-	                value: endDate,
-	                onValueChanged(e) {
-	                    const date = e.value;
-	                    if (date instanceof Date && !isNaN(date)) {
-	                        const yyyy = date.getFullYear();
-	                        const mm = String(date.getMonth() + 1).padStart(2, '0');
-	                        const dd = String(date.getDate()).padStart(2, '0');
-	                        const hh = String(date.getHours()).padStart(2, '0');
-	                        const min = String(date.getMinutes()).padStart(2, '0');
+							console.log(`${yyyy}${mm}${dd}${hh}${min}`);
+						}
+					}
+					, inputAttr: { name: "startDate" }
+				});
 
-	                        console.log(`${yyyy}${mm}${dd}${hh}${min}`);
-	                    }
-	                }
-	            });
-	        }
-	        if(this.value == "2"){
-	            recreateDateBox("#startDate", {
-	                type: "date",
-	                value: startDate,
-	                displayFormat: "yyyy-MM-dd",
-	                onValueChanged(e) {
-	                    const date = e.value;
-	                    if (date instanceof Date && !isNaN(date)) {
-	                        const yyyy = date.getFullYear();
-	                        const mm = String(date.getMonth() + 1).padStart(2, '0');
-	                        const dd = String(date.getDate()).padStart(2, '0');
-	                        
-	                        console.log(`${yyyy}${mm}${dd}`);
-	                    }
-	                },
-	            });
-	            recreateDateBox("#endDate", {
-	                type: "date",
-	                value: endDate,
-	                displayFormat: "yyyy-MM-dd",
-	                onValueChanged(e) {
-	                    const date = e.value;
-	                    if (date instanceof Date && !isNaN(date)) {
-	                        const yyyy = date.getFullYear();
-	                        const mm = String(date.getMonth() + 1).padStart(2, '0');
-	                        const dd = String(date.getDate()).padStart(2, '0');
-	                        
-	                        console.log(`${yyyy}${mm}${dd}`);
-	                    }
-	                },
-	            });
-	        }
-	        if(this.value == "3"){
-	            recreateDateBox("#startDate", {
-	                type: "date",
-	                value: startDate,
-	                displayFormat: "yyyy-MM",
-	                onValueChanged(e) {
-	                    const date = e.value;
-	                    if (date instanceof Date && !isNaN(date)) {
-	                        const yyyy = date.getFullYear();
-	                        const mm = String(date.getMonth() + 1).padStart(2, '0');
-	                        console.log(`${yyyy}${mm}`);
-	                    }
-	                },
-	            });
-	            
-	            recreateDateBox("#endDate", {
-	                type: "date",
-	                value: endDate,
-	                displayFormat: "yyyy-MM",
-	                onValueChanged(e) {
-	                    const date = e.value;
-	                    if (date instanceof Date && !isNaN(date)) {
-	                        const yyyy = date.getFullYear();
-	                        const mm = String(date.getMonth() + 1).padStart(2, '0');
-	                        console.log(`${yyyy}${mm}`);
-	                    }
-	                },
-	            });
-	        }
-	        if(this.value == "4"){
-	            recreateDateBox("#startDate", {
-	                showClearButton: true,
-	                useMaskBehavior: true,
-	                displayFormat: "yyyy '년' ",
-	                type: 'date',
-	                value: startDate,
-	                onValueChanged(e) {
-	                    const date = e.value;
-	                    if (date instanceof Date && !isNaN(date)) {
-	                        const yyyy = date.getFullYear();
-	                        console.log(`${yyyy}`);
-	                    }
-	                },
-	            });
-	            
-	            recreateDateBox("#endDate", {
+				recreateDateBox("#endDate", {
+					type: 'datetime',
+					//displayFormat: "yyyy-MM-dd a h:mm",
+					value: endDate,
+					onValueChanged(e) {
+						const date = e.value;
+						if (date instanceof Date && !isNaN(date)) {
+							const yyyy = date.getFullYear();
+							const mm = String(date.getMonth() + 1).padStart(2, '0');
+							const dd = String(date.getDate()).padStart(2, '0');
+							const hh = String(date.getHours()).padStart(2, '0');
+							const min = String(date.getMinutes()).padStart(2, '0');
+
+							console.log(`${yyyy}${mm}${dd}${hh}${min}`);
+						}
+					}
+					, inputAttr: { name: "endDate" }
+				});
+			}
+			if (this.value == "2") {
+				recreateDateBox("#startDate", {
+					type: "date",
+					value: startDate,
+					displayFormat: "yyyy-MM-dd",
+					onValueChanged(e) {
+						const date = e.value;
+						if (date instanceof Date && !isNaN(date)) {
+							const yyyy = date.getFullYear();
+							const mm = String(date.getMonth() + 1).padStart(2, '0');
+							const dd = String(date.getDate()).padStart(2, '0');
+
+							console.log(`${yyyy}${mm}${dd}`);
+						}
+					}
+					, inputAttr: { name: "startDate" }
+				});
+				recreateDateBox("#endDate", {
+					type: "date",
+					value: endDate,
+					displayFormat: "yyyy-MM-dd",
+					onValueChanged(e) {
+						const date = e.value;
+						if (date instanceof Date && !isNaN(date)) {
+							const yyyy = date.getFullYear();
+							const mm = String(date.getMonth() + 1).padStart(2, '0');
+							const dd = String(date.getDate()).padStart(2, '0');
+
+							console.log(`${yyyy}${mm}${dd}`);
+						}
+					}
+					, inputAttr: { name: "endDate" }
+				});
+			}
+			if (this.value == "3") {
+				recreateDateBox("#startDate", {
+					type: "date",
+					value: startDate,
+					displayFormat: "yyyy-MM",
+					onValueChanged(e) {
+						const date = e.value;
+						if (date instanceof Date && !isNaN(date)) {
+							const yyyy = date.getFullYear();
+							const mm = String(date.getMonth() + 1).padStart(2, '0');
+							console.log(`${yyyy}${mm}`);
+						}
+					}
+					, inputAttr: { name: "startDate" }
+				});
+
+				recreateDateBox("#endDate", {
+					type: "date",
+					value: endDate,
+					displayFormat: "yyyy-MM",
+					onValueChanged(e) {
+						const date = e.value;
+						if (date instanceof Date && !isNaN(date)) {
+							const yyyy = date.getFullYear();
+							const mm = String(date.getMonth() + 1).padStart(2, '0');
+							console.log(`${yyyy}${mm}`);
+						}
+					}
+					, inputAttr: { name: "endDate" }
+				});
+			}
+			if (this.value == "4") {
+				recreateDateBox("#startDate", {
+					showClearButton: true,
+					useMaskBehavior: true,
+					displayFormat: "yyyy '년' ",
+					type: 'date',
+					value: startDate,
+					onValueChanged(e) {
+						const date = e.value;
+						if (date instanceof Date && !isNaN(date)) {
+							const yyyy = date.getFullYear();
+							console.log(`${yyyy}`);
+						}
+					}
+					, inputAttr: { name: "startDate" }
+				});
+
+				recreateDateBox("#endDate", {
 					showClearButton: true,
 					useMaskBehavior: true,
 					displayFormat: "yyyy '년' ",
@@ -135,92 +181,39 @@ $(function () {
 							const yyyy = date.getFullYear();
 							console.log(`${yyyy}`);
 						}
-					},
+					}
+					, inputAttr: { name: "endDate" }
 				});
 			}
 		})
 	})
-	
+
 	const checkedRadio = document.querySelector('input[name="stat-radio"]:checked');
 	if (checkedRadio) {
 		checkedRadio.dispatchEvent(new Event('change'));
 	}
-	
+
 	//조회 그리드
 	$("#statGrid").dxDataGrid({
-		dataSource: [
-			{ b_msg_key: "0000001", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000002", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000003", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000004", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000005", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000006", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000007", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000008", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000009", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000010", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000011", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000012", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000013", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000014", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000015", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000016", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000017", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000018", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000019", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000020", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000021", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000022", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000023", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000024", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000025", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000026", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000027", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000028", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000029", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000030", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000031", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000032", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000033", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000034", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000035", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000036", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000037", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000038", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000039", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000040", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000041", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000042", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000043", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000044", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000045", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000046", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000047", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000048", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000049", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000050", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000051", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000052", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000053", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000054", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000055", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000056", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000057", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000058", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000059", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000060", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000061", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000062", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000063", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000064", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000065", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000066", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000067", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000068", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000069", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-			{ b_msg_key: "0000070", company_name: "지마켓", table_name: "SMSCLI_TBL_EVENT", result_date: "2025070109", try_cnt: "100", succ_cnt: "100", fail_cnt: "0" },
-		],
-		keyExpr: "b_msg_key",
+		dataSource: {
+			load: function(loadOptions) {
+				const formData = new FormData(document.getElementById("statHistForm"));
+				const skip = loadOptions.skip || 0;
+				const take = loadOptions.take || 50;
+
+				formData.append("skip", skip);
+				formData.append("take", take);
+
+				return $.ajax({
+					url: "/api/v1/stat/list",
+					method: "POST",
+					data: formData,
+					processData: false,
+					contentType: false
+				});
+			}
+		},
+		keyExpr: ["resultDate", "tableCode", "telSect"],
 		headerFilter: {
 			visible: true
 		},
@@ -248,21 +241,29 @@ $(function () {
 		columnResizingMode: 'widget',
 		columnAutoWidth: true,
 		columns: [
-			{ dataField: "result_date", caption: "시간/일자", alignment: "center" },
-			{ dataField: "company_name", caption: "대분류", alignment: "center" },	
-			{ dataField: "table_name", caption: "중분류", alignment: "center" },
-			{ dataField: "try_cnt", caption: "전체", alignment: "center" },		
-			{ dataField: "succ_cnt", caption: "성공", alignment: "center" },		
-			{ dataField: "fail_cnt", caption: "실패", alignment: "center" },						
+			{ dataField: "resultDate", caption: "시간/일자", alignment: "center" },
+			{
+				dataField: "companyName", caption: "대분류", alignment: "center", calculateCellValue: function(rowData) {
+					switch (rowData.companyCode) {
+						case 0: return "옥션";
+						case 1: return "지마켓";
+						default: return "-";
+					}
+				}
+			},
+			{ dataField: "tableName", caption: "중분류", alignment: "center" },
+			{ dataField: "tryCnt", caption: "전체", alignment: "center" },
+			{ dataField: "succCnt", caption: "성공", alignment: "center" },
+			{ dataField: "failCnt", caption: "실패", alignment: "center" },
 		],
 		toolbar: {
 			items: [
 				{
 					location: "before",
 					template: function() {
-					return $("<div>")
-						.attr("id", "totalCount")
-						.css({ fontSize: "17px", color: "#333", padding: "0 5px" });
+						return $("<div>")
+							.attr("id", "totalCount")
+							.css({ fontSize: "17px", color: "#333", padding: "0 5px" });
 					}
 				},
 				"searchPanel"
@@ -271,7 +272,7 @@ $(function () {
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
 			$("#totalCount").text(`총 ${totalCount}건`);
-		}		
+		}
 	}).dxDataGrid("instance");
 
 	//대분류
@@ -279,83 +280,58 @@ $(function () {
 		dataSource: [{
 			Code: 0,
 			Name: '옥션',
-		},{
+		}, {
 			Code: 1,
 			Name: '지마켓',
 		}],
-			displayExpr: 'Name',
-			valueExpr: 'Code',
-			value: 1
+		displayExpr: 'Name',
+		valueExpr: 'Code',
+		value: 1,
+		onValueChanged: function(e) {
+			//중분류 업데이트
+			const selectedCode = e.value;
+			$('#middle-category').dxSelectBox('option', 'dataSource', middleCategoryData[selectedCode] || []);
+			$('#middle-category').dxSelectBox('option', 'value', 1); // 기본값 다시 설정
+		}
+		, inputAttr: { name: "companyCode" }
 	});
 
 	//중분류
 	$('#middle-category').dxSelectBox({
-		dataSource: [{
-			Code: 0,
-			Name: '전체',
-		}, {
-			Code: 11,
-			Name: 'SMSCLI_TBL_EMG',
-		}, {
-			Code: 12,
-			Name: 'SMSCLI_TBL_ETC',
-		}, {
-			Code: 13,
-			Name: 'SMSCLI_TBL_ORDER',
-		}, {
-			Code: 14,
-			Name: 'SMSCLI_TBL_TRAN',
-		}, {
-			Code: 15,
-			Name: 'SMSCLI_TBL_EVENT',
-		}, {
-			Code: 16,
-			Name: 'SMSCLI_TBL_LARGE',
-		}, {
-			Code: 31,
-			Name: 'LMSCLI_TBL_EVENT',
-		}, {
-			Code: 32,
-			Name: 'LMSCLI_TBL_LARGE',
-		}, {
-			Code: 51,
-			Name: 'MMSCLI_TBL_EVENT',
-		}, {
-			Code: 52,
-			Name: 'MMSCLI_TBL_LARGE',
-		}, {
-			Code: 61,
-			Name: 'GMKT_SMSCLI_TBL_LARGE',
-		}, {
-			Code: 62,
-			Name: 'GMKT_LMSCLI_TBL_LARGE',
-		}, {
-			Code: 63,
-			Name: 'GMKT_MMSCLI_TBL_LARGE',
-		}, {
-			Code: 110,
-			Name: 'SFC_SMSCLI_TBL',
-		}],
-			displayExpr: 'Name',
-			valueExpr: 'Code',
-			value: 0
-	});
-
-
+		dataSource: middleCategoryData[1],
+		displayExpr: 'Name',
+		valueExpr: 'Code',
+		value: 1
+		, inputAttr: { name: "tableCode" }
+	}).dxSelectBox("instance");
 });
 
+// 검색
+function search() {
+	const formData = new FormData(document.getElementById("statHistForm"));
+	const skip = loadOptions.skip || 0;
+	const take = loadOptions.take || 50;
+	
+	postFormAjax("/api/v1/stat/list", formData, listCallback);
+}
+
+// 성공 함수
+function listCallback(data) {
+	dataGrid.option("dataSource", data);
+}
+
 //엑셀 다운로드 버튼
-document.getElementById("excel-btn").addEventListener('click',function(e){
+document.getElementById("excel-btn").addEventListener('click', function(e) {
 	e.preventDefault();
 	const grid = $("#statGrid").dxDataGrid("instance");
 	exportGridToExcel(grid);
 })
 
 //엑셀 다운로드
-function exportGridToExcel(gridInstance){
+function exportGridToExcel(gridInstance) {
 	const workbook = new ExcelJS.Workbook();
 	const worksheet = workbook.addWorksheet('정산/통계 조회');
-	
+
 	DevExpress.excelExporter.exportDataGrid({
 		component: gridInstance,
 		worksheet: worksheet,
@@ -366,6 +342,12 @@ function exportGridToExcel(gridInstance){
 		});
 	});
 }
+
+// 검색 버튼 이벤트
+document.getElementById('search_btn').addEventListener('click', function(e) {
+	e.preventDefault();
+	search();
+});
 
 //라디오 버튼클릭시 초기화
 function recreateDateBox(selector, options) {
