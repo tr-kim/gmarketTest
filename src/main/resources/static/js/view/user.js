@@ -194,7 +194,11 @@ $(function() {
 				caption: "최초 등록일",
 				alignment: "center",
 				customizeText: function(cellInfo) {
-					return formatTimestamp(cellInfo.value);
+					if(cellInfo && cellInfo.value){
+						return formatTimestamp(cellInfo.value);
+					} else {
+						return '-';
+					}
 				}
 			},
 			{
@@ -202,7 +206,11 @@ $(function() {
 				caption: "최종 수정일",
 				alignment: "center",
 				customizeText: function(cellInfo) {
-					return formatTimestamp(cellInfo.value);
+					if(cellInfo && cellInfo.value){
+						return formatTimestamp(cellInfo.value);
+					} else {
+						return '-';
+					}
 				}
 			},
 			{
