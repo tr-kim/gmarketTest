@@ -1,4 +1,7 @@
 let dataGrid;
+let largeCategoryInstance;
+let userGradeInstance;
+let userIdInstance;
 
 let currentMode = ''; // 전역 변수로 모드 추적
 let currentKey = null;
@@ -20,16 +23,16 @@ $(function() {
 	}
 
 	//구분
-	$('#large-category').dxSelectBox({
+	largeCategoryInstance = $('#large-category').dxSelectBox({
 		dataSource: categoryData,
 		displayExpr: 'Name',
 		valueExpr: 'Code',
 		value: categoryValue
 		, inputAttr: { name: "companyCode" }
-		, onValueChanged: function(e) {
-			dataGrid.option('editing.refreshMode', e.value);
-		}
-	});
+		// , onValueChanged: function(e) {
+		// 	dataGrid.option('editing.refreshMode', e.value);
+		// }
+	}).dxSelectBox("instance");
 
 	let userGradeData;
 	let userGradeValue;
@@ -70,22 +73,22 @@ $(function() {
 	};
 
 	//사용자등급
-	$('#user_grade').dxSelectBox({
+	 userGradeInstance = $('#user_grade').dxSelectBox({
 		dataSource: userGradeData,
 		displayExpr: 'Name',
 		valueExpr: 'Grade',
 		value: userGradeValue
 		, inputAttr: { name: "userGrade" }
-		, onValueChanged: function(e) {
-			dataGrid.option('editing.refreshMode', e.value);
-		}
-	});
+		// , onValueChanged: function(e) {
+		// 	dataGrid.option('editing.refreshMode', e.value);
+		// }
+	}).dxSelectBox("instance");
 
 	//사용자ID
-	$('#user_id').dxTextBox({
+	userIdInstance = $('#user_id').dxTextBox({
 		placeholder: '아이디를 입력하세요.'
 		, inputAttr: { name: "userId" }
-	});
+	}).dxTextBox("instance");
 	
 	//조회 그리드
 	dataGrid = $("#userGrid").dxDataGrid({
@@ -124,6 +127,7 @@ $(function() {
 		},
 		pager: {
 			visible: true,
+			showInfo: true,
 			showNavigationButtons: true,
 			showPageSizeSelector: true,
 			allowedPageSizes: [50, 100, 200]
@@ -277,7 +281,6 @@ $(function() {
 				"searchPanel"
 			]
 		},
-		
 		onEditingStart(e) {
 			document.getElementById('reset_btn').classList.add('d-none');
 			console.log(document.getElementById('reset_btn'));
@@ -374,6 +377,8 @@ function openCustomModal(mode, data = {}) {
 		document.getElementById('user_lms_data').value = 'N';
 		document.getElementById('user_mms_data').value = 'N';
 		document.getElementById('use_yn_data').value = 'Y';
+
+		document.getElementById('user_id_data').readOnly = false;
 	}
 
 	document.getElementById('user_add_modal').classList.add('d-block');
