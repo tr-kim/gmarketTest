@@ -38,27 +38,27 @@ public class UserDto implements Serializable {
 
 	// 사용자 아이디
 	@NotBlank(message = "아이디는 필수 입력 값입니다.", groups = NotBlankGroup1.class)
-	@Size(min = 3, max = 10, message = "아이디는 3~10자 이내로 입력하셔야 합니다.", groups = SizeGroup1.class)
-	@Pattern(regexp = "^(?!.*\\s).*$", message = "아이디에 공백이 있으면 안됩니다.", groups = PatternGroup1.class)
-	@Pattern(regexp = "^[A-Za-z0-9]+$", message = "아이디에 허용할 수 없는 문자가 입력되었습니다.", groups = PatternGroup2.class)
+	@Size(min = 3, max = 10, message = "아이디는 3~10자 이내로 입력해야 합니다.", groups = SizeGroup1.class)
+	@Pattern(regexp = "^(?!.*\\s).*$", message = "아이디는 공백을 포함할 수 없습니다.", groups = PatternGroup1.class)
+	@Pattern(regexp = "^[A-Za-z0-9]+$", message = "아이디에 허용되지않는 문자가 입력되었습니다.", groups = PatternGroup2.class)
 	private String userId;
 
 	// 사용자 패스워드
 	@NotBlank(message = "비밀번호는 필수 입력 값입니다.", groups = NotBlankGroup2.class)
-	@Size(min = 8, max = 20, message = "비밀번호는 8~20자 이내로 입력하셔야 합니다.", groups = SizeGroup2.class)
-	@Pattern(regexp = "^[A-Za-z0-9_]+$", message = "비밀번호에 허용할 수 없는 문자가 입력되었습니다.", groups = PatternGroup3.class)
+	@Size(min = 8, max = 20, message = "비밀번호는 8~20자 이내로 입력해야 합니다.", groups = SizeGroup2.class)
+	@Pattern(regexp = "^[A-Za-z0-9_]+$", message = "비밀번호에 허용되지않는 문자가 입력되었습니다.", groups = PatternGroup3.class)
 	private String userPwd;
 
 	// 사용자 이름
-	@NotBlank(message = "사용자이름은 필수 입력 값입니다.", groups = NotBlankGroup3.class)
+	@NotBlank(message = "사용자 이름은 필수 입력 값입니다.", groups = NotBlankGroup3.class)
 	private String userName;
 
 	// 사용자 전화번호
-	@Pattern(regexp = "(^$|^01[016789]-?\\d{3,4}-?\\d{4}$)", message = "유효한 휴대전화 번호 형식이어야 합니다.", groups = PatternGroup4.class)
+	@Pattern(regexp = "(^$|^01[016789]-?\\d{3,4}-?\\d{4}$)", message = "유효한 전화번호 형식이어야 합니다.", groups = PatternGroup4.class)
 	private String hpNo;
 
 	// 사용자 휴대전화
-	@Pattern(regexp = "(^$|^01[016789]-?\\d{3,4}-?\\d{4}$)", message = "유효한 휴대전화 번호 형식이어야 합니다.", groups = PatternGroup5.class)
+	@Pattern(regexp = "(^$|^01[016789]-?\\d{3,4}-?\\d{4}$)", message = "유효한 휴대전화번호 형식이어야 합니다.", groups = PatternGroup5.class)
 	private String telNo;
 
 	// 사용자 이메일
@@ -73,7 +73,6 @@ public class UserDto implements Serializable {
 	// 사용자 등급(Default : 2) - 0 : 관리자 등급 - 1 : 사용자 등급 - 2 : 운영자 등급
 	@NotBlank(message = "사용자 등급은 필수입니다.")
 	private Integer userGrade = 2;
-	//private String userGrade;
 
 	// SMS 사용 여부(Default : Y) - Y / N
 	@NotBlank(message = "SMS 사용 여부는 필수 입력 값입니다.")

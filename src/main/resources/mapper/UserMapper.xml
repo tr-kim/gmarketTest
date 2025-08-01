@@ -31,16 +31,13 @@
 		<if test='userId != null and !userId.isEmpty()'>
 			AND USER_ID = #{userId}
 		</if>
-		<!-- <if test='userGrade != null'> -->
 		<if test="userGrade != null and userGrade != -1">
 			AND USER_GRADE = #{userGrade}
 		</if>
 		<if test='companyCode != null'>
 			AND COMPANY_CODE = #{companyCode}
 		</if>
-		<if test='delFlag != null and delFlag == "N"'>
-			AND DEL_FLAG = 'N'
-		</if>
+		AND DEL_FLAG = 'N'
 	</select>
 	
 	<insert id="insertUserInfo" parameterType="com.web.gmarket.user.dto.UserDto">
