@@ -314,17 +314,26 @@ $(function () {
 	
 	//문자 byte 표시
 	function getByteLength(str) {
+		let resultStr = "";
 		let size = 0;
 		for(let i = 0; i < str.length; i++){
+			const tempStr = str.charAt(i);
+
 			const byteSize = new Blob([str.charAt(i)]).size;
 			if( byteSize == 3 ) size += 2;
 			else if( byteSize == 2 ) size += 2;
 			else size += 1;
+
+			if(size > 2000) {
+				showDialogCustom(`최대 2000byte까지 입력 가능합니다.`);	
+				
+				MSG_WRITE.value = resultStr;
+				break;				
+			}
+			resultStr += tempStr;			
 		}
-		
 		return size;
 	}
-	
 	
 	//이미지 확인
 	function hasImage() {
