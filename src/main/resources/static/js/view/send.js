@@ -271,19 +271,19 @@ $(function () {
 
 		const now = new Date();
 		const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; // 'YYYY-MM-DD'
-		const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`; // 'HH:MM'
+		const time = `${String(now.getHours()).padStart(2, '0')}시 ${String(now.getMinutes()).padStart(2, '0')}분`; // 'HH:MM'
 
 		if (selectedDate >= now) {
 			// 예약 가능한 시간
 			document.getElementById('reserveDate').textContent = 
-				`예약시간: ${reserveDate} ${reserveHour.value.padStart(2, '0')}:${reserveMinute.value.padStart(2, '0')}`;
+				`예약 발송 시간 : ${reserveDate} ${reserveHour.value.padStart(2, '0')}시 ${reserveMinute.value.padStart(2, '0')}분`;
 			reserveModal.classList.remove("d-block");
 		} else {
 			// 예약 불가 (지나간 시간)
 			document.getElementById('reserveDate').textContent = '';
 			
 			const message = `<div style='text-align: center;' class="pt-3">
-				과거 시간은 예약할 수 없습니다.<br><br><span class="text-666"> 현재시간 : ${date} ${time} </span>
+				과거 시간은 예약할 수 없습니다.<br><br><span class="text-666">현재 ${date} ${time}</span>
 			</div>`;
 			
 			showDialogCustom(message);
