@@ -57,19 +57,19 @@ window.addEventListener('load', function() {
 
 			if (isEmpty(pw1.value)) {
 				const message = '비밀번호를 입력해주세요.';
-				showDialogCustom(message);				
+				showDialogCustom(message);
 				return;
 			}
 
 			if (isEmpty(pw2.value)) {
 				const message = '비밀번호를 다시 입력해주세요.';
-				showDialogCustom(message);			
+				showDialogCustom(message);
 				return;
 			}
 
 			if (!(pw1.value === pw2.value)) {
 				const message = '비밀번호가 일치하지 않습니다. 다시 입력해주세요.';
-				showDialogCustom(message);	
+				showDialogCustom(message);
 				return;
 			}
 

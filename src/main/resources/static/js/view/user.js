@@ -242,8 +242,8 @@ $(function() {
 										const result = data.result;
 										
 										if (code == 1000) {
-											const successMsg = '삭제되었습니다.';
-											showDialogCustom(successMsg, function (){
+											const message = '삭제되었습니다.';
+											showDialogCustom(message, function (){
 												search();
 											});
 											
@@ -251,8 +251,8 @@ $(function() {
 											showDialogCustom(result);
 											
 										} else {
-											const failMsg = '삭제에 실패했습니다.';
-											showDialogCustom(failMsg);
+											const message = '삭제에 실패했습니다.';
+											showDialogCustom(message);
 										}
 									});
 									return { result: "ok" };
@@ -493,7 +493,7 @@ function successCallback(data) {
 	let code = data.code;
 	let result = data.result;
 
-	if (code == 1000) {		
+	if (code == 1000) {
 		const message = currentMode === 'edit' ? "수정되었습니다." : "등록되었습니다.";
 		showDialogCustom(message, function (){
 			document.getElementById('user_add_modal').classList.remove('d-block');

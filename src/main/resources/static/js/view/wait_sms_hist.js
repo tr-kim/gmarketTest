@@ -114,17 +114,7 @@ $(function () {
 			}
 			
 			if (errorMessage) {
-				DevExpress.ui.dialog.custom({
-					showTitle: false,
-					messageHtml: errorMessage,
-					buttons: [{
-						text: "확인",
-						onClick: function () {
-							return false;
-						}
-					}]
-				}).show();
-				
+				showDialogCustom(errorMessage);
 				return false;
 			}
 			
@@ -192,18 +182,7 @@ $(function () {
 			})
 			.catch(error => {
 				console.error("데이터 로드 실패:", error);
-				//alert("데이터를 불러오는 중 오류가 발생했습니다.");
-				
-				DevExpress.ui.dialog.custom({
-					showTitle: false,
-					messageHtml: `<div style='text-align: center;' class="pt-3">데이터를 불러오는 중 오류가 발생했습니다.</div>`,
-					buttons: [{
-						text: "확인",
-						onClick: function () {
-							return;
-						}
-					}]
-				}).show();
+				showDialogCustom('error');
 				
 				return {
 					data: [],
@@ -279,16 +258,7 @@ $(function () {
 				buttons: [{
 					icon: "find",
 					onClick: function(e) {
-						DevExpress.ui.dialog.custom({
-							showTitle: false,
-							messageHtml: "<div style='text-align: center;' class='pt-3'>상세보기</div>",
-							buttons: [{
-								text: "확인",
-								onClick: function () {
-									return { result: "ok" }; 
-								}
-							}]
-						}).show();
+						console.log('상세보기 준비 중');
 					}
 				}],
 			},
@@ -360,25 +330,15 @@ $(function () {
 							const selectedRows = waitDataGrid.getSelectedRowsData();
 							
 							if (selectedRows.length === 0) {
-								DevExpress.ui.dialog.custom({
-									showTitle: false,
-									messageHtml: "<div style='text-align: center;' class='pt-3'>삭제할 메시지를 선택하세요.</div>",
-									buttons: [{
-										text: "확인",
-										onClick: function () {
-											return { result: "ok" }; 
-										}
-									}]
-								}).show();
-								
+								const message = '삭제할 메시지를 선택하세요.';
+								showDialogCustom(message);
 								return;
 							}
 							
 							const confirmDialog = DevExpress.ui.dialog.custom({
 								showTitle: false,
 								messageHtml: `<div style='text-align: center;' class='pt-3'>
-								삭제하시겠습니까?<br>
-								<span class="text-666 mt-3">( 총 ${selectedRows.length} 건 )<span>
+									선택한 <b>${selectedRows.length}건</b>을 삭제하시겠습니까?
 								</div>`,
 								buttons: [{
 									text: "확인",
@@ -430,7 +390,8 @@ $(function () {
 				if (nowPlus30 < row.reqTime) {
 					allowedRows.push(row.bulkMsgKey); //dataSource key
 				} else {
-					DevExpress.ui.notify("전송 임박 항목은 선택되지 않습니다.", "warning", 2000);
+					const message = '전송 임박 항목은 선택되지 않습니다.';
+					showDialogCustom(message);
 				}
 			}
 			

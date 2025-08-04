@@ -115,21 +115,8 @@ $(function () {
 			const uploadedCount = document.querySelectorAll('#dropzone-image-list .col-4').length;
 			
 			if (uploadedCount >= 3) {
-				DevExpress.ui.dialog.custom({
-					showTitle: false,
-					messageHtml: `
-					<div style='text-align: center;' class="pt-3">
-						이미지는 최대 3개까지만 업로드할 수 있습니다.
-					</div>`,
-					buttons: [{
-						text: "확인",
-						onClick: function () {
-							return; 
-						}
-					}]
-				}).show();
-
-				//alert('이미지는 최대 3개까지만 업로드할 수 있습니다.');
+				const message = '이미지는 최대 3개까지만 업로드할 수 있습니다.';
+				showDialogCustom(message);
 				return;
 			}
 			
@@ -286,7 +273,6 @@ $(function () {
 		const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; // 'YYYY-MM-DD'
 		const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`; // 'HH:MM'
 
-
 		if (selectedDate >= now) {
 			// 예약 가능한 시간
 			document.getElementById('reserveDate').textContent = 
@@ -295,26 +281,14 @@ $(function () {
 		} else {
 			// 예약 불가 (지나간 시간)
 			document.getElementById('reserveDate').textContent = '';
-			DevExpress.ui.dialog.custom({
-				showTitle: false,
-				messageHtml: `<div style='text-align: center;' class="pt-3">
-				과거 시간은 예약할 수 없습니다.
-				<br>
-				<br>
-				<span class="text-666"> 현재시간 : ${date} ${time} </span>
-				</div>`,
-				buttons: [{
-					text: "확인",
-					onClick: function () {
-						return; //done()으로 넘어가는 값
-					}
-				}]
-			}).show();
-
 			
-		}		
-		
-		//document.querySelector('.date').textContent = '날짜를 선택해 주세요.';
+			const message = `<div style='text-align: center;' class="pt-3">
+				과거 시간은 예약할 수 없습니다.<br><br><span class="text-666"> 현재시간 : ${date} ${time} </span>
+			</div>`;
+			
+			showDialogCustom(message);
+			return;
+		}
 	})
 	
 	
@@ -455,7 +429,7 @@ $(function () {
 	const bookmarkDelBtns = document.querySelectorAll('.bookmarkMsg .x_btn');
 	bookmarkDelBtns.forEach( btn =>{
 		btn.addEventListener('click',function(){
-			DevExpress.ui.dialog.custom({
+			const confirmDialog = DevExpress.ui.dialog.custom({
 				showTitle: false,
 				messageHtml: "<div style='text-align: center;' class='pt-3'>삭제하시겠습니까?</div>",
 				buttons: [{
@@ -471,26 +445,20 @@ $(function () {
 					}
 				}]
 			}).show();
+			
+			confirmDialog.show().done(function(dialogResult) {
+				if (dialogResult.result === "ok") {
+					console.log("삭제 완료");
+					
+				} else {
+					console.log("취소");
+				}
+			});
 		})
 	})
 	
 	
 });
-
-
-//공통 alert
-function showAlertDialog(message) {
-	DevExpress.ui.dialog.custom({
-		showTitle: false,
-		messageHtml: `<div style='text-align: center;'>${message}</div>`,
-		buttons: [{
-			text: "확인",
-			onClick: function () {
-				return { result: "ok" }; //done()으로 넘어가는 값
-			}
-		}]
-	}).show();
-}
 
 
 //숫자만 입력
@@ -508,12 +476,14 @@ function addDirectNumber(){
 	const directNumber = numberInput.value.trim();
 	
 	if(directName == ""){
-		showAlertDialog("이름을 입력하세요.");
+		const message = '이름을 입력하세요.';
+		showDialogCustom(message);
 		return;
 	}
 	
 	if(directNumber == ""){
-		showAlertDialog("번호를 입력하세요.");
+		const message = '번호를 입력하세요.';
+		showDialogCustom(message);
 		return;
 	}
 	
