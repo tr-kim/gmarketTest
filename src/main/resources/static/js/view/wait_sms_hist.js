@@ -376,13 +376,21 @@ $(function () {
 							
 							const confirmDialog = DevExpress.ui.dialog.custom({
 								showTitle: false,
-								messageHtml: "<div style='text-align: center;' class='pt-3'>삭제하시겠습니까?</div>",
+								messageHtml: `<div style='text-align: center;' class='pt-3'>
+								삭제하시겠습니까?<br>
+								<span class="text-666 mt-3">( 총 ${selectedRows.length} 건 )<span>
+								</div>`,
 								buttons: [{
 									text: "확인",
 									type: "default",
-									onClick: function(e) {
-										const selectedKeys = waitDataGrid.getSelectedRowKeys();
-										console.log("삭제할 키:", selectedKeys);
+									onClick: function() {
+										const grid = e.component;
+										const selectedRowsData = grid.getSelectedRowsData();
+										const result = selectedRowsData.map(row => ({
+											bulkMsgKey: row.bulkMsgKey,
+											svcType: row.svcType
+										}));
+										console.log(result);
 										
 										//삭제 로직 실행
 										
