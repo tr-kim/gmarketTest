@@ -25,6 +25,9 @@
 	<script th:src="@{/js/devextreme/FileSaver.min.js}"></script>
 	<script th:src="@{/js/devextreme/localization/dx.messages.ko.js}"></script>
 	
+	<!-- DevExtreme License Key -->
+	<script th:src="@{/js/devextreme/devextreme-license.js}"></script>
+	
 	<!-- RSA -->
 	<script th:src="@{/js/rsa/jsbn.js}"></script>
 	<script th:src="@{/js/rsa/rsa.js}"></script>
@@ -48,7 +51,7 @@
                     <div class="user_nm font-weight-500">
 						<span sec:authentication="principal.username"></span>
                     </div>
-                    <div class="user_grade ">
+                    <div class="user_grade">
 						<span sec:authentication="principal.userGradeName"></span>
                     </div>
                 </div>
