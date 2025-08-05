@@ -1,9 +1,9 @@
 /*!
  * DevExpress Diagram (dx-diagram)
- * Version: 2.2.5
- * Build date: Mon Jan 22 2024
+ * Version: 2.2.18
+ * Build date: Wed Jun 18 2025
  *
- * Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
+ * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
  * Read about DevExpress licensing here: https://www.devexpress.com/Support/EULAs
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -25,6 +25,7 @@ return /******/ (() => { // webpackBootstrap
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Browser = void 0;
 var Browser = (function () {
     function Browser() {
     }
@@ -248,6 +249,7 @@ exports.Browser = Browser;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EmptyBatchUpdatableObject = exports.BatchUpdatableObject = void 0;
 var BatchUpdatableObject = (function () {
     function BatchUpdatableObject() {
         this.suspendUpdateCount = 0;
@@ -317,6 +319,7 @@ exports.EmptyBatchUpdatableObject = EmptyBatchUpdatableObject;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Flag = void 0;
 var Flag = (function () {
     function Flag(initValue) {
         if (initValue === void 0) { initValue = 0; }
@@ -368,6 +371,7 @@ exports.Flag = Flag;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ExtendedMinMax = exports.ExtendedMax = exports.ExtendedMin = exports.MinMaxNumber = exports.MinMax = void 0;
 var tslib_1 = __webpack_require__(655);
 var MinMax = (function () {
     function MinMax(minElement, maxElement) {
@@ -386,7 +390,7 @@ var MinMaxNumber = (function (_super) {
         get: function () {
             return this.maxElement - this.minElement;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return MinMaxNumber;
@@ -428,6 +432,7 @@ exports.ExtendedMinMax = ExtendedMinMax;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UnitConverter = void 0;
 var UnitConverter = (function () {
     function UnitConverter() {
     }
@@ -572,6 +577,7 @@ exports.UnitConverter = UnitConverter;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Metrics = void 0;
 var Metrics = (function () {
     function Metrics() {
     }
@@ -595,6 +601,7 @@ exports.Metrics = Metrics;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Offsets = void 0;
 var Offsets = (function () {
     function Offsets(left, right, top, bottom) {
         this.left = left;
@@ -609,14 +616,14 @@ var Offsets = (function () {
         get: function () {
             return this.left + this.right;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Offsets.prototype, "vertical", {
         get: function () {
             return this.top + this.bottom;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Offsets.fromNumber = function (offset) {
@@ -708,6 +715,7 @@ exports.Offsets = Offsets;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Point = void 0;
 var Point = (function () {
     function Point(x, y) {
         this.x = x;
@@ -787,6 +795,7 @@ exports.Point = Point;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RectangleDeviation = exports.HitTestDeviation = exports.Rectangle = void 0;
 var flag_1 = __webpack_require__(7820);
 var algorithms_1 = __webpack_require__(1104);
 var fixed_1 = __webpack_require__(8860);
@@ -803,21 +812,21 @@ var Rectangle = (function () {
         get: function () {
             return this.x + this.width;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Rectangle.prototype, "bottom", {
         get: function () {
             return this.y + this.height;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Rectangle.prototype, "center", {
         get: function () {
             return Rectangle.center(this);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Rectangle.prototype.createRectangle = function () {
@@ -1106,6 +1115,7 @@ exports.RectangleDeviation = RectangleDeviation;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Segment = void 0;
 var math_1 = __webpack_require__(8679);
 var metrics_1 = __webpack_require__(5596);
 var point_1 = __webpack_require__(8900);
@@ -1119,28 +1129,28 @@ var Segment = (function () {
         get: function () {
             return metrics_1.Metrics.euclideanDistance(this.startPoint, this.endPoint);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Segment.prototype, "xLength", {
         get: function () {
             return Math.abs(this.endPoint.x - this.startPoint.x);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Segment.prototype, "yLength", {
         get: function () {
             return Math.abs(this.endPoint.y - this.startPoint.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Segment.prototype, "center", {
         get: function () {
             return new point_1.Point(this.startPoint.x + (this.endPoint.x - this.startPoint.x) / 2, this.startPoint.y + (this.endPoint.y - this.startPoint.y) / 2);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Segment.prototype.isIntersected = function (segment) {
@@ -1201,6 +1211,7 @@ exports.Segment = Segment;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Size = void 0;
 var Size = (function () {
     function Size(width, height) {
         this.width = width;
@@ -1270,6 +1281,7 @@ exports.Size = Size;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Vector = void 0;
 var Vector = (function () {
     function Vector(x, y) {
         if (x === void 0) { x = 0; }
@@ -1281,7 +1293,7 @@ var Vector = (function () {
         get: function () {
             return Math.sqrt(this.x * this.x + this.y * this.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Vector.fromPoints = function (begin, end) {
@@ -1307,14 +1319,14 @@ var Vector = (function () {
         get: function () {
             return new Vector(1, 0);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Vector, "axisY", {
         get: function () {
             return new Vector(0, 1);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Vector.angleBetween = function (a, b) {
@@ -1336,6 +1348,7 @@ exports.Vector = Vector;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.IntervalAlgorithms = void 0;
 var list_1 = __webpack_require__(2940);
 var search_1 = __webpack_require__(2400);
 var fixed_1 = __webpack_require__(8860);
@@ -1504,6 +1517,7 @@ exports.IntervalAlgorithms = IntervalAlgorithms;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ConstInterval = void 0;
 var ConstInterval = (function () {
     function ConstInterval() {
     }
@@ -1511,7 +1525,7 @@ var ConstInterval = (function () {
         get: function () {
             return this.start + (this.length / 2);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     ConstInterval.prototype.isNormalized = function () {
@@ -1553,6 +1567,7 @@ exports.ConstInterval = ConstInterval;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FixedInterval = void 0;
 var tslib_1 = __webpack_require__(655);
 var mutable_1 = __webpack_require__(8678);
 var FixedInterval = (function (_super) {
@@ -1570,14 +1585,14 @@ var FixedInterval = (function (_super) {
         set: function (newEnd) {
             this.length = newEnd - this.start;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(FixedInterval.prototype, "center", {
         get: function () {
             return this.start + this.length / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     FixedInterval.prototype.copyFrom = function (obj) {
@@ -1623,6 +1638,7 @@ exports.FixedInterval = FixedInterval;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MutableInterval = void 0;
 var tslib_1 = __webpack_require__(655);
 var const_1 = __webpack_require__(7814);
 var MutableInterval = (function (_super) {
@@ -1647,6 +1663,7 @@ exports.MutableInterval = MutableInterval;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SparseIntervalsCollector = void 0;
 var intervals_1 = __webpack_require__(448);
 var SparseIntervalsCollector = (function () {
     function SparseIntervalsCollector(template) {
@@ -1676,6 +1693,7 @@ exports.SparseIntervalsCollector = SparseIntervalsCollector;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SparseIntervals = void 0;
 var iterator_1 = __webpack_require__(8094);
 var objects_iterator_1 = __webpack_require__(510);
 var SparseIntervals = (function () {
@@ -1694,14 +1712,14 @@ var SparseIntervals = (function () {
         get: function () {
             return this._count;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(SparseIntervals.prototype, "numIntervals", {
         get: function () {
             return this._numIntervals;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     SparseIntervals.prototype.getInterval = function (index) {
@@ -1725,6 +1743,7 @@ exports.SparseIntervals = SparseIntervals;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SparseIntervalsIterator = void 0;
 var SparseIntervalsIterator = (function () {
     function SparseIntervalsIterator(sparseIntervals) {
         this.sparseIntervals = sparseIntervals;
@@ -1734,7 +1753,7 @@ var SparseIntervalsIterator = (function () {
         get: function () {
             return !!this.curr;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     SparseIntervalsIterator.prototype.moveNext = function () {
@@ -1788,6 +1807,7 @@ exports.SparseIntervalsIterator = SparseIntervalsIterator;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SparseObjectsIterator = void 0;
 var tslib_1 = __webpack_require__(655);
 var iterator_1 = __webpack_require__(8094);
 var SparseObjectsIterator = (function (_super) {
@@ -1812,6 +1832,7 @@ exports.SparseObjectsIterator = SparseObjectsIterator;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Base64Utils = void 0;
 var file_1 = __webpack_require__(2674);
 var mime_type_1 = __webpack_require__(4633);
 var Base64Utils = (function () {
@@ -1883,6 +1904,7 @@ exports.Base64Utils = Base64Utils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ColorUtils = void 0;
 var string_1 = __webpack_require__(49);
 var ColorUtils = (function () {
     function ColorUtils() {
@@ -2041,6 +2063,7 @@ exports.ColorUtils = ColorUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.numberToStringHex = exports.numberToStringBin = exports.isOdd = exports.isEven = exports.isNonNullString = exports.isString = exports.isNumber = exports.boolToString = exports.boolToInt = exports.isDefined = void 0;
 var string_1 = __webpack_require__(49);
 function isDefined(value) {
     return value !== undefined && value !== null;
@@ -2093,6 +2116,7 @@ exports.numberToStringHex = numberToStringHex;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Equals = exports.Comparers = void 0;
 var Comparers = (function () {
     function Comparers() {
     }
@@ -2131,6 +2155,7 @@ exports.Equals = Equals;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DomUtils = void 0;
 var browser_1 = __webpack_require__(9279);
 var common_1 = __webpack_require__(2491);
 var math_1 = __webpack_require__(8679);
@@ -2324,21 +2349,6 @@ var DomUtils = (function () {
         function getAbsolutePositionY_FF3(element) {
             return Math.round(element.getBoundingClientRect().top + DomUtils.getDocumentScrollTop());
         }
-        function getAbsolutePositionY_Opera(curEl) {
-            var isFirstCycle = true;
-            if (curEl && DomUtils.isHTMLTableRowElement(curEl) && curEl.cells.length > 0)
-                curEl = curEl.cells[0];
-            var pos = getAbsoluteScrollOffset_OperaFF(curEl, false);
-            while (curEl != null) {
-                pos += curEl.offsetTop;
-                if (!isFirstCycle)
-                    pos -= curEl.scrollTop;
-                curEl = curEl.offsetParent;
-                isFirstCycle = false;
-            }
-            pos += document.body.scrollTop;
-            return pos;
-        }
         function getAbsolutePositionY_NS(curEl) {
             var pos = getAbsoluteScrollOffset_OperaFF(curEl, false);
             var isFirstCycle = true;
@@ -2374,8 +2384,6 @@ var DomUtils = (function () {
             return getAbsolutePositionY_IE(element);
         else if (browser_1.Browser.Firefox && browser_1.Browser.Version >= 3)
             return getAbsolutePositionY_FF3(element);
-        else if (browser_1.Browser.Opera)
-            return getAbsolutePositionY_Opera(element);
         else if (browser_1.Browser.NetscapeFamily && (!browser_1.Browser.Firefox || browser_1.Browser.Version < 3))
             return getAbsolutePositionY_NS(element);
         else if (browser_1.Browser.WebKitFamily || browser_1.Browser.Edge)
@@ -2624,6 +2632,7 @@ function getAbsoluteScrollOffset_OperaFF(curEl, isX) {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EncodeUtils = void 0;
 var EncodeUtils = (function () {
     function EncodeUtils() {
     }
@@ -2672,6 +2681,7 @@ exports.EncodeUtils = EncodeUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EvtUtils = void 0;
 var browser_1 = __webpack_require__(9279);
 var common_1 = __webpack_require__(2491);
 var dom_1 = __webpack_require__(6907);
@@ -2779,6 +2789,7 @@ exports.EvtUtils = EvtUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FileUtils = void 0;
 var browser_1 = __webpack_require__(9279);
 var base64_1 = __webpack_require__(6477);
 var common_1 = __webpack_require__(2491);
@@ -2848,6 +2859,7 @@ exports.FileUtils = FileUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.KeyCode = exports.ModifierKey = exports.KeyUtils = void 0;
 var browser_1 = __webpack_require__(9279);
 var encode_1 = __webpack_require__(9712);
 var string_1 = __webpack_require__(49);
@@ -3128,6 +3140,7 @@ var KeyCode;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ListUtils = void 0;
 var min_max_1 = __webpack_require__(6799);
 var comparers_1 = __webpack_require__(4170);
 var ListUtils = (function () {
@@ -3582,6 +3595,7 @@ exports.ListUtils = ListUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MathUtils = void 0;
 var list_1 = __webpack_require__(2940);
 var MathUtils = (function () {
     function MathUtils() {
@@ -3643,9 +3657,11 @@ exports.MathUtils = MathUtils;
 
 var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MimeTypeUtils = exports.DxMimeType = exports.ImageWebpMimeType = exports.ImageWbmpMimeType = exports.ImageIcoMimeType = exports.ImageTiffMimeType = exports.ImageSvgMimeType = exports.ImagePjpegMimeType = exports.ImageJpegMimeType = exports.ImageGifMimeType = exports.ImagePngMimeType = exports.DocmMimeType = exports.HtmlMimeType = exports.PlainTextMimeType = exports.RtfMimeType = exports.OpenXmlMimeType = void 0;
 exports.OpenXmlMimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 exports.RtfMimeType = 'application/rtf';
 exports.PlainTextMimeType = 'text/plain';
+exports.HtmlMimeType = 'text/html';
 exports.DocmMimeType = 'application/vnd.ms-word.document.macroEnabled.12';
 exports.ImagePngMimeType = 'image/png';
 exports.ImageGifMimeType = 'image/gif';
@@ -3672,6 +3688,7 @@ var DxMimeType;
     DxMimeType[DxMimeType["Ico"] = 11] = "Ico";
     DxMimeType[DxMimeType["Wbmp"] = 12] = "Wbmp";
     DxMimeType[DxMimeType["Webp"] = 13] = "Webp";
+    DxMimeType[DxMimeType["Html"] = 14] = "Html";
 })(DxMimeType = exports.DxMimeType || (exports.DxMimeType = {}));
 var MimeTypeUtils = (function () {
     function MimeTypeUtils() {
@@ -3704,6 +3721,7 @@ var MimeTypeUtils = (function () {
         _a[exports.RtfMimeType] = DxMimeType.Rtf,
         _a[exports.PlainTextMimeType] = DxMimeType.PlainText,
         _a[exports.DocmMimeType] = DxMimeType.Docm,
+        _a[exports.HtmlMimeType] = DxMimeType.Html,
         _a[exports.ImagePngMimeType] = DxMimeType.Png,
         _a[exports.ImageGifMimeType] = DxMimeType.Gif,
         _a[exports.ImageJpegMimeType] = DxMimeType.Jpeg,
@@ -3720,6 +3738,7 @@ var MimeTypeUtils = (function () {
         _b[DxMimeType.Rtf] = exports.RtfMimeType,
         _b[DxMimeType.PlainText] = exports.PlainTextMimeType,
         _b[DxMimeType.Docm] = exports.DocmMimeType,
+        _b[DxMimeType.Html] = exports.HtmlMimeType,
         _b[DxMimeType.Png] = exports.ImagePngMimeType,
         _b[DxMimeType.Gif] = exports.ImageGifMimeType,
         _b[DxMimeType.Jpeg] = exports.ImageJpegMimeType,
@@ -3736,6 +3755,7 @@ var MimeTypeUtils = (function () {
         _c[DxMimeType.Rtf] = '.rtf',
         _c[DxMimeType.PlainText] = '.txt',
         _c[DxMimeType.Docm] = '.docm',
+        _c[DxMimeType.Html] = '.html',
         _c[DxMimeType.Png] = '.png',
         _c[DxMimeType.Gif] = '.gif',
         _c[DxMimeType.Jpeg] = '.jpeg',
@@ -3751,6 +3771,8 @@ var MimeTypeUtils = (function () {
         '.rtf': DxMimeType.Rtf,
         '.txt': DxMimeType.PlainText,
         '.docm': DxMimeType.Docm,
+        '.html': DxMimeType.Html,
+        '.htm': DxMimeType.Html,
         '.png': DxMimeType.Png,
         '.gif': DxMimeType.Gif,
         '.jpeg': DxMimeType.Jpeg,
@@ -3773,6 +3795,7 @@ exports.MimeTypeUtils = MimeTypeUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SearchUtils = void 0;
 var SearchUtils = (function () {
     function SearchUtils() {
     }
@@ -3846,6 +3869,7 @@ exports.SearchUtils = SearchUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.StringUtils = void 0;
 var StringUtils = (function () {
     function StringUtils() {
     }
@@ -3970,6 +3994,7 @@ exports.StringUtils = StringUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TouchUtils = void 0;
 var browser_1 = __webpack_require__(9279);
 var common_1 = __webpack_require__(2491);
 var TouchUtils = (function () {
@@ -4836,13 +4861,51 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PasteSelectionCommand = void 0;
 var point_1 = __webpack_require__(8900);
 var PasteSelectionCommandBase_1 = __webpack_require__(7688);
+var Shape_1 = __webpack_require__(5503);
+var Connector_1 = __webpack_require__(7959);
 var PasteSelectionCommand = (function (_super) {
     __extends(PasteSelectionCommand, _super);
     function PasteSelectionCommand() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    PasteSelectionCommand.prototype.getEventPositionOffset = function (_items, _evtPosition) {
-        return new point_1.Point(0, 0);
+    PasteSelectionCommand.prototype.getEventPositionOffset = function (items, _evtPosition) {
+        var topLeftItem = items.reduce(function (acc, item) {
+            var x = item instanceof Shape_1.Shape ? item.position.x : item instanceof Connector_1.Connector ? item.getMinX() : Number.MAX_VALUE;
+            var y = item instanceof Shape_1.Shape ? item.position.y : item instanceof Connector_1.Connector ? item.getMinY() : Number.MAX_VALUE;
+            if (y < acc.y || (y === acc.y && x < acc.x)) {
+                acc.topLeftItem = item;
+                acc.x = x;
+                acc.y = y;
+            }
+            return acc;
+        }, {
+            topLeftItem: items[0],
+            x: Number.MAX_VALUE,
+            y: Number.MAX_VALUE
+        }).topLeftItem;
+        if (topLeftItem instanceof Shape_1.Shape) {
+            var newPoint = this.getShapeCorrectedPosition(this.control.model, topLeftItem);
+            return new point_1.Point(newPoint.x - topLeftItem.position.x, newPoint.y - topLeftItem.position.y);
+        }
+        else if (topLeftItem instanceof Connector_1.Connector) {
+            var newPoints = this.getConnectorCorrectedPoints(this.control.model, topLeftItem);
+            return new point_1.Point(topLeftItem.points[0].x - newPoints[0].x, topLeftItem.points[0].y - newPoints[0].y);
+        }
+    };
+    PasteSelectionCommand.prototype.getShapeCorrectedPosition = function (model, shape) {
+        var position = shape.position.clone();
+        while (model.findShapeAtPosition(position))
+            position.offset(PasteSelectionCommandBase_1.PasteSelectionCommandBase.positionOffset, PasteSelectionCommandBase_1.PasteSelectionCommandBase.positionOffset);
+        return position;
+    };
+    PasteSelectionCommand.prototype.getConnectorCorrectedPoints = function (model, connector) {
+        var points = connector.points.map(function (p) { return p.clone(); });
+        while (model.findConnectorAtPoints(points))
+            points.forEach(function (pt) {
+                pt.x += PasteSelectionCommandBase_1.PasteSelectionCommandBase.positionOffset;
+                pt.y += PasteSelectionCommandBase_1.PasteSelectionCommandBase.positionOffset;
+            });
+        return points;
     };
     return PasteSelectionCommand;
 }(PasteSelectionCommandBase_1.PasteSelectionCommandBase));
@@ -4878,7 +4941,6 @@ var Connector_1 = __webpack_require__(7959);
 var ImportConnectorHistoryItem_1 = __webpack_require__(3849);
 var ModelUtils_1 = __webpack_require__(4867);
 var SetSelectionHistoryItem_1 = __webpack_require__(4297);
-var point_1 = __webpack_require__(8900);
 var unit_converter_1 = __webpack_require__(9291);
 var PasteSelectionCommandBase = (function (_super) {
     __extends(PasteSelectionCommandBase, _super);
@@ -4896,49 +4958,26 @@ var PasteSelectionCommandBase = (function (_super) {
         var importer = new Importer_1.Importer(this.control.shapeDescriptionManager, data);
         items = importer.importItems(this.control.model);
         var offset = this.getEventPositionOffset(items, this.control.contextMenuPosition);
-        offset = this.getCorrectedOffsetByModel(items, offset);
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
             if (item instanceof Shape_1.Shape)
                 item.position.offsetByPoint(offset);
-            else if (item instanceof Connector_1.Connector)
+            else if (item instanceof Connector_1.Connector) {
                 item.points.forEach(function (p) { return p.offsetByPoint(offset); });
+                item.clearRenderPoints();
+            }
         }
         return items;
-    };
-    PasteSelectionCommandBase.prototype.getCorrectedOffsetByModel = function (items, baseOffset) {
-        var topLeftItem = items.reduce(function (acc, item) {
-            var x = item instanceof Shape_1.Shape ? item.position.x : item instanceof Connector_1.Connector ? item.getMinX() : Number.MAX_VALUE;
-            var y = item instanceof Shape_1.Shape ? item.position.y : item instanceof Connector_1.Connector ? item.getMinY() : Number.MAX_VALUE;
-            if (y < acc.y || (y === acc.y && x < acc.x)) {
-                acc.topLeftItem = item;
-                acc.x = x;
-                acc.y = y;
-            }
-            return acc;
-        }, {
-            topLeftItem: items[0],
-            x: Number.MAX_VALUE,
-            y: Number.MAX_VALUE
-        }).topLeftItem;
-        if (topLeftItem instanceof Shape_1.Shape) {
-            var newPoint = this.getShapeCorrectedPosition(this.control.model, topLeftItem, baseOffset);
-            return new point_1.Point(newPoint.x - topLeftItem.position.x, newPoint.y - topLeftItem.position.y);
-        }
-        else if (topLeftItem instanceof Connector_1.Connector) {
-            var newPoints = this.getConnectorCorrectedPoints(this.control.model, topLeftItem, baseOffset);
-            return new point_1.Point(topLeftItem.points[0].x - newPoints[0].x, topLeftItem.points[0].y - newPoints[0].y);
-        }
     };
     PasteSelectionCommandBase.prototype.executeCore = function (state, parameter) {
         var _this = this;
         var ret = true;
-        if (parameter)
-            this.performPaste(parameter);
-        else
+        if (parameter === undefined)
             this.getClipboardData(function (data) {
                 ret = _this.execute(data);
             });
+        else
+            this.performPaste(parameter);
         return ret;
     };
     PasteSelectionCommandBase.prototype.addItemForSortingRecursive = function (itemsHashtable, item) {
@@ -5003,21 +5042,6 @@ var PasteSelectionCommandBase = (function (_super) {
         this.control.history.endTransaction();
         this.control.endUpdateCanvas();
         this.control.barManager.updateItemsState();
-    };
-    PasteSelectionCommandBase.prototype.getShapeCorrectedPosition = function (model, shape, initOffset) {
-        var position = shape.position.clone().offsetByPoint(initOffset);
-        while (model.findShapeAtPosition(position))
-            position.offset(PasteSelectionCommandBase.positionOffset, PasteSelectionCommandBase.positionOffset);
-        return position;
-    };
-    PasteSelectionCommandBase.prototype.getConnectorCorrectedPoints = function (model, connector, initOffset) {
-        var points = connector.points.map(function (p) { return p.clone().offsetByPoint(initOffset); });
-        while (model.findConnectorAtPoints(points))
-            points.forEach(function (pt) {
-                pt.x += PasteSelectionCommandBase.positionOffset;
-                pt.y += PasteSelectionCommandBase.positionOffset;
-            });
-        return points;
     };
     Object.defineProperty(PasteSelectionCommandBase.prototype, "isPermissionsRequired", {
         get: function () { return true; },
@@ -6336,6 +6360,7 @@ var MoveCommand = (function (_super) {
         helper.initDraggingShapes(selection.getSelectedShapes(false, true), false);
         helper.initDraggingConnectors(selection.getSelectedConnectors(false, true), false);
         helper.move(false, function (p) { return _this.getPosition(p); }, function () { }, function () { });
+        helper.finish();
         ModelUtils_1.ModelUtils.tryUpdateModelRectangle(this.control.history, function (offsetLeft, offsetTop) { return helper.onTryUpdateModelSize(offsetLeft, offsetTop); });
         this.control.history.endTransaction();
         return true;
@@ -9490,20 +9515,22 @@ var DataSource = (function () {
         return shape;
     };
     DataSource.prototype.changeShapeByDataItem = function (history, model, shape, node, point) {
+        var updated = false;
         if (node.left !== undefined)
             point.x = ModelUtils_1.ModelUtils.getTwipsValue(model.units, node.left);
         if (node.top !== undefined)
             point.y = ModelUtils_1.ModelUtils.getTwipsValue(model.units, node.top);
-        ModelUtils_1.ModelUtils.setShapePosition(history, model, shape, point, false);
+        updated = ModelUtils_1.ModelUtils.setShapePosition(history, model, shape, point, false) || updated;
         if (node.type !== undefined)
-            ModelUtils_1.ModelUtils.changeShapeType(history, model, shape, node.type);
+            updated = ModelUtils_1.ModelUtils.changeShapeType(history, model, shape, node.type) || updated;
         var size = shape.size.clone();
         if (node.width !== undefined)
             size.width = ModelUtils_1.ModelUtils.getTwipsValue(model.units, node.width);
         if (node.height !== undefined)
             size.height = ModelUtils_1.ModelUtils.getTwipsValue(model.units, node.height);
-        ModelUtils_1.ModelUtils.setShapeSize(history, model, shape, point, size);
-        ModelUtils_1.ModelUtils.updateShapeAttachedConnectors(history, model, shape);
+        updated = ModelUtils_1.ModelUtils.setShapeSize(history, model, shape, point, size) || updated;
+        if (updated)
+            ModelUtils_1.ModelUtils.updateShapeAttachedConnectors(history, model, shape);
         if (node.text !== undefined && node.text !== shape.text)
             history.addAndRedo(new ChangeShapeTextHistoryItem_1.ChangeShapeTextHistoryItem(shape, node.text));
         if (node.image !== undefined && node.image !== shape.image.actualUrl)
@@ -9762,15 +9789,58 @@ var DocumentDataSource = (function (_super) {
     DocumentDataSource.prototype.updateItemsByModel = function (model) {
         var _this = this;
         this.beginChangesNotification();
-        this.deleteNodes(model);
-        this.deleteEdges(model);
+        var nodeNotifications = {
+            inserts: [],
+            updates: [],
+            deletes: []
+        };
+        this.deleteNodes(model, nodeNotifications);
         model.items.forEach(function (item) {
             if (item instanceof Shape_1.Shape)
-                _this.updateNode(model, item);
+                _this.updateNode(model, item, nodeNotifications);
+        });
+        model.items.forEach(function (item) {
+            if (item instanceof Shape_1.Shape)
+                _this.updateNodeObjectConnectedProperties(item, _this.findNode(item.dataKey), _this.changesListener);
+        });
+        this.applyDelayedNodeNotifications(nodeNotifications);
+        this.deleteEdges(model);
+        model.items.forEach(function (item) {
             if (item instanceof Connector_1.Connector)
                 _this.updateEdge(model, item);
         });
         this.endChangesNotification(false);
+    };
+    DocumentDataSource.prototype.applyDelayedNodeNotifications = function (notification) {
+        var _this = this;
+        notification.deletes.forEach(function (element) {
+            _this.beginChangesNotification();
+            _this.changesListener.notifyNodeRemoved.call(_this.changesListener, element[0], element[1].dataObj, function (_key, _data) {
+                _this.endChangesNotification(false);
+            }, function (_error) {
+                _this.endChangesNotification(false);
+            });
+        });
+        notification.inserts.forEach(function (element) {
+            _this.beginChangesNotification();
+            _this.beginNodeInserting();
+            _this.changesListener.notifyNodeInserted.call(_this.changesListener, element[1].dataObj, function (data) {
+                _this.updateNodeObjectKey(element[0], element[1], data);
+                _this.endNodeInserting();
+                _this.endChangesNotification(false);
+            }, function (_) {
+                _this.endNodeInserting();
+                _this.endChangesNotification(false);
+            });
+        });
+        notification.updates.forEach(function (element) {
+            _this.beginChangesNotification();
+            _this.changesListener.notifyNodeUpdated.call(_this.changesListener, _this.nodeDataImporter.getKey(element[1].dataObj || element[1].key), element[1].dataObj, function (_key, _data) {
+                _this.endChangesNotification(false);
+            }, function (_error) {
+                _this.endChangesNotification(false);
+            });
+        });
     };
     DocumentDataSource.prototype.isItemObjectModified = function (item, itemObj, importer) {
         var modified = (importer.setLocked && itemObj.locked !== item.locked) ||
@@ -9836,8 +9906,7 @@ var DocumentDataSource = (function (_super) {
             }
         });
     };
-    DocumentDataSource.prototype.updateNode = function (model, shape) {
-        var _this = this;
+    DocumentDataSource.prototype.updateNode = function (model, shape, notifications) {
         var nodeObj = this.findNode(shape.dataKey);
         if (!nodeObj) {
             var dataObj = {};
@@ -9849,26 +9918,12 @@ var DocumentDataSource = (function (_super) {
             this.updateNodeObjectProperties(shape, nodeObj, model.units);
             this.updateNodeObjectConnectedProperties(shape, nodeObj);
             this.updateNodeObjectKey(shape, nodeObj, nodeObj.dataObj);
-            this.beginChangesNotification();
-            this.beginNodeInserting();
-            this.changesListener.notifyNodeInserted.call(this.changesListener, nodeObj.dataObj, function (data) {
-                _this.updateNodeObjectKey(shape, nodeObj, data);
-                _this.endNodeInserting();
-                _this.endChangesNotification(false);
-            }, function (error) {
-                _this.endNodeInserting();
-                _this.endChangesNotification(false);
-            });
+            notifications.inserts.push([shape, nodeObj]);
         }
         else if (this.isNodeObjectModified(shape, nodeObj, model.units)) {
             this.updateNodeObjectProperties(shape, nodeObj, model.units);
             this.updateNodeObjectConnectedProperties(shape, nodeObj);
-            this.beginChangesNotification();
-            this.changesListener.notifyNodeUpdated.call(this.changesListener, this.nodeDataImporter.getKey(nodeObj.dataObj || nodeObj.key), nodeObj.dataObj, function (key, data) {
-                _this.endChangesNotification(false);
-            }, function (error) {
-                _this.endChangesNotification(false);
-            });
+            notifications.updates.push([shape, nodeObj]);
         }
         else
             this.updateNodeObjectConnectedProperties(shape, nodeObj, this.changesListener);
@@ -9965,9 +10020,9 @@ var DocumentDataSource = (function (_super) {
     DocumentDataSource.prototype.updateNodeObjectParentKeyInternal = function (nodeObj, changesListener) {
         var _this = this;
         this.beginChangesNotification();
-        changesListener.notifyNodeUpdated.call(changesListener, this.nodeDataImporter.getKey(nodeObj.dataObj) || nodeObj.key, nodeObj.dataObj, function (key, data) {
+        changesListener.notifyNodeUpdated.call(changesListener, this.nodeDataImporter.getKey(nodeObj.dataObj) || nodeObj.key, nodeObj.dataObj, function (_key, _data) {
             _this.endChangesNotification(false);
-        }, function (error) {
+        }, function (_error) {
             _this.endChangesNotification(false);
         });
     };
@@ -9986,9 +10041,9 @@ var DocumentDataSource = (function (_super) {
     DocumentDataSource.prototype.updateNodeObjectContainerOrParentKeyInternal = function (nodeObj, changesListener) {
         var _this = this;
         this.beginChangesNotification();
-        changesListener.notifyNodeUpdated.call(changesListener, this.nodeDataImporter.getKey(nodeObj.dataObj) || nodeObj.key, nodeObj.dataObj, function (key, data) {
+        changesListener.notifyNodeUpdated.call(changesListener, this.nodeDataImporter.getKey(nodeObj.dataObj) || nodeObj.key, nodeObj.dataObj, function (_key, _data) {
             _this.endChangesNotification(false);
-        }, function (error) {
+        }, function (_error) {
             _this.endChangesNotification(false);
         });
     };
@@ -10011,9 +10066,9 @@ var DocumentDataSource = (function (_super) {
                 nodeObj.parentDataObj = parentNodeObj && parentNodeObj.dataObj;
                 if (changesListener) {
                     this.beginChangesNotification();
-                    changesListener.notifyNodeUpdated.call(changesListener, this.nodeDataImporter.getKey(nodeObj.dataObj) || nodeObj.key, nodeObj.dataObj, function (key, data) {
+                    changesListener.notifyNodeUpdated.call(changesListener, this.nodeDataImporter.getKey(nodeObj.dataObj) || nodeObj.key, nodeObj.dataObj, function (_key, _data) {
                         _this.endChangesNotification(false);
-                    }, function (error) {
+                    }, function (_error) {
                         _this.endChangesNotification(false);
                     });
                 }
@@ -10034,9 +10089,9 @@ var DocumentDataSource = (function (_super) {
             nodeObj.containerDataObj = containerNodeObj && containerNodeObj.dataObj;
             if (changesListener) {
                 this.beginChangesNotification();
-                changesListener.notifyNodeUpdated.call(changesListener, this.nodeDataImporter.getKey(nodeObj.dataObj) || nodeObj.key, nodeObj.dataObj, function (key, data) {
+                changesListener.notifyNodeUpdated.call(changesListener, this.nodeDataImporter.getKey(nodeObj.dataObj) || nodeObj.key, nodeObj.dataObj, function (_key, _data) {
                     _this.endChangesNotification(false);
-                }, function (error) {
+                }, function (_error) {
                     _this.endChangesNotification(false);
                 });
             }
@@ -10102,21 +10157,15 @@ var DocumentDataSource = (function (_super) {
                 }
             });
     };
-    DocumentDataSource.prototype.deleteNodes = function (model) {
+    DocumentDataSource.prototype.deleteNodes = function (model, notifications) {
         var _this = this;
         this.deleteItems(this.nodes, function (key) { return model.findShapeByDataKey(key); }, function (item) { return _this.getNodeArray(item); }, function (item, dataModified) {
             var key = (item.dataObj && _this.nodeDataImporter.getKey(item.dataObj)) || item.key;
             var nodeObj = _this.findNode(key);
             if (nodeObj)
                 _this.nodes.splice(_this.nodes.indexOf(nodeObj), 1);
-            if (dataModified) {
-                _this.beginChangesNotification();
-                _this.changesListener.notifyNodeRemoved.call(_this.changesListener, key, item.dataObj, function (key, data) {
-                    _this.endChangesNotification(false);
-                }, function (error) {
-                    _this.endChangesNotification(false);
-                });
-            }
+            if (dataModified)
+                notifications.deletes.push([key, item]);
         });
     };
     DocumentDataSource.prototype.getParentItem = function (shape) {
@@ -10170,7 +10219,7 @@ var DocumentDataSource = (function (_super) {
                     _this.updateEdgeObjectKey(connector, edgeObj, data);
                     _this.endNodeInserting();
                     _this.endChangesNotification(false);
-                }, function (error) {
+                }, function (_error) {
                     _this.endNodeInserting();
                     _this.endChangesNotification(false);
                 });
@@ -10180,9 +10229,9 @@ var DocumentDataSource = (function (_super) {
             this.updateEdgeObjectProperties(connector, edgeObj, model.units);
             if (edgeObj.dataObj) {
                 this.beginChangesNotification();
-                this.changesListener.notifyEdgeUpdated.call(this.changesListener, this.edgeDataImporter.getKey(edgeObj.dataObj) || edgeObj.key, edgeObj.dataObj, function (key, data) {
+                this.changesListener.notifyEdgeUpdated.call(this.changesListener, this.edgeDataImporter.getKey(edgeObj.dataObj) || edgeObj.key, edgeObj.dataObj, function (_key, _data) {
                     _this.endChangesNotification(false);
-                }, function (error) {
+                }, function (_error) {
                     _this.endChangesNotification(false);
                 });
             }
@@ -10227,9 +10276,9 @@ var DocumentDataSource = (function (_super) {
     DocumentDataSource.prototype.updateEdgeObjectFromOrToPropertyInternal = function (edgeObj, changesListener) {
         var _this = this;
         this.beginChangesNotification();
-        changesListener.notifyEdgeUpdated.call(changesListener, this.nodeDataImporter.getKey(edgeObj.dataObj) || edgeObj.key, edgeObj.dataObj, function (key, data) {
+        changesListener.notifyEdgeUpdated.call(changesListener, this.nodeDataImporter.getKey(edgeObj.dataObj) || edgeObj.key, edgeObj.dataObj, function (_key, _data) {
             _this.endChangesNotification(false);
-        }, function (error) {
+        }, function (_error) {
             _this.endChangesNotification(false);
         });
     };
@@ -10326,16 +10375,16 @@ var DocumentDataSource = (function (_super) {
     };
     DocumentDataSource.prototype.deleteEdges = function (model) {
         var _this = this;
-        this.deleteItems(this.edges, function (key) { return model.findConnectorByDataKey(key); }, function (item) { return _this.edgeDataSource; }, function (item, dataModified) {
+        this.deleteItems(this.edges, function (key) { return model.findConnectorByDataKey(key); }, function (_item) { return _this.edgeDataSource; }, function (item, dataModified) {
             var key = (item.dataObj && _this.edgeDataImporter.getKey(item.dataObj)) || item.key;
             var edgeObj = _this.findEdge(key);
             if (edgeObj)
                 _this.edges.splice(_this.edges.indexOf(edgeObj), 1);
             if (dataModified) {
                 _this.beginChangesNotification();
-                _this.changesListener.notifyEdgeRemoved.call(_this.changesListener, key, item.dataObj, function (key, data) {
+                _this.changesListener.notifyEdgeRemoved.call(_this.changesListener, key, item.dataObj, function (_key, _data) {
                     _this.endChangesNotification(false);
-                }, function (error) {
+                }, function (_error) {
                     _this.endChangesNotification(false);
                 });
             }
@@ -11233,7 +11282,7 @@ var ContextMenuHandler = (function (_super) {
         window.setTimeout(function () {
             _this.onVisibilityChanged.raise1(function (l) { return l.notifyShowContextMenu(eventPoint, modelPoint); });
             _this.contextMenuVisible = true;
-        }, 0);
+        }, 1);
     };
     ContextMenuHandler.prototype.hideContextMenu = function () {
         var _this = this;
@@ -11241,7 +11290,7 @@ var ContextMenuHandler = (function (_super) {
             window.setTimeout(function () {
                 _this.onVisibilityChanged.raise1(function (l) { return l.notifyHideContextMenu(); });
                 _this.contextMenuVisible = false;
-            }, 0);
+            }, 1);
     };
     ContextMenuHandler.prototype.notifyDragStart = function (itemKeys) { };
     ContextMenuHandler.prototype.notifyDragEnd = function (itemKeys) { };
@@ -11486,6 +11535,16 @@ var MouseEventSource = (function () {
         this.key = key;
         this.value = value;
     }
+    Object.defineProperty(MouseEventSource.prototype, "isConnector", {
+        get: function () { return this.type === MouseEventElementType.Connector || this.type === MouseEventElementType.ConnectorText; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(MouseEventSource.prototype, "isShape", {
+        get: function () { return this.type === MouseEventElementType.Shape || this.type === MouseEventElementType.ShapeConnectionPoint; },
+        enumerable: false,
+        configurable: true
+    });
     return MouseEventSource;
 }());
 exports.MouseEventSource = MouseEventSource;
@@ -11661,6 +11720,7 @@ var EventManager = (function () {
     EventManager.prototype.initialize = function () {
         this.visualizersManager.initialize(this.control.model);
         this.mouseHandler.initialize(this.control.model);
+        this.textInputHandler.reset();
     };
     EventManager.prototype.beginUpdate = function (lockUpdateCanvas) {
         this.contextMenuHandler.beginUpdate();
@@ -11946,7 +12006,7 @@ var MouseHandler = (function () {
                 return false;
             if (!this.copyDiagramItemsByCtrlAndShift)
                 return true;
-            return evt.source.type !== Event_1.MouseEventElementType.Shape && evt.source.type !== Event_1.MouseEventElementType.Connector;
+            return !evt.source.isConnector && !evt.source.isShape;
         }
         return this.allowScrollPage && this.shouldScrollPage;
     };
@@ -12562,9 +12622,9 @@ var MouseHandlerDefaultState = (function (_super) {
     MouseHandlerDefaultState.prototype.onDragDiagramItemOnMouseDown = function (evt) {
         if (!this.handler.canAddDiagramItemToSelection(evt))
             _super.prototype.onDragDiagramItemOnMouseDown.call(this, evt);
-        else if (evt.source.type === Event_1.MouseEventElementType.Shape)
+        else if (evt.source.isShape)
             this.handler.switchState(new MouseHandlerMoveShapeState_1.MouseHandlerMoveShapeState(this.handler, this.history, this.model, this.selection, this.visualizerManager));
-        else if (evt.source.type === Event_1.MouseEventElementType.Connector)
+        else if (evt.source.isConnector)
             this.handler.switchState(new MouseHandlerMoveConnectorState_1.MouseHandlerMoveConnectorState(this.handler, this.history, this.model, this.selection, this.visualizerManager));
     };
     MouseHandlerDefaultState.prototype.onDragStart = function (evt) {
@@ -12755,8 +12815,7 @@ var MouseHandlerDefaultStateBase = (function (_super) {
         return this.selection.hasKey(key);
     };
     MouseHandlerDefaultStateBase.prototype.hasDiagramItem = function (evt) {
-        return evt.source.type === Event_1.MouseEventElementType.Shape ||
-            evt.source.type === Event_1.MouseEventElementType.Connector;
+        return evt.source.isShape || evt.source.isConnector;
     };
     MouseHandlerDefaultStateBase.prototype.onShapeExpandBtnMouseDown = function (evt) {
         this.handler.addDiagramItemToSelection(evt);
@@ -12879,6 +12938,8 @@ var MouseHandlerDragDiagramItemStateBase = (function (_super) {
         return _this;
     }
     MouseHandlerDragDiagramItemStateBase.prototype.finish = function () {
+        var _a;
+        (_a = this.dragHelper) === null || _a === void 0 ? void 0 : _a.finish();
         this.visualizerManager.resetExtensionLines();
         this.visualizerManager.resetContainerTarget();
         this.visualizerManager.resetConnectionTarget();
@@ -14756,7 +14817,10 @@ var TextInputHandler = (function () {
         if (this.isTextInputActive())
             this.applyTextInput(evt.inputText);
     };
-    TextInputHandler.prototype.onFocus = function (evt) {
+    TextInputHandler.prototype.onFocus = function (_) {
+    };
+    TextInputHandler.prototype.reset = function () {
+        delete this.textInputItem;
     };
     TextInputHandler.prototype.hasCtrlModifier = function (key) {
         return (key & key_1.ModifierKey.Ctrl) > 0;
@@ -19283,9 +19347,10 @@ var SugiyamaNodesOrderer = (function () {
         var blocks = [];
         var isBottom = alignment === MedianAlignmentMode.BottomLeft || alignment === MedianAlignmentMode.BottomRight;
         var allNodesInfo = new ListUtils_1.HashSet(nodeInfos.slice(0).sort(function (a, b) { return isBottom ? (a.layer - b.layer) : (b.layer - a.layer); }), function (n) { return n.key; });
+        var knownNodes = new ListUtils_1.HashSet();
         while (allNodesInfo.length) {
             var firstNode = allNodesInfo.item(0);
-            var block = this.getBlock(graph, firstNode, medians, alignment);
+            var block = this.getBlock(graph, firstNode, medians, alignment).filter(function (n) { return knownNodes.tryPush(n.key); });
             blocks.push(block);
             block.forEach(function (n) { return allNodesInfo.remove(n); });
         }
@@ -20403,6 +20468,270 @@ var CycleRemover = (function () {
     return CycleRemover;
 }());
 exports.CycleRemover = CycleRemover;
+
+
+/***/ }),
+
+/***/ 1057:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RTree = void 0;
+var rectangle_1 = __webpack_require__(8011);
+var RTree = (function () {
+    function RTree(maxWidth) {
+        if (maxWidth === void 0) { maxWidth = 6; }
+        this.maxWidth = maxWidth;
+        this.minWidth = Math.floor(maxWidth / 2);
+        this.root = new RTreeNodeBranch(new rectangle_1.Rectangle(0, 0, 0, 0), []);
+    }
+    RTree.prototype.search = function (point) {
+        var result = [];
+        if (!this.root.rect.containsPoint(point))
+            return result;
+        var hitsStack = [];
+        hitsStack.push(this.root.nodes);
+        while (hitsStack.length) {
+            var nodes = hitsStack.pop();
+            for (var i = nodes.length - 1, node = void 0; node = nodes[i]; i--)
+                if (node.rect.containsPoint(point))
+                    if (isBranch(node))
+                        hitsStack.push(node.nodes);
+                    else
+                        result.push(node.obj);
+        }
+        return result;
+    };
+    RTree.prototype.insert = function (rect, obj) {
+        var newLeaf = new RTreeNodeLeaf(rect.clone(), obj);
+        if (!this.root.nodes.length) {
+            this.root.rect = rect.clone();
+            this.root.nodes.push(newLeaf);
+            return;
+        }
+        var treeStack = this.chooseLeafSubtree(newLeaf);
+        var retObj = newLeaf;
+        var current;
+        var previous;
+        while (treeStack.length) {
+            if (current && isBranch(current) && !current.nodes.length) {
+                previous = current;
+                current = treeStack.pop();
+                for (var i = 0, node = void 0; node = current.nodes[i]; i++) {
+                    if (isBranch(node) && (node === previous || !node.nodes.length)) {
+                        node.nodes.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            else
+                current = treeStack.pop();
+            if (retObj instanceof RTreeNode || Array.isArray(retObj)) {
+                if (Array.isArray(retObj)) {
+                    for (var i = 0, retObjChild = void 0; retObjChild = retObj[i]; i++) {
+                        expandRect(current.rect, retObjChild.rect);
+                    }
+                    current.nodes = current.nodes.concat(retObj);
+                }
+                else {
+                    expandRect(current.rect, retObj.rect);
+                    current.nodes.push(retObj);
+                }
+                if (current.nodes.length <= this.maxWidth) {
+                    retObj = current.rect.clone();
+                }
+                else {
+                    var a = this.linearSplit(current.nodes);
+                    retObj = a;
+                    if (!treeStack.length) {
+                        current.nodes.push(a[0]);
+                        treeStack.push(current);
+                        retObj = a[1];
+                    }
+                }
+            }
+            else {
+                expandRect(current.rect, retObj);
+                retObj = current.rect.clone();
+            }
+        }
+    };
+    RTree.prototype.chooseLeafSubtree = function (newLeaf) {
+        var result = [];
+        var bestChoiceIndex = -1;
+        var bestChoiceArea;
+        var first = true;
+        result.push(this.root);
+        var nodes = this.root.nodes;
+        while (first || bestChoiceIndex !== -1) {
+            if (first)
+                first = false;
+            else {
+                result.push(nodes[bestChoiceIndex]);
+                nodes = nodes[bestChoiceIndex].nodes;
+                bestChoiceIndex = -1;
+            }
+            for (var i = nodes.length - 1, ltree = void 0; ltree = nodes[i]; i--) {
+                if (!isBranch(ltree)) {
+                    bestChoiceIndex = -1;
+                    break;
+                }
+                var oldLRatio = squarifiedRatio(ltree.rect.width, ltree.rect.height, ltree.nodes.length + 1);
+                var nw = Math.max(ltree.rect.x + ltree.rect.width, newLeaf.rect.x + newLeaf.rect.width) - Math.min(ltree.rect.x, newLeaf.rect.x);
+                var nh = Math.max(ltree.rect.y + ltree.rect.height, newLeaf.rect.y + newLeaf.rect.height) - Math.min(ltree.rect.y, newLeaf.rect.y);
+                var lratio = squarifiedRatio(nw, nh, ltree.nodes.length + 2);
+                if (bestChoiceIndex < 0 || Math.abs(lratio - oldLRatio) < bestChoiceArea) {
+                    bestChoiceArea = Math.abs(lratio - oldLRatio);
+                    bestChoiceIndex = i;
+                }
+            }
+        }
+        return result;
+    };
+    RTree.prototype.linearSplit = function (nodes) {
+        var n = this.pickLinear(nodes);
+        while (nodes.length > 0) {
+            this.pickNext(nodes, n[0], n[1]);
+        }
+        return n;
+    };
+    RTree.prototype.pickLinear = function (nodes) {
+        var lowestHighX = nodes.length - 1;
+        var highestLowX = 0;
+        var lowestHighY = nodes.length - 1;
+        var highestLowY = 0;
+        var t1;
+        var t2;
+        for (var i = nodes.length - 2, l = void 0; l = nodes[i]; i--) {
+            if (l.rect.x > nodes[highestLowX].rect.x)
+                highestLowX = i;
+            else if (l.rect.right < nodes[lowestHighX].rect.right)
+                lowestHighX = i;
+            if (l.rect.y > nodes[highestLowY].rect.y)
+                highestLowY = i;
+            else if (l.rect.bottom < nodes[lowestHighY].rect.bottom)
+                lowestHighY = i;
+        }
+        var dx = Math.abs((nodes[lowestHighX].rect.right) - nodes[highestLowX].rect.x);
+        var dy = Math.abs((nodes[lowestHighY].rect.bottom) - nodes[highestLowY].rect.y);
+        if (dx > dy) {
+            if (lowestHighX > highestLowX) {
+                t1 = nodes.splice(lowestHighX, 1)[0];
+                t2 = nodes.splice(highestLowX, 1)[0];
+            }
+            else {
+                t2 = nodes.splice(highestLowX, 1)[0];
+                t1 = nodes.splice(lowestHighX, 1)[0];
+            }
+        }
+        else {
+            if (lowestHighY > highestLowY) {
+                t1 = nodes.splice(lowestHighY, 1)[0];
+                t2 = nodes.splice(highestLowY, 1)[0];
+            }
+            else {
+                t2 = nodes.splice(highestLowY, 1)[0];
+                t1 = nodes.splice(lowestHighY, 1)[0];
+            }
+        }
+        return [
+            new RTreeNodeBranch(t1.rect.clone(), [t1]),
+            new RTreeNodeBranch(t2.rect.clone(), [t2])
+        ];
+    };
+    RTree.prototype.pickNext = function (nodes, a, b) {
+        var areaA = squarifiedRatio(a.rect.width, a.rect.height, a.nodes.length + 1);
+        var areaB = squarifiedRatio(b.rect.width, b.rect.height, b.nodes.length + 1);
+        var highAreaDelta;
+        var highAreaNode;
+        var lowestGrowthGroup;
+        for (var i = nodes.length - 1, l = void 0; l = nodes[i]; i--) {
+            var newAreaA = new rectangle_1.Rectangle(Math.min(a.rect.x, l.rect.x), Math.min(a.rect.y, l.rect.y), 0, 0);
+            newAreaA.width = Math.max(a.rect.right, l.rect.right) - newAreaA.x;
+            newAreaA.height = Math.max(a.rect.bottom, l.rect.bottom) - newAreaA.y;
+            var changeNewAreaA = Math.abs(squarifiedRatio(newAreaA.width, newAreaA.height, a.nodes.length + 2) - areaA);
+            var newAreaB = new rectangle_1.Rectangle(Math.min(b.rect.x, l.rect.x), Math.min(b.rect.y, l.rect.y), 0, 0);
+            newAreaB.width = Math.max(b.rect.right, l.rect.right) - newAreaB.x;
+            newAreaB.height = Math.max(b.rect.bottom, l.rect.bottom) - newAreaB.y;
+            var changeNewAreaB = Math.abs(squarifiedRatio(newAreaB.width, newAreaB.height, b.nodes.length + 2) - areaB);
+            if (!highAreaNode || !highAreaDelta || Math.abs(changeNewAreaB - changeNewAreaA) < highAreaDelta) {
+                highAreaNode = i;
+                highAreaDelta = Math.abs(changeNewAreaB - changeNewAreaA);
+                lowestGrowthGroup = changeNewAreaB < changeNewAreaA ? b : a;
+            }
+        }
+        var tmp = nodes.splice(highAreaNode, 1)[0];
+        if (a.nodes.length + nodes.length + 1 <= this.minWidth) {
+            a.nodes.push(tmp);
+            expandRect(a.rect, tmp.rect);
+        }
+        else if (b.nodes.length + nodes.length + 1 <= this.minWidth) {
+            b.nodes.push(tmp);
+            expandRect(b.rect, tmp.rect);
+        }
+        else {
+            lowestGrowthGroup.nodes.push(tmp);
+            expandRect(lowestGrowthGroup.rect, tmp.rect);
+        }
+    };
+    return RTree;
+}());
+exports.RTree = RTree;
+var RTreeNode = (function () {
+    function RTreeNode(rect) {
+        this.rect = rect;
+    }
+    return RTreeNode;
+}());
+var RTreeNodeLeaf = (function (_super) {
+    __extends(RTreeNodeLeaf, _super);
+    function RTreeNodeLeaf(rect, obj) {
+        var _this = _super.call(this, rect) || this;
+        _this.obj = obj;
+        return _this;
+    }
+    return RTreeNodeLeaf;
+}(RTreeNode));
+var RTreeNodeBranch = (function (_super) {
+    __extends(RTreeNodeBranch, _super);
+    function RTreeNodeBranch(rect, nodes) {
+        var _this = _super.call(this, rect) || this;
+        _this.nodes = nodes;
+        return _this;
+    }
+    return RTreeNodeBranch;
+}(RTreeNode));
+function isBranch(node) {
+    return "nodes" in node;
+}
+function squarifiedRatio(width, height, fill) {
+    var lperi = (width + height) / 2;
+    var larea = width * height;
+    var lgeo = larea / (lperi * lperi);
+    return larea * fill / lgeo;
+}
+function expandRect(rect, other) {
+    var rx = Math.max(rect.right, other.right);
+    var ry = Math.max(rect.bottom, other.bottom);
+    rect.x = Math.min(rect.x, other.x);
+    rect.y = Math.min(rect.y, other.y);
+    rect.width = rx - rect.x;
+    rect.height = ry - rect.y;
+}
 
 
 /***/ }),
@@ -22210,6 +22539,9 @@ var Connector = (function (_super) {
         this.actualRoutingMode = undefined;
         this.invalidateRenderPoints();
     };
+    Connector.prototype.unlockCreateRenderPoints = function () {
+        this.lockCreateRenderPoints = false;
+    };
     Connector.prototype.replaceRenderPointsCore = function (renderPoints, lockCreateRenderPoints, mode) {
         this.changeRenderPoints(renderPoints);
         this.lockCreateRenderPoints = lockCreateRenderPoints;
@@ -22868,7 +23200,7 @@ var AStarContext = (function (_super) {
         return _this;
     }
     AStarContext.prototype.addProhibitedPoint = function (point) {
-        this.prohibitedPoints[point.toString()] = point;
+        this.prohibitedPoints[point.x + "_" + point.y] = point;
     };
     AStarContext.prototype.getNeighborPoints = function (point) {
         var _this = this;
@@ -22886,7 +23218,7 @@ var AStarContext = (function (_super) {
         return node.penalty + this.metrics.penalty(distance, middlePosition, turnDirection, this.getIntersectedItems(middlePosition));
     };
     AStarContext.prototype.allowPoint = function (p) {
-        return this.prohibitedPoints[p.toString()] === undefined && (!this.prohibitedSegments || this.prohibitedSegments.allowPoint(p));
+        return !((p.x + "_" + p.y) in this.prohibitedPoints) && (!this.prohibitedSegments || this.prohibitedSegments.allowPoint(p));
     };
     AStarContext.prototype.getTurnDirection = function (angle) {
         return RightAngleConnectorRoutingMathOperations_1.RightAngleConnectorRoutingMathOperations.getTurnDirection(angle);
@@ -22894,17 +23226,8 @@ var AStarContext = (function (_super) {
     AStarContext.prototype.getIntersectedItems = function (position) {
         var _this = this;
         var margin = this.routingContext.shapeMargins;
-        return this.routingContext.getIntersectedItems(position, function (p, i) { return _this.hasIntersectedItem(p, i, margin); });
-    };
-    AStarContext.prototype.hasIntersectedItem = function (point, item, margin) {
-        if (!this.isIntersectedWithExtendedRectangle(point, item, margin))
-            return false;
-        if (this.hasOneShapeConnection(item))
-            return true;
-        return !this.itemContainsConnectionPoints(item);
-    };
-    AStarContext.prototype.isIntersectedWithExtendedRectangle = function (point, item, margin) {
-        return item.rectangle.clone().inflate(margin).containsPoint(point);
+        return this.routingContext.getIntersectedItems(position, margin)
+            .filter(function (i) { return _this.hasOneShapeConnection(i) || !_this.itemContainsConnectionPoints(i); });
     };
     AStarContext.prototype.itemContainsConnectionPoints = function (item) {
         var rectangle = item.rectangle;
@@ -23198,9 +23521,10 @@ var UniqueAStarNodePositions = (function () {
         if (getKey === void 0) { getKey = function (key) { return key.toString(); }; }
         this.getKey = getKey;
         this.items = {};
+        this.length = 0;
     }
     Object.defineProperty(UniqueAStarNodePositions.prototype, "count", {
-        get: function () { return Object.keys(this.items).length; },
+        get: function () { return this.length; },
         enumerable: false,
         configurable: true
     });
@@ -23210,13 +23534,17 @@ var UniqueAStarNodePositions = (function () {
     };
     UniqueAStarNodePositions.prototype.add = function (position, node) {
         var key = this.getKey(position);
-        if (this.items[key] === undefined)
+        if (this.items[key] === undefined) {
+            this.length++;
             this.items[key] = { position: position, node: node };
+        }
     };
     UniqueAStarNodePositions.prototype.remove = function (position) {
         var key = this.getKey(position);
-        if (this.items[key] !== undefined)
+        if (this.items[key] !== undefined) {
+            this.length--;
             delete this.items[key];
+        }
     };
     return UniqueAStarNodePositions;
 }());
@@ -23240,10 +23568,10 @@ var ConnectorProhibitedSegments = (function () {
         this.segments.push(segment);
     };
     ConnectorProhibitedSegments.prototype.addExludedPoint = function (point) {
-        this.exludedPoints[point.toString()] = point;
+        this.exludedPoints[point.x + "_" + point.y] = true;
     };
     ConnectorProhibitedSegments.prototype.allowPoint = function (point) {
-        if (this.exludedPoints[point.toString()] === undefined)
+        if (!((point.x + "_" + point.y) in this.exludedPoints))
             for (var i = 0; i < this.segments.length; i++)
                 if (this.segments[i].containsPoint(point))
                     return false;
@@ -23409,26 +23737,16 @@ var ConnectorRoutingModel = (function () {
             return new RightAngleConnectorRoutingStrategy_1.RightAngleConnectorRoutingStrategy(this);
         return undefined;
     };
-    ConnectorRoutingModel.prototype.getItems = function (beginConnectorShape, endConnectorShape) {
-        return this.getShapes(beginConnectorShape, endConnectorShape);
+    ConnectorRoutingModel.prototype.getItems = function () {
+        return this.getShapes();
     };
     ConnectorRoutingModel.prototype.notifyConnectorRoutingModeChanged = function (connectorRoutingMode) {
         this.connectorRoutingMode = connectorRoutingMode;
     };
-    ConnectorRoutingModel.prototype.getShapes = function (beginConnectorShape, endConnectorShape) {
+    ConnectorRoutingModel.prototype.getShapes = function () {
         if (this.model === undefined || this.connectorRoutingMode === undefined || this.connectorRoutingMode === Settings_1.ConnectorRoutingMode.None)
             return [];
-        if (this.connectorRoutingMode === Settings_1.ConnectorRoutingMode.AllShapesOnly)
-            return this.model.items.filter(function (i) { return i instanceof Shape_1.Shape; });
-        return this.getConnectorShapes(beginConnectorShape, endConnectorShape);
-    };
-    ConnectorRoutingModel.prototype.getConnectorShapes = function (beginConnectorShape, endConnectorShape) {
-        var result = [];
-        if (beginConnectorShape)
-            result.push(beginConnectorShape);
-        if (endConnectorShape && beginConnectorShape !== endConnectorShape)
-            result.push(endConnectorShape);
-        return result;
+        return this.model.items.filter(function (i) { return i instanceof Shape_1.Shape; });
     };
     return ConnectorRoutingModel;
 }());
@@ -23531,6 +23849,7 @@ var AStarMetrics_1 = __webpack_require__(9927);
 var AStarContext_1 = __webpack_require__(2180);
 var AStarCalculator_1 = __webpack_require__(3975);
 var Utils_1 = __webpack_require__(8675);
+var RTree_1 = __webpack_require__(1057);
 var CuttingItemsContext = (function () {
     function CuttingItemsContext() {
         this.cuttingItemKeys = [];
@@ -23553,22 +23872,21 @@ var CuttingItemsContext = (function () {
 }());
 exports.CuttingItemsContext = CuttingItemsContext;
 var IntersectingItemsByPointsContext = (function () {
-    function IntersectingItemsByPointsContext() {
-        this.items = {};
+    function IntersectingItemsByPointsContext(routingModel) {
+        this.routingModel = routingModel;
+        this.trees = {};
     }
-    IntersectingItemsByPointsContext.prototype.getOrAddItems = function (point, getItems) {
-        if (point) {
-            var key = point.toString();
-            var item = this.items[key];
-            if (item !== undefined)
-                return item.items;
-            if (getItems) {
-                var items = getItems(point);
-                this.items[key] = { point: point, items: items };
-                return items;
-            }
+    IntersectingItemsByPointsContext.prototype.getItems = function (point, margin) {
+        return this.getOrCreateTree(margin).search(point);
+    };
+    IntersectingItemsByPointsContext.prototype.getOrCreateTree = function (margin) {
+        if (!this.trees[margin]) {
+            this.trees[margin] = new RTree_1.RTree();
+            var items = this.routingModel.getItems();
+            for (var i = 0, item = void 0; item = items[i]; i++)
+                this.trees[margin].insert(margin ? item.rectangle.inflate(margin, margin) : item.rectangle, item);
         }
-        return undefined;
+        return this.trees[margin];
     };
     return IntersectingItemsByPointsContext;
 }());
@@ -23584,7 +23902,7 @@ var RightAngleConnectorRoutingContext = (function () {
         this.endConnectionSide = this.getConnectionSide(this.endConnectionShape, endConnectionPointIndex, this.endPoint);
         this.ignorableItemKeys = {};
         this.cuttingShapesContext = new CuttingItemsContext();
-        this.intersectedItemsByPointsContext = new IntersectingItemsByPointsContext();
+        this.intersectedItemsByPointsContext = new IntersectingItemsByPointsContext(this.routingModel);
         this.isInvalidRenderSegments = true;
     }
     Object.defineProperty(RightAngleConnectorRoutingContext.prototype, "shapeMargins", {
@@ -23693,11 +24011,11 @@ var RightAngleConnectorRoutingContext = (function () {
         RightAngleConnectorRoutingMathOperations_1.RightAngleConnectorRoutingMathOperations.unionPoints(result);
         return result;
     };
-    RightAngleConnectorRoutingContext.prototype.getIntersectedItems = function (point, predicate) {
+    RightAngleConnectorRoutingContext.prototype.getIntersectedItems = function (point, margin) {
         var _this = this;
-        return this.intersectedItemsByPointsContext.getOrAddItems(point, function (p) { return _this.routingModel
-            .getItems(_this.beginConnectionShape, _this.endConnectionShape)
-            .filter(function (s) { return !_this.isIgnorableItem(s) && predicate(p, s); }); });
+        return this.intersectedItemsByPointsContext
+            .getItems(point, margin)
+            .filter(function (item) { return !_this.isIgnorableItem(item); });
     };
     RightAngleConnectorRoutingContext.prototype.validateRenderPoints = function (result) {
         if (this.isInvalidRenderSegments) {
@@ -23725,7 +24043,7 @@ var RightAngleConnectorRoutingContext = (function () {
     };
     RightAngleConnectorRoutingContext.prototype.processIntersection = function () {
         var _this = this;
-        var shapes = this.routingModel.getItems(this.beginConnectionShape, this.endConnectionShape);
+        var shapes = this.routingModel.getItems();
         if (shapes)
             shapes.forEach(function (s) {
                 var key = s.key;
@@ -23868,8 +24186,8 @@ var RightAngleConnectorRoutingContext = (function () {
         return this.createBeginConnectionSegmentCore(-offset);
     };
     RightAngleConnectorRoutingContext.prototype.hasIntersectedItemsByPoint = function (point, secondPoint, connectionItem) {
-        var intersectedItems = this.getIntersectedItems(point, function (p, s) { return s.rectangle.containsPoint(p) && !s.rectangle.containsPoint(secondPoint) && s.key !== connectionItem.key; });
-        return intersectedItems !== undefined && intersectedItems.length > 0;
+        return this.getIntersectedItems(point, 0)
+            .some(function (i) { return i.key !== connectionItem.key && !i.rectangle.containsPoint(secondPoint); });
     };
     RightAngleConnectorRoutingContext.prototype.createEndConnectionSegment = function (offset, endShapeContainsBeginConnection) {
         if (this.endConnectionSide === DiagramItem_1.ConnectionPointSide.Undefined)
@@ -23910,11 +24228,11 @@ var RightAngleConnectorRoutingContext = (function () {
         return RightAngleConnectorRoutingMathOperations_1.RightAngleConnectorRoutingMathOperations.isConnectionRectanleLineIntersected(this.endConnectionShape.rectangle, segment, this.endConnectionSide, excludeBeginPoint, excludeEndPoint, function (x, y) { return new point_1.Point(x, y); });
     };
     RightAngleConnectorRoutingContext.prototype.isIgnorableItem = function (item) {
-        return this.ignorableItemKeys[item.key] !== undefined;
+        return item.key in this.ignorableItemKeys;
     };
     RightAngleConnectorRoutingContext.prototype.createExtendedShapesBounds = function () {
         var _this = this;
-        return this.routingModel.getItems(this.beginConnectionShape, this.endConnectionShape).map(function (i) { return i.rectangle.clone().inflate(_this.routingModel.shapeMargins); });
+        return this.routingModel.getItems().map(function (i) { return i.rectangle.clone().inflate(_this.routingModel.shapeMargins); });
     };
     RightAngleConnectorRoutingContext.prototype.createGrid = function () {
         return RoutingGrid_1.RoutingGrid.create(this.createGridPoints(), this.createExtendedShapesBounds(), function (x, y) { return new point_1.Point(x, y); });
@@ -24413,6 +24731,9 @@ var SelectionDragHelper = (function () {
             pi.point.x += offsetLeft;
             pi.point.y += offsetTop;
         });
+    };
+    SelectionDragHelper.prototype.finish = function () {
+        this.draggingConnectors.forEach(function (c) { return c.connector.unlockCreateRenderPoints(); });
     };
     SelectionDragHelper.prototype.moveConnector = function (dc, shouldClone, getMovePoint) {
         var startPoints = dc.startPoints;
@@ -25316,11 +25637,16 @@ var ModelUtils = (function () {
                         ModelUtils.setShapePosition(history, model, child, childPosition);
                     }
                 });
+            return true;
         }
+        return false;
     };
     ModelUtils.setShapeSize = function (history, model, shape, newPosition, newSize) {
-        if (!shape.size.equals(newSize) || !shape.position.equals(newPosition))
+        if (!shape.size.equals(newSize) || !shape.position.equals(newPosition)) {
             history.addAndRedo(new ResizeShapeHistoryItem_1.ResizeShapeHistoryItem(shape.key, newPosition, newSize));
+            return true;
+        }
+        return false;
     };
     ModelUtils.addConnectorPoint = function (history, connectorKey, pointIndex, position) {
         history.addAndRedo(new AddConnectorPointHistoryItem_1.AddConnectorPointHistoryItem(connectorKey, pointIndex, position));
@@ -26186,7 +26512,7 @@ var ModelUtils = (function () {
     };
     ModelUtils.changeShapeType = function (history, model, shape, shapeType) {
         if (shape.description.key === shapeType)
-            return;
+            return false;
         history.beginTransaction();
         var oldConPts = shape.getConnectionPoints();
         var oldConPtsSides = oldConPts.map(function (p) { return shape.getConnectionPointSide(p); });
@@ -26201,6 +26527,7 @@ var ModelUtils = (function () {
             this.updateConnectorAttachedPoints(history, model, connector);
         }
         history.endTransaction();
+        return true;
     };
     ModelUtils.updateConnectionIndexByNewShapeType = function (history, connector, position, oldPointIndex, oldConPts, oldConPtsSides, newConPts, newConPtsSides) {
         if (oldPointIndex < 0)
@@ -28035,7 +28362,7 @@ var CustomShapeDescription = (function (_super) {
         return new rectangle_1.Rectangle(left + (this.properties.imageLeft && !forToolbox ? this.properties.imageLeft * width : 0), top + (this.properties.imageTop && !forToolbox ? this.properties.imageTop * height : 0), this.properties.imageWidth && !forToolbox ? this.properties.imageWidth * width : width, this.properties.imageHeight && !forToolbox ? this.properties.imageHeight * height : height);
     };
     CustomShapeDescription.prototype.updateSvgImage = function (cacheImageInfo) {
-        var isToolboxImage = cacheImageInfo.imageUrl && cacheImageInfo.imageUrl === this.properties.svgToolboxUrl;
+        var isToolboxImage = this.svgToolboxImage && cacheImageInfo.imageUrl && cacheImageInfo.imageUrl === this.properties.svgToolboxUrl;
         var svgImage = isToolboxImage ? this.svgToolboxImage : this.svgImage;
         if (cacheImageInfo.base64)
             svgImage.loadBase64Content(cacheImageInfo.base64);
@@ -33124,11 +33451,11 @@ var CanvasItemsManager = (function (_super) {
     };
     CanvasItemsManager.prototype.notifyDragScrollStart = function () { };
     CanvasItemsManager.prototype.notifyDragScrollEnd = function () { };
-    CanvasItemsManager.prototype.notifyTextInputStart = function (item, text, position, size) {
+    CanvasItemsManager.prototype.notifyTextInputStart = function (item, _text, _position, _size) {
         var element = this.itemElements[item.key];
         dom_1.DomUtils.addClassName(element, "text-input");
     };
-    CanvasItemsManager.prototype.notifyTextInputEnd = function (item, captureFocus) {
+    CanvasItemsManager.prototype.notifyTextInputEnd = function (item, _captureFocus) {
         var element = this.itemElements[item.key];
         dom_1.DomUtils.removeClassName(element, "text-input");
     };
@@ -33145,7 +33472,7 @@ var CanvasItemsManager = (function (_super) {
         this.dom.changeByFunc(this.itemSelectorsContainer, function (e) { return e.setAttribute("transform", scale); });
         this.actualZoom = actualZoom;
     };
-    CanvasItemsManager.prototype.notifyViewAdjusted = function (canvasOffset) { };
+    CanvasItemsManager.prototype.notifyViewAdjusted = function (_canvasOffset) { };
     CanvasItemsManager.prototype.invalidatePrimitives = function (item) {
         if (this.primitives[item.key]) {
             this.primitives[item.key].forEach(function (primitive) {
@@ -33336,7 +33663,7 @@ var CanvasItemsManager = (function (_super) {
         if (this.itemGroupContainers[key] === undefined || this.itemGroupContainers[key][zIndex] === undefined) {
             if (this.itemGroupContainers[key] === undefined)
                 this.itemGroupContainers[key] = [];
-            var nextSiblingZIndex = Object.keys(this.itemGroupContainers[key]).map(function (z) { return +z; }).sort().filter(function (z) { return z > zIndex; })[0];
+            var nextSiblingZIndex = Object.keys(this.itemGroupContainers[key]).map(function (z) { return +z; }).sort(function (a, b) { return a - b; }).filter(function (z) { return z > zIndex; })[0];
             this.itemGroupContainers[key][zIndex] = this.createAndChangePrimitiveElement(new GroupPrimitive_1.GroupPrimitive([], null, zIndex), parent, this.itemGroupContainers[key][nextSiblingZIndex]);
         }
         return this.itemGroupContainers[key][zIndex];
@@ -33347,7 +33674,7 @@ var CanvasItemsManager = (function (_super) {
         if (this.itemSelectorGroupContainers[key] === undefined || this.itemSelectorGroupContainers[key][zIndex] === undefined) {
             if (this.itemSelectorGroupContainers[key] === undefined)
                 this.itemSelectorGroupContainers[key] = [];
-            var nextSiblingZIndex = Object.keys(this.itemSelectorGroupContainers[key]).map(function (z) { return +z; }).sort().filter(function (z) { return z > zIndex; })[0];
+            var nextSiblingZIndex = Object.keys(this.itemSelectorGroupContainers[key]).map(function (z) { return +z; }).sort(function (a, b) { return a - b; }).filter(function (z) { return z > zIndex; })[0];
             this.itemSelectorGroupContainers[key][zIndex] = this.createAndChangePrimitiveElement(new GroupPrimitive_1.GroupPrimitive([], null, zIndex), parent, this.itemSelectorGroupContainers[key][nextSiblingZIndex]);
         }
         return this.itemSelectorGroupContainers[key][zIndex];
@@ -33370,7 +33697,7 @@ var CanvasItemsManager = (function (_super) {
         this.populateItems(itemsToUpdate, this.selectedItems, newSelectedItems);
         this.selectedItems = newSelectedItems;
         itemsToUpdate.forEach(function (item) {
-            if (item instanceof Connector_1.Connector)
+            if (item instanceof Connector_1.Connector && !_this.pendingRemoveChanges[item.key])
                 _this.applyOrPostponeChanges([new ModelChange_1.ItemChange(item, ModelChange_1.ItemChangeType.UpdateClassName, true)]);
         });
     };
@@ -35024,7 +35351,7 @@ var CanvasViewManager = (function (_super) {
             }
         }
         else
-            this.resizeView(actualModelSizeWithoutZoom, this.actualZoom, containerSize, simpleView, crop, offset);
+            this.resizeView(actualModelSizeWithoutZoom, this.actualZoom, containerSize, simpleView, crop, offset || offsets_1.Offsets.empty());
     };
     CanvasViewManager.prototype.resetView = function (actualModelSizeWithoutZoom, actualZoom, containerSize, simpleView, cropWithoutZoom, toReset) {
         var actualModelSize = actualModelSizeWithoutZoom.clone().multiply(actualZoom, actualZoom);
@@ -35375,6 +35702,9 @@ var InputManager = (function () {
             Utils_2.HtmlFocusUtils.focusWithPreventScroll(this.textInputElement || this.inputElement);
         else
             Utils_2.HtmlFocusUtils.focusWithPreventScroll(this.inputElement);
+    };
+    InputManager.prototype.clear = function () {
+        this.setInputElementFocusHandlerMode(false);
     };
     InputManager.prototype.setClipboardData = function (data) {
         this.clipboardInputElement.value = data;
@@ -37203,6 +37533,7 @@ var RenderManager = (function () {
     RenderManager.prototype.clear = function () {
         this.items.clear();
         this.selection.clear();
+        this.input.clear();
     };
     RenderManager.prototype.attachPointerEvents = function (svgElement) {
         dom_1.DomUtils.addClassName(svgElement, TOUCH_ACTION_CSSCLASS);
@@ -37323,12 +37654,8 @@ var RenderManager = (function () {
             this.input.captureFocus();
         if (Utils_2.EventUtils.isTouchEvent(evt))
             this.processTouchDown(evt);
-        var srcElement = evt_1.EvtUtils.getEventSource(evt);
-        var tagName = srcElement && srcElement.tagName;
-        if (browser_1.Browser.TouchUI || tagName.toLowerCase() === "img" || tagName.toLowerCase() === "image") {
-            evt_1.EvtUtils.preventEventAndBubble(evt);
-            return false;
-        }
+        evt_1.EvtUtils.preventEventAndBubble(evt);
+        return false;
     };
     RenderManager.prototype.onMouseMove = function (evt) {
         var _this = this;
@@ -38040,7 +38367,7 @@ var CanvasItemsManager_1 = __webpack_require__(8693);
 var TOOLBOX_CSSCLASS = "dxdi-toolbox";
 var DRAG_CAPTURED_CSSCLASS = "dxdi-tb-drag-captured";
 var START_DRAG_CSSCLASS = "dxdi-tb-start-drag-flag";
-var TOUCH_DRAGTIMEOUT_MS = 800;
+var TOUCH_DRAGTIMEOUT_MS = 300;
 var Toolbox = (function () {
     function Toolbox(parent, readOnly, allowDragging, shapeDescriptionManager, shapeTypes, getAllowedShapeTypes) {
         this.readOnly = readOnly;
@@ -38065,7 +38392,9 @@ var Toolbox = (function () {
     };
     Toolbox.prototype.createMainElement = function (parent) {
         var element = document.createElement("div");
-        element.setAttribute("class", TOOLBOX_CSSCLASS);
+        element.classList.add(TOOLBOX_CSSCLASS);
+        if (browser_1.Browser.AndroidMobilePlatform)
+            element.classList.add("dxdi-nodrag");
         element.draggable = true;
         if (this.emulateDragEvents)
             element.tabIndex = 0;
@@ -39091,7 +39420,6 @@ var AutoZoomMode;
 var ConnectorRoutingMode;
 (function (ConnectorRoutingMode) {
     ConnectorRoutingMode[ConnectorRoutingMode["None"] = 0] = "None";
-    ConnectorRoutingMode[ConnectorRoutingMode["ConnectorShapesOnly"] = 1] = "ConnectorShapesOnly";
     ConnectorRoutingMode[ConnectorRoutingMode["AllShapesOnly"] = 2] = "AllShapesOnly";
 })(ConnectorRoutingMode = exports.ConnectorRoutingMode || (exports.ConnectorRoutingMode = {}));
 
@@ -40630,6 +40958,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   __read: () => (/* binding */ __read),
 /* harmony export */   __rest: () => (/* binding */ __rest),
 /* harmony export */   __spread: () => (/* binding */ __spread),
+/* harmony export */   __spreadArray: () => (/* binding */ __spreadArray),
 /* harmony export */   __spreadArrays: () => (/* binding */ __spreadArrays),
 /* harmony export */   __values: () => (/* binding */ __values)
 /* harmony export */ });
@@ -40657,6 +40986,8 @@ var extendStatics = function(d, b) {
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -40779,19 +41110,31 @@ function __read(o, n) {
     return ar;
 }
 
+/** @deprecated */
 function __spread() {
     for (var ar = [], i = 0; i < arguments.length; i++)
         ar = ar.concat(__read(arguments[i]));
     return ar;
 }
 
+/** @deprecated */
 function __spreadArrays() {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
     for (var r = Array(s), k = 0, i = 0; i < il; i++)
         for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
             r[k] = a[j];
     return r;
-};
+}
+
+function __spreadArray(to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+}
 
 function __await(v) {
     return this instanceof __await ? (this.v = v, this) : new __await(v);
@@ -40846,19 +41189,17 @@ function __importDefault(mod) {
     return (mod && mod.__esModule) ? mod : { default: mod };
 }
 
-function __classPrivateFieldGet(receiver, privateMap) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to get private field on non-instance");
-    }
-    return privateMap.get(receiver);
+function __classPrivateFieldGet(receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 }
 
-function __classPrivateFieldSet(receiver, privateMap, value) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to set private field on non-instance");
-    }
-    privateMap.set(receiver, value);
-    return value;
+function __classPrivateFieldSet(receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 }
 
 

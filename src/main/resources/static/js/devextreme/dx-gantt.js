@@ -1,9 +1,9 @@
 /*!
  * DevExpress Gantt (dx-gantt)
- * Version: 4.1.51
- * Build date: Fri Dec 08 2023
+ * Version: 4.1.62
+ * Build date: Wed Jun 04 2025
  *
- * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
+ * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
  * Read about DevExpress licensing here: https://www.devexpress.com/Support/EULAs
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -997,21 +997,6 @@ var DomUtils = (function () {
         function getAbsolutePositionY_FF3(element) {
             return Math.round(element.getBoundingClientRect().top + DomUtils.getDocumentScrollTop());
         }
-        function getAbsolutePositionY_Opera(curEl) {
-            var isFirstCycle = true;
-            if (curEl && DomUtils.isHTMLTableRowElement(curEl) && curEl.cells.length > 0)
-                curEl = curEl.cells[0];
-            var pos = getAbsoluteScrollOffset_OperaFF(curEl, false);
-            while (curEl != null) {
-                pos += curEl.offsetTop;
-                if (!isFirstCycle)
-                    pos -= curEl.scrollTop;
-                curEl = curEl.offsetParent;
-                isFirstCycle = false;
-            }
-            pos += document.body.scrollTop;
-            return pos;
-        }
         function getAbsolutePositionY_NS(curEl) {
             var pos = getAbsoluteScrollOffset_OperaFF(curEl, false);
             var isFirstCycle = true;
@@ -1047,8 +1032,6 @@ var DomUtils = (function () {
             return getAbsolutePositionY_IE(element);
         else if (browser_1.Browser.Firefox && browser_1.Browser.Version >= 3)
             return getAbsolutePositionY_FF3(element);
-        else if (browser_1.Browser.Opera)
-            return getAbsolutePositionY_Opera(element);
         else if (browser_1.Browser.NetscapeFamily && (!browser_1.Browser.Firefox || browser_1.Browser.Version < 3))
             return getAbsolutePositionY_NS(element);
         else if (browser_1.Browser.WebKitFamily || browser_1.Browser.Edge)
@@ -7807,7 +7790,7 @@ var TaskAreaExportHelper = (function () {
     Object.defineProperty(TaskAreaExportHelper.prototype, "headerRowHeight", {
         get: function () {
             if (!this._headerRowHeight) {
-                var element = this.scaleElements[0].filter(function (el) { return !!el; })[0];
+                var element = this.scaleElements[0].filter(function (el) { return !!el && el.offsetHeight; })[0];
                 this._headerRowHeight = element === null || element === void 0 ? void 0 : element.offsetHeight;
             }
             return this._headerRowHeight;
@@ -8979,6 +8962,7 @@ var Task = (function (_super) {
             _super.prototype.assignFromObject.call(this, sourceObj);
             this.owner = sourceObj.owner;
             this.parentId = (0, common_1.isDefined)(sourceObj.parentId) ? String(sourceObj.parentId) : null;
+            this.rawParentId = sourceObj.parentId;
             this.description = sourceObj.description;
             this.title = sourceObj.title;
             this.start = typeof sourceObj.start === "string" ? new Date(sourceObj.start) : sourceObj.start || this.createInvalidDate();
@@ -11165,7 +11149,8 @@ var ViewVisualModel = (function () {
     ViewVisualModel.prototype.getTaskObjectForDataSource = function (task) {
         var parentTask = task.parentId && this.tasks.getItemById(task.parentId);
         var rootId = this.getRootTaskId();
-        var parentId = rootId && task.parentId === rootId ? task.parentId : parentTask === null || parentTask === void 0 ? void 0 : parentTask.id;
+        var isRootLevelTask = rootId && task.parentId === rootId;
+        var parentId = isRootLevelTask ? this.getRootRawValue() : parentTask === null || parentTask === void 0 ? void 0 : parentTask.id;
         var taskObject = {
             id: task.id,
             start: task.isValidStart() ? task.start : null,
@@ -11218,6 +11203,10 @@ var ViewVisualModel = (function () {
             };
         }
         return null;
+    };
+    ViewVisualModel.prototype.getRootRawValue = function () {
+        var _a, _b, _c;
+        return (_c = (_b = (_a = this.root.children[0]) === null || _a === void 0 ? void 0 : _a.task) === null || _b === void 0 ? void 0 : _b.rawParentId) !== null && _c !== void 0 ? _c : null;
     };
     ViewVisualModel.prototype.populateItemsForView = function () {
         this._viewItemList.splice(0, this._viewItemList.length);
@@ -15900,6 +15889,7 @@ var GanttView = (function () {
         this.updateView();
     };
     GanttView.prototype.cleanMarkup = function () {
+        this.setNormalScreenMode();
         this.renderHelper.taskAreaManagerDetachEvents();
         this.taskEditController.detachEvents();
         this.clearStripLinesUpdater();
@@ -16074,7 +16064,7 @@ var GanttView = (function () {
     GanttView.prototype.getTaskResources = function (key) {
         var model = this.viewModel;
         var task = model.getItemByPublicId("task", key);
-        return task && model.getAssignedResources(task).items;
+        return (task && model.getAssignedResources(task).items) || [];
     };
     GanttView.prototype.getVisibleTaskKeys = function () { return this.viewModel.getVisibleTasks().map(function (t) { return t.id; }); };
     GanttView.prototype.getVisibleDependencyKeys = function () { return this.viewModel.getVisibleDependencies().map(function (d) { return d.id; }); };
@@ -16106,6 +16096,18 @@ var GanttView = (function () {
     };
     GanttView.prototype.getTaskTreeLine = function (taskKey) {
         return this.viewModel.getTaskTreeLine(taskKey).reverse();
+    };
+    GanttView.prototype.isInFullScreenMode = function () {
+        var _a;
+        return !!((_a = this.fullScreenModeHelper) === null || _a === void 0 ? void 0 : _a.isInFullScreenMode);
+    };
+    GanttView.prototype.setFullScreenMode = function () {
+        if (!this.isInFullScreenMode())
+            this.fullScreenModeHelper.toggle();
+    };
+    GanttView.prototype.setNormalScreenMode = function () {
+        if (this.isInFullScreenMode())
+            this.fullScreenModeHelper.toggle();
     };
     GanttView.prototype.setTaskValue = function (id, fieldName, newValue) {
         var command = this.commandManager.updateTaskCommand;
@@ -16758,7 +16760,7 @@ var GridLayoutCalculator = (function () {
     GridLayoutCalculator.prototype.getTaskWrapperClassName = function (index) {
         var result = "dx-gantt-taskWrapper";
         var viewItem = this.getViewItem(index);
-        if (viewItem.task.isMilestone() && !viewItem.isCustom)
+        if (viewItem.task.isMilestone())
             result = "dx-gantt-milestoneWrapper";
         if (viewItem.selected)
             result += " dx-gantt-selectedTask";
@@ -16768,10 +16770,11 @@ var GridLayoutCalculator = (function () {
         if (!(0, common_1.isDefined)(this._taskWrapperPoints[index])) {
             var viewItem = this.getViewItem(index);
             var height = this.getTaskHeight(index);
+            var width = this.getTaskWidth(index);
             var y = index * this.tickSize.height + (this.tickSize.height - height) / 2;
             var result = new point_1.Point(this.getPosByDate(viewItem.task.start), y);
-            if (viewItem.task.isMilestone() && !viewItem.isCustom)
-                result.x -= height / 2;
+            if (viewItem.task.isMilestone())
+                result.x -= width / 2;
             this._taskWrapperPoints[index] = result;
         }
         return this._taskWrapperPoints[index].clone();
@@ -17633,6 +17636,11 @@ var ScaleCalculator = (function () {
         return items;
     };
     ScaleCalculator.prototype.getDateInScale = function (pos) {
+        if (pos < 0) {
+            var timeOffset = pos / this.tickSize.width;
+            var timeSpan = DateUtils_1.DateUtils.getTickTimeSpan(this.viewType);
+            return new Date(this.range.start.getTime() + timeOffset * timeSpan);
+        }
         for (var i = 0; i < this.bottomScaleItems.length; i++) {
             var item = this.bottomScaleItems[i];
             var width = item.size.width;
@@ -18061,11 +18069,14 @@ var CustomTaskRender = (function () {
         if (this._hasRepeatedTemplateRenderCall(index))
             return;
         var viewItem = this.getViewItem(index);
-        viewItem.isCustom = false;
-        var taskTemplateContainer = document.createElement("DIV");
-        var taskInformation = this.createCustomTaskInformation(index);
-        viewItem.isCustom = true;
-        taskTemplateFunction(taskTemplateContainer, taskInformation, this.onTaskTemplateContainerRendered.bind(this), index);
+        if (viewItem) {
+            viewItem.isCustom = false;
+            var taskTemplateContainer = document.createElement("DIV");
+            var taskInformation = this.createCustomTaskInformation(index);
+            viewItem.isCustom = true;
+            taskTemplateFunction(taskTemplateContainer, taskInformation, this.onTaskTemplateContainerRendered.bind(this), index);
+        }
+        this._clearTemplateFuncsStack(index);
     };
     CustomTaskRender.prototype.onTaskTemplateContainerRendered = function (taskTemplateContainer, taskIndex) {
         var _this = this;
@@ -18100,16 +18111,16 @@ var CustomTaskRender = (function () {
     };
     CustomTaskRender.prototype.drawCustomTask = function (taskTemplateContainer, taskIndex) {
         var _this = this;
-        if (!this.taskElements[taskIndex])
-            return;
         var viewItem = this.getViewItem(taskIndex);
+        if (!viewItem || !this.taskElements[taskIndex])
+            return;
         viewItem.visible = !!taskTemplateContainer.innerHTML;
         this.taskElements[taskIndex].innerHTML = taskTemplateContainer.innerHTML;
         viewItem.size.height = this.taskElements[taskIndex].offsetHeight;
         viewItem.size.width = this.taskElements[taskIndex].offsetWidth;
         this.destroyTemplate(this.taskElements[taskIndex]);
         this._taskRender.removeTaskElement(taskIndex);
-        if (viewItem.visible) {
+        if (viewItem.visible && viewItem.task.isValid()) {
             var taskWrapperInfo = this.gridLayoutCalculator.getTaskWrapperElementInfo(taskIndex);
             this.createCustomTaskWrapperElement(taskIndex, taskWrapperInfo);
             this.taskElements[taskIndex].appendChild(taskTemplateContainer);
@@ -18133,15 +18144,17 @@ var CustomTaskRender = (function () {
         var taskWrapperInfo = this.gridLayoutCalculator.getTaskWrapperElementInfo(index);
         var taskElementInfo = this.gridLayoutCalculator.getTaskElementInfo(index, this.taskTitlePosition !== Enums_1.TaskTitlePosition.Inside);
         this.createCustomTaskWrapperElement(index, taskWrapperInfo);
-        var taskVisualElement = this.createCustomTaskVisualElement(index, taskElementInfo);
-        this._taskRender.createTaskTextElement(index, taskVisualElement);
+        var taskParent = this.taskElements[index];
+        if (this._renderHelper.taskTitlePosition === Enums_1.TaskTitlePosition.Outside)
+            this._taskRender.createTaskTextElement(index, taskParent);
+        this.createCustomTaskVisualElement(index, taskElementInfo);
         var taskResources = this.getTaskResources(task.id);
         var taskInformation = {
             cellSize: this.tickSize,
             isMilestone: task.isMilestone(),
             isParent: !!(viewItem === null || viewItem === void 0 ? void 0 : viewItem.children.length),
             taskData: task,
-            taskHTML: taskVisualElement,
+            taskHTML: taskParent.children,
             taskPosition: taskWrapperInfo.position,
             taskResources: taskResources,
             taskSize: taskElementInfo.size,
@@ -19722,15 +19735,16 @@ var TaskRender = (function () {
         var viewItem = this.getViewItem(index);
         if (taskTemplateFunction)
             this.customTaskRender.createCustomTaskElement(index, taskTemplateFunction);
-        if (!viewItem.task.isValid() || !viewItem.visible) {
-            var taskDependencies = this.getTaskDependencies(viewItem.task.internalId);
-            this.addInvalidTaskDependencies(taskDependencies);
-            if (viewItem.selected)
-                this.createTaskSelectionElement(index);
-            return;
-        }
-        if (!viewItem.isCustom)
+        else {
+            if (!viewItem.task.isValid() || !viewItem.visible) {
+                var taskDependencies = this.getTaskDependencies(viewItem.task.internalId);
+                this.addInvalidTaskDependencies(taskDependencies);
+                if (viewItem.selected)
+                    this.createTaskSelectionElement(index);
+                return;
+            }
             this.createDefaultTaskElement(index);
+        }
     };
     TaskRender.prototype.createTaskVisualElement = function (index) {
         var taskElementInfo = this.gridLayoutCalculator.getTaskElementInfo(index, this.taskTitlePosition !== Enums_1.TaskTitlePosition.Inside);
