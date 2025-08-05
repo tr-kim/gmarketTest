@@ -252,17 +252,6 @@ $(function () {
 			{ dataField: "msg", caption: "메시지 내용", alignment: "left" },
 			{ dataField: "cnt", caption: "전체", alignment: "center" },
 			{ dataField: "svcType", caption: "상세", alignment: "center" },
-			// {
-			// 	name: "detail",
-			// 	caption: "상세",
-			// 	type: "buttons",
-			// 	buttons: [{
-			// 		icon: "find",
-			// 		onClick: function(e) {
-			// 			console.log('상세보기 준비 중');
-			// 		}
-			// 	}],
-			// },
 			{ dataField: "userID", caption: "발송ID", alignment: "center" },
 		],
 		toolbar: {
