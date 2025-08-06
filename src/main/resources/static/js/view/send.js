@@ -415,59 +415,130 @@ $(function () {
 	const bookmarkMsg = document.querySelector('.bookmarkMsg');
 	document.getElementById('bookmark_btn').addEventListener('click', function(){
 		bookmarkMsg.classList.add('d-block');
+		document.querySelector('body').classList.add('on');
 	});
 	
 	const close_btns = document.querySelectorAll('.bookmarkMsg .close_btn');
 	close_btns.forEach(close_btn => {
 		close_btn.addEventListener('click', function() {
 			bookmarkMsg.classList.remove('d-block');
-		})
-	})
-	//내 문자 선택
-	const bookmarkMsgtext = document.querySelectorAll('.bookmarkMsg ul li textarea');
-	bookmarkMsgtext.forEach( text => {
-		text.addEventListener('click', function(){
-			const msg = text.textContent;
-			if(MSG_WRITE) {
-				MSG_WRITE.value="";
-				insertAtCursor(MSG_WRITE, msg );
-				MSG_WRITE.dispatchEvent(new Event('input')); //byte 체크 등 다른 input 이벤트
-			}	
-			bookmarkMsg.classList.remove('d-block');
+			document.querySelector('body').classList.remove('on');
 		})
 	})
 
-	//내 문자 삭제
-	const bookmarkDelBtns = document.querySelectorAll('.bookmarkMsg .x_btn');
-	bookmarkDelBtns.forEach( btn =>{
-		btn.addEventListener('click',function(){
-			const confirmDialog = DevExpress.ui.dialog.custom({
-				showTitle: false,
-				messageHtml: "<div style='text-align: center;' class='pt-3'>삭제하시겠습니까?</div>",
-				buttons: [{
-					text: "확인",
-					type: "default",
-					onClick: function(e) {
-						return { result: "ok" };
-					}					
-				}, {
-					text: "취소",
-					onClick: function(e) {
-						return { result: "cancel" };
-					}
+	//내 문자함 레이아웃
+	const store = [
+		{ b_msg_key: "0000001", msg: "1자일리톨스톤레몬향캔디 과량 섭취 시 설사를 일으킬 수 잇씁니다." },
+		{ b_msg_key: "0000002", msg: "2흠,,,( •̀ ω •́ )✧" },
+		{ b_msg_key: "0000003", msg: "3자일리톨스톤레몬향캔디 과량 섭취 시 설사를 일으킬 수 잇씁니다. 제품이 단단하므로 섭취 시 치아손상에 주의하세요. 제품을 삼킬 경우 질식 또는 식도 손상의 위험이 있습니다. 동물에게 먹이지 마세요. 부정, 불량 식품신고는 국번없이 1399, 본 제품은 공정거래위원회 고시 소비자분쟁해결 기준에 의거 교환 또는 보상을 받을 수 있습니다." },
+		{ b_msg_key: "0000004", msg: "4메가커피" },
+		{ b_msg_key: "0000005", msg: "5완료 할당량에 도달했습니다." },
+		{ b_msg_key: "0000006", msg: "6제품이 단단하므로 섭취 시 치아손상에 주의하세요. 제품을 삼킬 경우 질식 또는 식도 손상의 위험이 있습니다. 동물에게 먹이지 마세요. 부정, 불량 식품신고는 국번없이 1399, 본 제품은 공정거래위원회 고시 소비자분쟁해결 기준에 의거 교환 또는 보상을 받을 수 있습니다." },
+		{ b_msg_key: "0000007", msg: "7완료 할당량에 도달했습니다." },
+		{ b_msg_key: "0000008", msg: "8완료 할당량에 도달했습니다." },
+		{ b_msg_key: "0000009", msg: "9제품이 단단하므로 섭취 시 치아손상에 주의하세요. 제품을 삼킬 경우 질식 또는 식도 손상의 위험이 있습니다. 동물에게 먹이지 마세요. 부정, 불량 식품신고는 국번없이 1399, 본 제품은 공정거래위원회 고시 소비자분쟁해결 기준에 의거 교환 또는 보상을 받을 수 있습니다." },
+
+	]
+	$('#msg-card-view').dxCardView({
+		dataSource: store,
+		keyExpr: "b_msg_key",
+		remoteOperations: false,
+		cardsPerRow: '3',
+		cardMinWidth: 200,
+		cardHeight:200,
+		wordWrapEnabled: true,				
+		editing: {			
+			allowDeleting: true,
+			popup: {
+				width: 700,
+				height: 400,
+			},
+			form: {
+				items: [{
+					dataField: 'msg',
+					editorType: 'dxSelectBox',
+					editorOptions: {
+						dataSource: ['Low', 'Normal', 'High', 'Urgent'],
+					},
 				}]
-			}).show();
+			},
+			texts: {
+				confirmDeleteMessage: '정말 삭제하시겠습니까?', 
+			}
+		},
+		columns: [			
+			{
+				dataField: 'msg',	
+				caption: "",
+				label: {
+					visible: false
+				},			 				
+			},			
+		],
+		searchPanel: {
+			visible: true,
+			width: 250,
+		},
+	});
+	//내 문자 선택
+	document.addEventListener('click', function (e) {
+	// 카드(content) 내부 클릭인지 확인
+		const card = e.target.closest('.dx-cardview-card-content');
+		if (card) {
+			const content = card.querySelector('.dx-cardview-field-value');
+			if (content) {
+				MSG_WRITE.value="";
+				insertAtCursor(MSG_WRITE, content.textContent.trim() );
+				MSG_WRITE.dispatchEvent(new Event('input'));
+			}
+			bookmarkMsg.classList.remove('d-block');
+			document.querySelector('body').classList.remove('on');
+		}
+	});
+	// const bookmarkMsgtext = document.querySelectorAll('.bookmarkMsg ul li textarea');
+	// bookmarkMsgtext.forEach( text => {
+	// 	text.addEventListener('click', function(){
+	// 		const msg = text.textContent;
+	// 		if(MSG_WRITE) {
+	// 			MSG_WRITE.value="";
+	// 			insertAtCursor(MSG_WRITE, msg );
+	// 			MSG_WRITE.dispatchEvent(new Event('input')); //byte 체크 등 다른 input 이벤트
+	// 		}	
+	// 		bookmarkMsg.classList.remove('d-block');
+	// 	})
+	// })
+
+	//내 문자 삭제
+	// const bookmarkDelBtns = document.querySelectorAll('.bookmarkMsg .x_btn');
+	// bookmarkDelBtns.forEach( btn =>{
+	// 	btn.addEventListener('click',function(){
+	// 		const confirmDialog = DevExpress.ui.dialog.custom({
+	// 			showTitle: false,
+	// 			messageHtml: "<div style='text-align: center;' class='pt-3'>삭제하시겠습니까?</div>",
+	// 			buttons: [{
+	// 				text: "확인",
+	// 				type: "default",
+	// 				onClick: function(e) {
+	// 					return { result: "ok" };
+	// 				}					
+	// 			}, {
+	// 				text: "취소",
+	// 				onClick: function(e) {
+	// 					return { result: "cancel" };
+	// 				}
+	// 			}]
+	// 		}).show();
 			
-			confirmDialog.show().done(function(dialogResult) {
-				if (dialogResult.result === "ok") {
-					console.log("삭제 완료");
+	// 		confirmDialog.show().done(function(dialogResult) {
+	// 			if (dialogResult.result === "ok") {
+	// 				console.log("삭제 완료");
 					
-				} else {
-					console.log("취소");
-				}
-			});
-		})
-	})
+	// 			} else {
+	// 				console.log("취소");
+	// 			}
+	// 		});
+	// 	})
+	// })
 	
 	
 });

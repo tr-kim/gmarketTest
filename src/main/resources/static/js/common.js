@@ -201,6 +201,7 @@ window.addEventListener('load', function() {
 			passwordChg.classList.remove('d-block');
 		});
 	}
+
 })
 
 function getAjax(url, param, successCallback, errorCallback) {
