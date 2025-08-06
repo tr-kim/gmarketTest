@@ -558,12 +558,18 @@ aside .psw_chg_btn:hover{
     height: 45px;
 }
 .bookmarkMsg .dx-cardview-card-content{
-    height: calc(100% - 45px);
+    /* height: calc(100% - 45px); */
+    overflow-y: auto;
+    /* max-height: 200px; */
+    height: 200px;
 }
-#msg-card-view {
-    max-height: 600px;
+.bookmarkMsg .dx-cardview-field-value{
     overflow-y: auto;
 }
+/* #msg-card-view {
+    max-height: 600px;
+    overflow-y: auto;
+} */
 /* passwordChg.html */
 .passwordChg .modal-wrap{
     width: 600px;
