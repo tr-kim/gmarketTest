@@ -510,7 +510,7 @@ aside .psw_chg_btn:hover{
     width: 800px;
     max-width: none;
 }
-.bookmarkMsg .modal-con{
+/* .bookmarkMsg .modal-con{
     max-height: 600px;
     overflow-y: auto;
 }
@@ -539,6 +539,30 @@ aside .psw_chg_btn:hover{
 .x_btn:hover{
     background: #0d6efd;
     color: #fff;
+} */
+.bookmarkMsg .dx-cardview-card > div {
+    height: 100%;
+}
+
+.bookmarkMsg .dx-cardview-card:hover{
+    border: 1px solid #0d6efd;
+    box-shadow: 0 0 10px #00000020;
+}
+.bookmarkMsg .dx-cardview-headers {
+    display: none !important;
+}
+.bookmarkMsg .dx-cardview-field-caption{
+    display: none !important;
+}
+.bookmarkMsg .dx-cardview-card-header{
+    height: 45px;
+}
+.bookmarkMsg .dx-cardview-card-content{
+    height: calc(100% - 45px);
+}
+#msg-card-view {
+    max-height: 600px;
+    overflow-y: auto;
 }
 /* passwordChg.html */
 .passwordChg .modal-wrap{

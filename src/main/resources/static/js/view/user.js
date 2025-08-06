@@ -1,4 +1,7 @@
 let dataGrid;
+let largeCategoryInstance;
+let userGradeInstance;
+let userIdInstance;
 
 let currentMode = ''; // 전역 변수로 모드 추적
 let currentKey = null;
@@ -20,22 +23,25 @@ $(function() {
 	}
 
 	//구분
-	$('#large-category').dxSelectBox({
+	largeCategoryInstance = $('#large-category').dxSelectBox({
 		dataSource: categoryData,
 		displayExpr: 'Name',
 		valueExpr: 'Code',
 		value: categoryValue
 		, inputAttr: { name: "companyCode" }
-		, onValueChanged: function(e) {
-			dataGrid.option('editing.refreshMode', e.value);
-		}
-	});
+		// , onValueChanged: function(e) {
+		// 	dataGrid.option('editing.refreshMode', e.value);
+		// }
+	}).dxSelectBox("instance");
 
 	let userGradeData;
 	let userGradeValue;
 
 	if (userGrade == 0) {
 		userGradeData = [{
+			Grade: -1,
+			Name: '전체',
+		},{
 			Grade: 0,
 			Name: '슈퍼관리자',
 		}, {
@@ -48,9 +54,12 @@ $(function() {
 			Grade: 3,
 			Name: '운영자',
 		}];
-		userGradeValue = 0;
+		userGradeValue = -1;
 	} else {
 		userGradeData = [{
+			Grade: -1,
+			Name: '전체',
+		},{
 			Grade: 1,
 			Name: '관리자',
 		}, {
@@ -60,26 +69,26 @@ $(function() {
 			Grade: 3,
 			Name: '운영자',
 		}];
-		userGradeValue = 1;
+		userGradeValue = -1;
 	};
 
 	//사용자등급
-	$('#user_grade').dxSelectBox({
+	 userGradeInstance = $('#user_grade').dxSelectBox({
 		dataSource: userGradeData,
 		displayExpr: 'Name',
 		valueExpr: 'Grade',
 		value: userGradeValue
 		, inputAttr: { name: "userGrade" }
-		, onValueChanged: function(e) {
-			dataGrid.option('editing.refreshMode', e.value);
-		}
-	});
+		// , onValueChanged: function(e) {
+		// 	dataGrid.option('editing.refreshMode', e.value);
+		// }
+	}).dxSelectBox("instance");
 
 	//사용자ID
-	$('#user_id').dxTextBox({
+	userIdInstance = $('#user_id').dxTextBox({
 		placeholder: '아이디를 입력하세요.'
 		, inputAttr: { name: "userId" }
-	});
+	}).dxTextBox("instance");
 	
 	//조회 그리드
 	dataGrid = $("#userGrid").dxDataGrid({
@@ -118,6 +127,7 @@ $(function() {
 		},
 		pager: {
 			visible: true,
+			showInfo: true,
 			showNavigationButtons: true,
 			showPageSizeSelector: true,
 			allowedPageSizes: [50, 100, 200]
@@ -180,6 +190,30 @@ $(function() {
 				}
 			},
 			{
+				dataField: "regDate",
+				caption: "최초 등록일",
+				alignment: "center",
+				customizeText: function(cellInfo) {
+					if(cellInfo && cellInfo.value){
+						return formatTimestamp(cellInfo.value);
+					} else {
+						return '-';
+					}
+				}
+			},
+			{
+				dataField: "chgDate",
+				caption: "최종 수정일",
+				alignment: "center",
+				customizeText: function(cellInfo) {
+					if(cellInfo && cellInfo.value){
+						return formatTimestamp(cellInfo.value);
+					} else {
+						return '-';
+					}
+				}
+			},
+			{
 				name: "edit_btn",
 				caption: "수정",
 				type: "buttons",
@@ -208,8 +242,8 @@ $(function() {
 										const result = data.result;
 										
 										if (code == 1000) {
-											const successMsg = '삭제되었습니다.';
-											showDialogCustom(successMsg, function (){
+											const message = '삭제되었습니다.';
+											showDialogCustom(message, function (){
 												search();
 											});
 											
@@ -217,8 +251,8 @@ $(function() {
 											showDialogCustom(result);
 											
 										} else {
-											const failMsg = '삭제에 실패했습니다.';
-											showDialogCustom(failMsg);
+											const message = '삭제에 실패했습니다.';
+											showDialogCustom(message);
 										}
 									});
 									return { result: "ok" };
@@ -248,7 +282,7 @@ $(function() {
 					location: "before",
 					template: function() {
 						return $("<div>")
-							.attr("userSeq", "totalCount")
+							.attr("id", "totalCount")
 							.css({ fontSize: "17px", color: "#333", padding: "0 5px" });
 					}
 				},
@@ -351,6 +385,8 @@ function openCustomModal(mode, data = {}) {
 		document.getElementById('user_lms_data').value = 'N';
 		document.getElementById('user_mms_data').value = 'N';
 		document.getElementById('use_yn_data').value = 'Y';
+
+		document.getElementById('user_id_data').readOnly = false;
 	}
 
 	document.getElementById('user_add_modal').classList.add('d-block');
@@ -457,7 +493,7 @@ function successCallback(data) {
 	let code = data.code;
 	let result = data.result;
 
-	if (code == 1000) {		
+	if (code == 1000) {
 		const message = currentMode === 'edit' ? "수정되었습니다." : "등록되었습니다.";
 		showDialogCustom(message, function (){
 			document.getElementById('user_add_modal').classList.remove('d-block');
@@ -472,4 +508,15 @@ function successCallback(data) {
 		const message = currentMode === 'edit' ? "수정에 실패했습니다." : "등록에 실패했습니다.";
 		showDialogCustom(message);		
 	}
+}
+
+function formatTimestamp(str) {
+	str = str.trim();
+	const yyyy = str.slice(0, 4);
+	const mm = str.slice(4, 6);
+	const dd = str.slice(6, 8);
+	const hh = str.slice(8, 10);
+	const mi = str.slice(10, 12);
+	const ss = str.slice(12, 14);
+	return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 }

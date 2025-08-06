@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html lagn="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-
+<html lagn="ko"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 		
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> 
+	<!-- 폐쇄망일 경우 layout 라이브러리를 따로 설치해서 사용해야됨 -->
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,8 +24,17 @@
 	<script th:src="@{/js/devextreme/exceljs.min.js}"></script>
 	<script th:src="@{/js/devextreme/FileSaver.min.js}"></script>
 	<script th:src="@{/js/devextreme/localization/dx.messages.ko.js}"></script>
+	
+	<!-- DevExtreme License Key -->
+	<script th:src="@{/js/devextreme/devextreme-license.js}"></script>
+	
+	<!-- RSA -->
+	<script th:src="@{/js/rsa/jsbn.js}"></script>
+	<script th:src="@{/js/rsa/rsa.js}"></script>
+	<script th:src="@{/js/rsa/prng4.js}"></script>
+	<script th:src="@{/js/rsa/rng.js}"></script>
+	<script th:src="@{/js/rsa/jsrsasign-all-min.js}"></script>
 </head>
-
 <body>
 	<aside class="d-flex flex-column justify-content-between">
 		<div class="w-100">
@@ -95,7 +107,7 @@
 							<span sec:authentication="principal.username"></span>
 						</div>
 						<div class="user_grade">
-							<span sec:authentication="principal.userGrade"></span>
+							<span sec:authentication="principal.userGradeName"></span>
 						</div>
 					</div>
 				</a>
@@ -117,6 +129,7 @@
     </section>
 	<th:block th:replace="~{/view/popup/passwordChg :: passwordChg}"></th:block>
 	<script>
+		<!-- 한국어 적용(ko-KR) -->
 		DevExpress.localization.locale(navigator.language);
 	</script>
 </body>

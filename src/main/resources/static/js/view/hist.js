@@ -171,18 +171,8 @@ $(function () {
 				}
 				
 				if (errorMessage) {
-					DevExpress.ui.dialog.custom({
-						showTitle: false,
-						messageHtml: errorMessage,
-						buttons: [{
-							text: "확인",
-							onClick: function () {
-								return false;
-							}
-						}]
-					}).show();
-					
-					return false;
+					showDialogCustom(errorMessage);
+					return;
 				}
 			//}
 			
@@ -253,18 +243,7 @@ $(function () {
 			})
 			.catch(error => {
 				console.error("데이터 로드 실패:", error);
-				// alert("데이터를 불러오는 중 오류가 발생했습니다.");
-				
-				DevExpress.ui.dialog.custom({
-					showTitle: false,
-					messageHtml: `<div style='text-align: center;' class="pt-3">데이터를 불러오는 중 오류가 발생했습니다.</div>`,
-					buttons: [{
-						text: "확인",
-						onClick: function () {
-							return;
-						}
-					}]
-				}).show();
+				showDialogCustom('error');
 				
 				return {
 				 	data: [],

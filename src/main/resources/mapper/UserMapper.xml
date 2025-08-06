@@ -31,12 +31,13 @@
 		<if test='userId != null and !userId.isEmpty()'>
 			AND USER_ID = #{userId}
 		</if>
-		<if test='userGrade != null'>
+		<if test="userGrade != null and userGrade != -1">
 			AND USER_GRADE = #{userGrade}
 		</if>
 		<if test='companyCode != null'>
 			AND COMPANY_CODE = #{companyCode}
 		</if>
+		AND DEL_FLAG = 'N'
 	</select>
 	
 	<insert id="insertUserInfo" parameterType="com.web.gmarket.user.dto.UserDto">
@@ -70,6 +71,7 @@
 			, MMS_YN = #{mmsYn}
 			, USE_YN = #{useYn}
 			, ENC_1_PA = #{enc1Pa}
+			, CHG_DATE = CONVERT(VARCHAR(10),GETDATE(),112) + REPLACE(CONVERT(VARCHAR(8),GETDATE(),108),':','') <!-- YYYYMMDDHHMMSS -->
 		WHERE USER_ID = #{userId}
 	</update>
 	
