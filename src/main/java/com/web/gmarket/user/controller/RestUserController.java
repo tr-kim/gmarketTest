@@ -217,6 +217,7 @@ public class RestUserController {
 	 * @param userDto
 	 * @return
 	 */
+	/*
 	@ResponseBody
 	@DeleteMapping("/delete")
 	public ResponseEntity<?> delete(Authentication authentication, @RequestBody UserDto userDto) {
@@ -245,6 +246,12 @@ public class RestUserController {
 			
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
+	}
+	*/
+
+	@DeleteMapping("/delete")
+	public ResponseEntity<?> delete(@RequestBody List<UserDto> userDtoList) {
+		return userService.deleteUserInfo(userDtoList);
 	}
 
 	/**

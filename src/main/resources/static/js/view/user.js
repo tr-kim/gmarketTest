@@ -106,18 +106,22 @@ $(function() {
 		key: "userSeq", //keyExpr
 		//행 선택 시
 		selection: {
-			mode: 'single',
+			mode: "multiple",
+			allowSelectAll: false, //전체선택 체크박스 방지
 		},
+		// selection: {
+		// 	mode: 'single',
+		// },
 		//행 마우스오버 시
 		hoverStateEnabled: true,
 		headerFilter: {
 			visible: true
 		},
-		editing: {
-			allowUpdating: true,
-			allowDeleting: true,
-			allowAdding: true
-		},
+		// editing: {
+		// 	allowUpdating: true,
+		// 	allowDeleting: true,
+		// 	allowAdding: true
+		// },
 		searchPanel: {
 			visible: true,
 			width: 300
@@ -213,68 +217,68 @@ $(function() {
 					}
 				}
 			},
-			{
-				name: "edit_btn",
-				caption: "수정",
-				type: "buttons",
-				buttons: [{
-					icon: "edit",
-					name: "edit",
-					text: '',
-				}, {
-					icon: "remove",
-					name: "delete",
-					text: '',
-					onClick: function(e) {
-						const rowData = e.row.data;
+			// {
+			// 	name: "edit_btn",
+			// 	caption: "수정",
+			// 	type: "buttons",
+			// 	buttons: [{
+			// 		icon: "edit",
+			// 		name: "edit",
+			// 		text: '',
+			// 	}, {
+			// 		icon: "remove",
+			// 		name: "delete",
+			// 		text: '',
+			// 		onClick: function(e) {
+			// 			const rowData = e.row.data;
 						
-						const confirmDialog = DevExpress.ui.dialog.custom({
-							showTitle: false,
-							messageHtml: "<div style='text-align: center;' class='pt-3'>삭제하시겠습니까?</div>",
-							buttons: [{
-								text: "확인",
-								type: "default",
-								onClick: function(e) {
-									const param = { userId: rowData.userId };
+			// 			const confirmDialog = DevExpress.ui.dialog.custom({
+			// 				showTitle: false,
+			// 				messageHtml: "<div style='text-align: center;' class='pt-3'>삭제하시겠습니까?</div>",
+			// 				buttons: [{
+			// 					text: "확인",
+			// 					type: "default",
+			// 					onClick: function(e) {
+			// 						const param = { userId: rowData.userId };
 									
-									deleteAjax('/api/v1/user/delete', param, function callback(data) {
-										const code = data.code;
-										const result = data.result;
+			// 						deleteAjax('/api/v1/user/delete', param, function callback(data) {
+			// 							const code = data.code;
+			// 							const result = data.result;
 										
-										if (code == 1000) {
-											const message = '삭제되었습니다.';
-											showDialogCustom(message, function (){
-												search();
-											});
+			// 							if (code == 1000) {
+			// 								const message = '삭제되었습니다.';
+			// 								showDialogCustom(message, function (){
+			// 									search();
+			// 								});
 											
-										} else if (code == 9003) {
-											showDialogCustom(result);
+			// 							} else if (code == 9003) {
+			// 								showDialogCustom(result);
 											
-										} else {
-											const message = '삭제에 실패했습니다.';
-											showDialogCustom(message);
-										}
-									});
-									return { result: "ok" };
-								}
-							}, {
-								text: "취소",
-								onClick: function(e) {
-									return { result: "cancel" };
-								}
-							}]
-						});
+			// 							} else {
+			// 								const message = '삭제에 실패했습니다.';
+			// 								showDialogCustom(message);
+			// 							}
+			// 						});
+			// 						return { result: "ok" };
+			// 					}
+			// 				}, {
+			// 					text: "취소",
+			// 					onClick: function(e) {
+			// 						return { result: "cancel" };
+			// 					}
+			// 				}]
+			// 			});
 
-						confirmDialog.show().done(function(dialogResult) {
-							if (dialogResult.result === "ok") {
-								console.log("삭제 완료");
-							} else {
-								console.log("취소");
-							}
-						});
-					}
-				}],
-			},
+			// 			confirmDialog.show().done(function(dialogResult) {
+			// 				if (dialogResult.result === "ok") {
+			// 					console.log("삭제 완료");
+			// 				} else {
+			// 					console.log("취소");
+			// 				}
+			// 			});
+			// 		}
+			// 	}],
+			// },
 		],
 		toolbar: {
 			items: [
@@ -289,11 +293,126 @@ $(function() {
 				"searchPanel"
 			]
 		},
-		onEditingStart(e) {
+		onRowClick: function (e) {
 			document.getElementById('reset_btn').classList.add('d-none');
 			console.log(document.getElementById('reset_btn'));
 			e.cancel = true; // 기본 편집 막기
 			openCustomModal('edit', e.data); // 수정 모드
+		},
+		// onEditingStart(e) {
+		// 	document.getElementById('reset_btn').classList.add('d-none');
+		// 	console.log(document.getElementById('reset_btn'));
+		// 	e.cancel = true; // 기본 편집 막기
+		// 	openCustomModal('edit', e.data); // 수정 모드
+		// },
+	
+		onToolbarPreparing: function (e) {
+			const toolbarItems = e.toolbarOptions.items;
+
+			// searchPanel 위치 찾기
+			const searchIndex = toolbarItems.findIndex(item => item.name === "searchPanel");
+
+			if (searchIndex !== -1) {
+				const selectAllToggleBtn = {
+					location: 'after',
+					widget: 'dxButton',
+					options: {
+						text: "전체 선택/해제",
+						stylingMode: 'outlined',
+						type: 'danger',
+						onClick: function () {
+							const grid = $('#userGrid').dxDataGrid('instance');
+							const selected = grid.getSelectedRowKeys();
+							if (selected.length === grid.totalCount()) {
+								grid.clearSelection();
+							} else {
+								grid.selectAll();
+							}
+						}
+					}
+				};
+
+				const deleteBtn = {
+					location: 'after',
+					widget: 'dxButton',
+					options: {
+						text: "선택 삭제",
+						stylingMode: 'contained',
+						type: 'danger',
+						onClick: function () {
+							const grid = $('#userGrid').dxDataGrid('instance');
+							const selectedRows = grid.getSelectedRowsData();
+
+							if (selectedRows.length === 0) {
+								showDialogCustom('삭제할 사용자를 선택하세요.');
+								return;
+							}
+
+							const confirmDialog = DevExpress.ui.dialog.custom({
+								showTitle: false,
+								messageHtml: `<div style='text-align: center;' class='pt-3'>
+									선택한 <b>${selectedRows.length}건</b>을 삭제하시겠습니까?
+								</div>`,
+								buttons: [
+									{
+										text: "확인",
+										type: "default",
+										onClick: function () {
+											const grid = e.component;
+											const selectedRowsData = grid.getSelectedRowsData();
+											
+											const param = selectedRowsData.map(row => ({
+												userId: row.userId
+											}));
+											
+											deleteAjax('/api/v1/user/delete', param, function callback(data) {
+												const code = data.code;
+												const result = data.result;
+												
+												if (code == 1000) {
+													showDialogCustom(result, function (){
+														search(); //재조회
+													});
+												} else {
+													showDialogCustom(result);
+												}
+											});
+											return { result: "ok" };
+											// const result = selectedRows.map(row => ({
+											// 	bulkMsgKey: row.bulkMsgKey,
+											// 	svcType: row.svcType
+											// }));
+											// console.log(result);
+
+											// // 삭제 로직 실행
+
+											// return { result: "ok" };
+										}
+									},
+									{
+										text: "취소",
+										onClick: function () {
+											return { result: "cancel" };
+										}
+									}
+								]
+							});
+
+							confirmDialog.show().done(function (dialogResult) {
+								if (dialogResult.result === "ok") {
+									console.log("삭제 완료");
+								} else {
+									console.log("취소");
+								}
+							});
+						}
+					}
+				};
+
+				// searchPanel 바로 왼쪽에 삽입 (삭제 버튼이 더 오른쪽에 오게)
+				toolbarItems.splice(searchIndex, 0, deleteBtn);
+				toolbarItems.splice(searchIndex, 0, selectAllToggleBtn);
+			}
 		},
 		onInitNewRow(e) {
 			e.cancel = true; // 기본 추가 막기

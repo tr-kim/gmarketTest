@@ -172,8 +172,33 @@ $(function () {
 			uploadProgressBar.option('visible', true);
 		},
 		onValueChanged: function (e) {
-			handleInput(); // 이미지 업로드되면 즉시 처리
+
+			const allowedFileExtensions = ['.jpg', '.jpeg', '.gif', '.png'];
+			const invalidFiles = [];
+
+			const validFiles = (e.value || []).filter(file => {
+				const extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+				const isValid = allowedFileExtensions.includes(extension);
+				if (!isValid) {
+					invalidFiles.push(file.name);
+				}
+				return isValid;
+			});
+
+			if (invalidFiles.length > 0) {
+				const message = `허용되지 않은 파일 형식입니다:\n${invalidFiles.join(', ')}`;
+				showDialogCustom(message);
+				console.warn('업로드 불가 파일 있음:', invalidFiles);
+
+				// 허용되지 않은 파일 제거
+				const uploader = $("#file-uploader").dxFileUploader("instance");
+				uploader.option("value", validFiles); // 유효한 파일만 다시 설정
+				return;
+			}
+
+			handleInput(); // 유효한 경우만 처리
 		},
+
 	}).dxFileUploader('instance');
 	
 	
@@ -437,7 +462,6 @@ $(function () {
 		{ b_msg_key: "0000007", msg: "7완료 할당량에 도달했습니다." },
 		{ b_msg_key: "0000008", msg: "8완료 할당량에 도달했습니다." },
 		{ b_msg_key: "0000009", msg: "9제품이 단단하므로 섭취 시 치아손상에 주의하세요. 제품을 삼킬 경우 질식 또는 식도 손상의 위험이 있습니다. 동물에게 먹이지 마세요. 부정, 불량 식품신고는 국번없이 1399, 본 제품은 공정거래위원회 고시 소비자분쟁해결 기준에 의거 교환 또는 보상을 받을 수 있습니다." },
-
 	]
 	$('#msg-card-view').dxCardView({
 		dataSource: store,
@@ -501,7 +525,7 @@ $(function () {
 	});
 	//내 문자 선택
 	document.addEventListener('click', function (e) {
-	// 카드(content) 내부 클릭인지 확인
+		// 카드(content) 내부 클릭인지 확인
 		const card = e.target.closest('.dx-cardview-card-content');
 		if (card) {
 			const content = card.querySelector('.dx-cardview-field-value');
@@ -514,6 +538,7 @@ $(function () {
 			document.querySelector('body').classList.remove('on');
 		}
 	});
+
 	// const bookmarkMsgtext = document.querySelectorAll('.bookmarkMsg ul li textarea');
 	// bookmarkMsgtext.forEach( text => {
 	// 	text.addEventListener('click', function(){
@@ -558,7 +583,6 @@ $(function () {
 	// 		});
 	// 	})
 	// })
-	
 	
 });
 
