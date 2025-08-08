@@ -328,7 +328,7 @@ $(function () {
 							const confirmDialog = DevExpress.ui.dialog.custom({
 								showTitle: false,
 								messageHtml: `<div style='text-align: center;' class='pt-3'>
-									선택한 <b>${selectedRows.length}건</b>을 삭제하시겠습니까?
+									<b>${selectedRows.length}건</b>을 삭제하시겠습니까?
 								</div>`,
 								buttons: [{
 									text: "확인",
@@ -336,16 +336,24 @@ $(function () {
 									onClick: function() {
 										const grid = e.component;
 										const selectedRowsData = grid.getSelectedRowsData();
-										const result = selectedRowsData.map(row => ({
+										
+										const param = selectedRowsData.map(row => ({
 											bulkMsgKey: row.bulkMsgKey,
 											svcType: row.svcType
 										}));
-										console.log(result);
 										
-										//삭제 로직 실행
-										
-										
-										
+										deleteAjax('/api/v1/wait/delete', param, function callback(data) {
+											const code = data.code;
+											const result = data.result;
+											
+											if (code == 1000) {
+												showDialogCustom(result, function (){
+													waitDataGrid.getDataSource().reload(); //재조회
+												});
+											} else {
+												showDialogCustom(result);
+											}
+										});
 										return { result: "ok" };
 									}
 								}, {

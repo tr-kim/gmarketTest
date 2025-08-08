@@ -478,7 +478,26 @@ $(function () {
 		searchPanel: {
 			visible: true,
 			width: 250,
+			placeholder:'찾을 내용을 입력하세요.',
 		},
+		toolbar: {
+			items: [
+				{
+					location: "before",
+					template: function() {
+					return $("<div>")
+						.attr("id", "totalCount")
+						.css({ fontSize: "17px", color: "#333", padding: "0 5px" });
+					}
+				},
+				"searchPanel"
+			]
+		},
+		onContentReady: function(e) {
+			const totalCount = e.component.totalCount();
+			$("#totalCount").text(`총 ${totalCount}건`);
+		}
+		
 	});
 	//내 문자 선택
 	document.addEventListener('click', function (e) {

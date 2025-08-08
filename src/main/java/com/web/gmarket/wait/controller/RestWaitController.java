@@ -32,10 +32,10 @@ public class RestWaitController {
 			List<WaitDto> result = waitService.getWaitList(waitDto);
 			int totalCount = waitService.getWaitCount(waitDto);
 			
-	        Map<String, Object> response = new HashMap<>();
-	        response.put("data", result);
-	        response.put("totalCount", totalCount);
-	        
+			Map<String, Object> response = new HashMap<>();
+			response.put("data", result);
+			response.put("totalCount", totalCount);
+			
 			return ResponseEntity.ok(response);
 			
 		} catch (Exception e) {
@@ -51,9 +51,12 @@ public class RestWaitController {
 	
 	@PutMapping("/update")
 	public void update() {
+		
 	}
 	
 	@DeleteMapping("/delete")
-	public void delete() {
+	public ResponseEntity<?> deleteWaitList(@RequestBody List<WaitDto> waitDtoList) {
+		return waitService.deleteWaitList(waitDtoList);
 	}
+	
 }
