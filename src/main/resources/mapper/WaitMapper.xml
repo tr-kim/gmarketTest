@@ -44,7 +44,7 @@
 			OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 		</if>
 	</select>
-
+	
 	<select id="selectWaitCount" resultType="int">
 		SELECT COUNT(*) FROM (			
 			SELECT 1 AS CNT
@@ -56,5 +56,15 @@
 			</if>		
 		) TOTAL
 	</select>
-
+	
+	<delete id="deleteWaitMsg" parameterType="map">
+		DELETE FROM ${tableName}
+		WHERE B_MSG_KEY = #{bulkMsgKey}
+	</delete>
+	
+	<delete id="deleteBroadCastMsg" parameterType="map">
+		DELETE T_BROADCAST_MSG
+		WHERE B_MSG_KEY = #{bulkMsgKey}
+	</delete>
+	
 </mapper>

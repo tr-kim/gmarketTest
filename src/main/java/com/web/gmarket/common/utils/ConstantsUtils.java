@@ -16,6 +16,7 @@ public class ConstantsUtils {
 	public static final int VALIDATE_ERROR = 9001;
 	public static final int USER_DUPLICATION = 9002;	// 사용자 중복
 	public static final int USER_NON_EXISTENCE = 9003;	// 사용자 미존재
+	public static final int DATA_DOSE_NOT_EXIST = 9004; // 누락된 데이터
 	
 	public static final String CODE = "code";
 	public static final String LIST = "list";
