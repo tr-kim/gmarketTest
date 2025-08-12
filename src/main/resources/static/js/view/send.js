@@ -88,6 +88,7 @@ $(function () {
 		dropZone: '#dropzone-external',
 		multiple: true,
 		allowedFileExtensions: ['.jpg', '.jpeg', '.gif', '.png'],
+		maxFileSize: 100 * 1024,
 		uploadMode: 'instantly',
 		uploadUrl: 'https://js.devexpress.com/Demos/NetCore/FileUploader/Upload',
 		visible: false,
@@ -172,25 +173,38 @@ $(function () {
 			uploadProgressBar.option('visible', true);
 		},
 		onValueChanged: function (e) {
-
 			const allowedFileExtensions = ['.jpg', '.jpeg', '.gif', '.png'];
 			const invalidFiles = [];
+			const oversizedFiles = [];
 
 			const validFiles = (e.value || []).filter(file => {
 				const extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
-				const isValid = allowedFileExtensions.includes(extension);
-				if (!isValid) {
+				const isValidExt = allowedFileExtensions.includes(extension);
+				const isValidSize = file.size <= 100 * 1024; // 100KB 이하
+
+				if (!isValidExt) {
 					invalidFiles.push(file.name);
 				}
-				return isValid;
+				if (!isValidSize) {
+					oversizedFiles.push(file.name);
+				}
+
+				return isValidExt && isValidSize;
 			});
 
 			if (invalidFiles.length > 0) {
 				const message = `허용되지 않은 파일 형식입니다:\n${invalidFiles.join(', ')}`;
 				showDialogCustom(message);
 				console.warn('업로드 불가 파일 있음:', invalidFiles);
+			}
 
-				// 허용되지 않은 파일 제거
+			if (oversizedFiles.length > 0) {
+				showDialogCustom(`파일 크기가 100KB를 초과합니다:\n${oversizedFiles.join(', ')}`);
+				console.warn('크기 초과 파일 있음:', oversizedFiles);
+			}
+
+			if (invalidFiles.length > 0 || oversizedFiles.length > 0) {
+				// 허용되지 않은 파일 또는 크기 초과 파일 제거
 				const uploader = $("#file-uploader").dxFileUploader("instance");
 				uploader.option("value", validFiles); // 유효한 파일만 다시 설정
 				return;
@@ -198,6 +212,33 @@ $(function () {
 
 			handleInput(); // 유효한 경우만 처리
 		},
+		// onValueChanged: function (e) {
+
+		// 	const allowedFileExtensions = ['.jpg', '.jpeg', '.gif', '.png'];
+		// 	const invalidFiles = []; 
+
+		// 	const validFiles = (e.value || []).filter(file => {
+		// 		const extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+		// 		const isValid = allowedFileExtensions.includes(extension);
+		// 		if (!isValid) {
+		// 			invalidFiles.push(file.name);
+		// 		}
+		// 		return isValid;
+		// 	});
+
+		// 	if (invalidFiles.length > 0) {
+		// 		const message = `허용되지 않은 파일 형식입니다:\n${invalidFiles.join(', ')}`;
+		// 		showDialogCustom(message);
+		// 		console.warn('업로드 불가 파일 있음:', invalidFiles);
+
+		// 		// 허용되지 않은 파일 제거
+		// 		const uploader = $("#file-uploader").dxFileUploader("instance");
+		// 		uploader.option("value", validFiles); // 유효한 파일만 다시 설정
+		// 		return;
+		// 	}
+
+		// 	handleInput(); // 유효한 경우만 처리
+		// },
 
 	}).dxFileUploader('instance');
 	
@@ -241,13 +282,6 @@ $(function () {
 	function reserveDateTextContent(){
 		document.querySelector('.reserveSend .date').textContent= reserveDate;
 	}
-
-	//080 수신거부
-	document.getElementById('checkDefault').addEventListener('change', function () {
-		const input = document.getElementById('rejectNum');
-		input.disabled = !this.checked;
-	});
-	
 	
 	//예약 발송 모달 열기,닫기
 	const reserveModal = document.querySelector('.reserveSend');
@@ -335,7 +369,14 @@ $(function () {
 		
 		INPUT_BYTE.textContent = byteLength;
 	}
-	
+
+	//080 수신거부
+	document.getElementById('checkDefault').addEventListener('change', function () {
+		const input = document.getElementById('rejectNum');
+		input.disabled = !this.checked;
+		 handleInput();
+	});	
+
 	//문자 byte 표시
 	function getByteLength(str) {
 		let resultStr = "";
@@ -371,34 +412,61 @@ $(function () {
 		
 		return files.length > 0;
 	}
-	
-	
+
 	//입력 이벤트 핸들링
 	function handleInput() {
-		const titleContent = MSG_TITLE.value;
-		const titleByteLength = getByteLength(titleContent);
+    const titleContent = MSG_TITLE.value;
+    const titleByteLength = getByteLength(titleContent);
+
+    const writeContent = MSG_WRITE.value;
+    const writeByteLength = getByteLength(writeContent);
+
+    let totalByteLength = writeByteLength; // 기본은 내용 바이트 수
+
+    // checkDefault가 활성화(checked)되어 있고 rejectNum도 입력되면 바이트 합산
+    if (!document.getElementById('rejectNum').disabled) {
+        const rejectNumContent = document.getElementById('rejectNum').value;
+        const rejectNumByteLength = getByteLength(rejectNumContent);
+        totalByteLength += rejectNumByteLength;
+    }
+
+    const hasImg = hasImage();
+
+    if (hasImg) {
+        setMsgType(2, totalByteLength); // MMS
+    } else if (titleContent.trim() !== '' || totalByteLength > 80) {
+        setMsgType(1, totalByteLength); // LMS
+    } else {
+        setMsgType(0, totalByteLength); // SMS
+    }
+}
+	// function handleInput() {
+	// 	const titleContent = MSG_TITLE.value;
+	// 	const titleByteLength = getByteLength(titleContent);
 		
-		const writeContent = MSG_WRITE.value;
-		const writeByteLength = getByteLength(writeContent);
+	// 	const writeContent = MSG_WRITE.value;
+	// 	const writeByteLength = getByteLength(writeContent);
 		
-		const hasImg = hasImage();
+	// 	const hasImg = hasImage();
 		
-		//console.log("hasImage():", hasImg);
-		//console.log("title:", titleContent.trim(), "| byte:", writeByteLength);
+	// 	//console.log("hasImage():", hasImg);
+	// 	//console.log("title:", titleContent.trim(), "| byte:", writeByteLength);
 		
-		if (hasImg) {
-			setMsgType(2, writeByteLength); //MMS
+	// 	if (hasImg) {
+	// 		setMsgType(2, writeByteLength); //MMS
 			
-		} else if (titleContent.trim() !== '' || writeByteLength > 80) {
-			setMsgType(1, writeByteLength); //LMS
+	// 	} else if (titleContent.trim() !== '' || writeByteLength > 80) {
+	// 		setMsgType(1, writeByteLength); //LMS
 			
-		} else {
-			setMsgType(0, writeByteLength); //SMS
-		}
-	}
-	
+	// 	} else {
+	// 		setMsgType(0, writeByteLength); //SMS
+	// 	}
+	// }
+
+	const rejectNum = document.getElementById('rejectNum')
 	MSG_TITLE.addEventListener("input", handleInput); //제목
 	MSG_WRITE.addEventListener("input", handleInput); //내용
+	rejectNum.addEventListener("input", handleInput); //080 수신거부 번호
 	
 	
 	//커서 위치에 특수문자 삽입
