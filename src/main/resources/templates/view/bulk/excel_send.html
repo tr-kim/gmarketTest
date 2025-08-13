@@ -3,54 +3,314 @@
 	layout:decorate="~{${layout}}" layout:fragment="content">
 
 <body>
-	<p class="font-sz-20 font-weight-600 pt-3 text-666">엑셀발송</p>
-	<form class="content row mx-0 mb-2" id="excel_send">
-		<div class="col-6">
-			<div class="row d-flex align-items-center mb-2">
-				<div class="col-3">
-			 		<label class="font-weight-500">사용자 등급</label>
+	<p class="font-sz-20 font-weight-600 pt-3 text-666">엑셀 발송</p>
+	<form class="content row mx-0 send" id="excelSend">
+		<ul>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">엑셀선택</div>
+				<div class="col">					
+					<input type="file" name="" id="" class="form-control me-2">
+					<!-- <a href="" download class="text-nowrap font-weight-500 mx-2"><i class="bi bi-download me-1"></i>양식다운로드</a> -->
 				</div>
+			</li>	
+			<li>
+				<div class="col-2 font-weight-500">시트선택</div>
 				<div class="col">
-					<select name="" id="" class="form-select">
-						<option value="">슈퍼관리자</option>
-						<option value="">관리자</option>
-						<option value="">사용자</option>
-						<option value="">운영자</option>
+					<select name="sheet" id="sheet" class="form-select mb-3">
+						<option value="">시트를 선택해주세요.</option>
+					</select>
+					<div id="excelGrid" class="grid">
+							<table class="table w-100 text-center mb-0">
+								<colgroup>
+									<col style="width:33%;">
+									<col style="width:33%;">
+									<col style="width:34%;">
+								</colgroup>
+								<thead>
+									<tr>
+										<th>수신번호</th>
+										<th>발신번호</th>
+										<th>전송시간</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="no-data">
+										<td class="py-3" colspan="3">파일을 선택해주세요.</td>
+									</tr>
+								</tbody>
+                            </table>
+						</div>
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">발신번호</div>
+				<div class="col d-flex">					
+						<select name="callbackNoSelect" id="callbackNoSelect" class="form-select me-2">
+							<option value="직접입력">직접입력</option>
+						</select>					
+						<input type="text" name="callbackNo" id="callbackNo" class="form-control" placeholder="발신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">			
+				</div>
+			</li>
+			<li class="align-items-center mb-2">
+				<div class="col-2 font-weight-500">수신번호</div>
+				<div class="col d-flex">					
+					<select name="directNumSelect" id="directNumSelect" class="form-select me-2">
+						<option value="직접입력">직접입력</option>
+					</select>					
+					<input type="text" name="directNum" id="directNum" class="form-control" placeholder="발신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">			
+				</div>
+			</li>
+			<li class="align-items-center justify-content-end">
+				<div>
+					<button type="button" class="btn btn-primary text-nowrap" onclick="">지정</button>
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">대분류</div>
+				<div class="col d-flex">					
+					<select name="large-category" id="large-category" class="form-select">
+						<option value="0">옥션</option>
+						<option value="1">지마켓</option>
+					</select>	
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">사용자ID</div>
+				<div class="col">
+					<input type="text" name="userId" id="userId" class="form-control" placeholder="사용자ID를 입력하세요." maxlength="100" th:value="${#authentication.principal.userId}">
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">제목</div>
+				<div class="col">
+					<input type="text" name="msgTitle" id="msgTitle" class="form-control" maxlength="100" placeholder="제목을 입력하면 장문으로 변경됩니다.">
+				</div>
+			</li>
+			<li>
+				<div class="col-2 font-weight-500">내용</div>
+				<div class="col">	
+					<div class="d-flex grid overflow-visible">
+						<div class="msg_wrap col-5">
+						<div class="msg_wrap_hd d-flex">
+							<div class="msg_type col-3 sms py-2 px-2 text-center">
+								SMS
+							</div>	
+							<div class="msg_byte col text-end py-2 pe-2">
+								<span id="input_byte">0</span>/<span id="total_byte">80</span> byte
+							</div>
+						</div>
+						<textarea name="msgWrite" id="msgWrite" class="p-3 w-100"></textarea>
+						
+					</div>
+					<div class="add_option col position-relative">
+						<ul class="option_tab d-flex px-3">
+							<li class="col on"><button type="button">이미지</button></li>
+							<li class="col"><button type="button">변수선택</button></li>
+							<li class="col"><button type="button">특수문자</button></li>
+						</ul>
+						<div class="option_wrap px-3 py-2 d-block">
+							<div id="dropzone-external" class="flex-box">
+								<div id="dropzone-text" class="flex-box">
+									<span>이미지를 드래그&드롭하거나 클릭해 주세요.</span>
+								</div>								
+								<div id="upload-progress"></div>
+							</div>
+							<div id="dropzone-image-list" class="row mt-3"></div>
+							<div id="file-uploader"></div>
+							<span class="img-question position-absolute end-0 bottom-0 p-3"><i class="bi bi-question-circle"></i></span>
+						</div>
+						<div class="option_wrap px-3 py-2" id="tag">
+							<ul class="row mt-2">
+								<li class="col-4 text-center mb-3"><button type="button">변수1</button></li>
+								<li class="col-4 text-center mb-3"><button type="button">변수2</button></li>
+								<li class="col-4 text-center mb-3"><button type="button">변수3</button></li>
+								<li class="col-4 text-center mb-3"><button type="button">변수4</button></li>
+								<li class="col-4 text-center mb-3"><button type="button">변수5</button></li>
+							</ul>
+						</div>
+						<div class="option_wrap px-3 py-2" id="unicode">
+							<ul class="d-flex flex-wrap">
+                                <li class="col"><span>☆</span></li>
+                                <li class="col"><span>★</span></li>
+                                <li class="col"><span>○</span></li>
+                                <li class="col"><span>●</span></li>
+                                <li class="col"><span>◎</span></li>
+                                <li class="col"><span>◇</span></li>
+                                <li class="col"><span>◆</span></li>
+                                <li class="col"><span>□</span></li>
+                                <li class="col"><span>■</span></li>
+                                <li class="col"><span>△</span></li>
+                                <li class="col"><span>▲</span></li>
+                                <li class="col"><span>▽</span></li>
+                                <li class="col"><span>▼</span></li>
+                                <li class="col"><span>→</span></li>
+                                <li class="col"><span>←</span></li>
+                                <li class="col"><span>↑</span></li>
+                                <li class="col"><span>↓</span></li>
+                                <li class="col"><span>↔</span></li>
+                                <li class="col"><span>◁</span></li>
+                                <li class="col"><span>◀</span></li>
+                                <li class="col"><span>▷</span></li>
+                                <li class="col"><span>▶</span></li>
+                                <li class="col"><span>♤</span></li>
+                                <li class="col"><span>♠</span></li>
+                                <li class="col"><span>♡</span></li>
+                                <li class="col"><span>♥</span></li>
+                                <li class="col"><span>♧</span></li>
+                                <li class="col"><span>♣</span></li>
+                                <li class="col"><span>⊙</span></li>
+                                <li class="col"><span>◈</span></li>
+                                <li class="col"><span>▣</span></li>
+                                <li class="col"><span>◐</span></li>
+                                <li class="col"><span>◑</span></li>
+                                <li class="col"><span>♨</span></li>
+                                <li class="col"><span>☏</span></li>
+                                <li class="col"><span>☎</span></li>
+                                <li class="col"><span>☜</span></li>
+                                <li class="col"><span>☞</span></li>
+                                <li class="col"><span>¶</span></li>
+                                <li class="col"><span>†</span></li>
+                                <li class="col"><span>‡</span></li>
+                                <li class="col"><span>↕</span></li>
+                                <li class="col"><span>㈜</span></li>
+                                <li class="col"><span>㉿</span></li>
+                                <li class="col"><span>↗</span></li>
+                                <li class="col"><span>↙</span></li>
+                                <li class="col"><span>↖</span></li>
+                                <li class="col"><span>↘</span></li>
+                                <li class="col"><span>♭</span></li>
+                                <li class="col"><span>♩</span></li>
+                                <li class="col"><span>♪</span></li>
+                                <li class="col"><span>♬</span></li>
+                                <li class="col"><span>Σ</span></li>
+                                <li class="col"><span>Φ</span></li>
+                                <li class="col"><span>Ψ</span></li>
+                                <li class="col"><span>Ω</span></li>
+                                <li class="col"><span>▒</span></li>
+                                <li class="col"><span>▤</span></li>
+                                <li class="col"><span>▥</span></li>
+                                <li class="col"><span>▨</span></li>
+                                <li class="col"><span>▧</span></li>
+                                <li class="col"><span>▦</span></li>
+                                <li class="col"><span>▩</span></li>
+                                <li class="col"><span>『</span></li>
+                                <li class="col"><span>』</span></li>
+                                <li class="col"><span>。</span></li>
+                            </ul>
+						</div>
+					</div>
+					</div>					
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">전송대상</div>
+				<div class="col">
+					<input type="text" name="sendInfo" id="sendInfo" class="form-control" placeholder="전송대상을 입력하세요." maxlength="100">
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">SMS 수신여부</div>
+				<div class="col">
+					<select name="reserved3" id="reserved3" class="form-select">
+						<option value="0">확인</option>
+						<option value="1">미확인</option>
 					</select>
 				</div>
-			</div>		
+			</li>
+			<li>
+				<div class="col-2 font-weight-500">수신거부</div>
+				<div class="col">
+					<div class="form-check me-2">
+						<input class="form-check-input" type="checkbox" value="" id="rejectCheckDefault">
+						<label class="form-check-label text-nowrap" for="rejectCheckDefault">
+						080 수신거부 번호
+						</label>
+					</div>
+					<input type="text" name="rejectNum" id="rejectNum" class="form-control" value="(거부)0800002004" maxlength="100" disabled>
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">발송시간</div>
+				<div class="col d-flex align-items-center">
+					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+						<input type="radio" class="btn-check" name="send_time" id="send_time1" autocomplete="off" checked>
+						<label class="btn send_btn px-4" for="send_time1">즉시</label>
+
+						<input type="radio" class="btn-check" name="send_time" id="send_time2" autocomplete="off">
+						<label class="btn send_btn px-4" for="send_time2">예약</label>
+					</div>
+					<div id="reserveDate" class="text-primary ms-3"></div>
+				</div>					
+			</li>
+			<li class="reserveDateLi d-none">
+				<div class="col-2 font-weight-500">분할전송</div>
+				<div class="col align-items-center">
+					<div class="btn-group mb-2" role="group" aria-label="Basic radio toggle button group">
+						<input type="radio" class="btn-check" name="split_send" id="split_send1" autocomplete="off" checked>
+						<label class="btn send_btn px-4" for="split_send1">미사용</label>
+
+						<input type="radio" class="btn-check" name="split_send" id="split_send2" autocomplete="off">
+						<label class="btn send_btn px-4" for="split_send2">사용</label>
+					</div>
+					<div id="splitSendUse" class="d-flex align-items-center disabled">
+						<div class="col-2">
+							<select name="splitMinute" id="splitMinute" class="form-select me-2" disabled>
+								<option value="1">1</option>
+								<option value="5">5</option>
+								<option value="7">7</option>
+								<option value="10">10</option>
+								<option value="15">15</option>
+								<option value="20">20</option>
+								<option value="25">25</option>
+								<option value="30">30</option>
+								<option value="40">40</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+								<option value="200">200</option>
+							</select>
+						</div>						
+						<span class="mx-1"> 분마다 </span>
+						<div class="col-2">
+							<select name="splitNum" id="splitNum" class="form-select me-2" disabled>
+								<option value="1">1</option>								
+								<option value="10">10</option>
+								<option value="30">30</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+								<option value="200">200</option>
+								<option value="50">500</option>
+								<option value="1000">1000</option>
+								<option value="2000">2000</option>
+							</select>
+						</div>						
+						<span class="mx-1"> 건씩 전송 </span>
+					</div>
+				</div>					
+			</li>
 			
-			<div class="row d-flex align-items-center mb-2">
-				<div class="col-3">
-					<label class="font-weight-500">사용자 ID</label>
-				</div>
+			<li>
+				<div class="col-2 font-weight-500">전송범위</div>
 				<div class="col">
-					<input type="text" name="" id="" class="form-control" placeholder="아이디를 입력하세요.">
+					<div class="form-check me-2">
+						<input class="form-check-input" type="checkbox" value="" id="tranCheckDefault">
+						<label class="form-check-label text-nowrap" for="tranCheckDefault">
+							전송범위 설정
+						</label>
+					</div>
+					<div class="d-flex align-items-center">
+						<input type="text" name="tranRangeStart" id="tranRangeStart" class="form-control" value="" maxlength="100" disabled>
+						<span class="mx-1">~</span>
+						<input type="text" name="tranRangeEnd" id="tranRangeEnd" class="form-control" value="" maxlength="100" disabled>
+					</div>					
 				</div>
-			</div>			
-		</div>
-		<div class="col-6">
-			<div class="row d-flex align-items-center mb-2">
-				<div class="col-3">
-			 		<label class="font-weight-500">구분</label>
-				</div>
-				<div class="col">
-					<select name="" id="" class="form-select">
-						<option value="">G마켓</option>
-					</select>
-				</div>
-			</div>			
-			<div class="row d-flex align-items-center">
-				<div class="col d-flex justify-content-end">
-					<button class="btn btn-outline-primary font-sz-14 ms-2" id="add-btn">등록</button>
-					<button class="btn btn-primary font-sz-14 ms-2">조회</button>
-				</div>
-			</div>
-		</div>
-	</form>
-	<div class="content">
-		<div id="userGrid"></div>
-	</div>
+			</li>
+			<li class="d-flex align-items-center justify-content-center">
+				<button type="button" class="btn btn-primary px-5" id="final_send_btn" onclick="sendMessage()">즉시발송</button>
+			</li>
+		</ul>
+	</form>	
+	<th:block th:replace="~{/view/popup/reserveSend :: reserveSend}"></th:block>
+	<script th:src="@{/js/view/excel_send.js}"></script>
 </body>
 
 </html>

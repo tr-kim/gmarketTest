@@ -10,35 +10,6 @@ $(function () {
 	MSG_WRITE.placeholder = "내용을 입력해 주세요.\n80byte 초과 시 장문 문자로,\n이미지 추가 시 포토 문자로 자동 전환 됩니다.";
 	
 	
-	//수신번호 옵션(직접입력, 주소록, 엑셀파일)
-	const tabButtons = document.querySelectorAll('.tab li button');
-	const tabs = document.querySelectorAll('.tab li');
-	const callbacks = document.querySelectorAll('.callback_wrap');
-	
-	tabButtons.forEach((button, index) => {
-		button.addEventListener('click', (e) => {
-			e.preventDefault();
-			// .tab li에 on 클래스 조정
-			tabs.forEach((li, liIdx) => {
-				if (liIdx === index) {
-					li.classList.add('on');
-				} else {
-					li.classList.remove('on');
-				}
-			});
-			
-			// .callback_wrap에 d-block 클래스 조정
-			callbacks.forEach((wrap, wrapIdx) => {
-				if (wrapIdx === index) {
-					wrap.classList.add('d-block');
-				} else {
-					wrap.classList.remove('d-block');
-				}
-			});
-		});
-	});
-	
-	
 	//내용 옵션(이미지, 변수선택, 특수문자)
 	const optabButtons = document.querySelectorAll('.option_tab li button');
 	const optabs = document.querySelectorAll('.option_tab li');
@@ -288,19 +259,27 @@ $(function () {
 	const selects = document.querySelectorAll('.reserveSend select');
 	const reserveHour = document.getElementById('hour');
 	const reserveMinute = document.getElementById('minute');
+    const reserveDateLi = document.querySelector('.reserveDateLi');
 	
 	document.getElementById('send_time1').addEventListener('change',function(){
 		if (this.checked) {
 			document.getElementById('reserveDate').textContent = "";
 			FINAL_SEND_BTN.textContent = "즉시발송";
+
+            if(!reserveDateLi.classList.contains('d-none')) {
+                reserveDateLi.classList.add('d-none');
+            }
 		}
 	});
 	
 	document.getElementById('send_time2').addEventListener('click', function () {
 		if (this.checked) {
-			reserveModal.classList.add("d-block");
-			
+			reserveModal.classList.add("d-block");			
 			FINAL_SEND_BTN.textContent = "예약발송";
+
+             if(reserveDateLi.classList.contains('d-none')) {
+                reserveDateLi.classList.remove('d-none');
+            }
 		}
 	});
 	
@@ -310,6 +289,10 @@ $(function () {
 		document.getElementById('send_time1').checked = true;
 		document.getElementById('reserveDate').textContent = "";
 		FINAL_SEND_BTN.textContent = "즉시발송";
+
+        if(!reserveDateLi.classList.contains('d-none')) {
+            reserveDateLi.classList.add('d-none');
+        }
 		
 		//document.querySelector('.date').textContent = '날짜를 선택해 주세요.';
 		selects.forEach(select => {
@@ -350,7 +333,31 @@ $(function () {
 		}
 	})
 	
+	//분할전송 사용, 미사용	
+    const splitSendUse = document.getElementById('splitSendUse');
+    const splitMinute = document.getElementById('splitMinute');
+    const splitNum = document.getElementById('splitNum');
+
+	document.getElementById('split_send1').addEventListener('change',function(){
+		if (this.checked) {			
+            splitMinute.disabled = true;
+            splitNum.disabled = true;
+            if(!splitSendUse.classList.contains('disabled')) {
+                splitSendUse.classList.add('disabled');
+            }
+		}
+	});
 	
+	document.getElementById('split_send2').addEventListener('click', function () {
+		if (this.checked) {
+            splitMinute.disabled = false;
+            splitNum.disabled = false;
+			if(splitSendUse.classList.contains('disabled')) {
+                splitSendUse.classList.remove('disabled');
+            }
+		}
+	});
+
 	//문자 타입 표시
 	function setMsgType(idx, byteLength) {
 		const types = ['SMS', 'LMS', 'MMS'];
@@ -370,8 +377,16 @@ $(function () {
 		INPUT_BYTE.textContent = byteLength;
 	}
 
+	//전송범위설정
+	document.getElementById('tranCheckDefault').addEventListener('change', function () {
+		const input1 = document.getElementById('tranRangeStart');
+        const input2 = document.getElementById('tranRangeEnd');
+		input1.disabled = !this.checked;
+        input2.disabled = !this.checked;
+	});	
+
 	//080 수신거부
-	document.getElementById('checkDefault').addEventListener('change', function () {
+	document.getElementById('rejectCheckDefault').addEventListener('change', function () {
 		const input = document.getElementById('rejectNum');
 		input.disabled = !this.checked;
 		 handleInput();
@@ -423,7 +438,7 @@ $(function () {
 
     let totalByteLength = writeByteLength; // 기본은 내용 바이트 수
 
-    // checkDefault가 활성화(checked)되어 있고 rejectNum도 입력되면 바이트 합산
+    // rejectCheckDefault가 활성화(checked)되어 있고 rejectNum도 입력되면 바이트 합산
     if (!document.getElementById('rejectNum').disabled) {
         const rejectNumContent = document.getElementById('rejectNum').value;
         const rejectNumByteLength = getByteLength(rejectNumContent);
@@ -503,154 +518,6 @@ $(function () {
 		})
 	});
 	
-	
-	//내 문자함    
-	const bookmarkMsg = document.querySelector('.bookmarkMsg');
-	document.getElementById('bookmark_btn').addEventListener('click', function(){
-		bookmarkMsg.classList.add('d-block');
-		document.querySelector('body').classList.add('on');
-	});
-	
-	const close_btns = document.querySelectorAll('.bookmarkMsg .close_btn');
-	close_btns.forEach(close_btn => {
-		close_btn.addEventListener('click', function() {
-			bookmarkMsg.classList.remove('d-block');
-			document.querySelector('body').classList.remove('on');
-		})
-	})
-
-	//내 문자함 레이아웃
-	const store = [
-		{ b_msg_key: "0000001", msg: "1자일리톨스톤레몬향캔디 과량 섭취 시 설사를 일으킬 수 잇씁니다." },
-		{ b_msg_key: "0000002", msg: "2흠,,,( •̀ ω •́ )✧" },
-		{ b_msg_key: "0000003", msg: "3자일리톨스톤레몬향캔디 과량 섭취 시 설사를 일으킬 수 잇씁니다. 제품이 단단하므로 섭취 시 치아손상에 주의하세요. 제품을 삼킬 경우 질식 또는 식도 손상의 위험이 있습니다. 동물에게 먹이지 마세요. 부정, 불량 식품신고는 국번없이 1399, 본 제품은 공정거래위원회 고시 소비자분쟁해결 기준에 의거 교환 또는 보상을 받을 수 있습니다." },
-		{ b_msg_key: "0000004", msg: "4메가커피" },
-		{ b_msg_key: "0000005", msg: "5완료 할당량에 도달했습니다." },
-		{ b_msg_key: "0000006", msg: "6제품이 단단하므로 섭취 시 치아손상에 주의하세요. 제품을 삼킬 경우 질식 또는 식도 손상의 위험이 있습니다. 동물에게 먹이지 마세요. 부정, 불량 식품신고는 국번없이 1399, 본 제품은 공정거래위원회 고시 소비자분쟁해결 기준에 의거 교환 또는 보상을 받을 수 있습니다." },
-		{ b_msg_key: "0000007", msg: "7완료 할당량에 도달했습니다." },
-		{ b_msg_key: "0000008", msg: "8완료 할당량에 도달했습니다." },
-		{ b_msg_key: "0000009", msg: "9제품이 단단하므로 섭취 시 치아손상에 주의하세요. 제품을 삼킬 경우 질식 또는 식도 손상의 위험이 있습니다. 동물에게 먹이지 마세요. 부정, 불량 식품신고는 국번없이 1399, 본 제품은 공정거래위원회 고시 소비자분쟁해결 기준에 의거 교환 또는 보상을 받을 수 있습니다." },
-	]
-	$('#msg-card-view').dxCardView({
-		dataSource: store,
-		keyExpr: "b_msg_key",
-		remoteOperations: false,
-		cardsPerRow: '3',
-		cardMinWidth: 200,
-		cardHeight:200,
-		wordWrapEnabled: true,				
-		editing: {			
-			allowDeleting: true,
-			popup: {
-				width: 700,
-				height: 400,
-			},
-			form: {
-				items: [{
-					dataField: 'msg',
-					editorType: 'dxSelectBox',
-					editorOptions: {
-						dataSource: ['Low', 'Normal', 'High', 'Urgent'],
-					},
-				}]
-			},
-			texts: {
-				confirmDeleteMessage: '정말 삭제하시겠습니까?', 
-			}
-		},
-		columns: [			
-			{
-				dataField: 'msg',	
-				caption: "",
-				label: {
-					visible: false
-				},			 				
-			},			
-		],
-		searchPanel: {
-			visible: true,
-			width: 250,
-			placeholder:'찾을 내용을 입력하세요.',
-		},
-		toolbar: {
-			items: [
-				{
-					location: "before",
-					template: function() {
-					return $("<div>")
-						.attr("id", "totalCount")
-						.css({ fontSize: "17px", color: "#333", padding: "0 5px" });
-					}
-				},
-				"searchPanel"
-			]
-		},
-		onContentReady: function(e) {
-			const totalCount = e.component.totalCount();
-			$("#totalCount").text(`총 ${totalCount}건`);
-		}
-		
-	});
-	//내 문자 선택
-	document.addEventListener('click', function (e) {
-		// 카드(content) 내부 클릭인지 확인
-		const card = e.target.closest('.dx-cardview-card-content');
-		if (card) {
-			const content = card.querySelector('.dx-cardview-field-value');
-			if (content) {
-				MSG_WRITE.value="";
-				insertAtCursor(MSG_WRITE, content.textContent.trim() );
-				MSG_WRITE.dispatchEvent(new Event('input'));
-			}
-			bookmarkMsg.classList.remove('d-block');
-			document.querySelector('body').classList.remove('on');
-		}
-	});
-
-	// const bookmarkMsgtext = document.querySelectorAll('.bookmarkMsg ul li textarea');
-	// bookmarkMsgtext.forEach( text => {
-	// 	text.addEventListener('click', function(){
-	// 		const msg = text.textContent;
-	// 		if(MSG_WRITE) {
-	// 			MSG_WRITE.value="";
-	// 			insertAtCursor(MSG_WRITE, msg );
-	// 			MSG_WRITE.dispatchEvent(new Event('input')); //byte 체크 등 다른 input 이벤트
-	// 		}	
-	// 		bookmarkMsg.classList.remove('d-block');
-	// 	})
-	// })
-
-	//내 문자 삭제
-	// const bookmarkDelBtns = document.querySelectorAll('.bookmarkMsg .x_btn');
-	// bookmarkDelBtns.forEach( btn =>{
-	// 	btn.addEventListener('click',function(){
-	// 		const confirmDialog = DevExpress.ui.dialog.custom({
-	// 			showTitle: false,
-	// 			messageHtml: "<div style='text-align: center;' class='pt-3'>삭제하시겠습니까?</div>",
-	// 			buttons: [{
-	// 				text: "확인",
-	// 				type: "default",
-	// 				onClick: function(e) {
-	// 					return { result: "ok" };
-	// 				}					
-	// 			}, {
-	// 				text: "취소",
-	// 				onClick: function(e) {
-	// 					return { result: "cancel" };
-	// 				}
-	// 			}]
-	// 		}).show();
-			
-	// 		confirmDialog.show().done(function(dialogResult) {
-	// 			if (dialogResult.result === "ok") {
-	// 				console.log("삭제 완료");
-					
-	// 			} else {
-	// 				console.log("취소");
-	// 			}
-	// 		});
-	// 	})
-	// })
 	
 });
 
