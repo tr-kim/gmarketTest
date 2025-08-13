@@ -11,17 +11,28 @@ spring:
     mode: HTML
     cache: false #개발 시에는 false
   datasource:
-    hikari:
-      jdbc-url: jdbc:mariadb://10.1.75.103:3306/reseller
-      username: reseller
-      password: dnvreseller
-      driver-class-name: org.mariadb.jdbc.Driver
-      maximum-pool-size: 10
-      minimum-idle: 5
-      idle-timeout: 600000
-      connection-timeout: 30000
-      pool-name: HikariCP
-
+    gmarket:
+      hikari:
+        driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+        jdbc-url: jdbc:log4jdbc:sqlserver://;serverName=192.168.0.122\SQLEXPRESS;databaseName=msdbgm;encrypt=true # encrypt=false 운영 환경에서는 true
+        username: gmarket
+        password: gmarket12#$
+        maximum-pool-size: 10
+        minimum-idle: 5
+        idle-timeout: 600000
+        connection-timeout: 30000
+        pool-name: HikariCP-GM
+    auction:
+      hikari:
+        driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+        jdbc-url: jdbc:log4jdbc:sqlserver://;serverName=192.168.0.122\SQLEXPRESS;databaseName=msdbau;encrypt=true # encrypt=false 운영 환경에서는 true
+        username: gmarket
+        password: gmarket12#$
+        maximum-pool-size: 10
+        minimum-idle: 5
+        idle-timeout: 600000
+        connection-timeout: 30000
+        pool-name: HikariCP-AU
 logging:
   level:
     root: info

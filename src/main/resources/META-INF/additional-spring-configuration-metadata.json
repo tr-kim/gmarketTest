@@ -8,5 +8,95 @@
     "name": "spring.datasource.jdbc-url",
     "type": "java.lang.String",
     "description": "A description for 'spring.datasource.jdbc-url'"
+  },
+  {
+    "name": "spring.datasource.gmarket.hikari.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.gmarket.hikari.driver-class-name'"
+  },
+  {
+    "name": "spring.datasource.gmarket.hikari.pool-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.gmarket.hikari.pool-name'"
+  },
+  {
+    "name": "spring.datasource.gmarket.hikari.jdbc-url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.gmarket.hikari.jdbc-url'"
+  },
+  {
+    "name": "spring.datasource.gmarket.hikari.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.gmarket.hikari.username'"
+  },
+  {
+    "name": "spring.datasource.gmarket.hikari.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.gmarket.hikari.password'"
+  },
+  {
+    "name": "spring.datasource.gmarket.hikari.maximum-pool-size",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.gmarket.hikari.maximum-pool-size'"
+  },
+  {
+    "name": "spring.datasource.gmarket.hikari.minimum-idle",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.gmarket.hikari.minimum-idle'"
+  },
+  {
+    "name": "spring.datasource.gmarket.hikari.idle-timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.gmarket.hikari.idle-timeout'"
+  },
+  {
+    "name": "spring.datasource.gmarket.hikari.connection-timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.gmarket.hikari.connection-timeout'"
+  },
+  {
+    "name": "spring.datasource.auction.hikari.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.auction.hikari.driver-class-name'"
+  },
+  {
+    "name": "spring.datasource.auction.hikari.jdbc-url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.auction.hikari.jdbc-url'"
+  },
+  {
+    "name": "spring.datasource.auction.hikari.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.auction.hikari.username'"
+  },
+  {
+    "name": "spring.datasource.auction.hikari.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.auction.hikari.password'"
+  },
+  {
+    "name": "spring.datasource.auction.hikari.maximum-pool-size",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.auction.hikari.maximum-pool-size'"
+  },
+  {
+    "name": "spring.datasource.auction.hikari.minimum-idle",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.auction.hikari.minimum-idle'"
+  },
+  {
+    "name": "spring.datasource.auction.hikari.idle-timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.auction.hikari.idle-timeout'"
+  },
+  {
+    "name": "spring.datasource.auction.hikari.connection-timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.auction.hikari.connection-timeout'"
+  },
+  {
+    "name": "spring.datasource.auction.hikari.pool-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.auction.hikari.pool-name'"
   }
 ]}

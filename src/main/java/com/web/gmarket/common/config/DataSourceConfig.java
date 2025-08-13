@@ -8,12 +8,11 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-@Configuration
+// @Configuration
 public class DataSourceConfig  {
 	
 	final ApplicationContext applicationContext;

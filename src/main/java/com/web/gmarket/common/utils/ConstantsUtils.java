@@ -25,6 +25,7 @@ public class ConstantsUtils {
 	public static final String MESSAGE = "message";
 	public static final String REASON = "reason";
 	public static final String RESULT = "result";
+	public static final String TOTAL_COUNT = "totalCount";
 	
 	public static final String APPLICATION_JSON = "application/json";
 	public static final String AUTHORIZATION = "Authorization";
@@ -56,4 +57,11 @@ public class ConstantsUtils {
 	public static final int TOTAL_MON_TIME = 1; // ex) 5분 => 5
 	public static final int ALARM_FLAG = 2; // 알람에 대한 데이터를 가져오는 기준 => 1 -> 현재시간부터 (현재시간 - TOTAL_MON_TIME(분)) 까지의 데이터, 2 -> 최근전송시간부터 (최근전송시간 - TOTAL_MON_TIME(분)) 까지의 데이터
 	public static final int TOTAL_GRAPH_TIME = 60; // Graph Reload 시간 간격(초단위, ex) 1분 => 60)
+	
+	// DB Connection Type
+	public static final String DB_GMAREKT = "gmarket";
+	public static final String DB_AUCTION = "auction";
+	
+	public static final int AUCTION_CODE = 0;
+	public static final int GMAREKT_CODE = 1;
 }
