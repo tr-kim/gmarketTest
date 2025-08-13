@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class StatDto implements Serializable {
+public class StatDto extends StatCodeDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -68,7 +68,7 @@ public class StatDto implements Serializable {
 	private String tableName;
 
 	// 테이블 구분 코드 목록
-	private List<Integer> tableCodeList = new ArrayList<Integer>();
+	private List<Integer> tableCodeList = new ArrayList<>();
 	
 	private String startDate;
 	private String endDate;
@@ -76,14 +76,6 @@ public class StatDto implements Serializable {
 	private int timeType = 1;
 
 	// 페이징
-	private int skip;
-	private int take;
-	
-	public List<Integer> getTableCodeList() {
-        return this.tableCodeList;
-    }
-
-    public void setTableCodeList(List<Integer> tableCodeList) {
-        this.tableCodeList = tableCodeList;
-    }
+	private int skip = 0;
+	private int take = 50;
 }

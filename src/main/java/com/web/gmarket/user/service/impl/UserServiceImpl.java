@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
+import com.web.gmarket.common.config.DynamicDataSourceService;
+import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.user.dto.UserDto;
 import com.web.gmarket.user.mapper.UserMapper;
 import com.web.gmarket.user.service.UserService;
@@ -22,41 +24,42 @@ import lombok.extern.slf4j.Slf4j;
 public class UserServiceImpl implements UserService {
 
 	@Autowired
-	private UserMapper userMapper;
+	private DynamicDataSourceService dynamicDataSourceService;
 
 	@Override
 	public UserDto selectUserInfo(String userId, String delFlag) {
+		
 		UserDto userDto = new UserDto();
 		userDto.setUserId(userId);
 		userDto.setDelFlag(delFlag);
 		
-		return userMapper.selectUserInfo(userDto);
+		return getMapper().selectUserInfo(userDto);
 	}
 
 	@Override
 	public List<UserDto> selectUserInfoList(UserDto userDto) {
-		return userMapper.selectUserInfoList(userDto);
+		return getMapper().selectUserInfoList(userDto);
 	}
 
 	@Override
 	public int insertUserInfo(UserDto userDto) {
 		// 비밀번호 암호화 및 hash 값 넣기
 		passwordEncode(userDto);
-
-		return userMapper.insertUserInfo(userDto);
+		
+		return getMapper().insertUserInfo(userDto);
 	}
 
 	@Override
 	public int updateUserInfo(UserDto userDto) {
 		// 비밀번호 암호화 및 hash 값 넣기
 		passwordEncode(userDto);
-
-		return userMapper.updateUserInfo(userDto);
+		
+		return getMapper().updateUserInfo(userDto);
 	}
 
 	@Override
 	public int deleteUserInfo(String userId) {
-		return userMapper.deleteUserInfo(userId);
+		return getMapper().deleteUserInfo(userId);
 	}
 
 	@Override
@@ -64,7 +67,7 @@ public class UserServiceImpl implements UserService {
 		// 비밀번호 암호화 및 hash 값 넣기
 		passwordEncode(userDto);
 		
-		return userMapper.updateUserPassword(userDto);
+		return getMapper().updateUserPassword(userDto);
 	}
 
 	@Override
@@ -111,5 +114,8 @@ public class UserServiceImpl implements UserService {
 
 		return userDto;
 	}
-
+	
+	public UserMapper getMapper() {
+		return dynamicDataSourceService.getMapper(ConstantsUtils.DB_GMAREKT, UserMapper.class);
+	}
 }

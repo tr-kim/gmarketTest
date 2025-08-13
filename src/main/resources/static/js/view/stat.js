@@ -1,49 +1,60 @@
-const middleCategoryData = {
-	0: [
-		{ code: 0, name: '전체' },
-		{ code: 1, name: 'SMSCLI_TBL_CHARGED' },
-		{ code: 2, name: 'SMSCLI_TBL_ESCROW' },
-		{ code: 3, name: 'SMSCLI_TBL_OUTBID' },
-		{ code: 4, name: 'SMSCLI_TBL_API' },
-		{ code: 5, name: 'SMSCLI_TBL_BATCH' },
-		{ code: 6, name: 'SMSCLI_TBL_MOTORS' },
-		{ code: 7, name: 'SMSCLI_TBL_PUMBL' },
-		{ code: 8, name: 'SMSCLI_TBL_EVENT' },
-		{ code: 9, name: 'SMSCLI_TBL_LARGE' },
-		{ code: 21, name: 'LMSCLI_TBL_EVENT' },
-		{ code: 22, name: 'LMSCLI_TBL_LARGE' },
-		{ code: 41, name: 'MMSCLI_TBL_EVENT' },
-		{ code: 42, name: 'MMSCLI_TBL_LARGE' },
-		{ code: 71, name: 'IAC_SMSCLI_TBL_LARGE' },
-		{ code: 72, name: 'IAC_LMSCLI_TBL_LARGE' },
-		{ code: 73, name: 'IAC_MMSCLI_TBL_LARGE' }
-	],
-	1: [
-		{ code: 0, name: '전체' },
-		{ code: 11, name: 'SMSCLI_TBL_EMG' },
-		{ code: 12, name: 'SMSCLI_TBL_ETC' },
-		{ code: 13, name: 'SMSCLI_TBL_ORDER' },
-		{ code: 14, name: 'SMSCLI_TBL_TRAN' },
-		{ code: 15, name: 'SMSCLI_TBL_EVENT' },
-		{ code: 16, name: 'SMSCLI_TBL_LARGE' },
-		{ code: 31, name: 'LMSCLI_TBL_EVENT' },
-		{ code: 32, name: 'LMSCLI_TBL_LARGE' },
-		{ code: 51, name: 'MMSCLI_TBL_EVENT' },
-		{ code: 52, name: 'MMSCLI_TBL_LARGE' },
-		{ code: 61, name: 'GMKT_SMSCLI_TBL_LARGE' },
-		{ code: 62, name: 'GMKT_LMSCLI_TBL_LARGE' },
-		{ code: 63, name: 'GMKT_MMSCLI_TBL_LARGE' },
-		{ code: 110, name: 'SFC_SMSCLI_TBL' }
-	]
-};
+let dataGrid;
+let largeCategory;
+let largeCategorySelectCode;
+let middleCategory;
+let middleCategorySelectName;
+const period = 3000;	// 최대 검색 기간 
 
 $(function() {
+
+	const middleCategoryData = {
+		0: [
+			{ code: -1, name: '선택하세요' },
+			{ code: 0, name: '전체' },
+			{ code: 1, name: 'SMSCLI_TBL_CHARGED' },
+			{ code: 2, name: 'SMSCLI_TBL_ESCROW' },
+			{ code: 3, name: 'SMSCLI_TBL_OUTBID' },
+			{ code: 4, name: 'SMSCLI_TBL_API' },
+			{ code: 5, name: 'SMSCLI_TBL_BATCH' },
+			{ code: 6, name: 'SMSCLI_TBL_MOTORS' },
+			{ code: 7, name: 'SMSCLI_TBL_PUMBL' },
+			{ code: 8, name: 'SMSCLI_TBL_EVENT' },
+			{ code: 9, name: 'SMSCLI_TBL_LARGE' },
+			{ code: 21, name: 'LMSCLI_TBL_EVENT' },
+			{ code: 22, name: 'LMSCLI_TBL_LARGE' },
+			{ code: 41, name: 'MMSCLI_TBL_EVENT' },
+			{ code: 42, name: 'MMSCLI_TBL_LARGE' },
+			{ code: 71, name: 'IAC_SMSCLI_TBL_LARGE' },
+			{ code: 72, name: 'IAC_LMSCLI_TBL_LARGE' },
+			{ code: 73, name: 'IAC_MMSCLI_TBL_LARGE' }
+		],
+		1: [
+			{ code: -1, name: '선택하세요' },
+			{ code: 0, name: '전체' },
+			{ code: 11, name: 'SMSCLI_TBL_EMG' },
+			{ code: 12, name: 'SMSCLI_TBL_ETC' },
+			{ code: 13, name: 'SMSCLI_TBL_ORDER' },
+			{ code: 14, name: 'SMSCLI_TBL_TRAN' },
+			{ code: 15, name: 'SMSCLI_TBL_EVENT' },
+			{ code: 16, name: 'SMSCLI_TBL_LARGE' },
+			{ code: 31, name: 'LMSCLI_TBL_EVENT' },
+			{ code: 32, name: 'LMSCLI_TBL_LARGE' },
+			{ code: 51, name: 'MMSCLI_TBL_EVENT' },
+			{ code: 52, name: 'MMSCLI_TBL_LARGE' },
+			{ code: 61, name: 'GMKT_SMSCLI_TBL_LARGE' },
+			{ code: 62, name: 'GMKT_LMSCLI_TBL_LARGE' },
+			{ code: 63, name: 'GMKT_MMSCLI_TBL_LARGE' },
+			{ code: 110, name: 'SFC_SMSCLI_TBL' }
+		]
+	};
+	
+	// 일주일 기본값 설정
 	const startDate = new Date();
 	const endDate = new Date();
 	endDate.setDate(endDate.getDate() + 7);
 
 	//라디오
-	const radios = document.querySelectorAll('input[name="stat-radio"]');
+	const radios = document.querySelectorAll('input[name="timeType"]');
 
 	radios.forEach(radio => {
 		radio.addEventListener('change', function() {
@@ -51,7 +62,7 @@ $(function() {
 			if (this.value == "1") {
 				recreateDateBox("#startDate", {
 					type: 'datetime',
-					//displayFormat: "yyyy-MM-dd a h:mm",
+					name: "startDate",
 					value: startDate,
 					onValueChanged(e) {
 						const date = e.value;
@@ -65,12 +76,11 @@ $(function() {
 							console.log(`${yyyy}${mm}${dd}${hh}${min}`);
 						}
 					}
-					, inputAttr: { name: "startDate" }
 				});
 
 				recreateDateBox("#endDate", {
 					type: 'datetime',
-					//displayFormat: "yyyy-MM-dd a h:mm",
+					name: "endDate",
 					value: endDate,
 					onValueChanged(e) {
 						const date = e.value;
@@ -84,12 +94,11 @@ $(function() {
 							console.log(`${yyyy}${mm}${dd}${hh}${min}`);
 						}
 					}
-					, inputAttr: { name: "endDate" }
 				});
-			}
-			if (this.value == "2") {
+			} else if (this.value == "2") {
 				recreateDateBox("#startDate", {
 					type: "date",
+					name: "startDate",
 					value: startDate,
 					displayFormat: "yyyy-MM-dd",
 					onValueChanged(e) {
@@ -102,10 +111,10 @@ $(function() {
 							console.log(`${yyyy}${mm}${dd}`);
 						}
 					}
-					, inputAttr: { name: "startDate" }
 				});
 				recreateDateBox("#endDate", {
 					type: "date",
+					name: "endDate",
 					value: endDate,
 					displayFormat: "yyyy-MM-dd",
 					onValueChanged(e) {
@@ -118,12 +127,11 @@ $(function() {
 							console.log(`${yyyy}${mm}${dd}`);
 						}
 					}
-					, inputAttr: { name: "endDate" }
 				});
-			}
-			if (this.value == "3") {
+			} else if (this.value == "3") {
 				recreateDateBox("#startDate", {
 					type: "date",
+					name: "startDate",
 					value: startDate,
 					displayFormat: "yyyy-MM",
 					onValueChanged(e) {
@@ -131,14 +139,15 @@ $(function() {
 						if (date instanceof Date && !isNaN(date)) {
 							const yyyy = date.getFullYear();
 							const mm = String(date.getMonth() + 1).padStart(2, '0');
+
 							console.log(`${yyyy}${mm}`);
 						}
 					}
-					, inputAttr: { name: "startDate" }
 				});
 
 				recreateDateBox("#endDate", {
 					type: "date",
+					name: "endDate",
 					value: endDate,
 					displayFormat: "yyyy-MM",
 					onValueChanged(e) {
@@ -146,18 +155,18 @@ $(function() {
 						if (date instanceof Date && !isNaN(date)) {
 							const yyyy = date.getFullYear();
 							const mm = String(date.getMonth() + 1).padStart(2, '0');
+
 							console.log(`${yyyy}${mm}`);
 						}
 					}
-					, inputAttr: { name: "endDate" }
 				});
-			}
-			if (this.value == "4") {
+			} else if (this.value == "4") {
 				recreateDateBox("#startDate", {
 					showClearButton: true,
 					useMaskBehavior: true,
 					displayFormat: "yyyy '년' ",
 					type: 'date',
+					name: "startDate",
 					value: startDate,
 					onValueChanged(e) {
 						const date = e.value;
@@ -166,7 +175,6 @@ $(function() {
 							console.log(`${yyyy}`);
 						}
 					}
-					, inputAttr: { name: "startDate" }
 				});
 
 				recreateDateBox("#endDate", {
@@ -174,6 +182,7 @@ $(function() {
 					useMaskBehavior: true,
 					displayFormat: "yyyy '년' ",
 					type: 'date',
+					name: "endDate",
 					value: endDate,
 					onValueChanged(e) {
 						const date = e.value;
@@ -182,22 +191,63 @@ $(function() {
 							console.log(`${yyyy}`);
 						}
 					}
-					, inputAttr: { name: "endDate" }
 				});
 			}
 		})
 	})
 
-	const checkedRadio = document.querySelector('input[name="stat-radio"]:checked');
+	const checkedRadio = document.querySelector('input[name="timeType"]:checked');
 	if (checkedRadio) {
 		checkedRadio.dispatchEvent(new Event('change'));
 	}
 
+	//중분류
+	middleCategory = $('#middle-category').dxSelectBox({
+		dataSource: middleCategoryData[1],
+		displayExpr: 'name',
+		valueExpr: 'code',
+		value: -1,
+		name: "tableCode",
+		onValueChanged: function(e) {
+			
+			// select text 가져오기
+			middleCategorySelectName = e.component.option("displayValue");
+		}
+	}).dxSelectBox("instance");
+	
+	// 사용자 등급 및 회사 업체에 따라 select box option 설정
+	var largeCategoryData = [ { code: -1, name: '선택하세요' } ];
+	
+	if((userGrade == 0 || (userGrade == 1 && companyCode == 0))) {
+		largeCategoryData.push({ code: 0, name: '옥션' });
+	} 
+	
+	if((userGrade == 0 || (userGrade == 1 && companyCode == 1))) {
+		largeCategoryData.push({ code: 1, name: '지마켓' });
+	}
+	
+	//대분류
+	largeCategory = $('#large-category').dxSelectBox({
+		dataSource: largeCategoryData,
+		displayExpr: 'name',
+		valueExpr: 'code',
+		value: companyCode,
+		name: "companyCode",
+		onValueChanged: function(e) {
+			//중분류 업데이트
+			largeCategorySelectCode = e.value;
+			middleCategory.option('dataSource', middleCategoryData[largeCategorySelectCode] || []);
+			middleCategory.option('value', -1); // 기본값 다시 설정
+			
+		}
+	}).dxSelectBox("instance");
+
 	//조회 그리드
-	$("#statGrid").dxDataGrid({
+	dataGrid = $("#statGrid").dxDataGrid({
 		dataSource: {
 			load: function(loadOptions) {
 				const formData = new FormData(document.getElementById("statHistForm"));
+				
 				const skip = loadOptions.skip || 0;
 				const take = loadOptions.take || 50;
 
@@ -210,10 +260,20 @@ $(function() {
 					data: formData,
 					processData: false,
 					contentType: false
+				}).then(function(result) {
+					return {
+						data: result.list,
+						totalCount: result.totalCount
+					};
+				}).catch(function() {
+					showDialogCustom("error");
+					return {
+						data: [],
+						totalCount: 0
+					};
 				});
 			}
 		},
-		keyExpr: ["resultDate", "tableCode", "telSect"],
 		headerFilter: {
 			visible: true
 		},
@@ -247,7 +307,7 @@ $(function() {
 					switch (rowData.companyCode) {
 						case 0: return "옥션";
 						case 1: return "지마켓";
-						default: return "-";
+						default: return "선택하세요";
 					}
 				}
 			},
@@ -271,77 +331,56 @@ $(function() {
 		},
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
-			$("#totalCount").text(`총 ${totalCount}건`);
+			
+			middleCategorySelectName = (middleCategorySelectName == "선택하세요" || middleCategorySelectName === undefined) ? "" : middleCategorySelectName;
+			
+			const companyName = largeCategorySelectCode == 0 ? "(옥션 " + middleCategorySelectName + " 테이블)" : "(G마켓 " + middleCategorySelectName + " 테이블)"; 
+			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다. ${companyName}`);
 		}
 	}).dxDataGrid("instance");
-
-	//대분류
-	$('#large-category').dxSelectBox({
-		dataSource: [{
-			Code: 0,
-			Name: '옥션',
-		}, {
-			Code: 1,
-			Name: '지마켓',
-		}],
-		displayExpr: 'Name',
-		valueExpr: 'Code',
-		value: 1,
-		onValueChanged: function(e) {
-			//중분류 업데이트
-			const selectedCode = e.value;
-			$('#middle-category').dxSelectBox('option', 'dataSource', middleCategoryData[selectedCode] || []);
-			$('#middle-category').dxSelectBox('option', 'value', 1); // 기본값 다시 설정
-		}
-		, inputAttr: { name: "companyCode" }
-	});
-
-	//중분류
-	$('#middle-category').dxSelectBox({
-		dataSource: middleCategoryData[1],
-		displayExpr: 'Name',
-		valueExpr: 'Code',
-		value: 1
-		, inputAttr: { name: "tableCode" }
-	}).dxSelectBox("instance");
 });
 
 // 검색
-function search() {
-	const formData = new FormData(document.getElementById("statHistForm"));
-	const skip = loadOptions.skip || 0;
-	const take = loadOptions.take || 50;
-	
-	postFormAjax("/api/v1/stat/list", formData, listCallback);
-}
+const searchBtn = $('#search-btn').dxButton({
+	stylingMode: 'contained',
+	text: '조회',
+	type: 'default',
+	width: 60,
+	onClick() {
+		const formData = new FormData(document.getElementById("statHistForm"));
+		
+		const searchCompanyCode = formData.get("companyCode");
+		const searchTableCode = formData.get("tableCode");
+		const searchStartDate = new Date(formData.get("startDate"));
+		const searchEndDate = new Date(formData.get("endDate"));
+		const diffMs = endDate - startDate;
+		
+		if(searchStartDate > searchEndDate) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
+		if(diffMs > period) { showDialogCustom("조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : " + diffMs + "일"); return false }
+		
+		if(searchCompanyCode == -1 || searchCompanyCode < 0) { showDialogCustom("대분류를 선택하세요."); return false; }
+		if(searchTableCode == -1 || searchTableCode < 0) { showDialogCustom("중분류를 선택하세요."); return false; }
+		
+		postFormAjax("/api/v1/stat/list", formData, listCallback);
+	}
+}).dxButton('instance');
 
 // 성공 함수
 function listCallback(data) {
 	dataGrid.option("dataSource", data);
 }
 
-const searchBtn = $('#search-btn').dxButton({
-    stylingMode: 'contained',
-    text: '조회',
-    type: 'default',
-    width: 60,
-    onClick() {
-		
-    },
-}).dxButton('instance');
-
 //엑셀 다운로드 버튼
 const excelBtn = $('#excel-btn').dxButton({
-    stylingMode: 'contained',
-    text: '엑셀 다운로드',
-    type: 'success',
-    width: 120,
-    onClick() {
+	stylingMode: 'contained',
+	text: '엑셀 다운로드',
+	type: 'success',
+	width: 120,
+	onClick() {
 		const grid = $("#statGrid").dxDataGrid("instance");
 		exportGridToExcel(grid);
-    },
+	},
 }).dxButton('instance');
->>>>>>> master
 
 //엑셀 다운로드
 function exportGridToExcel(gridInstance) {
@@ -358,12 +397,6 @@ function exportGridToExcel(gridInstance) {
 		});
 	});
 }
-
-// 검색 버튼 이벤트
-document.getElementById('search_btn').addEventListener('click', function(e) {
-	e.preventDefault();
-	search();
-});
 
 //라디오 버튼클릭시 초기화
 function recreateDateBox(selector, options) {

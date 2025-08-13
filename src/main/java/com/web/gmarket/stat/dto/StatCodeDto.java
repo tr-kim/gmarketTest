@@ -16,7 +16,7 @@ public class StatCodeDto {
 	private int tableSeq;
 	
 	// 테이블 구분 코드
-	private int tableCode;
+	private int tableCode = -1;
 	
 	// 회사코드(default : 0) - 0 : Auction - 1 : Gmarket
 	private int companyCode = 0;
@@ -25,7 +25,7 @@ public class StatCodeDto {
 	private String tableName;
 	
 	// 테이블 종류(default : 1) - 1 : SMS 일반 - 2 : SMS 대량(이력 테이블 사용) - 3 : LMS 대량(이력 테이블 사용) - 4 : MMS 대량(이력 테이블 사용)
-	private int tableType;
+	private int tableType = 1;
 	
 	// 정보 등록일 (Default : 현재시간)
 	private String regDate;

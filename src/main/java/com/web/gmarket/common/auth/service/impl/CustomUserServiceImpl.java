@@ -3,10 +3,12 @@ package com.web.gmarket.common.auth.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.web.gmarket.common.auth.service.CustomUserService;
+import com.web.gmarket.common.config.DynamicDataSourceService;
 import com.web.gmarket.user.dto.UserDto;
 import com.web.gmarket.user.mapper.UserMapper;
 
@@ -14,11 +16,15 @@ import com.web.gmarket.user.mapper.UserMapper;
 public class CustomUserServiceImpl implements CustomUserService {
 	
 	@Autowired
-	private UserMapper userMapper;
+	private DynamicDataSourceService dynamicDataSourceService;
 
 	@Override
 	public Optional<UserDto> login(UserDto userDto) {
-		UserDto user  = userMapper.selectUserInfo(userDto);
+		
+		SqlSessionTemplate sqlSession = dynamicDataSourceService.getSqlSessionTemplate("gmarket");
+		UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+		
+		UserDto user  = mapper.selectUserInfo(userDto);
 		
 		return Optional.ofNullable(user);
 	}

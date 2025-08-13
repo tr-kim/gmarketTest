@@ -6,11 +6,7 @@ import com.web.gmarket.stat.dto.StatDto;
 
 public interface StatService {
 	
-	public int selectStatListGmarketCount(StatDto statDto);
+	public int selectStatListCount(StatDto statDto);
 	
-	public List<StatDto> selectStatListGmarket(StatDto statDto);
-	
-	public int selectStatListAuctionCount(StatDto statDto);
-	
-	public List<StatDto> selectStatListAuction(StatDto statDto);
+	public List<StatDto> selectStatList(StatDto statDto);
 }
