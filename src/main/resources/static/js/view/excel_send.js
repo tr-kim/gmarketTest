@@ -682,7 +682,22 @@ function excelUpload(input) {
 	})
 	.then(res => res.json())
 	.then(data => {
-		console.log(data);
+		const sheet = document.getElementById('sheet');
+
+		// 기존 옵션 전부 제거 후, 안내용 기본 옵션 추가
+		sheet.innerHTML = "";
+		const defaultOpt = document.createElement('option');
+		defaultOpt.value = "";
+		defaultOpt.textContent = "시트를 선택해주세요.";
+		sheet.appendChild(defaultOpt);
+
+		console.log(data.sheetName);
+		data.sheetName.forEach(option => {
+			const opt = document.createElement('option');
+			opt.value = option;
+			opt.textContent = option;
+			sheet.appendChild(opt);
+		});
 	})
 	.catch(err => {
 		console.error("파일 업로드 실패", err);
