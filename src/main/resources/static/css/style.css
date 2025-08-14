@@ -428,18 +428,12 @@ aside .psw_chg_btn:hover{
 #splitSendUse.disabled span{
     color: #ddd;
 }
-#excelSend input[type="file"].form-control::file-selector-button {
+.filebtn input[type="file"].form-control::file-selector-button {
     background-color: #0f6cbd;
     border-radius: 0.375rem;
     color: #fff;  
-    /*              
-    border: none;              
-    padding: 0.375rem 0.75rem;
-      
-    cursor: pointer; */
 }
-/* Hover 효과 */
-#excelSend input[type="file"].form-control:hover::file-selector-button {
+.filebtn input[type="file"].form-control:hover::file-selector-button {
     background-color: #115fa3 !important;
 }
 #dropzone-external {

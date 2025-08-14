@@ -14,6 +14,7 @@ window.addEventListener('load', function() {
 				li.classList.add('active');
 			});
 		});
+		
 
 		sendmenu.addEventListener('click', function(e) {
 			e.stopPropagation(); // 클릭 이벤트 전파 막기

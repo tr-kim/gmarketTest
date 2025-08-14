@@ -183,6 +183,33 @@ $(function () {
 
 			handleInput(); // 유효한 경우만 처리
 		},
+		// onValueChanged: function (e) {
+
+		// 	const allowedFileExtensions = ['.jpg', '.jpeg', '.gif', '.png'];
+		// 	const invalidFiles = []; 
+
+		// 	const validFiles = (e.value || []).filter(file => {
+		// 		const extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+		// 		const isValid = allowedFileExtensions.includes(extension);
+		// 		if (!isValid) {
+		// 			invalidFiles.push(file.name);
+		// 		}
+		// 		return isValid;
+		// 	});
+
+		// 	if (invalidFiles.length > 0) {
+		// 		const message = `허용되지 않은 파일 형식입니다:\n${invalidFiles.join(', ')}`;
+		// 		showDialogCustom(message);
+		// 		console.warn('업로드 불가 파일 있음:', invalidFiles);
+
+		// 		// 허용되지 않은 파일 제거
+		// 		const uploader = $("#file-uploader").dxFileUploader("instance");
+		// 		uploader.option("value", validFiles); // 유효한 파일만 다시 설정
+		// 		return;
+		// 	}
+
+		// 	handleInput(); // 유효한 경우만 처리
+		// },
 
 	}).dxFileUploader('instance');
 	
@@ -232,16 +259,12 @@ $(function () {
 	const selects = document.querySelectorAll('.reserveSend select');
 	const reserveHour = document.getElementById('hour');
 	const reserveMinute = document.getElementById('minute');
-    const reserveDateLi = document.querySelector('.reserveDateLi');
 	
 	document.getElementById('send_time1').addEventListener('change',function(){
 		if (this.checked) {
 			document.getElementById('reserveDate').textContent = "";
 			FINAL_SEND_BTN.textContent = "즉시발송";
 
-            if(!reserveDateLi.classList.contains('d-none')) {
-                reserveDateLi.classList.add('d-none');
-            }
 		}
 	});
 	
@@ -249,10 +272,6 @@ $(function () {
 		if (this.checked) {
 			reserveModal.classList.add("d-block");			
 			FINAL_SEND_BTN.textContent = "예약발송";
-
-             if(reserveDateLi.classList.contains('d-none')) {
-                reserveDateLi.classList.remove('d-none');
-            }
 		}
 	});
 	
@@ -262,12 +281,7 @@ $(function () {
 		document.getElementById('send_time1').checked = true;
 		document.getElementById('reserveDate').textContent = "";
 		FINAL_SEND_BTN.textContent = "즉시발송";
-
-        if(!reserveDateLi.classList.contains('d-none')) {
-            reserveDateLi.classList.add('d-none');
-        }
 		
-		//document.querySelector('.date').textContent = '날짜를 선택해 주세요.';
 		selects.forEach(select => {
 			select.value = "00";
 		})
@@ -305,31 +319,6 @@ $(function () {
 			return;
 		}
 	})
-	
-	//분할전송 사용, 미사용	
-    const splitSendUse = document.getElementById('splitSendUse');
-    const splitMinute = document.getElementById('splitMinute');
-    const splitNum = document.getElementById('splitNum');
-
-	document.getElementById('split_send1').addEventListener('change',function(){
-		if (this.checked) {			
-            splitMinute.disabled = true;
-            splitNum.disabled = true;
-            if(!splitSendUse.classList.contains('disabled')) {
-                splitSendUse.classList.add('disabled');
-            }
-		}
-	});
-	
-	document.getElementById('split_send2').addEventListener('click', function () {
-		if (this.checked) {
-            splitMinute.disabled = false;
-            splitNum.disabled = false;
-			if(splitSendUse.classList.contains('disabled')) {
-                splitSendUse.classList.remove('disabled');
-            }
-		}
-	});
 
 	//문자 타입 표시
 	function setMsgType(idx, byteLength) {
@@ -349,14 +338,6 @@ $(function () {
 		
 		INPUT_BYTE.textContent = byteLength;
 	}
-
-	//전송범위설정
-	document.getElementById('tranCheckDefault').addEventListener('change', function () {
-		const input1 = document.getElementById('tranRangeStart');
-        const input2 = document.getElementById('tranRangeEnd');
-		input1.disabled = !this.checked;
-        input2.disabled = !this.checked;
-	});	
 
 	//080 수신거부
 	document.getElementById('rejectCheckDefault').addEventListener('change', function () {
@@ -428,28 +409,6 @@ $(function () {
         setMsgType(0, totalByteLength); // SMS
     }
 }
-	// function handleInput() {
-	// 	const titleContent = MSG_TITLE.value;
-	// 	const titleByteLength = getByteLength(titleContent);
-		
-	// 	const writeContent = MSG_WRITE.value;
-	// 	const writeByteLength = getByteLength(writeContent);
-		
-	// 	const hasImg = hasImage();
-		
-	// 	//console.log("hasImage():", hasImg);
-	// 	//console.log("title:", titleContent.trim(), "| byte:", writeByteLength);
-		
-	// 	if (hasImg) {
-	// 		setMsgType(2, writeByteLength); //MMS
-			
-	// 	} else if (titleContent.trim() !== '' || writeByteLength > 80) {
-	// 		setMsgType(1, writeByteLength); //LMS
-			
-	// 	} else {
-	// 		setMsgType(0, writeByteLength); //SMS
-	// 	}
-	// }
 
 	const rejectNum = document.getElementById('rejectNum')
 	MSG_TITLE.addEventListener("input", handleInput); //제목
@@ -491,23 +450,49 @@ $(function () {
 		})
 	});
 	
-	//엑셀 파일 업로드
-	document.getElementById('excelFile').addEventListener('change', function () {
+	//파일 업로드시 Grid
+	document.getElementById('textFile').addEventListener('change', function () {
 		const file = this.files[0];
 		if (!file) return;
 
-		// xls, xlsx 파일만 허용
-		const allowedExtensions = ['.xls', '.xlsx'];
-		const fileName = file.name.toLowerCase();
-		const isExcel = allowedExtensions.some(ext => fileName.endsWith(ext));
-
-		if (!isExcel) {
-			showDialogCustom("xls, xlsx 파일만 업로드 가능합니다.");
-			this.value = ""; 
+		// txt 파일만 허용
+		if (file.type !== "text/plain" && !file.name.endsWith(".txt")) {
+			showDialogCustom("TXT 파일만 업로드 가능합니다.");
+			this.value = "";
 			return;
 		}
-	})
 
+		const reader = new FileReader();
+		reader.onload = function (e) {
+			const content = e.target.result;
+			const numbers = content.split(',').map(num => num.trim()).filter(Boolean);
+
+			const tbody = document.querySelector('#textGrid tbody');
+			tbody.innerHTML = "";
+
+			if (numbers.length === 0) {
+				// 데이터 없으면 no-data 다시 추가
+				tbody.innerHTML = `
+					<tr class="no-data">
+						<td class="py-3" colspan="3">파일을 선택해주세요.</td>
+					</tr>
+				`;
+				return;
+			}
+
+			// 번호 목록 tr로 추가
+			numbers.forEach(num => {
+				const tr = document.createElement('tr');
+				const td = document.createElement('td');
+				td.textContent = num;
+				tr.appendChild(td);
+				tbody.appendChild(tr);
+			});
+
+			document.querySelector('span.direct_input_num').textContent= numbers.length;
+		};
+		reader.readAsText(file);
+	});
 });
 
 
