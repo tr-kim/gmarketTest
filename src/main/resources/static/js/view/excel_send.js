@@ -668,3 +668,37 @@ function sendMessage(){
 }
 
 
+//엑셀 파일 업로드
+function excelUpload(input) {
+	const file = input.files[0];
+	if (!file) return;
+	
+	const formData = new FormData();
+	formData.append("file", file);
+	
+	fetch("/api/v1/excelSend/upload", {
+		method: "POST",
+		body: formData
+	})
+	.then(res => res.json())
+	.then(data => {
+		console.log(data);
+	})
+	.catch(err => {
+		console.error("파일 업로드 실패", err);
+		showDialogCustom('error');
+	});
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
