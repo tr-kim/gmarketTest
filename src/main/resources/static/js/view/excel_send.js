@@ -482,14 +482,22 @@ $(function () {
 	
 	
 	//변수추가
-	document.querySelectorAll('#tag li button').forEach((btn, idx)=>{
-		btn.addEventListener('click',() => {
-			if(MSG_WRITE) {
-				insertAtCursor(MSG_WRITE, `#TAG${idx + 1}#`);
+	document.querySelector('#tag').addEventListener('click', (e) => {
+		if (e.target.tagName === 'BUTTON') {
+			if (MSG_WRITE) {
+				insertAtCursor(MSG_WRITE, e.target.textContent);
 				MSG_WRITE.dispatchEvent(new Event('input'));
 			}
-		})
+		}
 	});
+	// document.querySelectorAll('#tag li button').forEach((btn, idx)=>{
+	// 	btn.addEventListener('click',() => {
+	// 		if(MSG_WRITE) {
+	// 			insertAtCursor(MSG_WRITE, btn.textContent);
+	// 			MSG_WRITE.dispatchEvent(new Event('input'));
+	// 		}
+	// 	})
+	// });
 	
 	//엑셀 파일 업로드
 	document.getElementById('excelFile').addEventListener('change', function () {
@@ -708,13 +716,17 @@ function reserve() {
 		return;
 	}
 	
+	const sheetName = document.getElementById("sheet").value;
+	
 	// 발신번호
 	const callbackSelect = document.getElementById("callbackSelect").value;
 	const callbackInput = document.getElementById("tranCallback").value.trim();
-	
+	const callbackFlag = callbackSelect === "직접입력" ? 1 : 2;
+
 	// 수신번호
 	const calleeSelect = document.getElementById("calleeSelect").value;
 	const calleeInput = document.getElementById("tranCallee").value.trim();
+	const calleeFlag = calleeSelect === "직접입력" ? 1 : 2;
 	
 	// 발신번호 검증
 	if (callbackSelect === "직접입력" && callbackInput === "") {
@@ -748,7 +760,74 @@ function reserve() {
 		return;
 	}
 	
+	const params = new URLSearchParams();
+	params.append("excelFile", EXCEL_FILE_NAME);
+	params.append("sheetName", sheetName);
+	//발신번호
+	params.append("callbackFlag", callbackFlag);
+	params.append("callbackRow", callbackSelect);
+	params.append("tranCallback", callbackInput);
+	//수신번호
+	params.append("calleeFlag", calleeFlag);
+	params.append("calleeRow", calleeSelect);
+	params.append("tranCallee", calleeInput);
 	
+	fetch("/api/v1/excelSend/reserve", {
+		method: "POST",
+		headers: { "Content-Type": "application/x-www-form-urlencoded" },
+		body: params.toString()
+	})
+	.then(res => res.json())
+	.then(data => {
+		console.log(data);
+		
+		const status = data.status;
+		
+		if(status == "success"){
+			console.log(
+				'excelFile:', EXCEL_FILE_NAME
+				, '| sheetName:', sheetName
+				, '| callbackFlag:', callbackFlag
+				, '| callbackRow:', callbackSelect
+				, '| tranCallback:', callbackInput
+				, '| calleeFlag:', calleeFlag
+				, '| calleeRow:', calleeSelect
+				, '| tranCallee:', calleeInput
+			);
+			const retData = data.retData;
+			const table = document.querySelector("#excelGrid table");
+
+			// thead
+			const thead = table.querySelector("thead");
+			thead.innerHTML = "";
+			const headRow = document.createElement("tr");
+			retData[0].forEach(text => {
+				const th = document.createElement("th");
+				th.textContent = text;
+				headRow.appendChild(th);
+			});
+			thead.appendChild(headRow);
+
+			// tbody
+			const tbody = table.querySelector("tbody");
+			tbody.innerHTML = "";
+			retData.slice(1).forEach(rowData => {
+				const tr = document.createElement("tr");
+				rowData.forEach(text => {
+					const td = document.createElement("td");
+					td.textContent = text;
+					tr.appendChild(td);
+				});
+				tbody.appendChild(tr);
+			});
+		}else{
+			showDialogCustom('error');
+		}
+	})
+	.catch(err => {
+		console.error("시트 읽기 실패:", err);
+		showDialogCustom('error');
+	});
 	
 }
 

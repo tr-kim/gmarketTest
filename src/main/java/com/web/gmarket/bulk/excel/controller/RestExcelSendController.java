@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -253,6 +254,10 @@ public class RestExcelSendController {
 	/**
 	 * 발신번호, 수신번호, 전송시간 추가
 	 */
+	public int columnNameToIndex(String colName) {
+		return new CellReference(colName + "1").getCol(); // "B" → 1
+	}
+	
 	@PostMapping("/reserve")
 	public Map<String, Object> reserve(
 		@RequestParam("excelFile") String excelFile,
@@ -390,9 +395,45 @@ public class RestExcelSendController {
 				data.add(rowData);
 			}
 			
+			// 7. 수신번호/발신번호 가공
+			List<List<String>> newData = new ArrayList<>();
+
+			// 헤더
+			List<String> header = new ArrayList<>();
+			header.add("수신번호");
+			header.add("발신번호");
+			header.add("전송시간");
+			header.addAll(data.get(0)); // 기존 ABCD 그대로
+			newData.add(header);
+
+			// 열 인덱스 구하기 (문자열 → 숫자 변환) 
+			int callbackCol = -1; 
+			int calleeCol = -1; 
+			if ("2".equals(callbackFlag)) { 
+				callbackCol = columnNameToIndex(callbackRow); // 예: "B" → 1 
+				} if ("2".equals(calleeFlag)) { calleeCol = columnNameToIndex(calleeRow); }
+
+			// 데이터 채우기
+			for (int i = 2; i < data.size(); i++) { // 0:열번호, 1:엑셀헤더 → 2부터 실제데이터 
+			List<String> row = data.get(i); List<String> newRow = new ArrayList<>(); // 수신번호 
+			String callee = ""; if ("1".equals(calleeFlag)) { 
+				callee = tranCallee; 
+			} else if ("2".equals(calleeFlag) && calleeCol >= 0 && calleeCol < row.size()) { 
+				callee = row.get(calleeCol); } // 발신번호 
+				String callback = ""; if ("1".equals(callbackFlag)) { 
+					callback = tranCallback; 
+				} else if ("2".equals(callbackFlag) && callbackCol >= 0 && callbackCol < row.size()) { 
+					callback = row.get(callbackCol); } // 전송시간 (일단 고정값, 필요하면 옵션화 가능) 
+					String tranTime = "즉시전송"; // 새 데이터 조합 
+					newRow.add(callee); 
+					newRow.add(callback); newRow.add(tranTime); 
+					newRow.addAll(row); newData.add(newRow); 
+				}
 			// 리턴값 셋팅
 			result.put("status", "success");
-			result.put("retData", data);
+			result.put("retData", newData);
+			// result.put("status", "success");
+			// result.put("retData", data);
 			
 		} catch (Exception e) {
 			result.put("status", "error");
