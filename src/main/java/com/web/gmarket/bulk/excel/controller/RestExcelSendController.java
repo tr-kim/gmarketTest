@@ -144,7 +144,7 @@ public class RestExcelSendController {
 			
 			// 4. 최대 행/열 계산
 			// 내용이 없어도 개수 포함
-			int maxRows = sheet.getLastRowNum();
+			int maxRows = sheet.getLastRowNum() + 1;
 			int maxCells = 0;
 			for (Row row : sheet) {
 				if (row != null && row.getLastCellNum() > maxCells) {

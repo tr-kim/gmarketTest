@@ -16,30 +16,25 @@
 			<li>
 				<div class="col-2 font-weight-500">시트선택</div>
 				<div class="col">
-					<select name="sheet" id="sheet" class="form-select mb-3">
+					<select name="sheet" id="sheet" class="form-select mb-3" onchange="excelReadSheet(this)">
 						<option value="">시트를 선택해주세요.</option>
 					</select>
 					<div id="excelGrid" class="grid">
-							<table class="table w-100 text-center mb-0">
-								<colgroup>
-									<col style="width:33%;">
-									<col style="width:33%;">
-									<col style="width:34%;">
-								</colgroup>
-								<thead>
-									<tr>
-										<th>수신번호</th>
-										<th>발신번호</th>
-										<th>전송시간</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr class="no-data">
-										<td class="py-3" colspan="3">파일을 선택해주세요.</td>
-									</tr>
-								</tbody>
-                            </table>
-						</div>
+						<table class="table w-100 text-center mb-0">
+							<thead>
+								<tr>
+									<th>수신번호</th>
+									<th>발신번호</th>
+									<th>전송시간</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="no-data">
+									<td class="py-3" colspan="3">파일을 선택해주세요.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</li>
 			<li class="align-items-center">

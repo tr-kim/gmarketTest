@@ -690,6 +690,8 @@ function excelUpload(input) {
 			const retData = data.retData;
 			const sheet = document.getElementById('sheet');
 			
+			window.uploadedExcelFileName = retData.excelFile;
+			console.log("업로드된 엑셀 파일 이름:", window.uploadedExcelFileName);
 			// 기존 옵션 전부 제거 후, 안내용 기본 옵션 추가
 			sheet.innerHTML = "";
 			const defaultOpt = document.createElement('option');
@@ -702,6 +704,7 @@ function excelUpload(input) {
 				opt.value = option;
 				opt.textContent = option;
 				sheet.appendChild(opt);
+				
 			});
 		}else{
 			showDialogCustom('error');
@@ -713,11 +716,100 @@ function excelUpload(input) {
 	});
 }
 
+//엑셀 시트 읽기
+function excelReadSheet(option) {
+    const sheetName = option.value;
+    if (!sheetName) return;
 
+    if (!window.uploadedExcelFileName) {
+        showDialogCustom('엑셀파일이 없습니다.');
+        return;
+    }
 
+    const params = new URLSearchParams();
+    params.append("excelFile", window.uploadedExcelFileName);
+    params.append("sheetName", sheetName);
 
+    fetch("/api/v1/excelSend/readSheet", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params.toString()
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log("시트 읽기 결과:", data);
+        // 여기에 테이블에 데이터 뿌리는 로직 추가
+		const table = document.querySelector("#excelGrid table");
+		const retData = data.retData;
 
+        // thead 설정
+        const thead = table.querySelector("thead");
+        thead.innerHTML = ""; // 기존 내용 제거
+        const headRow = document.createElement("tr");
+        retData[0].forEach(text => {
+            const th = document.createElement("th");
+            th.textContent = text;
+            headRow.appendChild(th);
+        });
+        thead.appendChild(headRow);
 
+        // tbody 설정
+        const tbody = table.querySelector("tbody");
+        tbody.innerHTML = ""; // 기존 내용 제거
+        retData.slice(1).forEach(rowData => {
+            const tr = document.createElement("tr");
+            rowData.forEach(text => {
+                const td = document.createElement("td");
+                td.textContent = text;
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+		
+			
+		const callbackNoSelect = document.getElementById('callbackNoSelect');
+		const directNumSelect = document.getElementById('directNumSelect');
+		// const tagLi = document.getElementById('tag');
+		const tagLi = document.querySelector('#tag ul');
+		
+		//발신번호
+		callbackNoSelect.innerHTML = "";
+		const callbackNoOpt = document.createElement('option');
+
+		callbackNoOpt.value = "";
+		callbackNoOpt.textContent = "직접입력";
+		callbackNoSelect.appendChild(callbackNoOpt);
+
+		//수신번호
+		directNumSelect.innerHTML = "";
+		const directNumOpt = document.createElement('option');
+
+		directNumOpt.value = "";
+		directNumOpt.textContent = "직접입력";
+		directNumSelect.appendChild(directNumOpt);
+
+		//변수선택
+		tagLi.innerHTML = "";		
+		
+		retData[0].forEach(option => {
+			const opt = document.createElement('option');
+			opt.value = option;
+			opt.textContent = option;
+			callbackNoSelect.appendChild(opt); // 발신번호
+			directNumSelect.appendChild(opt.cloneNode(true)); // 수신번호, 복제해서 사용
+
+			const tagOpt = document.createElement('li');
+			tagOpt.classList.add('col-4', 'text-center', 'mb-3');
+			tagOpt.innerHTML = `<button type="button">${option}</button>`; // 변수선택
+			tagLi.appendChild(tagOpt);
+		});		
+		
+    })
+    .catch(err => {
+        console.error("시트 읽기 실패:", err);
+        showDialogCustom('error');
+    });
+}
 
 
 
