@@ -38,8 +38,8 @@ public class RestExcelSendController {
 	/**
 	 * 엑셀 파일 업로드
 	 */
-	@PostMapping("/upload")
-	public Map<String, Object> uploadExcel(@RequestParam("file") MultipartFile file) throws IOException {
+	@PostMapping("/fileUpload")
+	public Map<String, Object> uploadExcelFile(@RequestParam("file") MultipartFile file) throws IOException {
 		Map<String, Object> result = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		
@@ -108,6 +108,164 @@ public class RestExcelSendController {
 	public Map<String, Object> readExcelSheet(
 		@RequestParam("excelFile") String excelFile,
 		@RequestParam("sheetName") String sheetName) throws IOException {
+		
+		Map<String, Object> result = new HashMap<>();
+		List<List<String>> data = new ArrayList<>();
+		
+		// 1. 파일 찾기
+		String uploadDir = EXCEL_PATH;
+		File file = new File(uploadDir, excelFile);
+		if (!file.exists()) {
+			result.put("status", "error");
+			result.put("message", "파일을 찾을 수 없습니다.");
+			return result;
+		}
+		
+		// 2. 확장자에 따라 Workbook 생성
+		Workbook workbook = null;
+		try (InputStream is = new FileInputStream(file)) {
+			if (excelFile.endsWith(".xls")) {
+				workbook = new HSSFWorkbook(is);
+			} else if (excelFile.endsWith(".xlsx")) {
+				workbook = new XSSFWorkbook(is);
+			} else {
+				result.put("status", "error");
+				result.put("message", "엑셀 파일 형식이 아닙니다.");
+				return result;
+			}
+			
+			// 3. 시트 찾기
+			Sheet sheet = workbook.getSheet(sheetName);
+			if (sheet == null) {
+	            result.put("status", "error");
+	            result.put("message", "해당 시트를 찾을 수 없습니다.");
+	            return result;
+			}
+			
+			// 4. 최대 행/열 계산
+			// 내용이 없어도 개수 포함
+			int maxRows = sheet.getLastRowNum() + 1;
+			int maxCells = 0;
+			for (Row row : sheet) {
+				if (row != null && row.getLastCellNum() > maxCells) {
+					maxCells = row.getLastCellNum();
+				}
+			}
+			
+			// 4. 최대 행/열 계산
+			// 내용이 없으면 개수 제외
+			/*int maxRows = sheet.getPhysicalNumberOfRows();
+			int maxCells = 0;
+			for (int i = 0; i < maxRows; i++) {
+				Row row = sheet.getRow(i);
+				if (row != null && row.getPhysicalNumberOfCells() > maxCells) {
+					maxCells = row.getPhysicalNumberOfCells();
+				}
+			}*/
+			
+			if (maxRows > EXCEL_ROW_MAX) {
+	            result.put("status", "error");
+	            result.put("message", "엑셀파일은 " + EXCEL_ROW_MAX + "줄까지 가능합니다.");
+	            return result;
+			}
+			
+			if (maxCells > EXCEL_CELL_MAX) {
+	            result.put("status", "error");
+	            result.put("message", "엑셀파일은 " + EXCEL_CELL_MAX + "열까지 가능합니다.");
+	            return result;
+			}
+			
+			// 5. 시트 내용 읽기
+			// 0번째 행에 열번호 추가
+			List<String> colHeaders = new ArrayList<>();
+			for (int i = 0; i < maxCells; i++) {
+				colHeaders.add(getColumnName(i));
+			}
+			data.add(colHeaders);
+			
+			// 6. 데이터 행 추가
+			for (int r = 0; r < maxRows; r++) {
+				Row row = sheet.getRow(r);
+				List<String> rowData = new ArrayList<>();
+				
+				for (int c = 0; c < maxCells; c++) {
+					String excelValue = "";
+					if (row != null) {
+						Cell cell = row.getCell(c);
+						if (cell != null) {
+							switch (cell.getCellType()) {
+								case FORMULA: // 수식이 들어있는 경우
+									excelValue = cell.getCellFormula();
+									break;
+									
+								case NUMERIC:
+									if (DateUtil.isCellDateFormatted(cell)) {
+										excelValue = new SimpleDateFormat("yyyy-MM-dd").format(cell.getDateCellValue());
+									} else {
+										excelValue = String.valueOf((int) cell.getNumericCellValue());
+									}
+									break;
+									
+								case STRING:
+									excelValue = cell.getStringCellValue();
+									break;
+									
+								case BLANK:
+									excelValue = "";
+									break;
+									
+								case BOOLEAN:
+									excelValue = String.valueOf(cell.getBooleanCellValue());
+									break;
+									
+								case ERROR:
+									excelValue = String.valueOf(cell.getErrorCellValue());
+									break;
+									
+								default:
+									excelValue = "";
+							}
+						}
+					}
+					rowData.add(excelValue);
+				}
+				data.add(rowData);
+			}
+			
+			// 리턴값 셋팅
+			result.put("status", "success");
+			result.put("retData", data);
+			
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("message", e.getMessage());
+			
+		} finally {
+			if (workbook != null) {
+				workbook.close();
+			}
+		}
+		
+		return result;
+	}
+	
+	
+	/**
+	 * 발신번호, 수신번호, 전송시간 추가
+	 */
+	@PostMapping("/reserve")
+	public Map<String, Object> reserve(
+		@RequestParam("excelFile") String excelFile,
+		@RequestParam("sheetName") String sheetName,
+		// 발신번호
+		@RequestParam("callbackFlag") String callbackFlag, 	// 직접입력(1), 드롭다운(2)
+		@RequestParam("callbackRow") String callbackRow, 	// 드롭다운 값
+		@RequestParam("tranCallback") String tranCallback, 	// 직접입력 값
+		// 수신번호
+		@RequestParam("calleeFlag") String calleeFlag, 	// 직접입력(1), 드롭다운(2)
+		@RequestParam("calleeRow") String calleeRow, 	// 드롭다운 값
+		@RequestParam("tranCallee") String tranCallee 	// 직접입력 값
+	) throws IOException {
 		
 		Map<String, Object> result = new HashMap<>();
 		List<List<String>> data = new ArrayList<>();

@@ -9,7 +9,7 @@
 			<li class="align-items-center filebtn">
 				<div class="col-2 font-weight-500">엑셀선택</div>
 				<div class="col">
-					<input type="file" name="excelFile" id="excelFile" class="form-control me-2" accept=".xls, .xlsx" onchange="excelUpload(this)">
+					<input type="file" name="excelFile" id="excelFile" class="form-control me-2" accept=".xls, .xlsx" onchange="excelFileUpload(this)">
 					<!-- <a href="" download class="text-nowrap font-weight-500 mx-2"><i class="bi bi-download me-1"></i>양식다운로드</a> -->
 				</div>
 			</li>	
@@ -39,25 +39,25 @@
 			</li>
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">발신번호</div>
-				<div class="col d-flex">					
-						<select name="callbackNoSelect" id="callbackNoSelect" class="form-select me-2">
-							<option value="직접입력">직접입력</option>
-						</select>					
-						<input type="text" name="callbackNo" id="callbackNo" class="form-control" placeholder="발신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">			
+				<div class="col d-flex">
+					<select name="callbackSelect" id="callbackSelect" class="form-select me-2">
+						<option value="직접입력">직접입력</option>
+					</select>
+					<input type="text" name="tranCallback" id="tranCallback" class="form-control" placeholder="발신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
 				</div>
 			</li>
 			<li class="align-items-center mb-2">
 				<div class="col-2 font-weight-500">수신번호</div>
-				<div class="col d-flex">					
-					<select name="directNumSelect" id="directNumSelect" class="form-select me-2">
+				<div class="col d-flex">
+					<select name="calleeSelect" id="calleeSelect" class="form-select me-2">
 						<option value="직접입력">직접입력</option>
-					</select>					
-					<input type="text" name="directNum" id="directNum" class="form-control" placeholder="발신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">			
+					</select>
+					<input type="text" name="tranCallee" id="tranCallee" class="form-control" placeholder="수신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
 				</div>
 			</li>
 			<li class="align-items-center justify-content-end">
 				<div>
-					<button type="button" class="btn btn-primary text-nowrap" onclick="">지정</button>
+					<button type="button" class="btn btn-primary text-nowrap" onclick="reserve()">지정</button>
 				</div>
 			</li>
 			<li class="align-items-center">
