@@ -32,7 +32,6 @@ public class DynamicDataSourceService {
 	private final Map<String, SqlSessionFactory> sqlSessionFactoryCache = new ConcurrentHashMap<>();
 	private final Map<String, SqlSessionTemplate> sqlSessionTemplateCache = new ConcurrentHashMap<>();
 	
-	
 	public <T> T getMapper(String dbName, Class<T> mapperClass) {
         SqlSessionTemplate sqlSession = getSqlSessionTemplate(dbName);
         return sqlSession.getMapper(mapperClass);
@@ -55,7 +54,7 @@ public class DynamicDataSourceService {
 	private DataSource createDataSource(String dbName) {
 		Hikari setting = properties.getDatasource().get(dbName).getHikari();
 
-		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> dbName : " + dbName);
+		// log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> dbName : " + dbName);
 
 		if (setting == null) {
 			throw new IllegalArgumentException("알 수 없는 DB 설정: " + dbName);
@@ -82,10 +81,10 @@ public class DynamicDataSourceService {
 			SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
 
 			factoryBean.setDataSource(dataSource);
-			// ✅ Mapper XML 위치 등록
+			// Mapper XML 위치 등록
 			factoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/*.xml"));
 
-			// ✅ MyBatis 설정 파일 등록 (예: aliases, typeHandlers 등)
+			// MyBatis 설정 파일 등록 (예: aliases, typeHandlers 등)
 			factoryBean.setConfigLocation(applicationContext.getResource("classpath:mybatis-config.xml"));
 
 			return factoryBean.getObject();

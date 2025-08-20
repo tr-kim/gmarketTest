@@ -26,6 +26,8 @@ public class ConstantsUtils {
 	public static final String REASON = "reason";
 	public static final String RESULT = "result";
 	public static final String TOTAL_COUNT = "totalCount";
+	public static final String GMAREKT = "gmarket";
+	public static final String AUCTION = "auction";
 	
 	public static final String APPLICATION_JSON = "application/json";
 	public static final String AUTHORIZATION = "Authorization";
@@ -62,6 +64,7 @@ public class ConstantsUtils {
 	public static final String DB_GMAREKT = "gmarket";
 	public static final String DB_AUCTION = "auction";
 	
+	// Company Code
 	public static final int AUCTION_CODE = 0;
 	public static final int GMAREKT_CODE = 1;
 }

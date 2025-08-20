@@ -210,6 +210,7 @@ $(function () {
 			
 			const phoneNumValue = phoneNumInstance.option("value");
 			const middleItem = middleCategoryInstance.option("selectedItem");
+			const companyCode = largeCategoryInstance.option("value");
 			
 			const params = {
 				startDate: startDateFormatted,
@@ -217,6 +218,7 @@ $(function () {
 				startTime: startTimeFormatted + "000000",
 				endTime: endTimeFormatted + "235959",
 				phoneNum: phoneNumValue,
+				companyCode: companyCode,
 				//테스트 중. 전체 시 테이블명 수정 필요
 				tableName: (middleItem.name == "전체") ? "SMSCLI_TBL_EVENT" : middleItem.name,
 				//페이징 서버사이드 처리

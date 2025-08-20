@@ -155,6 +155,7 @@ $(function () {
 			}
 			
 			const titleValue = titleInstance.option("value");
+			const companyCode = largeCategoryInstance.option("value");
 			
 			const params = {
 				startDate: startDateFormatted,
@@ -162,6 +163,7 @@ $(function () {
 				startTime: startTimeFormatted + "000000",
 				endTime: endTimeFormatted + "235959",
 				bulkTitle: titleValue,
+				companyCode: companyCode,
 				//페이징 서버사이드 처리
 				skip: loadOptions.skip ?? 0, //offset: 앞에서 건너뛸 레코드 수
 				take: loadOptions.take ?? 50, //limit: 가져올 레코드 수

@@ -4,15 +4,15 @@
   
 <mapper namespace="com.web.gmarket.real.mapper.RealMapper">
 	
-	<select id="selectRealHistTotalList" resultType="com.web.gmarket.real.dto.RealDto" parameterType="int">
+	<select id="selectRealHistTotalList" resultType="com.web.gmarket.real.dto.RealDto">
 		<choose>
-			<when test = "alarmFlag == 1">
+			<when test = "alarmFlag != null and alarmFlag == 1">
 				/*
 					RealMapper.selectTotal 전체 현황 - 현재 시간 기준
 				*/
 				<![CDATA[
 					SELECT 
-						REPLACE(SUBSTRING(CONVERT(CHAR(8), GETDATE(), 8), 4, 8), ':', '') AS IN_TIME
+						ISNULL(REPLACE(SUBSTRING(CONVERT(CHAR(8), GETDATE(), 8), 4, 8), ':', ''), '00:00') AS IN_TIME
 						, ISNULL(SUM(SEND_CNT), 0) AS SEND_CNT
 					FROM T_MSG_TRAFFIC 
 					WHERE IN_TIME <= GETDATE() 
@@ -23,64 +23,45 @@
 				/*
 					RealMapper.selectTotal 전체 현황 - 최근 발송 시간 기준
 				*/
-				<![CDATA[
+				
 				DECLARE @d_date DATETIME
 				SELECT @d_date = (SELECT TOP 1 IN_TIME FROM T_MSG_TRAFFIC GROUP BY IN_TIME ORDER BY IN_TIME DESC)
 				SELECT 
-					REPLACE(SUBSTRING(CONVERT(CHAR(8), MAX(IN_TIME), 8), 4, 8), ':', '') AS IN_TIME
+					ISNULL(REPLACE(SUBSTRING(CONVERT(CHAR(8), MAX(IN_TIME), 8), 4, 8), ':', ''), '00:00') AS IN_TIME
 					, ISNULL(SUM(SEND_CNT), 0) AS SEND_CNT 
 				FROM T_MSG_TRAFFIC 
+				<![CDATA[
 				WHERE IN_TIME <= DATEADD(N, 0, @d_date) 
 				  AND IN_TIME >= DATEADD(N, -#{totalMonTime}, @d_date)
-				  AND TABLE_CODE IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 21, 22, 71, 72, 73)
-				UNION ALL
-				SELECT
-					REPLACE(SUBSTRING(CONVERT(CHAR(8), MAX(IN_TIME), 8), 4, 8), ':', '') AS IN_TIME
-					, ISNULL(SUM(SEND_CNT), 0) AS SEND_CNT
-				FROM T_MSG_TRAFFIC
-				WHERE IN_TIME <= DATEADD(N, 0, @d_date)
-				  AND IN_TIME >= DATEADD(N, -1, @d_date)
-				  AND TABLE_CODE IN (11, 12, 13, 14, 15, 16, 19, 20, 23, 24, 30, 31, 32)
 				]]>
+				  AND TABLE_CODE IN 
+				<foreach collection="codeList" item="code" open="(" separator="," close=")">
+					#{code}
+				</foreach>
 			</otherwise>
 		</choose>
 	</select>
 	
-	<select id="selectRealHistList" resultType="com.web.gmarket.real.dto.RealDto" parameterType="int">
-		<choose>
-			<when test = "companyCode == 0">
-				/*
-					RealMapper.selectRealHistList 옥션 전체 테이블 현황
-				*/
-				<![CDATA[
-				SELECT 
-					REPLACE(SUBSTRING(CONVERT(CHAR(8), GETDATE(), 8), 4, 8), ':', '') IN_TIME
-					, ISNULL(SUM(SEND_CNT), 0) SEND_CNT
-					, ISNULL(SUM(SUCC_CNT), 0) SUCC_CNT
-					, ISNULL(SUM(FAIL_CNT), 0) FAIL_CNT 
-				FROM T_MSG_TRAFFIC
-				WHERE IN_TIME <= GETDATE() 
-				  AND IN_TIME >= DATEADD(N, -1, GETDATE())
-				  AND TABLE_CODE IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 21, 22, 71, 72, 73)
-				]]>
-			</when>
-			<otherwise>
-				/*
-					RealMapper.selectRealHistList 지마켓 전체 테이블 현황
-				*/
-				<![CDATA[
-				SELECT 
-					REPLACE(SUBSTRING(CONVERT(CHAR(8), GETDATE(), 8), 4, 8), ':', '') IN_TIME
-					, ISNULL(SUM(SEND_CNT), 0) SEND_CNT
-					, ISNULL(SUM(SUCC_CNT), 0) SUCC_CNT
-					, ISNULL(SUM(FAIL_CNT), 0) FAIL_CNT 
-				FROM T_MSG_TRAFFIC
-				WHERE IN_TIME <= GETDATE() 
-				  AND IN_TIME >= DATEADD(N, -1, GETDATE())
-				  AND TABLE_CODE IN (11, 12, 13, 14, 15, 16, 19, 20, 23, 24, 30, 31, 32)
-				]]>
-			</otherwise>
-		</choose>
+	<select id="selectRealHistList" resultType="com.web.gmarket.real.dto.RealDto" parameterType="java.util.List">
+		
+			/*
+				RealMapper.selectRealHistList 옥션, 지마켓 전체 테이블 현황
+			*/
+			
+			SELECT 
+				ISNULL(REPLACE(SUBSTRING(CONVERT(CHAR(8), GETDATE(), 8), 4, 8), ':', ''), '00:00') IN_TIME
+				, ISNULL(SUM(SEND_CNT), 0) SEND_CNT
+				, ISNULL(SUM(SUCC_CNT), 0) SUCC_CNT
+				, ISNULL(SUM(FAIL_CNT), 0) FAIL_CNT 
+			FROM T_MSG_TRAFFIC
+			<![CDATA[ 
+			WHERE IN_TIME <= GETDATE() 
+			  AND IN_TIME >= DATEADD(N, -1, GETDATE()) 
+			]]>
+			  AND TABLE_CODE IN 
+			<foreach collection="codeList" item="code" open="(" separator="," close=")">
+				#{code}
+			</foreach>
 	</select>
 	
 	<select id="selectRealHistTableList" resultType="com.web.gmarket.real.dto.RealDto" parameterType="int">
@@ -88,7 +69,7 @@
 			RealMapper.selectRealHistTableList 테이블별 현황
 		*/
 		SELECT 
-			TOP 1 REPLACE(SUBSTRING(CONVERT(CHAR(8), IN_TIME ,8), 4, 8), ':', '') IN_TIME
+			TOP 1 ISNULL(REPLACE(SUBSTRING(CONVERT(CHAR(8), IN_TIME ,8), 4, 8), ':', ''), '00:00') IN_TIME
 			, ISNULL(SUM(SEND_CNT), 0) SEND_CNT
 			, ISNULL(SUM(SUCC_CNT), 0) SUCC_CNT
 			, ISNULL(SUM(FAIL_CNT), 0) FAIL_CNT 

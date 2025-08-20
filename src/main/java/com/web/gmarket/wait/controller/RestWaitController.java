@@ -29,6 +29,7 @@ public class RestWaitController {
 	@PostMapping("/list")
 	public ResponseEntity<?> getWaitList(@RequestBody WaitDto waitDto) {
 		try {
+			
 			List<WaitDto> result = waitService.getWaitList(waitDto);
 			int totalCount = waitService.getWaitCount(waitDto);
 			

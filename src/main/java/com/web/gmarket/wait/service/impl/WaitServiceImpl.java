@@ -4,25 +4,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.web.gmarket.common.config.DynamicDataSourceService;
 import com.web.gmarket.common.utils.ConstantsUtils;
+import com.web.gmarket.common.utils.DBUtils;
 import com.web.gmarket.wait.dto.WaitDto;
 import com.web.gmarket.wait.mapper.WaitMapper;
 import com.web.gmarket.wait.service.WaitService;
 
 @Service
 public class WaitServiceImpl implements WaitService {
+	
+	@Autowired
+	private DynamicDataSourceService dynamicDataSourceService;
 
-    private final WaitMapper waitMapper;
-
-    public WaitServiceImpl(WaitMapper waitMapper) {
-        this.waitMapper = waitMapper;
-    }
-    
 	//타입별 테이블명 치환
 	private static final Map<String, String> SVC_TYPE_TABLE_MAP = new HashMap<>();
 	static {
@@ -42,12 +42,18 @@ public class WaitServiceImpl implements WaitService {
 	
     @Override
     public List<WaitDto> getWaitList(WaitDto waitDto) {
-        return waitMapper.selectWaitList(waitDto);
+    	
+    	String dbName = DBUtils.getDBName(waitDto.getCompanyCode());
+    	
+        return getMapper(dbName).selectWaitList(waitDto);
     }
 
     @Override
     public int getWaitCount(WaitDto waitDto) {
-        return waitMapper.selectWaitCount(waitDto);
+    	
+    	String dbName = DBUtils.getDBName(waitDto.getCompanyCode());
+    	
+        return getMapper(dbName).selectWaitCount(waitDto);
     }
     
 	@Override
@@ -56,6 +62,7 @@ public class WaitServiceImpl implements WaitService {
 		Map<String, Object> result = new HashMap<>();
 		
 		try {
+			
 			if (waitDtoList == null || waitDtoList.isEmpty()) {
 				result.put(ConstantsUtils.CODE, ConstantsUtils.DATA_DOSE_NOT_EXIST);
 				result.put(ConstantsUtils.RESULT, "삭제할 항목이 없습니다.");
@@ -63,6 +70,8 @@ public class WaitServiceImpl implements WaitService {
 			}
 			
 			for (WaitDto dto : waitDtoList) {
+				
+				String dbName = DBUtils.getDBName(dto.getCompanyCode());
 				String bulkMsgKey = dto.getBulkMsgKey();
 				String svcType = dto.getSvcType();
 				
@@ -72,10 +81,10 @@ public class WaitServiceImpl implements WaitService {
 	            param.put("tableName", tableName);
 	            param.put("bulkMsgKey", bulkMsgKey);
 	            
-	            int deletedCount = waitMapper.deleteWaitMsg(param);
+	            int deletedCount = getMapper(dbName).deleteWaitMsg(param);
 	            
 				if (deletedCount > 0) {
-					waitMapper.deleteBroadCastMsg(param);
+					getMapper(dbName).deleteBroadCastMsg(param);
 				}
 			}
 			
@@ -90,6 +99,10 @@ public class WaitServiceImpl implements WaitService {
 			
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
+	}
+	
+	public WaitMapper getMapper(String dbName) {
+		return dynamicDataSourceService.getMapper(dbName, WaitMapper.class);
 	}
 	
 }

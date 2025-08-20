@@ -16,9 +16,10 @@ public class WaitDto {
 	private String startTime;
 	private String endTime;
     private String waitTitle;
+    private Integer companyCode; 
 	private Integer skip;
 	private Integer take;
-
+	
     //조회 컬럼
     private String bulkMsgKey;
 	private String loginID;
@@ -70,6 +71,14 @@ public class WaitDto {
 	
 	public void setWaitTitle(String waitTitle) {
 		this.waitTitle = waitTitle;
+	}
+	
+	public Integer getCompanyCode() {
+		return companyCode;
+	}
+	
+	public void setCompanyCode(Integer companyCode) {
+		this.companyCode = companyCode;
 	}
 	
 	public String getBulkMsgKey() {

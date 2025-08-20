@@ -4,22 +4,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.web.gmarket.bulk.hist.service.BulkHistService;
-import com.web.gmarket.common.utils.TableNameUtil;
 import com.web.gmarket.bulk.hist.dto.BulkHistDto;
 import com.web.gmarket.bulk.hist.mapper.BulkHistMapper;
+import com.web.gmarket.bulk.hist.service.BulkHistService;
+import com.web.gmarket.common.config.DynamicDataSourceService;
+import com.web.gmarket.common.config.JdbcTemplateProvider;
+import com.web.gmarket.common.utils.DBUtils;
+import com.web.gmarket.common.utils.TableNameUtil;
 
 @Service
 public class BulkHistServiceImpl implements BulkHistService {
-    private final BulkHistMapper bulkHistMapper;
-	private final JdbcTemplate jdbcTemplate;
+	private final JdbcTemplateProvider jdbcTemplateProvider;
+	private final DynamicDataSourceService dynamicDataSourceService;
 	
-	public BulkHistServiceImpl(BulkHistMapper bulkHistMapper, JdbcTemplate jdbcTemplate) {
-		this.bulkHistMapper = bulkHistMapper;
-		this.jdbcTemplate = jdbcTemplate;
+	public BulkHistServiceImpl(JdbcTemplateProvider jdbcTemplateProvider, DynamicDataSourceService dynamicDataSourceService) {
+		this.jdbcTemplateProvider = jdbcTemplateProvider;
+		this.dynamicDataSourceService = dynamicDataSourceService;
 	}
 	
 	//타입별 테이블명 치환
@@ -47,8 +49,11 @@ public class BulkHistServiceImpl implements BulkHistService {
 	//목록 조회 후 상태 카운트 병합
 	@Override
 	public List<BulkHistDto> getBulkHistList(BulkHistDto bulkHistDto) {
+		
+		String dbName = DBUtils.getDBName(bulkHistDto.getCompanyCode());
+		
 		//목록 조회
-		List<BulkHistDto> list = bulkHistMapper.selectBulkHistList(bulkHistDto);
+		List<BulkHistDto> list = getMapper(dbName).selectBulkHistList(bulkHistDto);
 		
 		String startMonth = bulkHistDto.getStartDate();
 		String endMonth = bulkHistDto.getEndDate();
@@ -62,12 +67,12 @@ public class BulkHistServiceImpl implements BulkHistService {
 			bulkHistDto.setBulkMsgKey(row.getBulkMsgKey());
 			
 			//월별 리스트 생성
-			List<String> tableList = TableNameUtil.getMonthTableNames(startMonth, endMonth, tableName, jdbcTemplate);
+			List<String> tableList = TableNameUtil.getMonthTableNames(startMonth, endMonth, tableName, jdbcTemplateProvider.getJdbcTemplate(dbName));
 			
 			bulkHistDto.setMonthTables(tableList);
 			
 			//상태 카운트 조회
-			Map<String, Integer> result = bulkHistMapper.selectBulkHistStatusCount(bulkHistDto);
+			Map<String, Integer> result = getMapper(dbName).selectBulkHistStatusCount(bulkHistDto);
 			
 			//조회된 카운트 병합
 			row.setCntStanby(result.getOrDefault("cntStanby", 0)); 			//전송대기
@@ -82,7 +87,13 @@ public class BulkHistServiceImpl implements BulkHistService {
 	
 	@Override
 	public int getBulkHistCount(BulkHistDto bulkHistDto) {
-		return bulkHistMapper.selectBulkHistCount(bulkHistDto);
+		String dbName = DBUtils.getDBName(bulkHistDto.getCompanyCode());
+		
+		return getMapper(dbName).selectBulkHistCount(bulkHistDto);
+	}
+	
+	public BulkHistMapper getMapper(String dbName) {
+		return dynamicDataSourceService.getMapper(dbName, BulkHistMapper.class);
 	}
 	
 }

@@ -18,6 +18,7 @@ public class HistDto {
 	private String endTime;
 	private String phoneNum;
 	private String tableName;
+	private Integer companyCode;
 	private List<String> monthTables;
 	private Integer skip;
 	private Integer take;
@@ -70,6 +71,14 @@ public class HistDto {
 	
 	public void setPhoneNum(String phoneNum) {
 		this.phoneNum = phoneNum;
+	}
+	
+	public Integer getCompanyCode() {
+		return companyCode;
+	}
+	
+	public void setCompanyCode(Integer companyCode) {
+		this.companyCode = companyCode;
 	}
 	
 	public List<String> getMonthTables() {
