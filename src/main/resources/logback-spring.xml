@@ -8,25 +8,25 @@
     
     <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>C:/gmarket/gmarket.log</file>
+        <ImmediateFlush>true</ImmediateFlush>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>C:/gmarket/backup/gmarket_%d{yyyy-MM-dd}.log</fileNamePattern>
 			<maxHistory>90</maxHistory>
 		</rollingPolicy>
 		<encoder>
 	       <pattern>%boldMagenta(%d{MM-dd HH:mm:ss}) [%boldYellow(%-5level)] %cyan(%logger{5}.%M) - %msg %n</pattern>
-	       <ImmediateFlush>true</ImmediateFlush>
 	    </encoder>
 	</appender>
 	
 	<appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>C:/gmarket/error/error.log</file>
+        <ImmediateFlush>true</ImmediateFlush>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>C:/gmarket/backup/error/error_%d{yyyy-MM-dd}.log</fileNamePattern>
 			<maxHistory>90</maxHistory>
 		</rollingPolicy>
 		<encoder>
 	       <pattern>%boldMagenta(%d{MM-dd HH:mm:ss}) [%boldYellow(%-5level)] %cyan(%logger{5}.%M) - %msg %n</pattern>
-	       <ImmediateFlush>true</ImmediateFlush>
 	    </encoder>
 	</appender>
 	
