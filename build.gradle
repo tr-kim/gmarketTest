@@ -93,6 +93,9 @@ dependencies {
 	implementation('some:lib:1.0') {
 	    exclude group: 'commons-logging', module: 'commons-logging'
 	}
+	
+	// excel
+	implementation 'org.apache.poi:poi-ooxml:5.2.5'
 }
 
 tasks.named('test') {

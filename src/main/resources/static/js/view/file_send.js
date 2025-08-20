@@ -183,6 +183,33 @@ $(function () {
 
 			handleInput(); // 유효한 경우만 처리
 		},
+		// onValueChanged: function (e) {
+
+		// 	const allowedFileExtensions = ['.jpg', '.jpeg', '.gif', '.png'];
+		// 	const invalidFiles = []; 
+
+		// 	const validFiles = (e.value || []).filter(file => {
+		// 		const extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+		// 		const isValid = allowedFileExtensions.includes(extension);
+		// 		if (!isValid) {
+		// 			invalidFiles.push(file.name);
+		// 		}
+		// 		return isValid;
+		// 	});
+
+		// 	if (invalidFiles.length > 0) {
+		// 		const message = `허용되지 않은 파일 형식입니다:\n${invalidFiles.join(', ')}`;
+		// 		showDialogCustom(message);
+		// 		console.warn('업로드 불가 파일 있음:', invalidFiles);
+
+		// 		// 허용되지 않은 파일 제거
+		// 		const uploader = $("#file-uploader").dxFileUploader("instance");
+		// 		uploader.option("value", validFiles); // 유효한 파일만 다시 설정
+		// 		return;
+		// 	}
+
+		// 	handleInput(); // 유효한 경우만 처리
+		// },
 
 	}).dxFileUploader('instance');
 	
@@ -232,16 +259,12 @@ $(function () {
 	const selects = document.querySelectorAll('.reserveSend select');
 	const reserveHour = document.getElementById('hour');
 	const reserveMinute = document.getElementById('minute');
-    const reserveDateLi = document.querySelector('.reserveDateLi');
 	
 	document.getElementById('send_time1').addEventListener('change',function(){
 		if (this.checked) {
 			document.getElementById('reserveDate').textContent = "";
 			FINAL_SEND_BTN.textContent = "즉시발송";
 
-            if(!reserveDateLi.classList.contains('d-none')) {
-                reserveDateLi.classList.add('d-none');
-            }
 		}
 	});
 	
@@ -249,10 +272,6 @@ $(function () {
 		if (this.checked) {
 			reserveModal.classList.add("d-block");			
 			FINAL_SEND_BTN.textContent = "예약발송";
-
-             if(reserveDateLi.classList.contains('d-none')) {
-                reserveDateLi.classList.remove('d-none');
-            }
 		}
 	});
 	
@@ -262,12 +281,7 @@ $(function () {
 		document.getElementById('send_time1').checked = true;
 		document.getElementById('reserveDate').textContent = "";
 		FINAL_SEND_BTN.textContent = "즉시발송";
-
-        if(!reserveDateLi.classList.contains('d-none')) {
-            reserveDateLi.classList.add('d-none');
-        }
 		
-		//document.querySelector('.date').textContent = '날짜를 선택해 주세요.';
 		selects.forEach(select => {
 			select.value = "00";
 		})
@@ -305,31 +319,6 @@ $(function () {
 			return;
 		}
 	})
-	
-	//분할전송 사용, 미사용	
-    const splitSendUse = document.getElementById('splitSendUse');
-    const splitMinute = document.getElementById('splitMinute');
-    const splitNum = document.getElementById('splitNum');
-
-	document.getElementById('split_send1').addEventListener('change',function(){
-		if (this.checked) {			
-            splitMinute.disabled = true;
-            splitNum.disabled = true;
-            if(!splitSendUse.classList.contains('disabled')) {
-                splitSendUse.classList.add('disabled');
-            }
-		}
-	});
-	
-	document.getElementById('split_send2').addEventListener('click', function () {
-		if (this.checked) {
-            splitMinute.disabled = false;
-            splitNum.disabled = false;
-			if(splitSendUse.classList.contains('disabled')) {
-                splitSendUse.classList.remove('disabled');
-            }
-		}
-	});
 
 	//문자 타입 표시
 	function setMsgType(idx, byteLength) {
@@ -349,14 +338,6 @@ $(function () {
 		
 		INPUT_BYTE.textContent = byteLength;
 	}
-
-	//전송범위설정
-	document.getElementById('tranCheckDefault').addEventListener('change', function () {
-		const input1 = document.getElementById('tranRangeStart');
-        const input2 = document.getElementById('tranRangeEnd');
-		input1.disabled = !this.checked;
-        input2.disabled = !this.checked;
-	});	
 
 	//080 수신거부
 	document.getElementById('rejectCheckDefault').addEventListener('change', function () {
@@ -428,28 +409,6 @@ $(function () {
         setMsgType(0, totalByteLength); // SMS
     }
 }
-	// function handleInput() {
-	// 	const titleContent = MSG_TITLE.value;
-	// 	const titleByteLength = getByteLength(titleContent);
-		
-	// 	const writeContent = MSG_WRITE.value;
-	// 	const writeByteLength = getByteLength(writeContent);
-		
-	// 	const hasImg = hasImage();
-		
-	// 	//console.log("hasImage():", hasImg);
-	// 	//console.log("title:", titleContent.trim(), "| byte:", writeByteLength);
-		
-	// 	if (hasImg) {
-	// 		setMsgType(2, writeByteLength); //MMS
-			
-	// 	} else if (titleContent.trim() !== '' || writeByteLength > 80) {
-	// 		setMsgType(1, writeByteLength); //LMS
-			
-	// 	} else {
-	// 		setMsgType(0, writeByteLength); //SMS
-	// 	}
-	// }
 
 	const rejectNum = document.getElementById('rejectNum')
 	MSG_TITLE.addEventListener("input", handleInput); //제목
@@ -482,49 +441,181 @@ $(function () {
 	
 	
 	//변수추가
-	document.querySelector('#tag').addEventListener('click', (e) => {
-		if (e.target.tagName === 'BUTTON') {
-			if (MSG_WRITE) {
-				insertAtCursor(MSG_WRITE, e.target.textContent);
+	document.querySelectorAll('#tag li button').forEach((btn, idx)=>{
+		btn.addEventListener('click',() => {
+			if(MSG_WRITE) {
+				insertAtCursor(MSG_WRITE, `#TAG${idx + 1}#`);
 				MSG_WRITE.dispatchEvent(new Event('input'));
 			}
-		}
+		})
 	});
-	// document.querySelectorAll('#tag li button').forEach((btn, idx)=>{
-	// 	btn.addEventListener('click',() => {
-	// 		if(MSG_WRITE) {
-	// 			insertAtCursor(MSG_WRITE, btn.textContent);
-	// 			MSG_WRITE.dispatchEvent(new Event('input'));
-	// 		}
-	// 	})
-	// });
 	
-	//엑셀 파일 업로드
-	document.getElementById('excelFile').addEventListener('change', function () {
+	//파일 업로드시 Grid
+	document.getElementById('textFile').addEventListener('change', function () {
 		const file = this.files[0];
 		if (!file) return;
 
-		// xls, xlsx 파일만 허용
-		const allowedExtensions = ['.xls', '.xlsx'];
-		const fileName = file.name.toLowerCase();
-		const isExcel = allowedExtensions.some(ext => fileName.endsWith(ext));
-
-		if (!isExcel) {
-			showDialogCustom("xls, xlsx 파일만 업로드 가능합니다.");
-			this.value = ""; 
+		// txt 파일만 허용
+		if (file.type !== "text/plain" && !file.name.endsWith(".txt")) {
+			showDialogCustom("TXT 파일만 업로드 가능합니다.");
+			this.value = "";
 			return;
 		}
-	})
 
+		const reader = new FileReader();
+		reader.onload = function (e) {
+			const content = e.target.result;
+			const numbers = content.split(',').map(num => num.trim()).filter(Boolean);
+
+			const tbody = document.querySelector('#textGrid tbody');
+			tbody.innerHTML = "";
+
+			if (numbers.length === 0) {
+				// 데이터 없으면 no-data 다시 추가
+				tbody.innerHTML = `
+					<tr class="no-data">
+						<td class="py-3" colspan="3">파일을 선택해주세요.</td>
+					</tr>
+				`;
+				return;
+			}
+
+			// 번호 목록 tr로 추가
+			numbers.forEach(num => {
+				const tr = document.createElement('tr');
+				const td = document.createElement('td');
+				td.textContent = num;
+				tr.appendChild(td);
+				tbody.appendChild(tr);
+			});
+
+			document.querySelector('span.direct_input_num').textContent= numbers.length;
+		};
+		reader.readAsText(file);
+	});
 });
-
-
-let EXCEL_FILE_NAME = "";
 
 
 //숫자만 입력
 function onlyNumber(element){
 	element.value = element.value.replace(/[^0-9]/g,'');
+}
+
+
+//직접입력 추가
+function addDirectNumber(){
+	const nameInput = document.getElementById("directName");
+	const directName = nameInput.value.trim();
+	
+	const numberInput = document.getElementById("directNumber");
+	const directNumber = numberInput.value.trim();
+	
+	if(directName == ""){
+		const message = '이름을 입력하세요.';
+		showDialogCustom(message);
+		return;
+	}
+	
+	if(directNumber == ""){
+		const message = '번호를 입력하세요.';
+		showDialogCustom(message);
+		return;
+	}
+	
+	const tbody = document.querySelector("#directGrid tbody");
+	
+	const emptyTr = tbody.querySelector('tr td[colspan]');
+	if (emptyTr){
+		tbody.innerHTML = '';
+	}
+	
+	const newTr = document.createElement('tr');
+	newTr.innerHTML = `
+		<td>${directName}</td>
+		<td class="phoneNum">${directNumber}</td>
+		<td>
+			<button type="button" class="numDelBtn" onclick="delDirectNumber(this)">
+			<i class="dx-icon-close"></i>
+			<span class="visually-hidden">삭제</span>
+			</button>
+		</td>
+	`;
+	
+	tbody.appendChild(newTr);
+	
+	//입력란 초기화
+	nameInput.value = '';
+	numberInput.value = '';
+	
+	updateDirectNumberStats();
+}
+
+
+//직접입력 삭제
+function delDirectNumber(element){
+	const confirmDialog = DevExpress.ui.dialog.custom({
+		showTitle: false,
+		messageHtml: "<div style='text-align: center;'>삭제하시겠습니까?</div>",
+		buttons: [{
+			text: "확인",
+			type: "default",
+			onClick: function(e) {
+				const tr = element.closest('tr');
+				tr.remove();
+				
+				const tbody = document.querySelector("#directGrid tbody");
+				
+				if (tbody.children.length == 0){
+					tbody.innerHTML = `
+						<tr class="no-data">
+							<td class="py-3" colspan="3">직접입력한 번호가 없습니다.</td>
+						</tr>
+					`
+				}
+				
+				updateDirectNumberStats();
+				
+				return { result: "ok" };
+			}
+		}, {
+			text: "취소",
+			onClick: function(e) {
+				return { result: "cancel" };
+			}
+		}]
+	});
+	
+	confirmDialog.show().done(function(dialogResult) {
+		if (dialogResult.result === "ok") {
+			console.log("삭제 완료");
+			
+		} else {
+			console.log("취소");
+		}
+	});
+}
+
+
+//직접입력 중복 수 계산
+function updateDirectNumberStats() {
+	const tbody = document.querySelector("#directGrid tbody");
+	const rows = tbody.querySelectorAll("tr:not(.no-data)");
+	const numbers = [];
+	const numberCounts = {};
+	
+	rows.forEach(row => {
+		const number = row.children[1]?.textContent?.trim(); //2번째 td가 번호
+		if (number) {
+			numbers.push(number);
+			numberCounts[number] = (numberCounts[number] || 0) + 1;
+		}
+	});
+	
+	const totalCount = numbers.length;
+	const dupCount = Object.values(numberCounts).filter(count => count > 1).reduce((a, b) => a + b - 1, 0);
+	
+	document.querySelector(".direct_input_num").textContent = totalCount;
+	document.querySelector(".direct_dup_num").textContent = dupCount;
 }
 
 
@@ -561,264 +652,4 @@ function sendMessage(){
 	});
 }
 
-
-//엑셀 파일 업로드
-function excelFileUpload(input) {
-	const file = input.files[0];
-	if (!file) return;
-	
-	const formData = new FormData();
-	formData.append("file", file);
-	
-	fetch("/api/v1/excelSend/fileUpload", {
-		method: "POST",
-		body: formData
-	})
-	.then(res => res.json())
-	.then(data => {
-		console.log(data);
-		
-		const status = data.status;
-		
-		if(status == "success"){
-			const retData = data.retData;
-			const sheet = document.getElementById('sheet');
-			
-			EXCEL_FILE_NAME = retData.excelFile;
-						
-			// 기존 옵션 전부 제거 후, 안내용 기본 옵션 추가
-			sheet.innerHTML = "";
-			const defaultOpt = document.createElement('option');
-			defaultOpt.value = "";
-			defaultOpt.textContent = "시트를 선택해주세요.";
-			sheet.appendChild(defaultOpt);
-			
-			retData.sheetName.forEach(option => {
-				const opt = document.createElement('option');
-				opt.value = option;
-				opt.textContent = option;
-				sheet.appendChild(opt);
-			});
-		}else{
-			showDialogCustom('error');
-		}
-	})
-	.catch(err => {
-		console.error("파일 업로드 실패", err);
-		showDialogCustom('error');
-	});
-}
-
-
-//엑셀 시트 읽기
-function excelReadSheet(option) {
-	const sheetName = option.value;
-	if (!sheetName) return;
-	
-	if (!EXCEL_FILE_NAME) {
-		showDialogCustom('엑셀 파일을 선택해주세요.');
-		return;
-	}
-	
-	const params = new URLSearchParams();
-	params.append("excelFile", EXCEL_FILE_NAME);
-	params.append("sheetName", sheetName);
-	
-	fetch("/api/v1/excelSend/readSheet", {
-		method: "POST",
-		headers: { "Content-Type": "application/x-www-form-urlencoded" },
-		body: params.toString()
-	})
-	.then(res => res.json())
-	.then(data => {
-		console.log(data);
-		
-		const status = data.status;
-		
-		if(status == "success"){
-			// 테이블 그리기
-			const retData = data.retData;
-			const table = document.querySelector("#excelGrid table");
-			
-			// thead 설정
-			const thead = table.querySelector("thead");
-			thead.innerHTML = ""; // 기존 내용 제거
-			const headRow = document.createElement("tr");
-			retData[0].forEach(text => {
-				const th = document.createElement("th");
-				th.textContent = text;
-				headRow.appendChild(th);
-			});
-			thead.appendChild(headRow);
-			
-			// tbody 설정
-			const tbody = table.querySelector("tbody");
-			tbody.innerHTML = ""; // 기존 내용 제거
-			retData.slice(1).forEach(rowData => {
-				const tr = document.createElement("tr");
-				rowData.forEach(text => {
-					const td = document.createElement("td");
-					td.textContent = text;
-					tr.appendChild(td);
-				});
-				tbody.appendChild(tr);
-			});
-			
-			//발신번호
-			const callbackSelect = document.getElementById('callbackSelect');
-			callbackSelect.innerHTML = "";
-			
-			const tranCallbackOpt = document.createElement('option');
-			tranCallbackOpt.value = "직접입력";
-			tranCallbackOpt.textContent = "직접입력";
-			callbackSelect.appendChild(tranCallbackOpt);
-			
-			//수신번호
-			const calleeSelect = document.getElementById('calleeSelect');
-			calleeSelect.innerHTML = "";
-			
-			const tranCalleeOpt = document.createElement('option');
-			tranCalleeOpt.value = "직접입력";
-			tranCalleeOpt.textContent = "직접입력";
-			calleeSelect.appendChild(tranCalleeOpt);
-			
-			//변수선택
-			const tagLi = document.querySelector('#tag ul');
-			tagLi.innerHTML = "";		
-			
-			retData[0].forEach(option => {
-				const opt = document.createElement('option');
-				opt.value = option;
-				opt.textContent = option;
-				callbackSelect.appendChild(opt); // 발신번호
-				calleeSelect.appendChild(opt.cloneNode(true)); // 수신번호(복제)
-				
-				const tagOpt = document.createElement('li');
-				tagOpt.classList.add('col-4', 'text-center', 'mb-3');
-				tagOpt.innerHTML = `<button type="button">${option}</button>`;
-				tagLi.appendChild(tagOpt); // 변수선택
-			});
-		}else{
-			showDialogCustom('error');
-		}
-	})
-	.catch(err => {
-		console.error("시트 읽기 실패:", err);
-		showDialogCustom('error');
-	});
-}
-
-
-// 발신번호, 수신번호 지정
-function reserve() {
-	if (!EXCEL_FILE_NAME) {
-		showDialogCustom('엑셀 파일을 선택해주세요.');
-		return;
-	}
-	
-	const sheetName = document.getElementById("sheet").value;
-	
-	// 발신번호
-	const callbackSelect = document.getElementById("callbackSelect").value;
-	const callbackInput = document.getElementById("tranCallback").value.trim();
-	const callbackFlag = callbackSelect === "직접입력" ? 1 : 2;
-
-	// 수신번호
-	const calleeSelect = document.getElementById("calleeSelect").value;
-	const calleeInput = document.getElementById("tranCallee").value.trim();
-	const calleeFlag = calleeSelect === "직접입력" ? 1 : 2;
-	
-	// 발신번호 검증
-	if (callbackSelect === "직접입력" && callbackInput === "") {
-		const message = '발신번호를 입력하세요.';
-		showDialogCustom(message, function (){
-			document.getElementById("tranCallback").focus();
-		});
-		return;
-		
-	} else if (callbackSelect !== "직접입력" && callbackInput !== "") {
-		const message = '직접입력이 아닐 경우<br>발신번호를 입력할 수 없습니다.';
-		showDialogCustom(message, function (){
-			document.getElementById("tranCallback").value = "";
-		});
-		return;
-	}
-	
-	// 수신번호 검증
-	if (calleeSelect === "직접입력" && calleeInput === "") {
-		const message = '수신번호를 입력하세요.';
-		showDialogCustom(message, function (){
-			document.getElementById("tranCallee").focus();
-		});
-		return;
-		
-	} else if (calleeSelect !== "직접입력" && calleeInput !== "") {
-		const message = '직접입력이 아닐 경우<br>수신번호를 입력할 수 없습니다.';
-		showDialogCustom(message, function (){
-			document.getElementById("tranCallee").value = "";
-		});
-		return;
-	}
-	
-	const params = new URLSearchParams();
-	params.append("excelFile", EXCEL_FILE_NAME);
-	params.append("sheetName", sheetName);
-	//발신번호
-	params.append("callbackFlag", callbackFlag);
-	params.append("callbackRow", callbackSelect);
-	params.append("tranCallback", callbackInput);
-	//수신번호
-	params.append("calleeFlag", calleeFlag);
-	params.append("calleeRow", calleeSelect);
-	params.append("tranCallee", calleeInput);
-	
-	fetch("/api/v1/excelSend/reserve", {
-		method: "POST",
-		headers: { "Content-Type": "application/x-www-form-urlencoded" },
-		body: params.toString()
-	})
-	.then(res => res.json())
-	.then(data => {
-		console.log(data);
-		
-		const status = data.status;
-		
-		if(status == "success"){
-			// 테이블 그리기
-			const retData = data.retData;
-			const table = document.querySelector("#excelGrid table");
-			
-			// thead
-			const thead = table.querySelector("thead");
-			thead.innerHTML = ""; // 기존 내용 제거
-			const headRow = document.createElement("tr");
-			retData[0].forEach(text => {
-				const th = document.createElement("th");
-				th.textContent = text;
-				headRow.appendChild(th);
-			});
-			thead.appendChild(headRow);
-
-			// tbody
-			const tbody = table.querySelector("tbody");
-			tbody.innerHTML = ""; // 기존 내용 제거
-			retData.slice(1).forEach(rowData => {
-				const tr = document.createElement("tr");
-				rowData.forEach(text => {
-					const td = document.createElement("td");
-					td.textContent = text;
-					tr.appendChild(td);
-				});
-				tbody.appendChild(tr);
-			});
-		}else{
-			showDialogCustom('error');
-		}
-	})
-	.catch(err => {
-		console.error("시트 읽기 실패:", err);
-		showDialogCustom('error');
-	});
-	
-}
 

@@ -6,63 +6,58 @@
 	<p class="font-sz-20 font-weight-600 pt-3 text-666">엑셀 발송</p>
 	<form class="content row mx-0 send" id="excelSend">
 		<ul>
-			<li class="align-items-center">
+			<li class="align-items-center filebtn">
 				<div class="col-2 font-weight-500">엑셀선택</div>
-				<div class="col">					
-					<input type="file" name="" id="" class="form-control me-2">
+				<div class="col">
+					<input type="file" name="excelFile" id="excelFile" class="form-control me-2" accept=".xls, .xlsx" onchange="excelFileUpload(this)">
 					<!-- <a href="" download class="text-nowrap font-weight-500 mx-2"><i class="bi bi-download me-1"></i>양식다운로드</a> -->
 				</div>
 			</li>	
 			<li>
 				<div class="col-2 font-weight-500">시트선택</div>
 				<div class="col">
-					<select name="sheet" id="sheet" class="form-select mb-3">
+					<select name="sheet" id="sheet" class="form-select mb-3" onchange="excelReadSheet(this)">
 						<option value="">시트를 선택해주세요.</option>
 					</select>
 					<div id="excelGrid" class="grid">
-							<table class="table w-100 text-center mb-0">
-								<colgroup>
-									<col style="width:33%;">
-									<col style="width:33%;">
-									<col style="width:34%;">
-								</colgroup>
-								<thead>
-									<tr>
-										<th>수신번호</th>
-										<th>발신번호</th>
-										<th>전송시간</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr class="no-data">
-										<td class="py-3" colspan="3">파일을 선택해주세요.</td>
-									</tr>
-								</tbody>
-                            </table>
-						</div>
+						<table class="table w-100 text-center mb-0">
+							<thead>
+								<tr>
+									<th>수신번호</th>
+									<th>발신번호</th>
+									<th>전송시간</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="no-data">
+									<td class="py-3" colspan="3">파일을 선택해주세요.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</li>
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">발신번호</div>
-				<div class="col d-flex">					
-						<select name="callbackNoSelect" id="callbackNoSelect" class="form-select me-2">
-							<option value="직접입력">직접입력</option>
-						</select>					
-						<input type="text" name="callbackNo" id="callbackNo" class="form-control" placeholder="발신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">			
+				<div class="col d-flex">
+					<select name="callbackSelect" id="callbackSelect" class="form-select me-2">
+						<option value="직접입력">직접입력</option>
+					</select>
+					<input type="text" name="tranCallback" id="tranCallback" class="form-control" placeholder="발신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
 				</div>
 			</li>
 			<li class="align-items-center mb-2">
 				<div class="col-2 font-weight-500">수신번호</div>
-				<div class="col d-flex">					
-					<select name="directNumSelect" id="directNumSelect" class="form-select me-2">
+				<div class="col d-flex">
+					<select name="calleeSelect" id="calleeSelect" class="form-select me-2">
 						<option value="직접입력">직접입력</option>
-					</select>					
-					<input type="text" name="directNum" id="directNum" class="form-control" placeholder="발신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">			
+					</select>
+					<input type="text" name="tranCallee" id="tranCallee" class="form-control" placeholder="수신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
 				</div>
 			</li>
 			<li class="align-items-center justify-content-end">
 				<div>
-					<button type="button" class="btn btn-primary text-nowrap" onclick="">지정</button>
+					<button type="button" class="btn btn-primary text-nowrap" onclick="reserve()">지정</button>
 				</div>
 			</li>
 			<li class="align-items-center">
@@ -120,12 +115,7 @@
 							<span class="img-question position-absolute end-0 bottom-0 p-3"><i class="bi bi-question-circle"></i></span>
 						</div>
 						<div class="option_wrap px-3 py-2" id="tag">
-							<ul class="row mt-2">
-								<li class="col-4 text-center mb-3"><button type="button">변수1</button></li>
-								<li class="col-4 text-center mb-3"><button type="button">변수2</button></li>
-								<li class="col-4 text-center mb-3"><button type="button">변수3</button></li>
-								<li class="col-4 text-center mb-3"><button type="button">변수4</button></li>
-								<li class="col-4 text-center mb-3"><button type="button">변수5</button></li>
+							<ul class="row mt-2">								
 							</ul>
 						</div>
 						<div class="option_wrap px-3 py-2" id="unicode">
