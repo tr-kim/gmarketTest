@@ -19,12 +19,14 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.web.gmarket.common.auth.dto.UserDetailsDto;
 
 @RestController
 @RequestMapping("/api/v1/excelSend")
@@ -40,7 +42,7 @@ public class RestExcelSendController {
 	 * 엑셀 파일 업로드
 	 */
 	@PostMapping("/fileUpload")
-	public Map<String, Object> uploadExcelFile(@RequestParam("file") MultipartFile file) throws IOException {
+	public Map<String, Object> uploadExcelFile(@RequestParam("file") MultipartFile file, Authentication authentication) throws IOException {
 		Map<String, Object> result = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		
@@ -54,7 +56,20 @@ public class RestExcelSendController {
 		// 2. 파일 저장
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String nowStr = sdf.format(new Date());
-		String savedFileName = "SEND_" + nowStr + "_" + file.getOriginalFilename();
+		String originalFilename = file.getOriginalFilename();
+		//String savedFileName = "SEND_" + nowStr + "_" + originalFilename;
+		
+		String ext = "";
+		int dotIndex = originalFilename.lastIndexOf(".");
+		if (dotIndex != -1) {
+			ext = originalFilename.substring(dotIndex); // 확장자 추출
+		}
+		
+		//String userId = ((UserDetails) authentication.getPrincipal()).getUsername(); // 서버 세션 ID
+		UserDetailsDto user = (UserDetailsDto) authentication.getPrincipal();
+		String userId = user.getUserId();
+		String savedFileName = "SEND_" + nowStr + "_" + userId + ext;
+		
 		File savedFile = new File(uploadDir + "/" + savedFileName);
 		file.transferTo(savedFile);
 		
@@ -145,7 +160,7 @@ public class RestExcelSendController {
 			
 			// 4. 최대 행/열 계산
 			// 내용이 없어도 개수 포함
-			int maxRows = sheet.getLastRowNum() + 1;
+			int maxRows = sheet.getLastRowNum() + 1; // 행 수는 +1
 			int maxCells = 0;
 			for (Row row : sheet) {
 				if (row != null && row.getLastCellNum() > maxCells) {
@@ -254,10 +269,6 @@ public class RestExcelSendController {
 	/**
 	 * 발신번호, 수신번호, 전송시간 추가
 	 */
-	public int columnNameToIndex(String colName) {
-		return new CellReference(colName + "1").getCol(); // "B" → 1
-	}
-	
 	@PostMapping("/reserve")
 	public Map<String, Object> reserve(
 		@RequestParam("excelFile") String excelFile,
@@ -307,7 +318,7 @@ public class RestExcelSendController {
 			
 			// 4. 최대 행/열 계산
 			// 내용이 없어도 개수 포함
-			int maxRows = sheet.getLastRowNum() + 1;
+			int maxRows = sheet.getLastRowNum() + 1; // 행 수는 +1
 			int maxCells = 0;
 			for (Row row : sheet) {
 				if (row != null && row.getLastCellNum() > maxCells) {
@@ -406,34 +417,49 @@ public class RestExcelSendController {
 			header.addAll(data.get(0)); // 기존 ABCD 그대로
 			newData.add(header);
 
-			// 열 인덱스 구하기 (문자열 → 숫자 변환) 
-			int callbackCol = -1; 
-			int calleeCol = -1; 
-			if ("2".equals(callbackFlag)) { 
-				callbackCol = columnNameToIndex(callbackRow); // 예: "B" → 1 
-				} if ("2".equals(calleeFlag)) { calleeCol = columnNameToIndex(calleeRow); }
-
+			// 열 인덱스 구하기 (문자열 → 숫자 변환)
+			int callbackCol = -1;
+			int calleeCol = -1;
+			if ("2".equals(callbackFlag)) {
+				callbackCol = columnNameToIndex(callbackRow); // 예: "B" → 1
+			}
+			if ("2".equals(calleeFlag)) {
+				calleeCol = columnNameToIndex(calleeRow);
+			}
+			
 			// 데이터 채우기
-			for (int i = 2; i < data.size(); i++) { // 0:열번호, 1:엑셀헤더 → 2부터 실제데이터 
-			List<String> row = data.get(i); List<String> newRow = new ArrayList<>(); // 수신번호 
-			String callee = ""; if ("1".equals(calleeFlag)) { 
-				callee = tranCallee; 
-			} else if ("2".equals(calleeFlag) && calleeCol >= 0 && calleeCol < row.size()) { 
-				callee = row.get(calleeCol); } // 발신번호 
-				String callback = ""; if ("1".equals(callbackFlag)) { 
-					callback = tranCallback; 
-				} else if ("2".equals(callbackFlag) && callbackCol >= 0 && callbackCol < row.size()) { 
-					callback = row.get(callbackCol); } // 전송시간 (일단 고정값, 필요하면 옵션화 가능) 
-					String tranTime = "즉시전송"; // 새 데이터 조합 
-					newRow.add(callee); 
-					newRow.add(callback); newRow.add(tranTime); 
-					newRow.addAll(row); newData.add(newRow); 
+			// 0:열번호, 1:엑셀헤더 → 2부터 실제데이터
+			for (int i = 2; i < data.size(); i++) {
+				List<String> row = data.get(i); List<String> newRow = new ArrayList<>();
+				
+				// 수신번호
+				String callee = "";
+				if ("1".equals(calleeFlag)) {
+					callee = tranCallee; 
+				} else if ("2".equals(calleeFlag) && calleeCol >= 0 && calleeCol < row.size()) {
+					callee = row.get(calleeCol);
 				}
+				
+				// 발신번호
+				String callback = "";
+				if ("1".equals(callbackFlag)) {
+					callback = tranCallback;
+				} else if ("2".equals(callbackFlag) && callbackCol >= 0 && callbackCol < row.size()) {
+					callback = row.get(callbackCol);
+				}
+				
+				// 전송시간
+				String tranTime = "즉시전송";
+				newRow.add(callee);
+				newRow.add(callback);
+				newRow.add(tranTime);
+				newRow.addAll(row);
+				newData.add(newRow);
+			}
+			
 			// 리턴값 셋팅
 			result.put("status", "success");
 			result.put("retData", newData);
-			// result.put("status", "success");
-			// result.put("retData", data);
 			
 		} catch (Exception e) {
 			result.put("status", "error");
@@ -459,6 +485,14 @@ public class RestExcelSendController {
 			index = (index / 26) - 1;
 		}
 		return columnName.toString();
+	}
+	
+	
+	/**
+	 * 엑셀 열 인덱스(문자열 → 숫자 변환)
+	 */
+	public int columnNameToIndex(String colName) {
+		return new CellReference(colName + "1").getCol(); // "B" → 1
 	}
 	
 	

@@ -637,8 +637,8 @@ function excelReadSheet(option) {
 		
 		if(status == "success"){
 			// 테이블 그리기
-			const table = document.querySelector("#excelGrid table");
 			const retData = data.retData;
+			const table = document.querySelector("#excelGrid table");
 			
 			// thead 설정
 			const thead = table.querySelector("thead");
@@ -784,22 +784,13 @@ function reserve() {
 		const status = data.status;
 		
 		if(status == "success"){
-			console.log(
-				'excelFile:', EXCEL_FILE_NAME
-				, '| sheetName:', sheetName
-				, '| callbackFlag:', callbackFlag
-				, '| callbackRow:', callbackSelect
-				, '| tranCallback:', callbackInput
-				, '| calleeFlag:', calleeFlag
-				, '| calleeRow:', calleeSelect
-				, '| tranCallee:', calleeInput
-			);
+			// 테이블 그리기
 			const retData = data.retData;
 			const table = document.querySelector("#excelGrid table");
-
+			
 			// thead
 			const thead = table.querySelector("thead");
-			thead.innerHTML = "";
+			thead.innerHTML = ""; // 기존 내용 제거
 			const headRow = document.createElement("tr");
 			retData[0].forEach(text => {
 				const th = document.createElement("th");
@@ -810,7 +801,7 @@ function reserve() {
 
 			// tbody
 			const tbody = table.querySelector("tbody");
-			tbody.innerHTML = "";
+			tbody.innerHTML = ""; // 기존 내용 제거
 			retData.slice(1).forEach(rowData => {
 				const tr = document.createElement("tr");
 				rowData.forEach(text => {
