@@ -121,6 +121,9 @@ public class UserDto implements Serializable {
 	// 암호화 된 사용자 암호
 	private String enc1Pa;
 	
+	private int skip = 0;
+	private int take = 50;
+	
 	@Builder(toBuilder = true)
 	private UserDto(int userSeq, String userId, String userPwd, String userName) {
 		this.userSeq = userSeq;

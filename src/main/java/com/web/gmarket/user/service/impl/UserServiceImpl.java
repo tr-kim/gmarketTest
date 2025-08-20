@@ -40,6 +40,11 @@ public class UserServiceImpl implements UserService {
 		
 		return getMapper().selectUserInfo(userDto);
 	}
+	
+	@Override
+	public int selectUserInfoListCount(UserDto userDto) {
+		return getMapper().selectUserInfoListCount(userDto);
+	}
 
 	@Override
 	public List<UserDto> selectUserInfoList(UserDto userDto) {

@@ -18,6 +18,26 @@
 		</if>
 	</select>
 	
+	<select id="selectUserInfoListCount" resultType="int" parameterType="com.web.gmarket.user.dto.UserDto">
+	  	/*
+	  		UserMapper.selectUserInfoListCount 사용자 정보 목록 갯수
+	  	*/
+	    SELECT 
+			COUNT(*)
+		FROM T_SMS_CLIENT
+		WHERE 1 = 1
+		<if test='userId != null and !userId.isEmpty()'>
+			AND USER_ID = #{userId}
+		</if>
+		<if test="userGrade != null and userGrade != -1">
+			AND USER_GRADE = #{userGrade}
+		</if>
+		<if test='companyCode != null'>
+			AND COMPANY_CODE = #{companyCode}
+		</if>
+		AND DEL_FLAG = 'N'
+	</select>
+	
 	<select id="selectUserInfoList" resultType="com.web.gmarket.user.dto.UserDto" parameterType="com.web.gmarket.user.dto.UserDto">
 	  	/*
 	  		UserMapper.selectUserInfoList 사용자 정보 목록 조회
@@ -38,6 +58,8 @@
 			AND COMPANY_CODE = #{companyCode}
 		</if>
 		AND DEL_FLAG = 'N'
+		ORDER BY USER_SEQ DESC
+		OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 	</select>
 	
 	<insert id="insertUserInfo" parameterType="com.web.gmarket.user.dto.UserDto">

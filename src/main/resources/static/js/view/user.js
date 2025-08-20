@@ -6,6 +6,8 @@ let userIdInstance;
 let currentMode = ''; // 전역 변수로 모드 추적
 let currentKey = null;
 
+let pageSize;
+
 $(function() {
 
 	let categoryData;
@@ -93,13 +95,33 @@ $(function() {
 	//조회 그리드
 	dataGrid = $("#userGrid").dxDataGrid({
 		dataSource: {
-			load: function() {
+			load: function(loadOptions) {
+				
+				const formData = new FormData(document.getElementById("userForm"));
+								
+				const skip = loadOptions.skip || 0;
+				const take = loadOptions.take || 50;
+	
+				formData.append("skip", skip);
+				formData.append("take", take);
+				
 				return $.ajax({
 					url: "/api/v1/user/list",
 					method: "POST",
-					data: new FormData(document.getElementById("userForm")),
+					data: formData,
 					processData: false,
 					contentType: false
+				}).then(function(result) {
+					return {
+						data: result.list,
+						totalCount: result.totalCount
+					};
+				}).catch(function() {
+					showDialogCustom("error");
+					return {
+						data: [],
+						totalCount: 0
+					};
 				});
 			}
 		},
@@ -371,7 +393,7 @@ $(function() {
 												
 												if (code == 1000) {
 													showDialogCustom(result, function (){
-														search(); //재조회
+														dataGrid.getDataSource().reload(); //재조회
 													});
 												} else {
 													showDialogCustom(result);
@@ -421,7 +443,12 @@ $(function() {
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
 			$("#totalCount").text(`총 ${totalCount}건`);
-		}
+		},
+		onOptionChanged: function(e) {
+	   		if (e.fullName === "paging.pageSize") {
+				pageSize = e.value;
+    		}
+	  	}
 	}).dxDataGrid("instance");
 });
 
@@ -446,11 +473,6 @@ function userModalReset() {
 	document.querySelectorAll('#user_add_modal select.select_2').forEach(select => {
 		select.value = "2";
 	});
-}
-
-// 검색
-function search() {
-	postFormAjax('/api/v1/user/list', new FormData(document.getElementById("userForm")), listCallback);
 }
 
 // 성공 함수
@@ -524,7 +546,15 @@ const searchBtn = $('#search-btn').dxButton({
     type: 'default',
     width: 60,
     onClick() {
-		search();
+		const formData = new FormData(document.getElementById("userForm"));
+		
+		const skip = 0;
+		const take = pageSize || 50;
+
+		formData.append("skip", skip);
+		formData.append("take", take);
+	
+		postFormAjax("/api/v1/user/list", formData);
     },
 }).dxButton('instance');
 
@@ -617,7 +647,7 @@ function successCallback(data) {
 		showDialogCustom(message, function (){
 			document.getElementById('user_add_modal').classList.remove('d-block');
 			userModalReset();
-			search();
+			dataGrid.getDataSource().reload();
 		});
 		
 	} else if (code == 9001 || code == 9002 || code == 9003) {
