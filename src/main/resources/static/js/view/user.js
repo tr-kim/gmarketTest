@@ -144,6 +144,9 @@ $(function() {
 		// 	allowDeleting: true,
 		// 	allowAdding: true
 		// },
+		remoteOperations: {
+			paging: true //페이징 서버사이드 처리
+		},
 		searchPanel: {
 			visible: true,
 			width: 300
@@ -475,11 +478,6 @@ function userModalReset() {
 	});
 }
 
-// 성공 함수
-function listCallback(data) {
-	dataGrid.option("dataSource", data);
-}
-
 // 등록 팝업창 및 수정 팝업창
 function openCustomModal(mode, data = {}) {
 	currentMode = mode;
@@ -540,7 +538,7 @@ function rsaCallback(data) {
 }
 
 // 조회 버튼
-const searchBtn = $('#search-btn').dxButton({
+$('#search-btn').dxButton({
     stylingMode: 'contained',
     text: '조회',
     type: 'default',
@@ -554,12 +552,18 @@ const searchBtn = $('#search-btn').dxButton({
 		formData.append("skip", skip);
 		formData.append("take", take);
 	
-		postFormAjax("/api/v1/user/list", formData);
+		//재조회
+		dataGrid.getDataSource().reload();
     },
 }).dxButton('instance');
 
+// 성공 함수
+function listCallback(data) {
+	dataGrid.option("dataSource", data);
+}
+
 // 등록 버튼
-const addBtn = $('#add_btn').dxButton({
+$('#add_btn').dxButton({
     stylingMode: 'outlined',
     text: '등록',
     type: 'default',
@@ -581,7 +585,7 @@ document.getElementById('close_btn').addEventListener('click', function(e) {
 });
 
 // 사용자 등록 모달 - 초기화 버튼
-const closeBtn = $('#reset_btn').dxButton({
+$('#reset_btn').dxButton({
     stylingMode: 'outlined',
     text: '초기화',
     type: 'default',
@@ -592,7 +596,7 @@ const closeBtn = $('#reset_btn').dxButton({
 }).dxButton('instance');
 
 // 사용자 등록 모달 - 저장 버튼
-const saveBtn = $('#save_btn').dxButton({
+$('#save_btn').dxButton({
     stylingMode: 'default',
     text: '저장',
     type: 'default',

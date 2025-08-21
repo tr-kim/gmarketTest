@@ -16,6 +16,9 @@
 	</resultMap>
 	
 	<select id="selectHistList" resultMap="HistResultMap">
+		/*
+			HistMapper.selectHistList
+		*/
 		<choose>
 			<when test="monthTables != null and monthTables.size() > 0">
 				(
@@ -46,6 +49,9 @@
 	</select>
 	
 	<select id="selectHistCount" resultType="int">
+		/*
+			HistMapper.selectHistCount
+		*/
 		<choose>
 			<when test="monthTables != null and monthTables.size() > 0">
 				SELECT COUNT(*) FROM (

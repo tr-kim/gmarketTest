@@ -6,10 +6,12 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,15 +72,20 @@ public class StatServiceImpl implements StatService {
 
 		// 코드 목록 조회
 		List<StatCodeDto> codeList = statCodeService.selectStatCodeList(statDto.getCompanyCode(), statDto.getTableCode());
-
+		
 		// 코드 목록 저장
-		List<Integer> list = new ArrayList<>();
-		for (StatCodeDto code : codeList) {
-			list.add(code.getTableCode());
-		}
+		List<Integer> list = codeList.stream().map(StatCodeDto::getTableCode).collect(Collectors.toList());
 		statDto.setTableCodeList(list);
+		
+		// 테이블 이름 저장
+		List<StatDto> selectAuctionStatList = getStatMapper(ConstantsUtils.DB_AUCTION).selectAuctionStatList(statDto);
+		Map<Integer, String> codeMap = codeList.stream().collect(Collectors.toMap(StatCodeDto::getTableCode, StatCodeDto::getTableName));
+		
+		for(StatDto dto : selectAuctionStatList) {
+			dto.setTableName(StringUtils.defaultIfBlank(codeMap.get(dto.getTableCode()), "-"));
+		}
 
-		return getStatMapper(ConstantsUtils.DB_AUCTION).selectAuctionStatList(statDto);
+		return selectAuctionStatList;
 	}
 
 	// 지마켓 목록 갯수

@@ -290,6 +290,9 @@ $(function() {
 		paging: {
 			pageSize: 50
 		},
+		remoteOperations: {
+			paging: true //페이징 서버사이드 처리
+		},
 		pager: {
 			visible: true,
 			showNavigationButtons: true,
@@ -314,7 +317,10 @@ $(function() {
 			{ dataField: "tableName", caption: "중분류", alignment: "center" },
 			{ dataField: "tryCnt", caption: "전체", alignment: "center" },
 			{ dataField: "succCnt", caption: "성공", alignment: "center" },
-			{ dataField: "failCnt", caption: "실패", alignment: "center" },
+			{ dataField: "failCnt", caption: "실패", alignment: "center",	 calculateCellValue: function(rowData) {
+					return rowData.tryCnt - rowData.succCnt;
+				} 
+			},
 		],
 		toolbar: {
 			items: [

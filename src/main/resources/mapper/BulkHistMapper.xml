@@ -21,6 +21,10 @@
 	</resultMap>
 	
 	<select id="selectBulkHistList" resultMap="BulkHistResultMap">
+		/*
+			BulkHistMapper.selectBulkHistList
+		*/
+	
 		(
 		SELECT
 			B_MSG_KEY,
@@ -51,6 +55,10 @@
 	</select>
 	
 	<select id="selectBulkHistCount" resultType="int">
+		/*
+			BulkHistMapper.selectBulkHistCount
+		*/
+	
 		SELECT COUNT(*) FROM (			
 			SELECT 1 AS CNT
 			FROM T_BROADCAST_MSG
@@ -63,6 +71,10 @@
 	</select>
 	
 	<select id="selectBulkHistStatusCount" resultType="map">
+		/*
+			BulkHistMapper.selectBulkHistStatusCount
+		*/
+	
 		<choose>
 			<when test="monthTables != null and monthTables.size() > 0">
 				SELECT
