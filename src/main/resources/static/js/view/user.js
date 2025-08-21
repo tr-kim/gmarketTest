@@ -147,6 +147,7 @@ $(function() {
 		remoteOperations: {
 			paging: true //페이징 서버사이드 처리
 		},
+		height: 500,
 		searchPanel: {
 			visible: true,
 			width: 300

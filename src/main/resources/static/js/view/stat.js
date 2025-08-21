@@ -244,36 +244,7 @@ $(function() {
 
 	//조회 그리드
 	dataGrid = $("#statGrid").dxDataGrid({
-		dataSource: {
-			load: function(loadOptions) {
-				const formData = new FormData(document.getElementById("statHistForm"));
-				
-				const skip = loadOptions.skip || 0;
-				const take = loadOptions.take || 50;
-
-				formData.append("skip", skip);
-				formData.append("take", take);
-
-				return $.ajax({
-					url: "/api/v1/stat/list",
-					method: "POST",
-					data: formData,
-					processData: false,
-					contentType: false
-				}).then(function(result) {
-					return {
-						data: result.list,
-						totalCount: result.totalCount
-					};
-				}).catch(function() {
-					showDialogCustom("error");
-					return {
-						data: [],
-						totalCount: 0
-					};
-				});
-			}
-		},
+		dataSource: [],
 		headerFilter: {
 			visible: true
 		},
@@ -281,6 +252,7 @@ $(function() {
 		selection: {
 			mode: 'single',
 		},
+		height: 500,
 		//행 마우스오버 시
 		hoverStateEnabled: true,
 		searchPanel: {
@@ -342,12 +314,13 @@ $(function() {
 			
 			const companyName = largeCategorySelectCode == 0 ? "(옥션 " + middleCategorySelectName + " 테이블)" : "(G마켓 " + middleCategorySelectName + " 테이블)"; 
 			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다. ${companyName}`);
+			
 		}
 	}).dxDataGrid("instance");
 });
 
 // 검색
-const searchBtn = $('#search-btn').dxButton({
+$('#search-btn').dxButton({
 	stylingMode: 'contained',
 	text: '조회',
 	type: 'default',
@@ -367,14 +340,42 @@ const searchBtn = $('#search-btn').dxButton({
 		if(searchCompanyCode == -1 || searchCompanyCode < 0) { showDialogCustom("대분류를 선택하세요."); return false; }
 		if(searchTableCode == -1 || searchTableCode < 0) { showDialogCustom("중분류를 선택하세요."); return false; }
 		
-		postFormAjax("/api/v1/stat/list", formData, listCallback);
+		const dataSource = new DevExpress.data.DataSource({
+			load: function(loadOptions) {
+				const formData = new FormData(document.getElementById("statHistForm"));
+				
+				const skip = loadOptions.skip || 0;
+				const take = loadOptions.take || 50;
+
+				formData.append("skip", skip);
+				formData.append("take", take);
+
+				return $.ajax({
+					url: "/api/v1/stat/list",
+					method: "POST",
+					data: formData,
+					processData: false,
+					contentType: false
+				}).then(function(result) {
+					return {
+						data: result.list,
+						totalCount: result.totalCount
+					};
+				}).catch(function() {
+					showDialogCustom("error");
+					return {
+						data: [],
+						totalCount: 0
+					};
+				});
+			}
+		});
+		
+		//재조회
+		dataGrid.option("dataSource", dataSource);
+		dataGrid.refresh(); 
 	}
 }).dxButton('instance');
-
-// 성공 함수
-function listCallback(data) {
-	dataGrid.option("dataSource", data);
-}
 
 //엑셀 다운로드 버튼
 const excelBtn = $('#excel-btn').dxButton({
@@ -391,7 +392,7 @@ const excelBtn = $('#excel-btn').dxButton({
 //엑셀 다운로드
 function exportGridToExcel(gridInstance) {
 	const workbook = new ExcelJS.Workbook();
-	const worksheet = workbook.addWorksheet('정산/통계 조회');
+	const worksheet = workbook.addWorksheet('정산_통계 조회');
 
 	DevExpress.excelExporter.exportDataGrid({
 		component: gridInstance,
@@ -399,7 +400,7 @@ function exportGridToExcel(gridInstance) {
 		autoFilterEnabled: true,
 	}).then(() => {
 		workbook.xlsx.writeBuffer().then((buffer) => {
-			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '정산/통계 조회.xlsx');
+			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '정산_통계 조회.xlsx');
 		});
 	});
 }

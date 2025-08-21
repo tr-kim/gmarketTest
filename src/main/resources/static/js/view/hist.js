@@ -271,6 +271,7 @@ $(function () {
 		headerFilter: {
 			visible: true
 		},
+		height: 500,
 		searchPanel: {
 			visible: true,
 			width: 300
