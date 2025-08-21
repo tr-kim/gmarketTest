@@ -52,26 +52,26 @@ public class DynamicDataSourceService {
 	}
 
 	private DataSource createDataSource(String dbName) {
-		Hikari setting = properties.getDatasource().get(dbName).getHikari();
+		Hikari hikari = properties.getDatasource().get(dbName).getHikari();
 
 		// log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> dbName : " + dbName);
 
-		if (setting == null) {
+		if (hikari == null) {
 			throw new IllegalArgumentException("알 수 없는 DB 설정: " + dbName);
 		}
 
 		HikariConfig config = new HikariConfig();
-		config.setJdbcUrl(setting.getJdbcUrl());
-		config.setUsername(setting.getUsername());
-		config.setPassword(setting.getPassword());
-		config.setDriverClassName(setting.getDriverClassName());
+		config.setJdbcUrl(hikari.getJdbcUrl());
+		config.setUsername(hikari.getUsername());
+		config.setPassword(hikari.getPassword());
+		config.setDriverClassName(hikari.getDriverClassName());
 
-		if (setting.getMaximumPoolSize() != null)
-			config.setMaximumPoolSize(setting.getMaximumPoolSize());
-		if (setting.getMinimumIdle() != null)
-			config.setMinimumIdle(setting.getMinimumIdle());
-		if (setting.getPoolName() != null)
-			config.setPoolName(setting.getPoolName());
+		if (hikari.getMaximumPoolSize() != null)
+			config.setMaximumPoolSize(hikari.getMaximumPoolSize());
+		if (hikari.getMinimumIdle() != null)
+			config.setMinimumIdle(hikari.getMinimumIdle());
+		if (hikari.getPoolName() != null)
+			config.setPoolName(hikari.getPoolName());
 
 		return new HikariDataSource(config);
 	}
@@ -89,6 +89,7 @@ public class DynamicDataSourceService {
 
 			return factoryBean.getObject();
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException("SqlSessionFactory 생성 실패", e);
 		}
 	}

@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService {
 
 			for (UserDto dto : userDtoList) {
 				String userId = dto.getUserId();
-				if (userId == null || userId.isEmpty()) continue;
+				if (StringUtils.isBlank(userId)) continue;
 
 				Map<String, Object> param = new HashMap<>();
 				param.put("userId", userId);
@@ -121,12 +122,12 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	public static String createHash(String data) throws Exception {
-		if (data == null) {
+		if (StringUtils.isBlank(data)) {
 			throw new NullPointerException();
 		}
 
-		MessageDigest md = MessageDigest.getInstance("SHA-512");
-		byte[] raw = md.digest(data.getBytes("EUC-KR"));
+		MessageDigest md = MessageDigest.getInstance(ConstantsUtils.SHA_512);
+		byte[] raw = md.digest(data.getBytes(ConstantsUtils.EUC_KR));
 
 		StringBuffer result = new StringBuffer();
 		for (int i = 0; i < raw.length; i++) {
