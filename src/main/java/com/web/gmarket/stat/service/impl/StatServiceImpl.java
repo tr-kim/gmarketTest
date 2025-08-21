@@ -17,8 +17,8 @@ import com.web.gmarket.common.config.DynamicDataSourceService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.stat.dto.StatCodeDto;
 import com.web.gmarket.stat.dto.StatDto;
-import com.web.gmarket.stat.mapper.StatCodeMapper;
 import com.web.gmarket.stat.mapper.StatMapper;
+import com.web.gmarket.stat.service.StatCodeService;
 import com.web.gmarket.stat.service.StatService;
 
 @Service
@@ -26,6 +26,9 @@ public class StatServiceImpl implements StatService {
 
 	@Autowired
 	private DynamicDataSourceService dynamicDataSourceService;
+	
+	@Autowired
+	private StatCodeService statCodeService;
 
 	@Override
 	public int selectStatListCount(StatDto statDto) {
@@ -66,7 +69,7 @@ public class StatServiceImpl implements StatService {
 		statDto.setEndDate(dateFormatConvert(statDto.getTimeType(), statDto.getEndDate()));
 
 		// 코드 목록 조회
-		List<StatCodeDto> codeList = getStatCodeMapper().selectStatCodeList(statDto.getCompanyCode(), statDto.getTableCode());
+		List<StatCodeDto> codeList = statCodeService.selectStatCodeList(statDto.getCompanyCode(), statDto.getTableCode());
 
 		// 코드 목록 저장
 		List<Integer> list = new ArrayList<>();
@@ -127,9 +130,5 @@ public class StatServiceImpl implements StatService {
 
 	public StatMapper getStatMapper(String dbName) {
 		return dynamicDataSourceService.getMapper(dbName, StatMapper.class);
-	}
-
-	public StatCodeMapper getStatCodeMapper() {
-		return dynamicDataSourceService.getMapper(ConstantsUtils.DB_GMAREKT, StatCodeMapper.class);
 	}
 }
