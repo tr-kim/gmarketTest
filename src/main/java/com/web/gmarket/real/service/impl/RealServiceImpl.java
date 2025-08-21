@@ -30,22 +30,11 @@ public class RealServiceImpl implements RealService {
 	public Map<String, List<RealDto>> selectRealHistTotalList(int totalMonTime, int alarmFlag) {
 		Map<String, List<RealDto>> result = new HashMap<>();
 		
-		List<Integer> codeList = new ArrayList<>();
-		List<StatCodeDto> auctionCodeList = statCodeService.selectStatCodeList(0, 0);
-		List<StatCodeDto> gmarketCodeList = statCodeService.selectStatCodeList(1, 0);
+		List<StatCodeDto> auctionCodeList = statCodeService.selectStatCodeList(ConstantsUtils.AUCTION_CODE, 0);
+		List<StatCodeDto> gmarketCodeList = statCodeService.selectStatCodeList(ConstantsUtils.GMAREKT_CODE, 0);
 		
-		for(StatCodeDto code : auctionCodeList) {
-			codeList.add(code.getTableCode());
-		}
-		
-		result.put(ConstantsUtils.AUCTION, getMapper(ConstantsUtils.DB_AUCTION).selectRealHistTotalList(totalMonTime, alarmFlag, codeList));
-		
-		codeList = new ArrayList<>();
-		for(StatCodeDto code : gmarketCodeList) {
-			codeList.add(code.getTableCode());
-		}
-		
-		result.put(ConstantsUtils.GMAREKT, getMapper(ConstantsUtils.DB_GMAREKT).selectRealHistTotalList(totalMonTime, alarmFlag, codeList));
+		result.put(ConstantsUtils.AUCTION, getMapper(ConstantsUtils.DB_AUCTION).selectRealHistTotalList(totalMonTime, alarmFlag, getCodeList(auctionCodeList)));
+		result.put(ConstantsUtils.GMAREKT, getMapper(ConstantsUtils.DB_GMAREKT).selectRealHistTotalList(totalMonTime, alarmFlag, getCodeList(gmarketCodeList)));
 		
 		return result;
 	}
@@ -56,25 +45,13 @@ public class RealServiceImpl implements RealService {
 		
 		switch (companyCode) {
 			case ConstantsUtils.AUCTION_CODE:
-				List<StatCodeDto> auctionCodeList = statCodeService.selectStatCodeList(0, 0);
-				
-				for(StatCodeDto code : auctionCodeList) {
-					codeList.add(code.getTableCode());
-				}
+				codeList = getCodeList(statCodeService.selectStatCodeList(ConstantsUtils.AUCTION_CODE, 0));
 				break;
 			case ConstantsUtils.GMAREKT_CODE:
-				List<StatCodeDto> gmarketCodeList = statCodeService.selectStatCodeList(1, 0);
-				
-				for(StatCodeDto code : gmarketCodeList) {
-					codeList.add(code.getTableCode());
-				}
+				codeList = getCodeList(statCodeService.selectStatCodeList(ConstantsUtils.GMAREKT_CODE, 0));
 				break;
 			default:
-				List<StatCodeDto> defaultCodeList = statCodeService.selectStatCodeList(0, 0);
-				
-				for(StatCodeDto code : defaultCodeList) {
-					codeList.add(code.getTableCode());
-				}
+				codeList = getCodeList(statCodeService.selectStatCodeList(ConstantsUtils.AUCTION_CODE, 0));
 				break;
 		}
 		
@@ -84,6 +61,17 @@ public class RealServiceImpl implements RealService {
 	@Override
 	public RealDto selectRealHistTableList(int companyCode, int tableCode) {
 		return  getMapper(DBUtils.getDBName(companyCode)).selectRealHistTableList(tableCode);
+	}
+	
+	public List<Integer> getCodeList(List<StatCodeDto> list) {
+		
+		List<Integer> codeList = new ArrayList<>();
+		
+		for(StatCodeDto code : list) {
+			codeList.add(code.getTableCode());
+		}
+		
+		return codeList;
 	}
 	
 	public RealMapper getMapper(String dbName) {
