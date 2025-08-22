@@ -58,23 +58,25 @@ public class RestUserController {
 			@Override
 			public void setAsText(String encryptedPassword) {
 
-				HttpSession session = request.getSession();
-
-				if (session == null) {
-					setValue(encryptedPassword); // 복호화 못하면 원본 그대로
-					return;
-				}
-
-				RSAPrivateKey privateKey = (RSAPrivateKey) session.getAttribute(ConstantsUtils.RSA_WEB_KEY);
-
-				if (privateKey == null) {
-					setValue(encryptedPassword);
-					return;
-				}
-
 				try {
+					
+					HttpSession session = request.getSession();
+	
+					if (session == null) {
+						setValue(encryptedPassword); // 복호화 못하면 원본 그대로
+						return;
+					}
+	
+					RSAPrivateKey privateKey = (RSAPrivateKey) session.getAttribute(ConstantsUtils.RSA_WEB_KEY);
+	
+					if (privateKey == null) {
+						setValue(encryptedPassword);
+						return;
+					}
+
 					String decrypted = RsaUtil.decryptRsa(privateKey, encryptedPassword);
 					setValue(decrypted);
+					
 				} catch (Exception e) {
 					log.error(e.getLocalizedMessage());
 					e.printStackTrace();
@@ -123,12 +125,12 @@ public class RestUserController {
 	 */
 	@ResponseBody
 	@PostMapping("/insert")
-	public ResponseEntity<?> insert(Authentication authentication, @Validated(ValidationSequence.class) UserDto userDto,
-			Errors errors) {
+	public ResponseEntity<?> insert(Authentication authentication, @Validated(ValidationSequence.class) UserDto userDto, Errors errors) {
 
 		Map<String, Object> result = new HashMap<>();
 		
 		try {
+			
 			if (errors.hasErrors()) {
 				LinkedHashMap<String, String> validatorResult = userService.validateHandling(errors);
 

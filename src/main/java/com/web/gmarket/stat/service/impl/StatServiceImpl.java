@@ -60,7 +60,7 @@ public class StatServiceImpl implements StatService {
 
 	// 옥션 목록 갯수
 	public int selectAuctionStatListCount(StatDto statDto) {
-		return getStatMapper(ConstantsUtils.DB_AUCTION).selectAuctionStatListCount(statDto);
+		return getMapper(ConstantsUtils.DB_AUCTION).selectAuctionStatListCount(statDto);
 	}
 
 	// 옥션 목록 조회
@@ -78,7 +78,7 @@ public class StatServiceImpl implements StatService {
 		statDto.setTableCodeList(list);
 		
 		// 테이블 이름 저장
-		List<StatDto> selectAuctionStatList = getStatMapper(ConstantsUtils.DB_AUCTION).selectAuctionStatList(statDto);
+		List<StatDto> selectAuctionStatList = getMapper(ConstantsUtils.DB_AUCTION).selectAuctionStatList(statDto);
 		Map<Integer, String> codeMap = codeList.stream().collect(Collectors.toMap(StatCodeDto::getTableCode, StatCodeDto::getTableName));
 		
 		for(StatDto dto : selectAuctionStatList) {
@@ -90,7 +90,7 @@ public class StatServiceImpl implements StatService {
 
 	// 지마켓 목록 갯수
 	public int selectGmarketStatListCount(StatDto statDto) {
-		return getStatMapper(ConstantsUtils.DB_GMAREKT).selectGmarketStatListCount(statDto);
+		return getMapper(ConstantsUtils.DB_GMAREKT).selectGmarketStatListCount(statDto);
 	}
 
 	// 지마켓 목록 조회
@@ -99,7 +99,7 @@ public class StatServiceImpl implements StatService {
 		statDto.setStartDate(dateFormatConvert(statDto.getTimeType(), statDto.getStartDate()));
 		statDto.setEndDate(dateFormatConvert(statDto.getTimeType(), statDto.getEndDate()));
 
-		return getStatMapper(ConstantsUtils.DB_GMAREKT).selectGmarketStatList(statDto);
+		return getMapper(ConstantsUtils.DB_GMAREKT).selectGmarketStatList(statDto);
 	}
 
 	// 날짜 포맷변환
@@ -135,7 +135,7 @@ public class StatServiceImpl implements StatService {
 
 	}
 
-	public StatMapper getStatMapper(String dbName) {
+	public StatMapper getMapper(String dbName) {
 		return dynamicDataSourceService.getMapper(dbName, StatMapper.class);
 	}
 }
