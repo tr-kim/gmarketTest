@@ -412,6 +412,7 @@ $(function () {
     let totalByteLength = writeByteLength; // 기본은 내용 바이트 수
 
     // rejectCheckDefault가 활성화(checked)되어 있고 rejectNum도 입력되면 바이트 합산
+	document.getElementById('titleByte').value = titleByteLength;
     if (!document.getElementById('rejectNum').disabled) {
         const rejectNumContent = document.getElementById('rejectNum').value;
         const rejectNumByteLength = getByteLength(rejectNumContent);
@@ -485,7 +486,7 @@ $(function () {
 	document.querySelector('#tag').addEventListener('click', (e) => {
 		if (e.target.tagName === 'BUTTON') {
 			if (MSG_WRITE) {
-				insertAtCursor(MSG_WRITE, e.target.textContent);
+				insertAtCursor(MSG_WRITE, `[%${e.target.textContent}%]`);
 				MSG_WRITE.dispatchEvent(new Event('input'));
 			}
 		}
@@ -821,4 +822,86 @@ function reserve() {
 	});
 	
 }
+
+function createSendData() {
+	//제목, 메시지, 메시지타입
+	const MSG_TITLE = document.getElementById('msgTitle').value.trim();
+    const MSG_WRITE = document.getElementById('msgWrite').value.trim();
+	const msg_type_value = document.querySelector('.msg_type').textContent.trim();
+	const MSG_TYPES = msg_type_value === "SMS" ? 'sms': msg_type_value === "LMS" ? 'lms' : 'mms';
+
+	// 수신번호, 회신번호 배열
+    const tableRows = document.querySelectorAll("#excelGrid table tbody tr");
+    const callees = [];
+    const callbacks = [];
+
+    tableRows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+        const callee = cells[0].textContent.trim();   // 수신번호
+        const callback = cells[1].textContent.trim(); // 발신번호
+
+        if (callee) callees.push(callee);
+        if (callback) callbacks.push(callback);
+    });
+
+    fetch("/api/v1/excelSend/createSendData", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({
+			callees: callees,
+			callbacks: callbacks,
+			message: MSG_WRITE,
+			title: MSG_TITLE,
+			messageType: MSG_TYPES
+		})
+	})
+	.then(res => res.json())
+	.then(data => {
+		console.log(data); // 서버에서 받은 데이터 확인
+
+		const tableBody = document.querySelector("#msgGrid table tbody");
+		tableBody.innerHTML = ""; // 기존 내용 제거
+
+		if (data && Array.isArray(data)) {
+			data.forEach(row => {
+				const tr = document.createElement("tr");
+
+				const tdCallee = document.createElement("td");
+				tdCallee.textContent = row["수신번호"];
+				tr.appendChild(tdCallee);
+
+				const tdCallback = document.createElement("td");
+				tdCallback.textContent = row["회신번호"];
+				tr.appendChild(tdCallback);
+
+				const tdTime = document.createElement("td");
+				tdTime.textContent = row["전송시간"] || "즉시전송";
+				tr.appendChild(tdTime);
+
+				const tdLength = document.createElement("td");
+				tdLength.textContent = row["길이"];
+				tr.appendChild(tdLength);
+
+				const tdMessage = document.createElement("td");
+				tdMessage.textContent = row["메시지"];
+				tr.appendChild(tdMessage);
+
+				const tdError = document.createElement("td");
+				tdError.textContent = row["에러내용"];
+				tr.appendChild(tdError);
+
+				tableBody.appendChild(tr);
+			});
+		} else {
+			tableBody.innerHTML = `<tr class="no-data">
+				<td class="py-3" colspan="6">메시지를 작성해 주세요.</td>
+			</tr>`;
+		}
+	})
+	.catch(err => {
+		console.error("데이터 로드 실패:", err);
+		showDialogCustom('error');
+	});
+}
+
 

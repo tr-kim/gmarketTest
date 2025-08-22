@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,14 +18,20 @@ import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import com.web.gmarket.common.auth.dto.UserDetailsDto;
 
@@ -428,8 +435,8 @@ public class RestExcelSendController {
 			}
 			
 			// 데이터 채우기
-			// 0:열번호, 1:엑셀헤더 → 2부터 실제데이터
-			for (int i = 2; i < data.size(); i++) {
+			// 0:열번호, 1부터 실제데이터
+			for (int i = 1; i < data.size(); i++) {
 				List<String> row = data.get(i); List<String> newRow = new ArrayList<>();
 				
 				// 수신번호
@@ -495,5 +502,76 @@ public class RestExcelSendController {
 		return new CellReference(colName + "1").getCol(); // "B" → 1
 	}
 	
-	
+	@PostMapping("/createSendData")
+	public List<Map<String, Object>> createSendData(@RequestBody Map<String, Object> body) {
+		// 클라이언트에서 받은 값
+		List<String> callees = (List<String>) body.get("callees");
+		List<String> callbacks = (List<String>) body.get("callbacks");
+		String message = (String) body.get("message");
+		String title = (String) body.get("title");
+		String messageType = (String) body.get("messageType");
+
+		List<Map<String, Object>> resultList = new ArrayList<>();
+
+		for (int i = 0; i < callees.size(); i++) {
+			String callee = callees.get(i);
+			String callback = callbacks.get(i);
+
+			int msgLen = getSMSLen(message);
+			int titleLen = getSMSLen(title);
+
+			String errorMsg = checkStrLen(msgLen, titleLen, callee, callback, messageType);
+
+			Map<String, Object> row = new HashMap<>();
+			row.put("수신번호", callee);
+			row.put("회신번호", callback);
+			row.put("전송시간", "즉시전송"); // 임시값
+			row.put("길이", msgLen);
+			row.put("메시지", message);
+			row.put("에러내용", errorMsg);
+
+			resultList.add(row);
+		}
+
+		return resultList;
+	}
+
+
+	/** JSP에서 쓰던 로직 그대로 */
+	public static int getSMSLen(String str) {
+		int iLength = 0;
+		if (str != null && str.length() > 0) {
+			byte[] by = str.getBytes();  // 기본 charset 사용
+			iLength = by.length;
+		}
+		return iLength;
+	}
+
+
+	// 메시지 체크
+	public String checkStrLen(int messageLen, int titleLen, String callee, String callback, String messageType) {
+		Pattern p = Pattern.compile("^[0-9]*$");
+		String result = "";
+		int MAX_LEN = messageType.equals("sms") ? 80 : 2000;
+		Matcher m = p.matcher(callee);
+		Matcher m2 = p.matcher(callback);
+
+		if (!m.matches()) result = "수신번호 이상";
+		else if (!m2.matches()) result = "회신번호 이상";
+		else if (messageLen == 0) result = "메시지 비어있음";
+		else if (messageLen > MAX_LEN) result = "메시지길이 초과";
+		else result = "발송가능";
+
+		if (callee.equals("")) result = "수신번호 이상";
+		if (callback.equals("")) result = "회신번호 이상";
+
+		if (!messageType.equals("sms")) {
+			if (titleLen > 200) result = "제목길이 초과";
+			else if (titleLen == 0) result = "제목 없음";
+		}
+
+		return result;
+	}
+
+
 }

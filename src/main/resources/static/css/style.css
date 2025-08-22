@@ -314,6 +314,14 @@ aside .psw_chg_btn:hover{
     max-height: 500px;
     overflow-y: auto;
 }
+.send .grid table th,
+.send .grid table td{
+    min-width: 150px;
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .send .grid table tbody tr:last-child{
     border-bottom: #fff;
 }
@@ -339,6 +347,14 @@ aside .psw_chg_btn:hover{
 .send .msg_wrap_ft button:hover{
     background: #f0f0f0;
     color: #333;
+}
+#msgWrite_btn {
+    border-radius: 0 0 0 6px;
+    color: #fff;
+    background-color: #0f6cbd;
+}
+#msgWrite_btn:hover {
+    background-color: #115fa3;
 }
 .send .msg_wrap textarea{
     border: none;
