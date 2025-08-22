@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.web.gmarket.stat.mapper.StatMapper">
+
+	<select id="selectAuctionStatListCount" resultType="int" parameterType="com.web.gmarket.stat.dto.StatDto">
+	  	/*
+	  		StatMapper.selectAuctionStatListCount  옥션 정산/통계 목록 갯수
+	  	*/
+		SELECT COUNT(*) 
+		FROM (
+			SELECT 
+				RESULT_DATE, TABLE_CODE, SUM(SUCC_CNT) AS SUCC, SUM(TRY_CNT) AS TRY_CNT, SUM(FAIL_01) AS FAIL_01
+			FROM (
+			<choose>
+				<when test="timeType == 1">
+				SELECT RESULT_DATE AS RESULT_DATE
+				</when>
+				<when test="timeType == 2">
+				SELECT SUBSTRING(RESULT_DATE, 1, 8) AS RESULT_DATE
+				</when>
+				<when test="timeType == 3">
+				SELECT SUBSTRING(RESULT_DATE, 1, 6) AS RESULT_DATE
+				</when>
+				<otherwise>
+				SELECT SUBSTRING(RESULT_DATE, 1, 4) AS RESULT_DATE
+				</otherwise>
+			</choose>
+					, TABLE_CODE, SUCC_CNT, TRY_CNT, FAIL_01 
+				FROM T_MSG_STAT
+				<choose>
+					<when test="tableCode > 0">
+				WHERE TABLE_CODE = #{tableCode}
+					</when>
+					<otherwise>
+				WHERE TABLE_CODE IN
+					<foreach collection="tableCodeList" item="code" separator="," open="(" close=")">
+			 		#{code}
+					</foreach>
+				</otherwise>
+				</choose>
+			) STAT_A WHERE <![CDATA[ RESULT_DATE >= #{startDate} AND RESULT_DATE <= #{endDate} ]]>
+			GROUP BY RESULT_DATE, TABLE_CODE
+		) STAT_B
+	</select>
+	
+	<select id="selectAuctionStatList" resultType="com.web.gmarket.stat.dto.StatDto" parameterType="com.web.gmarket.stat.dto.StatDto">
+	  	/*
+	  		StatMapper.selectAuctionStatList 옥션 정산/통계 목록 조회
+	  	*/
+	  	
+		SELECT 
+			RESULT_DATE, TABLE_CODE, SUM(SUCC_CNT) AS SUCC_CNT, SUM(TRY_CNT) AS TRY_CNT
+			, SUM(FAIL_01) AS FAIL_01, SUM(FAIL_02) AS FAIL_02, SUM(FAIL_03) AS FAIL_03, SUM(FAIL_04) AS FAIL_04
+			, SUM(FAIL_05) AS FAIL_05, SUM(FAIL_06) AS FAIL_06, SUM(FAIL_07) AS FAIL_07, SUM(FAIL_08) AS FAIL_08, SUM(FAIL_09) AS FAIL_09
+    	FROM (
+		<choose>
+			<when test="timeType == 1">
+			SELECT RESULT_DATE AS RESULT_DATE
+			</when>
+			<when test="timeType == 2">
+			SELECT SUBSTRING(RESULT_DATE, 1, 8) AS RESULT_DATE
+			</when>
+			<when test="timeType == 3">
+			SELECT SUBSTRING(RESULT_DATE, 1, 6) AS RESULT_DATE
+			</when>
+			<otherwise>
+			SELECT SUBSTRING(RESULT_DATE, 1, 4) AS RESULT_DATE
+			</otherwise>
+		</choose>
+				, TABLE_CODE, SUCC_CNT, TRY_CNT, FAIL_01
+				, FAIL_02, FAIL_03, FAIL_04, FAIL_05, FAIL_06, FAIL_07, FAIL_08, FAIL_09
+			FROM T_MSG_STAT
+			<choose>
+				<when test="tableCode > 0">
+			WHERE TABLE_CODE = #{tableCode}
+				</when>
+				<otherwise>
+			WHERE TABLE_CODE IN
+					<foreach collection="tableCodeList" item="code" separator="," open="(" close=")">
+			 		#{code}
+					</foreach>
+				</otherwise>
+			</choose>
+	  	) T
+	  	<![CDATA[
+	  	WHERE RESULT_DATE >= #{startDate} AND RESULT_DATE <= #{endDate}
+	  	]]>
+	  	GROUP BY RESULT_DATE, TABLE_CODE
+	  	ORDER BY RESULT_DATE DESC
+	  	OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
+	</select>
+	
+	<select id="selectGmarketStatListCount" resultType="int" parameterType="com.web.gmarket.stat.dto.StatDto">
+	  	/*
+	  		StatMapper.selectStatListGmarketCount 지마켓 정산/통계 목록 갯수
+	  	*/
+	  
+		SELECT COUNT(*) 
+		FROM (
+			SELECT 
+				RESULT_DATE, TABLE_CODE, TABLE_NAME, SUM(SUCC_CNT) AS SUCC, SUM(TRY_CNT) AS TRY_CNT , SUM(FAIL_01) AS FAIL_01 
+			FROM (
+			<choose>
+				<when test="timeType == 1">
+				SELECT A.RESULT_DATE AS RESULT_DATE
+				</when>
+				<when test="timeType == 2">
+				SELECT SUBSTRING(A.RESULT_DATE, 1, 8) AS RESULT_DATE
+				</when>
+				<when test="timeType == 3">
+				SELECT SUBSTRING(A.RESULT_DATE, 1, 6) AS RESULT_DATE
+				</when>
+				<otherwise>
+				SELECT SUBSTRING(A.RESULT_DATE, 1, 4) AS RESULT_DATE
+				</otherwise>
+			</choose>
+					, A.TABLE_CODE, B.TABLE_NAME, A.SUCC_CNT, A.TRY_CNT, A.FAIL_01 
+				FROM T_MSG_STAT A, T_TCODE_LIST B
+				WHERE A.TABLE_CODE = B.TABLE_CODE
+			  	  AND B.COMPANY_CODE = 1
+				<if test="tableCode > 0">
+			  	  AND B.TABLE_CODE = #{tableCode}
+			  	</if>
+			) STAT_A WHERE <![CDATA[ RESULT_DATE >= #{startDate} AND RESULT_DATE <= #{endDate} ]]>
+			GROUP BY RESULT_DATE, TABLE_NAME, TABLE_CODE
+		) STAT_B
+	</select>
+	
+	<select id="selectGmarketStatList" resultType="com.web.gmarket.stat.dto.StatDto" parameterType="com.web.gmarket.stat.dto.StatDto">
+	  	/*
+	  		StatMapper.selectStatList 지마켓 정산/통계 목록 조회
+	  	*/
+	  	
+		SELECT 
+			RESULT_DATE, TABLE_CODE, TABLE_NAME, SUM(SUCC_CNT) AS SUCC_CNT, SUM(TRY_CNT) AS TRY_CNT
+			, SUM(FAIL_01) AS FAIL_01, SUM(FAIL_02) AS FAIL_02, SUM(FAIL_03) AS FAIL_03, SUM(FAIL_04) AS FAIL_04
+			, SUM(FAIL_05) AS FAIL_05, SUM(FAIL_06) AS FAIL_06, SUM(FAIL_07) AS FAIL_07, SUM(FAIL_08) AS FAIL_08, SUM(FAIL_09) AS FAIL_09
+    	FROM (
+		<choose>
+			<when test="timeType == 1">
+			SELECT A.RESULT_DATE AS RESULT_DATE
+			</when>
+			<when test="timeType == 2">
+			SELECT SUBSTRING(A.RESULT_DATE, 1, 8) AS RESULT_DATE
+			</when>
+			<when test="timeType == 3">
+			SELECT SUBSTRING(A.RESULT_DATE, 1, 6) AS RESULT_DATE
+			</when>
+			<otherwise>
+			SELECT SUBSTRING(A.RESULT_DATE, 1, 4) AS RESULT_DATE
+			</otherwise>
+		</choose>
+				, A.TABLE_CODE, B.TABLE_NAME, A.SUCC_CNT, A.TRY_CNT, A.FAIL_01
+				, A.FAIL_02, A.FAIL_03, A.FAIL_04, A.FAIL_05, A.FAIL_06, A.FAIL_07, A.FAIL_08, A.FAIL_09
+			FROM T_MSG_STAT A, T_TCODE_LIST B 
+			WHERE A.TABLE_CODE = B.TABLE_CODE
+		  	  AND B.COMPANY_CODE = 1
+			<if test="tableCode > 0">
+		  	  AND B.TABLE_CODE = #{tableCode}
+		  	</if>
+	  	) T
+	  	<![CDATA[
+	  	WHERE RESULT_DATE >= #{startDate} AND RESULT_DATE <= #{endDate}
+	  	]]>
+	  	GROUP BY RESULT_DATE, TABLE_NAME, TABLE_CODE
+	  	ORDER BY RESULT_DATE DESC
+	  	OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
+	</select>
+	
+</mapper>

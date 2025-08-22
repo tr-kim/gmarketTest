@@ -34,18 +34,18 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-	
-	/**
+
+    /**
      * 1. 정적 자원(Resource)에 대해서 인증된 사용자가 정적 자원의 접근에 대해 ‘인가’에 대한 설정을 담당하는 메서드입니다.
      *
      * @return WebSecurityCustomizer
      */
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
+    WebSecurityCustomizer webSecurityCustomizer() {
         // 정적 자원에 대해서 Security를 적용하지 않음으로 설정
         return web -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
-    
+
     /**
      * 2. HTTP에 대해서 ‘인증’과 ‘인가’를 담당하는 메서드이며 필터를 통해 인증 방식과 인증 절차에 대해서 등록하며 설정을 담당하는 메서드입니다.
      *
@@ -54,7 +54,7 @@ public class WebSecurityConfig {
      * @throws Exception Exception
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)                                       										// CSRF 보호 비활성화 운영일 경우 홣성화 ignoringRequestMatchers("/api/v1/**")
                 .cors(AbstractHttpConfigurer::disable)																				// CORS 비홣성화
@@ -75,7 +75,7 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated())
                 		.exceptionHandling(exception -> exception
                 				.authenticationEntryPoint((request, response, authException) -> {									// 인증 없이 요청이 들어오면 이동
-                				    String uri = request.getRequestURI();
+                				    // String uri = request.getRequestURI();
                 				    String accept = request.getHeader("Accept");
 
                 				    if (accept != null && accept.contains("text/html")) {											// HTML 요청이 로그인 페이지
@@ -90,11 +90,11 @@ public class WebSecurityConfig {
             				.sessionFixation(sessionFixation -> sessionFixation
             		                .migrateSession() 																				// 세션 고정 공격(Session Fixation Attack) 방지
             		        )													
-            		        .maximumSessions(1)																						// 세션 갯수 설정 최대 1명
+            		        //.maximumSessions(1)																						// 세션 갯수 설정 최대 1명
             		        // .maxSessionsPreventsLogin(true)																		// 새 로그인 거부 (기존 세션 유지)
-            		        .maxSessionsPreventsLogin(false)																		// 새 로그인 가능 (기존 세션 삭제)
-            		        .expiredSessionStrategy(customSessionExpiredStrategy())													// Spring Security에서 세션이 만료되었을 때 사용자 정의 동작을 실행할 수 있도록 해주는 전략 클래스
-            		        .sessionRegistry(sessionRegistry())																		// 세션 레지스트리 설정
+            		        //.maxSessionsPreventsLogin(false)																		// 새 로그인 가능 (기존 세션 삭제)
+            		        //.expiredSessionStrategy(customSessionExpiredStrategy())													// Spring Security에서 세션이 만료되었을 때 사용자 정의 동작을 실행할 수 있도록 해주는 전략 클래스
+            		        //.sessionRegistry(sessionRegistry())																		// 세션 레지스트리 설정
             		    )
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)      					// 사용자 인증(커스텀 필터)
 //                .formLogin((formLogin) ->																							// 필터 사용 시 중복 요청으로 인해 주석 처리
@@ -123,7 +123,7 @@ public class WebSecurityConfig {
      * @return AuthenticationManager
      */
     @Bean
-    public AuthenticationManager authenticationManager() {
+    AuthenticationManager authenticationManager() {
         return new ProviderManager(customAuthenticationProvider());
     }
     
@@ -134,7 +134,7 @@ public class WebSecurityConfig {
      * @return CustomAuthenticationProvider
      */
     @Bean
-    public CustomAuthenticationProvider customAuthenticationProvider() {
+    CustomAuthenticationProvider customAuthenticationProvider() {
         return new CustomAuthenticationProvider(bCryptPasswordEncoder());
     }
     
@@ -153,7 +153,7 @@ public class WebSecurityConfig {
      * @return CustomAuthenticationFilter
      */
     @Bean
-    public CustomAuthenticationFilter customAuthenticationFilter() {
+    CustomAuthenticationFilter customAuthenticationFilter() {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager());
         customAuthenticationFilter.setFilterProcessesUrl("/login-process");     													// 접근 URL
         customAuthenticationFilter.setAuthenticationSuccessHandler(customLoginSuccessHandler());    								// '인증' 성공 시 해당 핸들러로 처리를 전가한다.
@@ -168,7 +168,7 @@ public class WebSecurityConfig {
      * @return CustomLoginSuccessHandler
      */
     @Bean
-    public CustomAuthSuccessHandler customLoginSuccessHandler() {
+    CustomAuthSuccessHandler customLoginSuccessHandler() {
         return new CustomAuthSuccessHandler(sessionRegistry());
     }
     
@@ -178,7 +178,7 @@ public class WebSecurityConfig {
      * @return CustomAuthFailureHandler
      */
     @Bean
-    public CustomAuthFailureHandler customLoginFailureHandler() {
+    CustomAuthFailureHandler customLoginFailureHandler() {
         return new CustomAuthFailureHandler();
     }
     
@@ -188,7 +188,7 @@ public class WebSecurityConfig {
      * @return accessDeniedHandler
      */
     @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
+    AccessDeniedHandler accessDeniedHandler() {
     	return new AccessDeniedHandlerImpl();
     }
     
@@ -198,7 +198,7 @@ public class WebSecurityConfig {
      * @return sessionRegistry
      */
     @Bean
-	public SessionRegistry sessionRegistry() {
+	SessionRegistry sessionRegistry() {
 	    return new SessionRegistryImpl();
 	}
 	
@@ -208,7 +208,7 @@ public class WebSecurityConfig {
      * @return ServletListenerRegistrationBean
      */
     @Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher() {
+    HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
     }
     
@@ -218,7 +218,7 @@ public class WebSecurityConfig {
      * @return CustomSessionExpiredStrategy
      */
     @Bean
-    public CustomSessionExpiredStrategy customSessionExpiredStrategy() {
+    CustomSessionExpiredStrategy customSessionExpiredStrategy() {
         return new CustomSessionExpiredStrategy();
     }
 }

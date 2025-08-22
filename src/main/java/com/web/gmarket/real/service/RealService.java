@@ -1,14 +1,15 @@
 package com.web.gmarket.real.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.web.gmarket.real.dto.RealDto;
 
 public interface RealService {
 
-	public List<RealDto> selectRealHistTotalList(int totalMonTime, int alarmFlag);
+	public  Map<String, List<RealDto>> selectRealHistTotalList(int totalMonTime, int alarmFlag);
 	
 	public RealDto selectRealHistList(int companyCode);
 	
-	public RealDto selectRealHistTableList(int tableCode);
+	public RealDto selectRealHistTableList(int companyCode, int tableCode);
 }

@@ -89,6 +89,11 @@ dependencies {
 	// validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	
+	// Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts 제거
+	implementation('some:lib:1.0') {
+	    exclude group: 'commons-logging', module: 'commons-logging'
+	}
+	
 	// excel
 	implementation 'org.apache.poi:poi-ooxml:5.2.5'
 }

@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import com.web.gmarket.common.config.DynamicDataSourceService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.user.dto.UserDto;
 import com.web.gmarket.user.mapper.UserMapper;
@@ -29,43 +30,44 @@ import lombok.extern.slf4j.Slf4j;
 public class UserServiceImpl implements UserService {
 
 	@Autowired
-	private UserMapper userMapper;
+	private DynamicDataSourceService dynamicDataSourceService;
 
 	@Override
 	public UserDto selectUserInfo(String userId, String delFlag) {
+		
 		UserDto userDto = new UserDto();
 		userDto.setUserId(userId);
 		userDto.setDelFlag(delFlag);
 		
-		return userMapper.selectUserInfo(userDto);
+		return getMapper().selectUserInfo(userDto);
+	}
+	
+	@Override
+	public int selectUserInfoListCount(UserDto userDto) {
+		return getMapper().selectUserInfoListCount(userDto);
 	}
 
 	@Override
 	public List<UserDto> selectUserInfoList(UserDto userDto) {
-		return userMapper.selectUserInfoList(userDto);
+		return getMapper().selectUserInfoList(userDto);
 	}
 
 	@Override
 	public int insertUserInfo(UserDto userDto) {
 		// 비밀번호 암호화 및 hash 값 넣기
 		passwordEncode(userDto);
-
-		return userMapper.insertUserInfo(userDto);
+		
+		return getMapper().insertUserInfo(userDto);
 	}
 
 	@Override
 	public int updateUserInfo(UserDto userDto) {
 		// 비밀번호 암호화 및 hash 값 넣기
 		passwordEncode(userDto);
-
-		return userMapper.updateUserInfo(userDto);
+		
+		return getMapper().updateUserInfo(userDto);
 	}
 
-	// public int deleteUserInfo(String userId) {
-	// 	return userMapper.deleteUserInfo(userId);
-	// }
-
-	@Override
 	@Transactional
 	public ResponseEntity<?> deleteUserInfo(List<UserDto> userDtoList) {
 		Map<String, Object> result = new HashMap<>();
@@ -79,12 +81,12 @@ public class UserServiceImpl implements UserService {
 
 			for (UserDto dto : userDtoList) {
 				String userId = dto.getUserId();
-				if (userId == null || userId.isEmpty()) continue;
+				if (StringUtils.isBlank(userId)) continue;
 
 				Map<String, Object> param = new HashMap<>();
 				param.put("userId", userId);
 
-				userMapper.deleteUserInfo(param);
+				getMapper().deleteUserInfo(param);
 			}
 
 			result.put(ConstantsUtils.CODE, ConstantsUtils.SUCCESS_CODE);
@@ -104,7 +106,7 @@ public class UserServiceImpl implements UserService {
 		// 비밀번호 암호화 및 hash 값 넣기
 		passwordEncode(userDto);
 		
-		return userMapper.updateUserPassword(userDto);
+		return getMapper().updateUserPassword(userDto);
 	}
 
 	@Override
@@ -120,12 +122,12 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	public static String createHash(String data) throws Exception {
-		if (data == null) {
+		if (StringUtils.isBlank(data)) {
 			throw new NullPointerException();
 		}
 
-		MessageDigest md = MessageDigest.getInstance("SHA-512");
-		byte[] raw = md.digest(data.getBytes("EUC-KR"));
+		MessageDigest md = MessageDigest.getInstance(ConstantsUtils.SHA_512);
+		byte[] raw = md.digest(data.getBytes(ConstantsUtils.EUC_KR));
 
 		StringBuffer result = new StringBuffer();
 		for (int i = 0; i < raw.length; i++) {
@@ -151,5 +153,8 @@ public class UserServiceImpl implements UserService {
 
 		return userDto;
 	}
-
+	
+	public UserMapper getMapper() {
+		return dynamicDataSourceService.getMapper(ConstantsUtils.DB_GMAREKT, UserMapper.class);
+	}
 }

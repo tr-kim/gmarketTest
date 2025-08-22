@@ -20,6 +20,14 @@ public interface UserMapper {
 	public UserDto selectUserInfo(UserDto userDto);
 	
 	/**
+	 * 사용자 목록 갯수
+	 * 
+	 * @param userDto
+	 * @return
+	 */
+	public int selectUserInfoListCount(UserDto userDto);
+	
+	/**
 	 * 사용자 목록 조회
 	 * 
 	 * @param userDto
@@ -49,7 +57,6 @@ public interface UserMapper {
 	 * @param userId
 	 * @return
 	 */
-	//public int deleteUserInfo(String userId);
 	public int deleteUserInfo(Map<String, Object> param);
 
 	/**

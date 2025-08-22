@@ -58,75 +58,6 @@ $(function () {
 		}
 	}).dxButton('instance');
 	
-	//조회 버튼
-	$('#search-btn').dxButton({
-		stylingMode: 'contained',
-		text: '조회',
-		type: 'default',
-		width: 60,
-		onClick() {
-			const startValue = startDateInstance.option("value");
-			const endValue = endDateInstance.option("value");
-			
-			let startDateFormatted = "", startTimeFormatted = "";
-			let endDateFormatted = "", endTimeFormatted = "";
-			
-			// 날짜가 Date 객체인지 확인
-			if (startValue instanceof Date && !isNaN(startValue)) {
-				const yyyy = startValue.getFullYear();
-				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
-				const dd = String(startValue.getDate()).padStart(2, '0');
-				startDateFormatted = `${yyyy}${mm}`;
-				startTimeFormatted = `${yyyy}${mm}${dd}`;
-			}
-			
-			if (endValue instanceof Date && !isNaN(endValue)) {
-				const yyyy = endValue.getFullYear();
-				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
-				const dd = String(endValue.getDate()).padStart(2, '0');
-				endDateFormatted = `${yyyy}${mm}`;
-				endTimeFormatted = `${yyyy}${mm}${dd}`;
-			}
-			
-			// 조회기간 구하기
-			const largeCategoryValue = largeCategoryInstance;
-			
-			if(largeCategoryValue != 0){
-				let start = new Date(
-					parseInt(startTimeFormatted.slice(0, 4)),
-					parseInt(startTimeFormatted.slice(4, 6)) - 1,
-					parseInt(startTimeFormatted.slice(6, 8))
-				);
-				
-				let end = new Date(
-					parseInt(endTimeFormatted.slice(0, 4)),
-					parseInt(endTimeFormatted.slice(4, 6)) - 1,
-					parseInt(endTimeFormatted.slice(6, 8))
-				);
-				
-				let diffMs = end - start;
-				let diffDays = diffMs / (1000 * 60 * 60 * 24);
-				
-				let errorMessage = "";
-
-				if (diffDays < 0) {
-					errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요.</div>`;
-				} else if (diffDays > 30) {
-					errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요. (30일 이내)
-					<br><br><span class="text-black-50">현재 입력한 조회 기간 : ${Math.floor(diffDays)}일</span></div>`;
-				}
-
-				if (errorMessage) {
-					showDialogCustom(errorMessage);
-					return;
-				}
-			}
-			
-			//재조회
-			bulkHistDataGrid.getDataSource().reload();
-		}
-	}).dxButton('instance');
-	
 	//조회 요청
 	const bulkHistDataSource = new DevExpress.data.CustomStore({
 		key: "bulkMsgKey",
@@ -155,6 +86,7 @@ $(function () {
 			}
 			
 			const titleValue = titleInstance.option("value");
+			const companyCode = largeCategoryInstance.option("value");
 			
 			const params = {
 				startDate: startDateFormatted,
@@ -162,6 +94,7 @@ $(function () {
 				startTime: startTimeFormatted + "000000",
 				endTime: endTimeFormatted + "235959",
 				bulkTitle: titleValue,
+				companyCode: companyCode,
 				//페이징 서버사이드 처리
 				skip: loadOptions.skip ?? 0, //offset: 앞에서 건너뛸 레코드 수
 				take: loadOptions.take ?? 50, //limit: 가져올 레코드 수
@@ -212,6 +145,7 @@ $(function () {
 		headerFilter: {
 			visible: true
 		},
+		height: 500,
 		searchPanel: {
 			visible: true,
 			width: 300
@@ -294,6 +228,75 @@ $(function () {
 	}).dxDataGrid("instance");
 
 });
+
+//조회 버튼
+$('#search-btn').dxButton({
+	stylingMode: 'contained',
+	text: '조회',
+	type: 'default',
+	width: 60,
+	onClick() {
+		const startValue = startDateInstance.option("value");
+		const endValue = endDateInstance.option("value");
+		
+		let startDateFormatted = "", startTimeFormatted = "";
+		let endDateFormatted = "", endTimeFormatted = "";
+		
+		// 날짜가 Date 객체인지 확인
+		if (startValue instanceof Date && !isNaN(startValue)) {
+			const yyyy = startValue.getFullYear();
+			const mm = String(startValue.getMonth() + 1).padStart(2, '0');
+			const dd = String(startValue.getDate()).padStart(2, '0');
+			startDateFormatted = `${yyyy}${mm}`;
+			startTimeFormatted = `${yyyy}${mm}${dd}`;
+		}
+		
+		if (endValue instanceof Date && !isNaN(endValue)) {
+			const yyyy = endValue.getFullYear();
+			const mm = String(endValue.getMonth() + 1).padStart(2, '0');
+			const dd = String(endValue.getDate()).padStart(2, '0');
+			endDateFormatted = `${yyyy}${mm}`;
+			endTimeFormatted = `${yyyy}${mm}${dd}`;
+		}
+		
+		// 조회기간 구하기
+		const largeCategoryValue = largeCategoryInstance;
+		
+		if(largeCategoryValue != 0){
+			let start = new Date(
+				parseInt(startTimeFormatted.slice(0, 4)),
+				parseInt(startTimeFormatted.slice(4, 6)) - 1,
+				parseInt(startTimeFormatted.slice(6, 8))
+			);
+			
+			let end = new Date(
+				parseInt(endTimeFormatted.slice(0, 4)),
+				parseInt(endTimeFormatted.slice(4, 6)) - 1,
+				parseInt(endTimeFormatted.slice(6, 8))
+			);
+			
+			let diffMs = end - start;
+			let diffDays = diffMs / (1000 * 60 * 60 * 24);
+			
+			let errorMessage = "";
+
+			if (diffDays < 0) {
+				errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요.</div>`;
+			} else if (diffDays > 30) {
+				errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요. (30일 이내)
+				<br><br><span class="text-black-50">현재 입력한 조회 기간 : ${Math.floor(diffDays)}일</span></div>`;
+			}
+
+			if (errorMessage) {
+				showDialogCustom(errorMessage);
+				return;
+			}
+		}
+		
+		//재조회
+		bulkHistDataGrid.getDataSource().reload();
+	}
+}).dxButton('instance');
 
 
 //엑셀 다운로드

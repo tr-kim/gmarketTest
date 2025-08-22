@@ -152,12 +152,15 @@ $(function () {
 			
 			const titleValue = titleInstance.option("value");
 			
+			const categoryValue = largeCategoryInstance.option("value");
+			
 			const params = {
 				startDate: startDateFormatted,
 				endDate: endDateFormatted,
 				startTime: startTimeFormatted + "000000",
 				endTime: endTimeFormatted + "235959",
 				waitTitle: titleValue,
+				companyCode: categoryValue,
 				//페이징 서버사이드 처리
 				skip: loadOptions.skip ?? 0, //offset: 앞에서 건너뛸 레코드 수
 				take: loadOptions.take ?? 50, //limit: 가져올 레코드 수
@@ -214,6 +217,7 @@ $(function () {
 		headerFilter: {
 			visible: true
 		},
+		height: 500,
 		searchPanel: {
 			visible: true,
 			width: 300

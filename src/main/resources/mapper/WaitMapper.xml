@@ -18,6 +18,9 @@
 	</resultMap>
 	
 	<select id="selectWaitList" resultMap="WaitResultMap">
+		/*
+			WaitMapper.selectWaitList
+		*/
 		(
 		SELECT
 			B_MSG_KEY,
@@ -46,6 +49,9 @@
 	</select>
 	
 	<select id="selectWaitCount" resultType="int">
+		/*
+			WaitMapper.selectWaitCount
+		*/
 		SELECT COUNT(*) FROM (			
 			SELECT 1 AS CNT
 			FROM T_BROADCAST_MSG
@@ -58,11 +64,17 @@
 	</select>
 	
 	<delete id="deleteWaitMsg" parameterType="map">
+		/*
+			WaitMapper.deleteWaitMsg
+		*/
 		DELETE FROM ${tableName}
 		WHERE B_MSG_KEY = #{bulkMsgKey}
 	</delete>
 	
 	<delete id="deleteBroadCastMsg" parameterType="map">
+		/*
+			WaitMapper.deleteBroadCastMsg
+		*/
 		DELETE T_BROADCAST_MSG
 		WHERE B_MSG_KEY = #{bulkMsgKey}
 	</delete>

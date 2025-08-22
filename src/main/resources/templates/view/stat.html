@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lagn="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lagn="ko" xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{${layout}}" layout:fragment="content">
 
 	<p class="font-sz-20 font-weight-600 pt-3 text-666">정산/통계 조회</p>
-	<form class="content row mx-0 mb-2" id="statHist">
+	<form class="content row mx-0 mb-2" id="statHistForm">
 		<div class="col-6">
 			<div class="row d-flex align-items-center mb-2 height-38">
 				<div class="col-3">
 					<label class="font-weight-500">구분</label>
 				</div>
 				<div class="col row">
-					<div class="col"><label><input type="radio" name="stat-radio" value="1" checked> 시간</label></div>
-					<div class="col"><label><input type="radio" name="stat-radio" value="2"> 일</label></div>
-					<div class="col"><label><input type="radio" name="stat-radio" value="3"> 월</label></div>
-					<div class="col"><label><input type="radio" name="stat-radio" value="4"> 년</label></div>
+					<div class="col"><label><input type="radio" name="timeType" value="1" checked> 시간</label></div>
+					<div class="col"><label><input type="radio" name="timeType" value="2"> 일</label></div>
+					<div class="col"><label><input type="radio" name="timeType" value="3"> 월</label></div>
+					<div class="col"><label><input type="radio" name="timeType" value="4"> 년</label></div>
 					<div class="col"></div>
 				</div>
 			</div>
@@ -47,22 +48,20 @@
 				<div class="col">
 					<div id="large-category"></div>
 				</div>
-			</div>   
+			</div>
 			<div class="row d-flex align-items-center mb-2">
 				<div class="col-3">
 					<label class="font-weight-500">중분류</label>
 				</div>
 				<div class="col">
-					<div id="middle-category"></div>					
+					<div id="middle-category"></div>	
 				</div>
 			</div>
 			<div class="row d-flex align-items-center">
 				<div class="col d-flex justify-content-end">
 					<div id="excel-btn" class="me-2"></div>
 					<div id="search-btn"></div>
-					<!-- <button class="btn btn-success font-sz-14 ms-2" id="excel-btn">엑셀 다운로드</button>
-					<button class="btn btn-primary font-sz-14 ms-2">조회</button> -->
-				</div>                        
+				</div>
 			</div>
 		</div>
 	</form>
@@ -70,5 +69,9 @@
 		<div id="statGrid"></div>
 	</div>
 	
+	<script th:inline="javascript">
+		let userGrade = /*[[${#authentication.principal.userGrade}]]*/ -1;
+		let companyCode = /*[[${#authentication.principal.companyCode}]]*/ -1;
+	</script>
 	<script th:src="@{/js/view/stat.js}"></script>
 </html>

@@ -12,13 +12,14 @@ public interface UserService {
 	
 	UserDto selectUserInfo(String userId, String delFlag);
 	
+	int selectUserInfoListCount(UserDto userDto);
+	
 	List<UserDto> selectUserInfoList(UserDto userDto);
 	
 	int insertUserInfo(UserDto userDto);
 	
 	int updateUserInfo(UserDto userDto);
 	
-	//int deleteUserInfo(String userId);
 	ResponseEntity<?> deleteUserInfo(List<UserDto> userDtoList);
 
 	int updateUserPassword(UserDto userDto);

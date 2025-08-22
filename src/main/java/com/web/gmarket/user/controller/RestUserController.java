@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -95,18 +95,22 @@ public class RestUserController {
 	@PostMapping("/list")
 	public ResponseEntity<?> list(Authentication authentication, UserDto userDto) {
 
-		List<UserDto> list = new ArrayList<>();
+		Map<String, Object> result = new HashMap<>();
 		
 		try {
 			
-			list = userService.selectUserInfoList(userDto);
+			result.put(ConstantsUtils.LIST, userService.selectUserInfoList(userDto));
+			result.put(ConstantsUtils.TOTAL_COUNT, userService.selectUserInfoListCount(userDto));
 			
-			return new ResponseEntity<>(list, HttpStatus.OK);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getLocalizedMessage());
 			e.printStackTrace();
 			
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(list);
+			result.put(ConstantsUtils.LIST, Collections.emptyList());
+			result.put(ConstantsUtils.TOTAL_COUNT, 0);
+			
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
 	}
 
@@ -212,43 +216,10 @@ public class RestUserController {
 
 	/**
 	 * 사용자 정보 삭제
-	 * 
-	 * @param authentication
-	 * @param userDto
+	 *
+	 * @param userDtoList
 	 * @return
 	 */
-	/*
-	@ResponseBody
-	@DeleteMapping("/delete")
-	public ResponseEntity<?> delete(Authentication authentication, @RequestBody UserDto userDto) {
-
-		Map<String, Object> result = new HashMap<>();
-		
-		try {
-			
-			String userId = userDto.getUserId();
-
-			UserDto info = userService.selectUserInfo(userId, ConstantsUtils.FALG_N);
-
-			if (info != null) {
-				int cnt = userService.deleteUserInfo(userId);
-				result.put(ConstantsUtils.CODE, cnt > 0 ? ConstantsUtils.SUCCESS_CODE : ConstantsUtils.ERROR_CODE);
-			} else {
-				result.put(ConstantsUtils.CODE, ConstantsUtils.USER_NON_EXISTENCE);
-				result.put(ConstantsUtils.RESULT, "사용자 정보가 존재하지 않습니다");
-			}
-
-			return ResponseEntity.status(HttpStatus.OK).body(result);
-		} catch (Exception e) {
-			log.error(e.getLocalizedMessage());
-			e.printStackTrace();
-			result.put(ConstantsUtils.CODE, ConstantsUtils.ERROR_CODE);
-			
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-		}
-	}
-	*/
-
 	@DeleteMapping("/delete")
 	public ResponseEntity<?> delete(@RequestBody List<UserDto> userDtoList) {
 		return userService.deleteUserInfo(userDtoList);

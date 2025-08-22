@@ -1,12 +1,11 @@
 package com.web.gmarket.bulk.hist.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -18,6 +17,7 @@ public class BulkHistDto {
 	private String startTime;
 	private String endTime;
 	private String bulkTitle;
+	private Integer companyCode;
 	private List<String> monthTables;
 	private Integer skip;
 	private Integer take;
@@ -80,6 +80,14 @@ public class BulkHistDto {
 	
 	public void setBulkTitle(String bulkTitle) {
 		this.bulkTitle = bulkTitle;
+	}
+	
+	public Integer getCompanyCode() {
+		return companyCode;
+	}
+	
+	public void setCompanyCode(Integer companyCode) {
+		this.companyCode = companyCode;
 	}
 	
 	public List<String> getMonthTables() {

@@ -34,6 +34,7 @@ public class RestRealSendHistController {
 	@ResponseBody
 	@PostMapping("/totalList")
 	public ResponseEntity<?> totalList() {
+		
 		try {
 			
 			return new ResponseEntity<>(realService.selectRealHistTotalList(ConstantsUtils.TOTAL_MON_TIME, ConstantsUtils.ALARM_FLAG), HttpStatus.OK);
@@ -44,18 +45,19 @@ public class RestRealSendHistController {
 			return new ResponseEntity<>(new ArrayList<RealDto>(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		
 	}
 	
 
 	/**
 	 * 옥션 및 지마켓 전체 현황
 	 * 
+	 * @param authentication
+	 * @param code
 	 * @return
 	 */
 	@ResponseBody
 	@PostMapping("/list")
-	public ResponseEntity<?> list(Authentication authentication,  @RequestParam(name = "code", defaultValue = "1") int code) {
+	public ResponseEntity<?> list(Authentication authentication,  @RequestParam(name="code", defaultValue = "1") int code) {
 		
 		try {
 			
@@ -68,27 +70,29 @@ public class RestRealSendHistController {
 			return new ResponseEntity<>(new RealDto(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		
 	}
 	
 	/**
 	 * 테이블별 현황
 	 * 
+	 * @param authentication
+	 * @param companyCode
+	 * @param tableCode
 	 * @return
 	 */
 	@ResponseBody
 	@PostMapping("/tableList")
-	public ResponseEntity<?> tableList(Authentication authentication,  @RequestParam(name = "code", defaultValue = "11") int code) {
-		RealDto dto = new RealDto();
+	public ResponseEntity<?> tableList(Authentication authentication,  @RequestParam(name="companyCode", defaultValue = "0") int companyCode, @RequestParam(name="tableCode", defaultValue = "1") int tableCode) {
 		
 		try {
-			// 테이블별 코드
-			return new ResponseEntity<>(realService.selectRealHistTableList(code), HttpStatus.OK);
+			
+			return new ResponseEntity<>(realService.selectRealHistTableList(companyCode, tableCode), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(e.getLocalizedMessage());
 			
 			return new ResponseEntity<>(new RealDto(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		
 	}
 }
