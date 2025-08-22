@@ -15,7 +15,7 @@
 			</li>	
 			<li>
 				<div class="col-2 font-weight-500">시트선택</div>
-				<div class="col">
+				<div class="col-10">
 					<select name="sheet" id="sheet" class="form-select mb-3" onchange="excelReadSheet(this)">
 						<option value="">시트를 선택해주세요.</option>
 					</select>
@@ -80,116 +80,143 @@
 				<div class="col">
 					<input type="text" name="msgTitle" id="msgTitle" class="form-control" maxlength="100" placeholder="제목을 입력하면 장문으로 변경됩니다.">
 				</div>
+				<input type="hidden" name="titleByte" id="titleByte">
 			</li>
 			<li>
 				<div class="col-2 font-weight-500">내용</div>
 				<div class="col">	
 					<div class="d-flex grid overflow-visible">
 						<div class="msg_wrap col-5">
-						<div class="msg_wrap_hd d-flex">
-							<div class="msg_type col-3 sms py-2 px-2 text-center">
-								SMS
-							</div>	
-							<div class="msg_byte col text-end py-2 pe-2">
-								<span id="input_byte">0</span>/<span id="total_byte">80</span> byte
+							<div class="msg_wrap_hd d-flex">
+								<div class="msg_type col-3 sms py-2 px-2 text-center">
+									SMS
+								</div>	
+								<div class="msg_byte col text-end py-2 pe-2">
+									<span id="input_byte">0</span>/<span id="total_byte">80</span> byte
+								</div>
+							</div>
+							<textarea name="msgWrite" id="msgWrite" class="p-3 w-100"></textarea>
+							<div class="msg_wrap_ft d-flex">
+								<button type="button" class="w-100 py-2 text-center text-nowrap font-sz-12" id="msgWrite_btn" onclick="createSendData()">메시지 작성</button>
 							</div>
 						</div>
-						<textarea name="msgWrite" id="msgWrite" class="p-3 w-100"></textarea>
-						
-					</div>
-					<div class="add_option col position-relative">
-						<ul class="option_tab d-flex px-3">
-							<li class="col on"><button type="button">이미지</button></li>
-							<li class="col"><button type="button">변수선택</button></li>
-							<li class="col"><button type="button">특수문자</button></li>
-						</ul>
-						<div class="option_wrap px-3 py-2 d-block">
-							<div id="dropzone-external" class="flex-box">
-								<div id="dropzone-text" class="flex-box">
-									<span>이미지를 드래그&드롭하거나 클릭해 주세요.</span>
-								</div>								
-								<div id="upload-progress"></div>
-							</div>
-							<div id="dropzone-image-list" class="row mt-3"></div>
-							<div id="file-uploader"></div>
-							<span class="img-question position-absolute end-0 bottom-0 p-3"><i class="bi bi-question-circle"></i></span>
-						</div>
-						<div class="option_wrap px-3 py-2" id="tag">
-							<ul class="row mt-2">								
+						<div class="add_option col position-relative">
+							<ul class="option_tab d-flex px-3">
+								<li class="col on"><button type="button">이미지</button></li>
+								<li class="col"><button type="button">변수선택</button></li>
+								<li class="col"><button type="button">특수문자</button></li>
 							</ul>
+							<div class="option_wrap px-3 py-2 d-block">
+								<div id="dropzone-external" class="flex-box">
+									<div id="dropzone-text" class="flex-box">
+										<span>이미지를 드래그&드롭하거나 클릭해 주세요.</span>
+									</div>								
+									<div id="upload-progress"></div>
+								</div>
+								<div id="dropzone-image-list" class="row mt-3"></div>
+								<div id="file-uploader"></div>
+								<span class="img-question position-absolute end-0 bottom-0 p-3"><i class="bi bi-question-circle"></i></span>
+							</div>
+							<div class="option_wrap px-3 py-2" id="tag">
+								<ul class="row mt-2">								
+								</ul>
+							</div>
+							<div class="option_wrap px-3 py-2" id="unicode">
+								<ul class="d-flex flex-wrap">
+									<li class="col"><span>☆</span></li>
+									<li class="col"><span>★</span></li>
+									<li class="col"><span>○</span></li>
+									<li class="col"><span>●</span></li>
+									<li class="col"><span>◎</span></li>
+									<li class="col"><span>◇</span></li>
+									<li class="col"><span>◆</span></li>
+									<li class="col"><span>□</span></li>
+									<li class="col"><span>■</span></li>
+									<li class="col"><span>△</span></li>
+									<li class="col"><span>▲</span></li>
+									<li class="col"><span>▽</span></li>
+									<li class="col"><span>▼</span></li>
+									<li class="col"><span>→</span></li>
+									<li class="col"><span>←</span></li>
+									<li class="col"><span>↑</span></li>
+									<li class="col"><span>↓</span></li>
+									<li class="col"><span>↔</span></li>
+									<li class="col"><span>◁</span></li>
+									<li class="col"><span>◀</span></li>
+									<li class="col"><span>▷</span></li>
+									<li class="col"><span>▶</span></li>
+									<li class="col"><span>♤</span></li>
+									<li class="col"><span>♠</span></li>
+									<li class="col"><span>♡</span></li>
+									<li class="col"><span>♥</span></li>
+									<li class="col"><span>♧</span></li>
+									<li class="col"><span>♣</span></li>
+									<li class="col"><span>⊙</span></li>
+									<li class="col"><span>◈</span></li>
+									<li class="col"><span>▣</span></li>
+									<li class="col"><span>◐</span></li>
+									<li class="col"><span>◑</span></li>
+									<li class="col"><span>♨</span></li>
+									<li class="col"><span>☏</span></li>
+									<li class="col"><span>☎</span></li>
+									<li class="col"><span>☜</span></li>
+									<li class="col"><span>☞</span></li>
+									<li class="col"><span>¶</span></li>
+									<li class="col"><span>†</span></li>
+									<li class="col"><span>‡</span></li>
+									<li class="col"><span>↕</span></li>
+									<li class="col"><span>㈜</span></li>
+									<li class="col"><span>㉿</span></li>
+									<li class="col"><span>↗</span></li>
+									<li class="col"><span>↙</span></li>
+									<li class="col"><span>↖</span></li>
+									<li class="col"><span>↘</span></li>
+									<li class="col"><span>♭</span></li>
+									<li class="col"><span>♩</span></li>
+									<li class="col"><span>♪</span></li>
+									<li class="col"><span>♬</span></li>
+									<li class="col"><span>Σ</span></li>
+									<li class="col"><span>Φ</span></li>
+									<li class="col"><span>Ψ</span></li>
+									<li class="col"><span>Ω</span></li>
+									<li class="col"><span>▒</span></li>
+									<li class="col"><span>▤</span></li>
+									<li class="col"><span>▥</span></li>
+									<li class="col"><span>▨</span></li>
+									<li class="col"><span>▧</span></li>
+									<li class="col"><span>▦</span></li>
+									<li class="col"><span>▩</span></li>
+									<li class="col"><span>『</span></li>
+									<li class="col"><span>』</span></li>
+									<li class="col"><span>。</span></li>
+								</ul>
+							</div>
 						</div>
-						<div class="option_wrap px-3 py-2" id="unicode">
-							<ul class="d-flex flex-wrap">
-                                <li class="col"><span>☆</span></li>
-                                <li class="col"><span>★</span></li>
-                                <li class="col"><span>○</span></li>
-                                <li class="col"><span>●</span></li>
-                                <li class="col"><span>◎</span></li>
-                                <li class="col"><span>◇</span></li>
-                                <li class="col"><span>◆</span></li>
-                                <li class="col"><span>□</span></li>
-                                <li class="col"><span>■</span></li>
-                                <li class="col"><span>△</span></li>
-                                <li class="col"><span>▲</span></li>
-                                <li class="col"><span>▽</span></li>
-                                <li class="col"><span>▼</span></li>
-                                <li class="col"><span>→</span></li>
-                                <li class="col"><span>←</span></li>
-                                <li class="col"><span>↑</span></li>
-                                <li class="col"><span>↓</span></li>
-                                <li class="col"><span>↔</span></li>
-                                <li class="col"><span>◁</span></li>
-                                <li class="col"><span>◀</span></li>
-                                <li class="col"><span>▷</span></li>
-                                <li class="col"><span>▶</span></li>
-                                <li class="col"><span>♤</span></li>
-                                <li class="col"><span>♠</span></li>
-                                <li class="col"><span>♡</span></li>
-                                <li class="col"><span>♥</span></li>
-                                <li class="col"><span>♧</span></li>
-                                <li class="col"><span>♣</span></li>
-                                <li class="col"><span>⊙</span></li>
-                                <li class="col"><span>◈</span></li>
-                                <li class="col"><span>▣</span></li>
-                                <li class="col"><span>◐</span></li>
-                                <li class="col"><span>◑</span></li>
-                                <li class="col"><span>♨</span></li>
-                                <li class="col"><span>☏</span></li>
-                                <li class="col"><span>☎</span></li>
-                                <li class="col"><span>☜</span></li>
-                                <li class="col"><span>☞</span></li>
-                                <li class="col"><span>¶</span></li>
-                                <li class="col"><span>†</span></li>
-                                <li class="col"><span>‡</span></li>
-                                <li class="col"><span>↕</span></li>
-                                <li class="col"><span>㈜</span></li>
-                                <li class="col"><span>㉿</span></li>
-                                <li class="col"><span>↗</span></li>
-                                <li class="col"><span>↙</span></li>
-                                <li class="col"><span>↖</span></li>
-                                <li class="col"><span>↘</span></li>
-                                <li class="col"><span>♭</span></li>
-                                <li class="col"><span>♩</span></li>
-                                <li class="col"><span>♪</span></li>
-                                <li class="col"><span>♬</span></li>
-                                <li class="col"><span>Σ</span></li>
-                                <li class="col"><span>Φ</span></li>
-                                <li class="col"><span>Ψ</span></li>
-                                <li class="col"><span>Ω</span></li>
-                                <li class="col"><span>▒</span></li>
-                                <li class="col"><span>▤</span></li>
-                                <li class="col"><span>▥</span></li>
-                                <li class="col"><span>▨</span></li>
-                                <li class="col"><span>▧</span></li>
-                                <li class="col"><span>▦</span></li>
-                                <li class="col"><span>▩</span></li>
-                                <li class="col"><span>『</span></li>
-                                <li class="col"><span>』</span></li>
-                                <li class="col"><span>。</span></li>
-                            </ul>
-						</div>
+					</div>									
+				</div>
+			</li>
+			<li>
+				<div class="col-2"></div>
+				<div class="col-10">
+					<div id="msgGrid" class="grid">
+						<table class="table w-100 text-center mb-0">
+							<thead>
+								<tr>
+									<th>수신번호</th>
+									<th>발신번호</th>
+									<th>전송시간</th>
+									<th>길이</th>
+									<th>메시지</th>
+									<th>에러내용</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="no-data">
+									<td class="py-3" colspan="6">메시지를 작성해 주세요.</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
-					</div>					
 				</div>
 			</li>
 			<li class="align-items-center">
