@@ -824,84 +824,95 @@ function reserve() {
 }
 
 function createSendData() {
-	//제목, 메시지, 메시지타입
-	const MSG_TITLE = document.getElementById('msgTitle').value.trim();
+    const MSG_TITLE = document.getElementById('msgTitle').value.trim();
     const MSG_WRITE = document.getElementById('msgWrite').value.trim();
-	const msg_type_value = document.querySelector('.msg_type').textContent.trim();
-	const MSG_TYPES = msg_type_value === "SMS" ? 'sms': msg_type_value === "LMS" ? 'lms' : 'mms';
+    const msg_type_value = document.querySelector('.msg_type').textContent.trim();
+    const MSG_TYPES = msg_type_value === "SMS" ? 'sms' : msg_type_value === "LMS" ? 'lms' : 'mms';
 
-	// 수신번호, 회신번호 배열
-    const tableRows = document.querySelectorAll("#excelGrid table tbody tr");
-    const callees = [];
-    const callbacks = [];
+    const sheetName = document.getElementById("sheet").value;
 
-    tableRows.forEach(row => {
-        const cells = row.querySelectorAll("td");
-        const callee = cells[0].textContent.trim();   // 수신번호
-        const callback = cells[1].textContent.trim(); // 발신번호
-
-        if (callee) callees.push(callee);
-        if (callback) callbacks.push(callback);
-    });
+    const params = new URLSearchParams();
+    params.append("excelFile", EXCEL_FILE_NAME);
+    params.append("sheetName", sheetName);
+    params.append("title", MSG_TITLE);
+    params.append("message", MSG_WRITE);
+    params.append("messageType", MSG_TYPES);
+    params.append("callbackFlag", document.getElementById("callbackSelect").value === "직접입력" ? 1 : 2);
+    params.append("callbackRow", document.getElementById("callbackSelect").value);
+    params.append("tranCallback", document.getElementById("tranCallback").value.trim());
+    params.append("calleeFlag", document.getElementById("calleeSelect").value === "직접입력" ? 1 : 2);
+    params.append("calleeRow", document.getElementById("calleeSelect").value);
+    params.append("tranCallee", document.getElementById("tranCallee").value.trim());
 
     fetch("/api/v1/excelSend/createSendData", {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({
-			callees: callees,
-			callbacks: callbacks,
-			message: MSG_WRITE,
-			title: MSG_TITLE,
-			messageType: MSG_TYPES
-		})
-	})
-	.then(res => res.json())
-	.then(data => {
-		console.log(data); // 서버에서 받은 데이터 확인
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params.toString()
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log("서버에서 넘어온 data 확인:", data);		
 
-		const tableBody = document.querySelector("#msgGrid table tbody");
-		tableBody.innerHTML = ""; // 기존 내용 제거
+        // data 배열 확인
+        if (data && data.status === "success") {
+            console.log("data 배열:", data.data);
+			const table = document.querySelector("#msgGrid table");
+			const tbody = table.querySelector("tbody");
 
-		if (data && Array.isArray(data)) {
-			data.forEach(row => {
+			// 기존 no-data 행 제거
+			tbody.innerHTML = "";
+
+			// HTML 엔티티 디코딩 함수
+			function decodeHTMLEntities(str) {
+				const txt = document.createElement("textarea");
+				txt.innerHTML = str;
+				return txt.value;
+			}
+
+			data.data.forEach(row => {
 				const tr = document.createElement("tr");
 
+				// 수신번호
 				const tdCallee = document.createElement("td");
-				tdCallee.textContent = row["수신번호"];
+				tdCallee.innerText = row["수신번호"];
 				tr.appendChild(tdCallee);
 
+				// 발신번호
 				const tdCallback = document.createElement("td");
-				tdCallback.textContent = row["회신번호"];
+				tdCallback.innerText = row["발신번호"];
 				tr.appendChild(tdCallback);
 
+				// 전송시간
 				const tdTime = document.createElement("td");
-				tdTime.textContent = row["전송시간"] || "즉시전송";
+				tdTime.innerText = row["전송시간"];
 				tr.appendChild(tdTime);
 
-				const tdLength = document.createElement("td");
-				tdLength.textContent = row["길이"];
-				tr.appendChild(tdLength);
+				// 길이
+				const tdLen = document.createElement("td");
+				tdLen.innerText = row["길이"];
+				tr.appendChild(tdLen);
 
-				const tdMessage = document.createElement("td");
-				tdMessage.textContent = row["메시지"];
-				tr.appendChild(tdMessage);
+				// 메시지 (엔티티 디코딩 적용)
+				const tdMsg = document.createElement("td");
+				const decodedMsg = decodeHTMLEntities(row["메시지"]);
+				tdMsg.innerText = decodedMsg;
+				tdMsg.title = decodedMsg; 
+				tr.appendChild(tdMsg);
 
-				const tdError = document.createElement("td");
-				tdError.textContent = row["에러내용"];
-				tr.appendChild(tdError);
+				// 에러내용
+				const tdErr = document.createElement("td");
+				tdErr.innerText = row["에러내용"];
+				tr.appendChild(tdErr);
 
-				tableBody.appendChild(tr);
+				tbody.appendChild(tr);
 			});
-		} else {
-			tableBody.innerHTML = `<tr class="no-data">
-				<td class="py-3" colspan="6">메시지를 작성해 주세요.</td>
-			</tr>`;
-		}
-	})
-	.catch(err => {
-		console.error("데이터 로드 실패:", err);
-		showDialogCustom('error');
-	});
-}
 
+        } else {
+            console.warn("데이터 로드 실패 또는 상태 오류:", data);
+        }
+    })
+    .catch(err => {
+        console.error("데이터 로드 실패:", err);
+    });
+}
 

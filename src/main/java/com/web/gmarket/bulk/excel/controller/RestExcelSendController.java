@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -503,39 +504,130 @@ public class RestExcelSendController {
 	}
 	
 	@PostMapping("/createSendData")
-	public List<Map<String, Object>> createSendData(@RequestBody Map<String, Object> body) {
-		// 클라이언트에서 받은 값
-		List<String> callees = (List<String>) body.get("callees");
-		List<String> callbacks = (List<String>) body.get("callbacks");
-		String message = (String) body.get("message");
-		String title = (String) body.get("title");
-		String messageType = (String) body.get("messageType");
+	public Map<String, Object> createSendData(
+		@RequestParam("excelFile") String excelFile,
+        @RequestParam("sheetName") String sheetName,
+        @RequestParam("title") String title,
+        @RequestParam("message") String messageTemplate,
+        @RequestParam("messageType") String messageType,
+        @RequestParam("callbackFlag") String callbackFlag,
+        @RequestParam("callbackRow") String callbackRow,
+        @RequestParam("tranCallback") String tranCallback,
+        @RequestParam("calleeFlag") String calleeFlag,
+        @RequestParam("calleeRow") String calleeRow,
+        @RequestParam("tranCallee") String tranCallee
+	) throws IOException {
+		
+		 Map<String, Object> result = new HashMap<>();
+		List<Map<String, Object>> data = new ArrayList<>();
 
-		List<Map<String, Object>> resultList = new ArrayList<>();
-
-		for (int i = 0; i < callees.size(); i++) {
-			String callee = callees.get(i);
-			String callback = callbacks.get(i);
-
-			int msgLen = getSMSLen(message);
-			int titleLen = getSMSLen(title);
-
-			String errorMsg = checkStrLen(msgLen, titleLen, callee, callback, messageType);
-
-			Map<String, Object> row = new HashMap<>();
-			row.put("수신번호", callee);
-			row.put("회신번호", callback);
-			row.put("전송시간", "즉시전송"); // 임시값
-			row.put("길이", msgLen);
-			row.put("메시지", message);
-			row.put("에러내용", errorMsg);
-
-			resultList.add(row);
+		// 1. 파일 확인
+		File file = new File(EXCEL_PATH, excelFile);
+		if (!file.exists()) {
+			result.put("status", "error");
+			result.put("message", "파일을 찾을 수 없습니다.");
+			return result;
 		}
 
-		return resultList;
-	}
+		Workbook workbook = null;
+		try (InputStream is = new FileInputStream(file)) {
+			if (excelFile.endsWith(".xls")) workbook = new HSSFWorkbook(is);
+			else if (excelFile.endsWith(".xlsx")) workbook = new XSSFWorkbook(is);
+			else {
+				result.put("status", "error");
+				result.put("message", "엑셀 파일 형식이 아닙니다.");
+				return result;
+			}
 
+			Sheet sheet = workbook.getSheet(sheetName);
+			if (sheet == null) {
+				result.put("status", "error");
+				result.put("message", "해당 시트를 찾을 수 없습니다.");
+				return result;
+			}
+
+			int maxRows = sheet.getLastRowNum() + 1;
+			int maxCells = 0;
+			for (Row row : sheet) {
+				if (row != null && row.getLastCellNum() > maxCells) {
+					maxCells = row.getLastCellNum();
+				}
+			}
+
+			if (maxRows > EXCEL_ROW_MAX || maxCells > EXCEL_CELL_MAX) {
+				result.put("status", "error");
+				result.put("message", "엑셀파일이 허용 범위를 초과합니다.");
+				return result;
+			}
+
+			// 2. 시트 내용 읽기 및 데이터 생성
+			for (int r = 0; r < maxRows; r++) {
+				Row row = sheet.getRow(r);
+				if (row == null) continue;
+
+				List<String> rowData = new ArrayList<>();
+				for (int c = 0; c < maxCells; c++) {
+					Cell cell = row.getCell(c);
+					rowData.add(cell != null ? cell.toString() : "");
+				}
+
+				// 3. 메시지 변수 치환
+				String message = messageTemplate;
+				for (int c = 0; c < rowData.size(); c++) {
+					String code = String.valueOf((char)('A' + c));
+					message = message.replace("[%"+code+"%]", rowData.get(c));
+				}
+
+				// 4. 발신번호 처리
+				String callbackValue;
+				if ("1".equals(callbackFlag)) {
+					callbackValue = tranCallback;
+				} else {
+					int colIdx = callbackRow.charAt(0) - 'A';
+					callbackValue = colIdx < rowData.size() ? rowData.get(colIdx) : "";
+				}
+
+				// 5. 수신번호 처리
+				String calleeValue;
+				if ("1".equals(calleeFlag)) {
+					calleeValue = tranCallee;
+				} else {
+					int colIdx = calleeRow.charAt(0) - 'A';
+					calleeValue = colIdx < rowData.size() ? rowData.get(colIdx) : "";
+				}
+
+				//메시지 길이, 오류 체크, 엔티티변환
+				int messageLen = getSMSLen(message);  
+				int titleLen = (title != null) ? title.length() : 0;
+
+				String errorMsg = checkStrLen(messageLen, titleLen, calleeValue, callbackValue, messageType);
+
+				String decodedMessage = StringEscapeUtils.unescapeHtml4(message);
+
+				// 6. Map 생성
+				Map<String, Object> rowMap = new HashMap<>();
+				rowMap.put("수신번호", calleeValue);
+				rowMap.put("발신번호", callbackValue);
+				rowMap.put("전송시간", "즉시전송");
+				rowMap.put("길이", messageLen);
+				rowMap.put("메시지", decodedMessage);
+				rowMap.put("에러내용", errorMsg);
+
+				data.add(rowMap);
+			}
+
+			result.put("status", "success");
+			result.put("data", data);
+
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("message", e.getMessage());
+		} finally {
+			if (workbook != null) workbook.close();
+		}
+
+		return result;
+	}
 
 	/** JSP에서 쓰던 로직 그대로 */
 	public static int getSMSLen(String str) {
