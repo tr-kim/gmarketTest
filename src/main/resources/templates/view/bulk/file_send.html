@@ -16,7 +16,7 @@
 			<li>
 				<div class="col-2 font-weight-500">수신번호</div>
 				<div class="col">
-					<div id="textGrid" class="grid">
+					<div id="textGrid" class="grid">						
 						<table class="table w-100 text-center mb-0">
 							<thead>
 								<tr>
@@ -30,6 +30,7 @@
 								</tr>
 							</tbody>
 						</table>
+						<div class="loadpanel"></div>
 					</div>
 					<div class="duplication_filter text-end mt-1">
 						<span>입력 수신번호 <span class="direct_input_num">0</span> 건</span>
@@ -77,13 +78,10 @@
 							</div>
 						</div>
 						<textarea name="msgWrite" id="msgWrite" class="p-3 w-100"></textarea>
-						
 					</div>
 					<div class="add_option col position-relative">
 						<ul class="option_tab d-flex px-3">
-							<li class="col on"><button type="button">이미지</button></li>
-							<li class="col"><button type="button">변수선택</button></li>
-							<li class="col"><button type="button">특수문자</button></li>
+							<li class="col on py-2">이미지</li>
 						</ul>
 						<div class="option_wrap px-3 py-2 d-block">
 							<div id="dropzone-external" class="flex-box">
@@ -96,86 +94,6 @@
 							<div id="file-uploader"></div>
 							<span class="img-question position-absolute end-0 bottom-0 p-3"><i class="bi bi-question-circle"></i></span>
 						</div>
-						<div class="option_wrap px-3 py-2" id="tag">
-							<ul class="row mt-2">
-								<li class="col-4 text-center mb-3"><button type="button">변수1</button></li>
-								<li class="col-4 text-center mb-3"><button type="button">변수2</button></li>
-								<li class="col-4 text-center mb-3"><button type="button">변수3</button></li>
-								<li class="col-4 text-center mb-3"><button type="button">변수4</button></li>
-								<li class="col-4 text-center mb-3"><button type="button">변수5</button></li>
-							</ul>
-						</div>
-						<div class="option_wrap px-3 py-2" id="unicode">
-							<ul class="d-flex flex-wrap">
-                                <li class="col"><span>☆</span></li>
-                                <li class="col"><span>★</span></li>
-                                <li class="col"><span>○</span></li>
-                                <li class="col"><span>●</span></li>
-                                <li class="col"><span>◎</span></li>
-                                <li class="col"><span>◇</span></li>
-                                <li class="col"><span>◆</span></li>
-                                <li class="col"><span>□</span></li>
-                                <li class="col"><span>■</span></li>
-                                <li class="col"><span>△</span></li>
-                                <li class="col"><span>▲</span></li>
-                                <li class="col"><span>▽</span></li>
-                                <li class="col"><span>▼</span></li>
-                                <li class="col"><span>→</span></li>
-                                <li class="col"><span>←</span></li>
-                                <li class="col"><span>↑</span></li>
-                                <li class="col"><span>↓</span></li>
-                                <li class="col"><span>↔</span></li>
-                                <li class="col"><span>◁</span></li>
-                                <li class="col"><span>◀</span></li>
-                                <li class="col"><span>▷</span></li>
-                                <li class="col"><span>▶</span></li>
-                                <li class="col"><span>♤</span></li>
-                                <li class="col"><span>♠</span></li>
-                                <li class="col"><span>♡</span></li>
-                                <li class="col"><span>♥</span></li>
-                                <li class="col"><span>♧</span></li>
-                                <li class="col"><span>♣</span></li>
-                                <li class="col"><span>⊙</span></li>
-                                <li class="col"><span>◈</span></li>
-                                <li class="col"><span>▣</span></li>
-                                <li class="col"><span>◐</span></li>
-                                <li class="col"><span>◑</span></li>
-                                <li class="col"><span>♨</span></li>
-                                <li class="col"><span>☏</span></li>
-                                <li class="col"><span>☎</span></li>
-                                <li class="col"><span>☜</span></li>
-                                <li class="col"><span>☞</span></li>
-                                <li class="col"><span>¶</span></li>
-                                <li class="col"><span>†</span></li>
-                                <li class="col"><span>‡</span></li>
-                                <li class="col"><span>↕</span></li>
-                                <li class="col"><span>㈜</span></li>
-                                <li class="col"><span>㉿</span></li>
-                                <li class="col"><span>↗</span></li>
-                                <li class="col"><span>↙</span></li>
-                                <li class="col"><span>↖</span></li>
-                                <li class="col"><span>↘</span></li>
-                                <li class="col"><span>♭</span></li>
-                                <li class="col"><span>♩</span></li>
-                                <li class="col"><span>♪</span></li>
-                                <li class="col"><span>♬</span></li>
-                                <li class="col"><span>Σ</span></li>
-                                <li class="col"><span>Φ</span></li>
-                                <li class="col"><span>Ψ</span></li>
-                                <li class="col"><span>Ω</span></li>
-                                <li class="col"><span>▒</span></li>
-                                <li class="col"><span>▤</span></li>
-                                <li class="col"><span>▥</span></li>
-                                <li class="col"><span>▨</span></li>
-                                <li class="col"><span>▧</span></li>
-                                <li class="col"><span>▦</span></li>
-                                <li class="col"><span>▩</span></li>
-                                <li class="col"><span>『</span></li>
-                                <li class="col"><span>』</span></li>
-                                <li class="col"><span>。</span></li>
-                            </ul>
-						</div>
-					</div>
 					</div>					
 				</div>
 			</li>
