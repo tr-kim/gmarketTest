@@ -87,38 +87,42 @@ window.addEventListener('load', function() {
 				const password = pw1.value;
 				const publicKeyModulus = data.RSA_MODULUS;
 				const publicKeyExponent = data.RSA_EXPONENT;
+				
+				if(publicKeyModulus != "" && publicKeyExponent != "") {
+					// RSA 암호화
+					let rsa = new RSAKey();
+					rsa.setPublic(publicKeyModulus, publicKeyExponent);
 
-				// RSA 암호화
-				let rsa = new RSAKey();
-				rsa.setPublic(publicKeyModulus, publicKeyExponent);
+					const encrypted = rsa.encrypt(password);
+					const base64 = hex2b64(encrypted);
 
-				const encrypted = rsa.encrypt(password);
-				const base64 = hex2b64(encrypted);
+					formData.append("userId", $("#pwd_chg_user_id").val());
+					formData.append("userPwd", encodeURIComponent(base64));
 
-				formData.append("userId", $("#pwd_chg_user_id").val());
-				formData.append("userPwd", encodeURIComponent(base64));
+					putFormAjax("/api/v1/user/passwordChg", formData, function callback(data) {
+						const code = data.code;
+						const result = data.result;
 
-				putFormAjax("/api/v1/user/passwordChg", formData, function callback(data) {
-					const code = data.code;
-					const result = data.result;
-
-					if (code == 1000) {
-						const message = '비밀번호가 변경되었습니다.';
-						showDialogCustom(message, function (){
-							pw1.value = '';
-							pw2.value = '';
-							document.getElementById('psw-ck').textContent = '';
-							document.querySelector('.passwordChg').classList.remove('d-block');
-						});
-						
-					} else if (code == 9003) {
-						showDialogCustom(result);
-						
-					} else {
-						const message = '비밀번호 변경에 실패했습니다.';
-						showDialogCustom(message);
-					}
-				});
+						if (code == 1000) {
+							const message = '비밀번호가 변경되었습니다.';
+							showDialogCustom(message, function (){
+								pw1.value = '';
+								pw2.value = '';
+								document.getElementById('psw-ck').textContent = '';
+								document.querySelector('.passwordChg').classList.remove('d-block');
+							});
+							
+						} else if (code == 9003) {
+							showDialogCustom(result);
+							
+						} else {
+							const message = '비밀번호 변경에 실패했습니다.';
+							showDialogCustom(message);
+						}
+					});
+				} else {
+					showDialogCustom("암호화 키가 올바르지 않습니다.");
+				}
 			});
 		});
 	}

@@ -74,7 +74,6 @@ public class ConstantsUtils {
 	
 	// RSA
 	public static final String RSA_WEB_KEY = "_RSA_WEB_Key_";
-	public static final String PUBLIC_KEY = "PUBLIC_KEY";
 	public static final String INTANCE_TYPE_RSA = "RSA";
 	public static final String RSA_MODULUS = "RSA_MODULUS";
 	public static final String RSA_EXPONENT = "RSA_EXPONENT";

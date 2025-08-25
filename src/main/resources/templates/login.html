@@ -108,17 +108,21 @@
 
 			const publicKeyModulus = $("#publicKeyModulus").val();
 			const publicKeyExponent = $("#publicKeyExponent").val();
+			
+			if(publicKeyModulus.length > 0 && publicKeyExponent.length > 0) {
+				// RSA 암호화
+				let rsa = new RSAKey();
+				rsa.setPublic(publicKeyModulus, publicKeyExponent);
 
-			// RSA 암호화
-			let rsa = new RSAKey();
-			rsa.setPublic(publicKeyModulus, publicKeyExponent);
+				const encrypted = rsa.encrypt(password);
+				const base64 = hex2b64(encrypted);
 
-			const encrypted = rsa.encrypt(password);
-			const base64 = hex2b64(encrypted);
+				$("#password").val(encodeURIComponent(base64));
 
-			$("#password").val(encodeURIComponent(base64));
-
-			$("#loginForm").submit();
+				$("#loginForm").submit();
+			} else {
+				alert("암호화 키가 올바르지 않습니다.");
+			}
 		});
 	</script>
 </body>
