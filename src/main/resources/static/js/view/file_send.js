@@ -1,5 +1,17 @@
+let loadPanel;
+
 $(function () {
 	
+	loadPanel = $('.loadpanel').dxLoadPanel({
+		shadingColor: 'rgba(0,0,0,0.4)',
+		position: { of: '#employee' },
+		visible: false,
+		showIndicator: true,
+		showPane: true,
+		shading: true,
+		hideOnOutsideClick: false,
+	}).dxLoadPanel('instance');
+
 	const MSG_TITLE = document.getElementById('msgTitle');
 	const MSG_WRITE = document.getElementById('msgWrite');
 	const MSG_TYPES = document.querySelector('.msg_type');
@@ -7,36 +19,7 @@ $(function () {
 	const TOTAL_BYTE = document.getElementById('total_byte');
 	const FINAL_SEND_BTN = document.getElementById('final_send_btn');
 	
-	MSG_WRITE.placeholder = "내용을 입력해 주세요.\n80byte 초과 시 장문 문자로,\n이미지 추가 시 포토 문자로 자동 전환 됩니다.";
-	
-	
-	//내용 옵션(이미지, 변수선택, 특수문자)
-	const optabButtons = document.querySelectorAll('.option_tab li button');
-	const optabs = document.querySelectorAll('.option_tab li');
-	const options = document.querySelectorAll('.option_wrap');
-	
-	optabButtons.forEach((button, index) => {
-		button.addEventListener('click', (e) => {
-			e.preventDefault();
-			// .tab li에 on 클래스 조정
-			optabs.forEach((li, liIdx) => {
-				if (liIdx === index) {
-					li.classList.add('on');
-				} else {
-					li.classList.remove('on');
-				}
-			});
-			
-			options.forEach((wrap, wrapIdx) => {
-				if (wrapIdx === index) {
-					wrap.classList.add('d-block');
-				} else {
-					wrap.classList.remove('d-block');
-				}
-			});
-		});
-	});
-	
+	MSG_WRITE.placeholder = "내용을 입력해 주세요.\n80byte 초과 시 장문 문자로,\n이미지 추가 시 포토 문자로 자동 전환 됩니다.";	
 	
 	function toggleDropZoneActive(dropZone, isActive) {
 		dropZone.classList.toggle('dropzone-active', isActive);
@@ -415,7 +398,6 @@ $(function () {
 	MSG_WRITE.addEventListener("input", handleInput); //내용
 	rejectNum.addEventListener("input", handleInput); //080 수신거부 번호
 	
-	
 	//커서 위치에 특수문자 삽입
 	function insertAtCursor(textarea, text){
 		const start = textarea.selectionStart;
@@ -428,7 +410,6 @@ $(function () {
 		textarea.focus();
 	}
 	
-	
 	//특수문자
 	document.querySelectorAll('#unicode li').forEach(span => {
 		span.addEventListener('click', function () {
@@ -439,7 +420,6 @@ $(function () {
 		});
 	});
 	
-	
 	//변수추가
 	document.querySelectorAll('#tag li button').forEach((btn, idx)=>{
 		btn.addEventListener('click',() => {
@@ -449,52 +429,9 @@ $(function () {
 			}
 		})
 	});
-	
-	//파일 업로드시 Grid
-	document.getElementById('textFile').addEventListener('change', function () {
-		const file = this.files[0];
-		if (!file) return;
-
-		// txt 파일만 허용
-		if (file.type !== "text/plain" && !file.name.endsWith(".txt")) {
-			showDialogCustom("TXT 파일만 업로드 가능합니다.");
-			this.value = "";
-			return;
-		}
-
-		const reader = new FileReader();
-		reader.onload = function (e) {
-			const content = e.target.result;
-			const numbers = content.split(',').map(num => num.trim()).filter(Boolean);
-
-			const tbody = document.querySelector('#textGrid tbody');
-			tbody.innerHTML = "";
-
-			if (numbers.length === 0) {
-				// 데이터 없으면 no-data 다시 추가
-				tbody.innerHTML = `
-					<tr class="no-data">
-						<td class="py-3" colspan="3">파일을 선택해주세요.</td>
-					</tr>
-				`;
-				return;
-			}
-
-			// 번호 목록 tr로 추가
-			numbers.forEach(num => {
-				const tr = document.createElement('tr');
-				const td = document.createElement('td');
-				td.textContent = num;
-				tr.appendChild(td);
-				tbody.appendChild(tr);
-			});
-
-			document.querySelector('span.direct_input_num').textContent= numbers.length;
-		};
-		reader.readAsText(file);
-	});
 });
 
+let TEXT_FILE_NAME = "";
 
 //숫자만 입력
 function onlyNumber(element){
@@ -502,125 +439,30 @@ function onlyNumber(element){
 }
 
 
-//직접입력 추가
-function addDirectNumber(){
-	const nameInput = document.getElementById("directName");
-	const directName = nameInput.value.trim();
-	
-	const numberInput = document.getElementById("directNumber");
-	const directNumber = numberInput.value.trim();
-	
-	if(directName == ""){
-		const message = '이름을 입력하세요.';
-		showDialogCustom(message);
-		return;
-	}
-	
-	if(directNumber == ""){
-		const message = '번호를 입력하세요.';
-		showDialogCustom(message);
-		return;
-	}
-	
-	const tbody = document.querySelector("#directGrid tbody");
-	
-	const emptyTr = tbody.querySelector('tr td[colspan]');
-	if (emptyTr){
-		tbody.innerHTML = '';
-	}
-	
-	const newTr = document.createElement('tr');
-	newTr.innerHTML = `
-		<td>${directName}</td>
-		<td class="phoneNum">${directNumber}</td>
-		<td>
-			<button type="button" class="numDelBtn" onclick="delDirectNumber(this)">
-			<i class="dx-icon-close"></i>
-			<span class="visually-hidden">삭제</span>
-			</button>
-		</td>
-	`;
-	
-	tbody.appendChild(newTr);
-	
-	//입력란 초기화
-	nameInput.value = '';
-	numberInput.value = '';
-	
-	updateDirectNumberStats();
-}
-
-
-//직접입력 삭제
-function delDirectNumber(element){
-	const confirmDialog = DevExpress.ui.dialog.custom({
-		showTitle: false,
-		messageHtml: "<div style='text-align: center;'>삭제하시겠습니까?</div>",
-		buttons: [{
-			text: "확인",
-			type: "default",
-			onClick: function(e) {
-				const tr = element.closest('tr');
-				tr.remove();
-				
-				const tbody = document.querySelector("#directGrid tbody");
-				
-				if (tbody.children.length == 0){
-					tbody.innerHTML = `
-						<tr class="no-data">
-							<td class="py-3" colspan="3">직접입력한 번호가 없습니다.</td>
-						</tr>
-					`
-				}
-				
-				updateDirectNumberStats();
-				
-				return { result: "ok" };
-			}
-		}, {
-			text: "취소",
-			onClick: function(e) {
-				return { result: "cancel" };
-			}
-		}]
-	});
-	
-	confirmDialog.show().done(function(dialogResult) {
-		if (dialogResult.result === "ok") {
-			console.log("삭제 완료");
-			
-		} else {
-			console.log("취소");
-		}
-	});
-}
-
-
-//직접입력 중복 수 계산
-function updateDirectNumberStats() {
-	const tbody = document.querySelector("#directGrid tbody");
-	const rows = tbody.querySelectorAll("tr:not(.no-data)");
-	const numbers = [];
-	const numberCounts = {};
-	
-	rows.forEach(row => {
-		const number = row.children[1]?.textContent?.trim(); //2번째 td가 번호
-		if (number) {
-			numbers.push(number);
-			numberCounts[number] = (numberCounts[number] || 0) + 1;
-		}
-	});
-	
-	const totalCount = numbers.length;
-	const dupCount = Object.values(numberCounts).filter(count => count > 1).reduce((a, b) => a + b - 1, 0);
-	
-	document.querySelector(".direct_input_num").textContent = totalCount;
-	document.querySelector(".direct_dup_num").textContent = dupCount;
-}
-
-
 //문자 발송
 function sendMessage(){
+	//파일 유무
+	TEXT_FILE_NAME = document.getElementById('textFile').value;
+	if (!TEXT_FILE_NAME) {
+		showDialogCustom('파일을 선택해주세요.');
+		return;
+	}
+	//발신번호 유무
+	if(document.getElementById('callbackNo').value == ""){
+		showDialogCustom('발신번호를 입력해주세요.');
+		return;
+	};
+	//사용자ID 유무
+	if(document.getElementById('userId').value == ""){
+		showDialogCustom('사용자ID를 입력해주세요.');
+		return;
+	};
+	//전송대상 유무
+	if(document.getElementById('sendInfo').value == ""){
+		showDialogCustom('전송대상을 입력해주세요.');
+		return;
+	};
+
 	const confirmDialog = DevExpress.ui.dialog.custom({
 		showTitle: false,
 		messageHtml: "<div style='text-align: center;'>발송하시겠습니까?</div>",
@@ -629,9 +471,6 @@ function sendMessage(){
 			type: "default",
 			onClick: function(e) {
 				//발송 로직 실행
-				
-				
-				
 				
 				return { result: "ok" };
 			}
@@ -650,6 +489,128 @@ function sendMessage(){
 			console.log("취소");
 		}
 	});
+}
+
+// 텍스트 파일 업로드
+function textFileUpload(input) {
+	const file = input.files[0];
+	if (!file) return;
+	
+	loadPanel.show();
+
+	const formData = new FormData();
+	formData.append("file", file);
+	
+	fetch("/api/v1/fileSend/txtUpload", {
+		method: "POST",
+		body: formData
+	})
+	.then(res => res.json())
+	.then(data => {
+		console.log(data);
+		
+		const status = data.status;
+		
+		if(status == "success"){
+			// 테이블 그리기
+			const retData = data.retData;
+			drawTable("textGrid", retData);			
+		}else{
+			const message = data.message;
+			showDialogCustom(message);
+			input.value = "";
+
+			document.getElementById('textGrid').style.height = "auto";
+			const tbody = document.querySelector("#textGrid table tbody");
+			document.querySelector('span.direct_input_num').textContent = '0'
+			tbody.innerHTML = `
+				<tr class="no-data">
+					<td class="py-3" colspan="2">파일을 선택해주세요.</td>
+				</tr>
+			`;
+		}
+	})
+	.catch(err => {
+		console.error("파일 업로드 실패", err);
+		showDialogCustom('error');
+		input.value = "";
+
+	})
+	.finally(() => {
+		loadPanel.hide();
+	})
+}
+
+// 테이블 그리기
+function drawTable(containerId, data){
+	const container = document.getElementById(containerId);
+	const table = container.querySelector("#textGrid table");
+	
+	if (!data || data.length === 0) return;
+	
+	const txtFile = data.txtFile;
+	const rowLength = data.count;
+	const textNumber = data.textNumber;
+	
+	TEXT_FILE_NAME = txtFile;
+	
+	// 건수 표시
+	document.querySelector('span.direct_input_num').textContent = 	rowLength.toLocaleString();
+	
+	// 전화번호 목록 표시
+	const tbody = table.querySelector("tbody");
+	tbody.innerHTML = ""; // 기존 내용 제거
+	
+	// 가상 스크롤 전
+	/*textNumber.forEach(num => {
+		const tr = document.createElement("tr");
+		const td = document.createElement("td");
+		td.textContent = num;
+		tr.appendChild(td);
+		tbody.appendChild(tr);
+	});*/
+	
+	// 가상 스크롤 시작
+	let rowHeight = 40; //각 행 높이(px)
+	const visibleRows = Math.ceil(500 / rowHeight); // 500px 영역에 몇개 보일지 계산
+	
+	// 전체 스크롤 가능한 높이
+	container.style.height = `${rowLength * rowHeight + 40}px`; // 헤더 40 포함
+	
+	// 스크롤 이벤트
+	container.addEventListener('scroll', renderVisibleRows);
+	
+	function renderVisibleRows(){
+		const scrollTop = container.scrollTop;
+		const startRow = Math.floor(scrollTop / rowHeight);
+		const endRow = Math.min(startRow + visibleRows + 5, rowLength);
+		
+		// 현재 보여질 행만 렌더링
+		tbody.innerHTML= "";
+		tbody.style.transform = `translateY(${startRow * rowHeight}px)`;
+		
+		// DocumentFragment 방식 (innerHTML 방식 부하 개선)
+		const fragment = document.createDocumentFragment();
+		
+		for (let i = startRow; i < endRow; i++) {
+			const tr = document.createElement("tr");
+			
+			const tdIdx = document.createElement("td");
+			tdIdx.textContent = textNumber[i]?.idx ?? ""; // 행번호
+			tr.appendChild(tdIdx);
+			
+			const tdVal = document.createElement("td");
+			tdVal.textContent = textNumber[i]?.value ?? ""; // 수신번호
+			tdVal.style.whiteSpace = 'pre-line'; // 줄바꿈
+			tr.appendChild(tdVal);
+			
+			fragment.appendChild(tr);
+		}
+		
+		tbody.appendChild(fragment);
+	}
+	renderVisibleRows();
+	// 가상 스크롤 종료	
 }
 
 

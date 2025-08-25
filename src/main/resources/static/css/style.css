@@ -452,6 +452,9 @@ aside .psw_chg_btn:hover{
 .filebtn input[type="file"].form-control:hover::file-selector-button {
     background-color: #115fa3 !important;
 }
+#textGrid table {
+    border-collapse: separate
+}
 #dropzone-external {
   background-color: rgb(183 183 183 / 10%);
   padding: 10px;
