@@ -8,24 +8,25 @@
 		<ul>
 			<li class="align-items-center filebtn">
 				<div class="col-2 font-weight-500">파일선택</div>
-				<div class="col">					
-					<input type="file" name="textFile" id="textFile" class="form-control me-2">
+				<div class="col">
+					<input type="file" name="textFile" id="textFile" class="form-control me-2" accept=".txt" onchange="textFileUpload(this)">
 					<!-- <a href="" download class="text-nowrap font-weight-500 mx-2"><i class="bi bi-download me-1"></i>양식다운로드</a> -->
 				</div>
-			</li>	
+			</li>
 			<li>
 				<div class="col-2 font-weight-500">수신번호</div>
-				<div class="col">					
+				<div class="col">
 					<div id="textGrid" class="grid">
-						<table class="table w-100 text-center mb-0">								
+						<table class="table w-100 text-center mb-0">
 							<thead>
 								<tr>
+									<th>NO</th>
 									<th>수신번호</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr class="no-data">
-									<td class="py-3" colspan="3">파일을 선택해주세요.</td>
+									<td class="py-3" colspan="2">파일을 선택해주세요.</td>
 								</tr>
 							</tbody>
 						</table>
@@ -218,12 +219,11 @@
 					<div id="reserveDate" class="text-primary ms-3"></div>
 				</div>					
 			</li>
-		
 			<li class="d-flex align-items-center justify-content-center">
 				<button type="button" class="btn btn-primary px-5" id="final_send_btn" onclick="sendMessage()">즉시발송</button>
 			</li>
 		</ul>
-	</form>	
+	</form>
 	<th:block th:replace="~{/view/popup/reserveSend :: reserveSend}"></th:block>
 	<script th:src="@{/js/view/file_send.js}"></script>
 </body>
