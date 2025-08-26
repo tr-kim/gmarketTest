@@ -499,24 +499,6 @@ $(function () {
 	// 		}
 	// 	})
 	// });
-	
-	//엑셀 파일 업로드
-	document.getElementById('excelFile').addEventListener('change', function () {
-		const file = this.files[0];
-		if (!file) return;
-
-		// xls, xlsx 파일만 허용
-		const allowedExtensions = ['.xls', '.xlsx'];
-		const fileName = file.name.toLowerCase();
-		const isExcel = allowedExtensions.some(ext => fileName.endsWith(ext));
-
-		if (!isExcel) {
-			showDialogCustom("xls, xlsx 파일만 업로드 가능합니다.");
-			this.value = ""; 
-			return;
-		}
-	})
-
 });
 
 
@@ -563,7 +545,7 @@ function sendMessage(){
 }
 
 
-//엑셀 파일 업로드
+// 엑셀 파일 업로드
 function excelFileUpload(input) {
 	const file = input.files[0];
 	if (!file) return;
@@ -583,12 +565,12 @@ function excelFileUpload(input) {
 		
 		if(status == "success"){
 			const retData = data.retData;
-			const sheet = document.getElementById('sheet');
-			
 			EXCEL_FILE_NAME = retData.excelFile;
-						
-			// 기존 옵션 전부 제거 후, 안내용 기본 옵션 추가
-			sheet.innerHTML = "";
+			
+			// 시트 목록 추가
+			const sheet = document.getElementById('sheet');
+			sheet.innerHTML = ""; // 기존 내용 제거
+			
 			const defaultOpt = document.createElement('option');
 			defaultOpt.value = "";
 			defaultOpt.textContent = "시트를 선택해주세요.";
@@ -601,7 +583,8 @@ function excelFileUpload(input) {
 				sheet.appendChild(opt);
 			});
 		}else{
-			showDialogCustom('error');
+			const message = data.message;
+			showDialogCustom(message);
 		}
 	})
 	.catch(err => {
@@ -611,7 +594,7 @@ function excelFileUpload(input) {
 }
 
 
-//엑셀 시트 읽기
+// 엑셀 시트 읽기
 function excelReadSheet(option) {
 	const sheetName = option.value;
 	if (!sheetName) return;
@@ -639,68 +622,10 @@ function excelReadSheet(option) {
 		if(status == "success"){
 			// 테이블 그리기
 			const retData = data.retData;
-			const table = document.querySelector("#excelGrid table");
-			
-			// thead 설정
-			const thead = table.querySelector("thead");
-			thead.innerHTML = ""; // 기존 내용 제거
-			const headRow = document.createElement("tr");
-			retData[0].forEach(text => {
-				const th = document.createElement("th");
-				th.textContent = text;
-				headRow.appendChild(th);
-			});
-			thead.appendChild(headRow);
-			
-			// tbody 설정
-			const tbody = table.querySelector("tbody");
-			tbody.innerHTML = ""; // 기존 내용 제거
-			retData.slice(1).forEach(rowData => {
-				const tr = document.createElement("tr");
-				rowData.forEach(text => {
-					const td = document.createElement("td");
-					td.textContent = text;
-					tr.appendChild(td);
-				});
-				tbody.appendChild(tr);
-			});
-			
-			//발신번호
-			const callbackSelect = document.getElementById('callbackSelect');
-			callbackSelect.innerHTML = "";
-			
-			const tranCallbackOpt = document.createElement('option');
-			tranCallbackOpt.value = "직접입력";
-			tranCallbackOpt.textContent = "직접입력";
-			callbackSelect.appendChild(tranCallbackOpt);
-			
-			//수신번호
-			const calleeSelect = document.getElementById('calleeSelect');
-			calleeSelect.innerHTML = "";
-			
-			const tranCalleeOpt = document.createElement('option');
-			tranCalleeOpt.value = "직접입력";
-			tranCalleeOpt.textContent = "직접입력";
-			calleeSelect.appendChild(tranCalleeOpt);
-			
-			//변수선택
-			const tagLi = document.querySelector('#tag ul');
-			tagLi.innerHTML = "";		
-			
-			retData[0].forEach(option => {
-				const opt = document.createElement('option');
-				opt.value = option;
-				opt.textContent = option;
-				callbackSelect.appendChild(opt); // 발신번호
-				calleeSelect.appendChild(opt.cloneNode(true)); // 수신번호(복제)
-				
-				const tagOpt = document.createElement('li');
-				tagOpt.classList.add('col-4', 'text-center', 'mb-3');
-				tagOpt.innerHTML = `<button type="button">${option}</button>`;
-				tagLi.appendChild(tagOpt); // 변수선택
-			});
+			drawTable("excelGrid", retData, "Y");
 		}else{
-			showDialogCustom('error');
+			const message = data.message;
+			showDialogCustom(message);
 		}
 	})
 	.catch(err => {
@@ -787,42 +712,175 @@ function reserve() {
 		if(status == "success"){
 			// 테이블 그리기
 			const retData = data.retData;
-			const table = document.querySelector("#excelGrid table");
-			
-			// thead
-			const thead = table.querySelector("thead");
-			thead.innerHTML = ""; // 기존 내용 제거
-			const headRow = document.createElement("tr");
-			retData[0].forEach(text => {
-				const th = document.createElement("th");
-				th.textContent = text;
-				headRow.appendChild(th);
-			});
-			thead.appendChild(headRow);
-
-			// tbody
-			const tbody = table.querySelector("tbody");
-			tbody.innerHTML = ""; // 기존 내용 제거
-			retData.slice(1).forEach(rowData => {
-				const tr = document.createElement("tr");
-				rowData.forEach(text => {
-					const td = document.createElement("td");
-					td.textContent = text;
-					tr.appendChild(td);
-				});
-				tbody.appendChild(tr);
-			});
+			drawTable("excelGrid", retData, "N");
 		}else{
-			showDialogCustom('error');
+			const message = data.message;
+			showDialogCustom(message);
 		}
 	})
 	.catch(err => {
-		console.error("시트 읽기 실패:", err);
+		console.error("번호 지정 실패:", err);
 		showDialogCustom('error');
 	});
-	
 }
 
+
+// 테이블 그리기
+function drawTable(containerId, data, init){
+	const container = document.getElementById(containerId);
+	const table = container.querySelector("table");
+	
+	if (!data || data.length === 0) return;
+	
+	const headerRow = data[0];   // 첫 번째 행은 열번호
+	const dataRow = data.slice(1); // 나머지 행은 데이터
+	const rowLength = dataRow.length;  // 데이터 행의 길이
+	
+	// thead 설정
+	const thead = table.querySelector("thead");
+	thead.innerHTML = ""; // 기존 내용 제거
+	const headtr = document.createElement("tr");
+	headerRow.forEach(text => {
+		const th = document.createElement("th");
+		th.textContent = text;
+		headtr.appendChild(th);
+	});
+	thead.appendChild(headtr);
+	
+	// tbody 설정
+	const tbody = table.querySelector("tbody");
+	tbody.innerHTML = ""; // 기존 내용 제거
+	
+	// 가상 스크롤 전
+	/*dataRow.forEach(rowData => {
+		const datatr = document.createElement("tr");
+		rowData.forEach(text => {
+			const td = document.createElement("td");
+			td.textContent = text;
+			datatr.appendChild(td);
+		});
+		tbody.appendChild(datatr);
+	});*/
+	
+	// 가상 스크롤 시작
+	let rowHeight = 40; //각 행 높이(px)
+	const visibleRows = Math.ceil(500 / rowHeight); // 500px 영역에 몇개 보일지 계산
+	
+	// 행 높이 측정. 몇개의 행만 샘플로 그려 평균 높이를 구함
+	function measureRowHeight(SampleRows){
+		const table = document.createElement('table');
+		table.style.visibility = 'hidden';
+		table.style.position = 'absolute';
+		
+		SampleRows.forEach(rowData => {
+			const tr = document.createElement('tr');
+			
+			rowData.forEach(cellData => {
+				const td = document.createElement('td');
+				td.textContent = cellData;
+				td.style.whiteSpace = 'pre-line'; // 줄바꿈
+				tr.appendChild(td);
+			});
+			table.appendChild(tr);
+		});
+		
+		document.body.appendChild(table);
+		
+		// 총 높이 계산
+		let totalHeight = 0;
+		const rowElements = table.querySelectorAll('tr');
+		rowElements.forEach(tr => {
+			totalHeight += tr.getBoundingClientRect().height;
+		});
+		
+		document.body.removeChild(table);
+		
+		return totalHeight / SampleRows.length; // 평균 높이
+	}
+	
+	if(dataRow.length > 0){
+		// 앞에서 3개 샘플링
+		rowHeight = measureRowHeight(dataRow.slice(0, 3));
+	}
+	
+	// 전체 스크롤 가능한 높이
+	container.style.height = `${rowLength * rowHeight + 40}px`; // 헤더 40 포함
+	
+	// 스크롤 이벤트
+	container.addEventListener('scroll', renderVisibleRows);
+	
+	function renderVisibleRows(){
+		const scrollTop = container.scrollTop;
+		const startRow = Math.floor(scrollTop / rowHeight);
+		const endRow = Math.min(startRow + visibleRows + 5, rowLength);
+		
+		// 현재 보여질 행만 렌더링
+		tbody.innerHTML= "";
+		tbody.style.transform = `translateY(${startRow * rowHeight}px)`;
+		
+		// DocumentFragment 방식 (innerHTML 방식 부하 개선)
+		const fragment = document.createDocumentFragment();
+		
+		for (let i = startRow; i < endRow; i++) {
+			const row = dataRow[i];
+			const tr = document.createElement("tr");
+			
+			row.forEach(cell => {
+				const td = document.createElement("td");
+				td.textContent = cell ?? "";
+				td.style.whiteSpace = 'pre-line'; // 줄바꿈
+				tr.appendChild(td);
+			});
+			
+			fragment.appendChild(tr);
+		}
+		
+		tbody.appendChild(fragment);	
+	}
+	renderVisibleRows();
+	// 가상 스크롤 종료
+	
+	// 초기 로드 시 열번호 할당
+	if(init == "Y"){
+		// 발신번호
+		const callbackSelect = document.getElementById('callbackSelect');
+		callbackSelect.innerHTML = "";
+		
+		const tranCallbackOpt = document.createElement('option');
+		tranCallbackOpt.value = "직접입력";
+		tranCallbackOpt.textContent = "직접입력";
+		callbackSelect.appendChild(tranCallbackOpt);
+		
+		// 수신번호
+		const calleeSelect = document.getElementById('calleeSelect');
+		calleeSelect.innerHTML = "";
+		
+		const tranCalleeOpt = document.createElement('option');
+		tranCalleeOpt.value = "직접입력";
+		tranCalleeOpt.textContent = "직접입력";
+		calleeSelect.appendChild(tranCalleeOpt);
+		
+		// 변수선택
+		const tagLi = document.querySelector('#tag ul');
+		tagLi.innerHTML = "";		
+		
+		headerRow.forEach(option => {
+			const opt = document.createElement('option');
+			opt.value = option;
+			opt.textContent = option;
+			callbackSelect.appendChild(opt); // 발신번호
+			calleeSelect.appendChild(opt.cloneNode(true)); // 수신번호(복제)
+			
+			const tagOpt = document.createElement('li');
+			tagOpt.classList.add('col-4', 'text-center', 'mb-3');
+			tagOpt.innerHTML = `<button type="button">${option}</button>`;
+			tagLi.appendChild(tagOpt); // 변수선택
+		});
+	}
+}
+
+
+// 메시지 작성
 function createSendData() {
     const MSG_TITLE = document.getElementById('msgTitle').value.trim();
     const MSG_WRITE = document.getElementById('msgWrite').value.trim();
@@ -850,12 +908,18 @@ function createSendData() {
         body: params.toString()
     })
     .then(res => res.json())
-    .then(data => {
-        console.log("서버에서 넘어온 data 확인:", data);		
-
-        // data 배열 확인
-        if (data && data.status === "success") {
-            console.log("data 배열:", data.data);
+	.then(data => {
+		console.log(data);
+		
+		const status = data.status;
+		
+		if(status == "success"){
+			// 테이블 그리기
+			//const retData = data.retData;
+			//drawTable("msgGrid", retData, "N");
+			
+			const retData = data.retData;
+			
 			const table = document.querySelector("#msgGrid table");
 			const tbody = table.querySelector("tbody");
 
@@ -869,7 +933,7 @@ function createSendData() {
 				return txt.value;
 			}
 
-			data.data.forEach(row => {
+			retData.forEach(row => {
 				const tr = document.createElement("tr");
 
 				// 수신번호
@@ -906,13 +970,14 @@ function createSendData() {
 
 				tbody.appendChild(tr);
 			});
-
-        } else {
-            console.warn("데이터 로드 실패 또는 상태 오류:", data);
-        }
-    })
-    .catch(err => {
-        console.error("데이터 로드 실패:", err);
-    });
+		}else{
+			const message = data.message;
+			showDialogCustom(message);
+		}
+	})
+	.catch(err => {
+		console.error("메시지 작성 실패:", err);
+		showDialogCustom('error');
+	});
 }
 
