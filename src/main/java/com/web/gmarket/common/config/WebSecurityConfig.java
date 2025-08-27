@@ -59,7 +59,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)                                       										// CSRF 보호 비활성화 운영일 경우 홣성화 ignoringRequestMatchers("/api/v1/**")
                 .cors(AbstractHttpConfigurer::disable)																				// CORS 비홣성화
                 .authorizeHttpRequests(auth -> 
-                	auth.requestMatchers("/login", "/login1", "/login2", "/login3", "/error/**", "/login-process").permitAll()
+                	auth.requestMatchers("/login", "/login1", "/login2", "/login3", "/error/**", "/login-process", "/files/download/**").permitAll()
                 		.requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico", "/assets/**", "/webfonts/**").permitAll()
                 		.requestMatchers("/index").authenticated()  																// 로그인만 하면 접근 가능
                 		.requestMatchers("/view/hist").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
