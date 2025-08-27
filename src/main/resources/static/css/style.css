@@ -608,3 +608,12 @@ aside .psw_chg_btn:hover{
     margin-top: .3rem;
     /* text-align: center; */
 }
+.excelWebSetup .modal-ft a{
+    border: 1px solid #0f6cbd;
+    background-color: #fff;
+    color:#0f6cbd;
+}
+.excelWebSetup .modal-ft a:hover{
+    background-color: #ebf3fc;
+    color: #0a2e4a;
+}
