@@ -144,6 +144,7 @@ input, textarea{
     border-top: 1px solid #e5e7eb;
     background-color: #f9fafb;
 }
+.modal-ft a,
 .modal-ft button{
     padding: 0.4375rem 1rem;
     color: #fff;

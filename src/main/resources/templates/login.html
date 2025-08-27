@@ -26,7 +26,7 @@
 <body>
 	<div id="gm_login" class="d-flex flex-column justify-content-center align-items-center">
 		<form id="loginForm" name="loginForm" th:method="post" th:action="@{/login-process}"
-			class="d-flex flex-column align-items-center rounded-3 bg-white">
+			class="d-flex flex-column align-items-center rounded-3 bg-white position-relative">
 			<h1>
 				<img th:src="@{/images/logo.png}" alt="지마켓로고">
 			</h1>
@@ -36,19 +36,30 @@
 					<label for="userId" class="font-weight-500">ID</label>
 					<input class="py-2" type="text" name="userId" id="userId" value="super" placeholder="아이디를 입력해 주세요.">
 				</div>
-				<div class="d-flex flex-column mt-3 mb-5">
+				<div class="d-flex flex-column mt-3 mb-2">
 					<label for="password" class="font-weight-500">Password</label>
 					<input class="py-2" type="password" name="userPwd" id="password" value="dinnovan1234"
 						placeholder="비밀번호를 입력해 주세요.">
-				</div>
+				</div>				
+				<div id="saveIdWrap" class="d-flex justify-content-end mb-4">
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="saveId">
+						<label class="form-check-label text-nowrap" for="saveId">
+							아이디 저장
+						</label>
+					</div>
+				</div>								
 				<button type="button" id="loginBtn" class="login_btn">로그인</button>
 				<div class="text-center mt-3">
 					<a href="javascript:void(0);" class="find_psw font-sz-14 font-weight-100">비밀번호 찾기</a>
 				</div>
 			</div>
-		</form>
+			<div class="position-absolute end-0 activeXdownload">
+				<button type="button" class="text-nowrap text-666"><i class="bi bi-download me-1"></i>ActiveX 수동 설치</button>
+			</div>
+		</form>		
 	</div>
-
+	<th:block th:replace="~{/view/popup/excelWebSetup :: excelWebSetup}"></th:block>
 	<input type="hidden" id="publicKeyModulus" name="publicKeyModulus" th:attr="value=${RSA_MODULUS}">
 	<input type="hidden" id="publicKeyExponent" name="publicKeyExponent" th:attr="value=${RSA_EXPONENT}">
 
@@ -123,6 +134,13 @@
 			} else {
 				alert("암호화 키가 올바르지 않습니다.");
 			}
+		});
+		// ActiveX 수동 설치 팝업
+		$(".activeXdownload button").click(function(){
+			$(".excelWebSetup").addClass("d-block");
+		});
+		$(".excelWebSetup .close_btn").click(function(){
+			$(".modal-bg").removeClass("d-block");
 		});
 	</script>
 </body>

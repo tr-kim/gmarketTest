@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="excelWebSetup">
+    <div class="modal-bg excelWebSetup">
+        <div class="modal-wrap">
+            <div class="modal-hd">
+                <span class="font-sz-16 font-weight-600">ActiveX 수동 설치</span>
+                <button class="close_btn"><i class="bi bi-x-lg"></i><span class="visually-hidden">닫기</span></button>
+            </div>
+            <div class="modal-con">  
+                <p>ebay SMS 발송 WEB 이용시 <strong>ActiveX 설치가 자동으로 설치되지 않는 경우</strong> 아래와 같이 조치하여 주시기 바랍니다.</p>              
+                <div class="wrap">                    
+                    <p class="text-center">&lt;조치방법&gt;</p>
+                    <ol class="ps-3">
+                        <li>
+                            [파일열기] 버튼을 클릭한 후, [실행] 버튼을 클릭하여 프로그램을 실행하십시오.
+                            <span>
+                                <img th:src="@{/images/excelWebSetup/01_Click.gif}" alt="파일 열고 실행버튼 누르기">
+                            </span>                            
+                        </li>
+                        <li>
+                            파일 다운로드 - 보안경고 창에서 [실행] 버튼을 클릭하여 프로그램을 실행하여 주십시오.
+                            <span>
+                                <img th:src="@{/images/excelWebSetup/02_Click.gif}" alt="실행 버튼 누르고 프로그램 실행">
+                            </span>                            
+                        </li>
+                        <li>
+                            ExcelWeb ActiveX 설치 화면에서 [다음] 버튼을 클릭하여 프로그램 설치를 진행하십시오.
+                            <span>
+                                <img th:src="@{/images/excelWebSetup/02_Click.gif}" alt="실행 버튼 누르고 프로그램 실행">
+                            </span>                            
+                        </li>
+                        <li>
+                            ExcelWeb ActiveX 설치 화면에서 [설치시작] 버튼을 클릭하여 프로그램 설치를 진행하십시오.
+                            <span>
+                               <img th:src="@{/images/excelWebSetup/04_Click.gif}" alt="설치시작 버튼을 클릭하여 프로그램 설치">
+                            </span>
+                            
+                        </li>
+                        <li>
+                            ExcelWeb ActiveX 설치 화면에서 [확인] 버튼을 클릭하여 프로그램 설치를 종료하십시오.
+                            <span>
+                                <img th:src="@{/images/excelWebSetup/05_Click.gif}" alt="확인 버튼을 클릭하여 프로그램 설치를 종료">
+                            </span>                            
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div class="modal-ft">
+                <a href="" class="sub-bg" download>파일열기</a>
+            </div>
+        </div>
+    </div>
+</th:block>
+</html>
