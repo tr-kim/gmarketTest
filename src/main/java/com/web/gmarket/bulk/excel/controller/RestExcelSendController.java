@@ -354,99 +354,187 @@ public class RestExcelSendController {
 	 */
 	@PostMapping("/createSendData")
 	public Map<String, Object> createSendData(
-		@RequestParam("excelFile") String excelFile,
-		@RequestParam("sheetName") String sheetName,
-		//제목, 내용
-		@RequestParam("title") String title,
-		@RequestParam("message") String messageTemplate,
-		@RequestParam("messageType") String messageType,
-		// 발신번호
-		@RequestParam("callbackFlag") String callbackFlag, 	// 직접입력(1), 드롭다운(2)
-		@RequestParam("callbackRow") String callbackRow, 	// 드롭다운 값
-		@RequestParam("tranCallback") String tranCallback, 	// 직접입력 값
-		// 수신번호
-		@RequestParam("calleeFlag") String calleeFlag, 	// 직접입력(1), 드롭다운(2)
-		@RequestParam("calleeRow") String calleeRow, 	// 드롭다운 값
-		@RequestParam("tranCallee") String tranCallee 	// 직접입력 값
+			@RequestParam("excelFile") String excelFile,
+			@RequestParam("sheetName") String sheetName,
+			@RequestParam("title") String title,
+			@RequestParam("message") String messageTemplate,
+			@RequestParam("messageType") String messageType,
+			@RequestParam("callbackFlag") String callbackFlag,
+			@RequestParam("callbackRow") String callbackRow,
+			@RequestParam("tranCallback") String tranCallback,
+			@RequestParam("calleeFlag") String calleeFlag,
+			@RequestParam("calleeRow") String calleeRow,
+			@RequestParam("tranCallee") String tranCallee
 	) throws IOException {
-		
+
 		Map<String, Object> result = new HashMap<>();
-		List<Map<String, Object>> data = new ArrayList<>();
-		
+		List<List<String>> data = new ArrayList<>();
+
 		// 1. 엑셀 파일 검증
 		Map<String, Object> validation = ExcelSendService.validateExcelFile(excelFile, sheetName);
 		if ("error".equals(validation.get("status"))) {
 			return validation; // 실패 시 그대로 리턴
 		}
-		
+
 		// 2. 시트 내용 읽기
 		Sheet sheet = (Sheet) validation.get("sheet");
 		int maxRows = (int) validation.get("maxRows");
 		int maxCells = (int) validation.get("maxCells");
-		
-		// 길이, 메시지, 에러내용 추가 시작
+
+		// 3. 헤더 설정
+		List<String> header = new ArrayList<>();
+		header.add("발신번호");
+		header.add("수신번호");
+		header.add("전송시간");
+		header.add("길이");
+		header.add("메시지");
+		header.add("에러내용");
+		data.add(header);
+
+		// 4. 데이터 처리
 		for (int r = 0; r < maxRows; r++) {
 			Row row = sheet.getRow(r);
 			if (row == null) continue;
 
 			List<String> rowData = new ArrayList<>();
+			List<String> cellValues = new ArrayList<>();
 			for (int c = 0; c < maxCells; c++) {
 				Cell cell = row.getCell(c);
-				rowData.add(cell != null ? cell.toString() : "");
+				cellValues.add(cell != null ? cell.toString() : "");
 			}
 
 			// 메시지 변수 치환
 			String message = messageTemplate;
-			for (int c = 0; c < rowData.size(); c++) {
+			for (int c = 0; c < cellValues.size(); c++) {
 				String code = String.valueOf((char)('A' + c));
-				message = message.replace("[%"+code+"%]", rowData.get(c));
+				message = message.replace("[%"+code+"%]", cellValues.get(c));
 			}
 
 			// 발신번호 처리
-			String callbackValue;
-			if ("1".equals(callbackFlag)) {
-				callbackValue = tranCallback;
-			} else {
-				int colIdx = callbackRow.charAt(0) - 'A';
-				callbackValue = colIdx < rowData.size() ? rowData.get(colIdx) : "";
-			}
+			String callbackValue = "1".equals(callbackFlag) ? tranCallback
+					: (callbackRow.charAt(0) - 'A' < cellValues.size() ? cellValues.get(callbackRow.charAt(0) - 'A') : "");
 
 			// 수신번호 처리
-			String calleeValue;
-			if ("1".equals(calleeFlag)) {
-				calleeValue = tranCallee;
-			} else {
-				int colIdx = calleeRow.charAt(0) - 'A';
-				calleeValue = colIdx < rowData.size() ? rowData.get(colIdx) : "";
-			}
+			String calleeValue = "1".equals(calleeFlag) ? tranCallee
+					: (calleeRow.charAt(0) - 'A' < cellValues.size() ? cellValues.get(calleeRow.charAt(0) - 'A') : "");
 
-			//메시지 길이, 오류 체크, 엔티티변환
-			int messageLen = ExcelSendService.getSMSLen(message);  
+			int messageLen = ExcelSendService.getSMSLen(message);
 			int titleLen = (title != null) ? title.length() : 0;
-
 			String errorMsg = ExcelSendService.checkStrLen(messageLen, titleLen, calleeValue, callbackValue, messageType);
-
 			String decodedMessage = StringEscapeUtils.unescapeHtml4(message);
 
-			// 리턴값 셋팅
-			Map<String, Object> rowMap = new HashMap<>();
-			rowMap.put("수신번호", calleeValue);
-			rowMap.put("발신번호", callbackValue);
-			rowMap.put("전송시간", "즉시전송");
-			rowMap.put("길이", messageLen);
-			rowMap.put("메시지", decodedMessage);
-			rowMap.put("에러내용", errorMsg);
+			// 2차원 배열로 추가
+			List<String> newRow = new ArrayList<>();
+			newRow.add(callbackValue);
+			newRow.add(calleeValue);
+			newRow.add("즉시전송");
+			newRow.add(String.valueOf(messageLen));
+			newRow.add(decodedMessage);
+			newRow.add(errorMsg);
 
-			data.add(rowMap);
+			data.add(newRow);
 		}
-		// 길이, 메시지, 에러내용 추가 종료
-		
-		// 리턴값 셋팅
+
 		result.put("status", "success");
 		result.put("retData", data);
-		
+
 		return result;
 	}
+	// @PostMapping("/createSendData")
+	// public Map<String, Object> createSendData(
+	// 	@RequestParam("excelFile") String excelFile,
+	// 	@RequestParam("sheetName") String sheetName,
+	// 	//제목, 내용
+	// 	@RequestParam("title") String title,
+	// 	@RequestParam("message") String messageTemplate,
+	// 	@RequestParam("messageType") String messageType,
+	// 	// 발신번호
+	// 	@RequestParam("callbackFlag") String callbackFlag, 	// 직접입력(1), 드롭다운(2)
+	// 	@RequestParam("callbackRow") String callbackRow, 	// 드롭다운 값
+	// 	@RequestParam("tranCallback") String tranCallback, 	// 직접입력 값
+	// 	// 수신번호
+	// 	@RequestParam("calleeFlag") String calleeFlag, 	// 직접입력(1), 드롭다운(2)
+	// 	@RequestParam("calleeRow") String calleeRow, 	// 드롭다운 값
+	// 	@RequestParam("tranCallee") String tranCallee 	// 직접입력 값
+	// ) throws IOException {
+		
+	// 	Map<String, Object> result = new HashMap<>();
+	// 	List<Map<String, Object>> data = new ArrayList<>();
+		
+	// 	// 1. 엑셀 파일 검증
+	// 	Map<String, Object> validation = ExcelSendService.validateExcelFile(excelFile, sheetName);
+	// 	if ("error".equals(validation.get("status"))) {
+	// 		return validation; // 실패 시 그대로 리턴
+	// 	}
+		
+	// 	// 2. 시트 내용 읽기
+	// 	Sheet sheet = (Sheet) validation.get("sheet");
+	// 	int maxRows = (int) validation.get("maxRows");
+	// 	int maxCells = (int) validation.get("maxCells");
+		
+	// 	// 길이, 메시지, 에러내용 추가 시작
+	// 	for (int r = 0; r < maxRows; r++) {
+	// 		Row row = sheet.getRow(r);
+	// 		if (row == null) continue;
+
+	// 		List<String> rowData = new ArrayList<>();
+	// 		for (int c = 0; c < maxCells; c++) {
+	// 			Cell cell = row.getCell(c);
+	// 			rowData.add(cell != null ? cell.toString() : "");
+	// 		}
+
+	// 		// 메시지 변수 치환
+	// 		String message = messageTemplate;
+	// 		for (int c = 0; c < rowData.size(); c++) {
+	// 			String code = String.valueOf((char)('A' + c));
+	// 			message = message.replace("[%"+code+"%]", rowData.get(c));
+	// 		}
+
+	// 		// 발신번호 처리
+	// 		String callbackValue;
+	// 		if ("1".equals(callbackFlag)) {
+	// 			callbackValue = tranCallback;
+	// 		} else {
+	// 			int colIdx = callbackRow.charAt(0) - 'A';
+	// 			callbackValue = colIdx < rowData.size() ? rowData.get(colIdx) : "";
+	// 		}
+
+	// 		// 수신번호 처리
+	// 		String calleeValue;
+	// 		if ("1".equals(calleeFlag)) {
+	// 			calleeValue = tranCallee;
+	// 		} else {
+	// 			int colIdx = calleeRow.charAt(0) - 'A';
+	// 			calleeValue = colIdx < rowData.size() ? rowData.get(colIdx) : "";
+	// 		}
+
+	// 		//메시지 길이, 오류 체크, 엔티티변환
+	// 		int messageLen = ExcelSendService.getSMSLen(message);  
+	// 		int titleLen = (title != null) ? title.length() : 0;
+
+	// 		String errorMsg = ExcelSendService.checkStrLen(messageLen, titleLen, calleeValue, callbackValue, messageType);
+
+	// 		String decodedMessage = StringEscapeUtils.unescapeHtml4(message);
+
+	// 		// 리턴값 셋팅
+	// 		Map<String, Object> rowMap = new HashMap<>();
+	// 		rowMap.put("수신번호", calleeValue);
+	// 		rowMap.put("발신번호", callbackValue);
+	// 		rowMap.put("전송시간", "즉시전송");
+	// 		rowMap.put("길이", messageLen);
+	// 		rowMap.put("메시지", decodedMessage);
+	// 		rowMap.put("에러내용", errorMsg);
+
+	// 		data.add(rowMap);
+	// 	}
+	// 	// 길이, 메시지, 에러내용 추가 종료
+		
+	// 	// 리턴값 셋팅
+	// 	result.put("status", "success");
+	// 	result.put("retData", data);
+		
+	// 	return result;
+	// }
 	
 	
 }
