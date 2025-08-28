@@ -340,10 +340,12 @@ $(function () {
 									onClick: function() {
 										const grid = e.component;
 										const selectedRowsData = grid.getSelectedRowsData();
+										const categoryValue = largeCategoryInstance.option("value");
 										
 										const param = selectedRowsData.map(row => ({
 											bulkMsgKey: row.bulkMsgKey,
-											svcType: row.svcType
+											svcType: row.svcType,
+											companyCode: categoryValue
 										}));
 										
 										deleteAjax('/api/v1/wait/delete', param, function callback(data) {
