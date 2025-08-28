@@ -1,4 +1,16 @@
+let loadPanel;
+
 $(function () {
+
+	loadPanel = $('.loadpanel').dxLoadPanel({
+		shadingColor: 'rgba(0,0,0,0.4)',
+		position: { of: '#employee' },
+		visible: false,
+		showIndicator: true,
+		showPane: true,
+		shading: true,
+		hideOnOutsideClick: false,
+	}).dxLoadPanel('instance');
 	
 	const MSG_TITLE = document.getElementById('msgTitle');
 	const MSG_WRITE = document.getElementById('msgWrite');
@@ -513,6 +525,54 @@ function onlyNumber(element){
 
 //문자 발송
 function sendMessage(){
+	//엑셀파일 유무
+	if (!EXCEL_FILE_NAME) {
+		showDialogCustom('파일을 선택해주세요.');
+		return;
+	}
+	//시트선택 유무
+	if (document.getElementById('sheet').value == "") {
+		showDialogCustom('시트를 선택해주세요.');
+		return;
+	}
+	//발신, 수신번호 유무
+	const firstTh = document.querySelector('#excelGrid thead th:first-child');
+	if (firstTh && firstTh.textContent.trim() !== "발신번호") {
+		showDialogCustom('발신번호, 수신번호 설정 후 지정 버튼을 눌러주세요.');
+		return;
+	}
+	//사용자ID 유무
+	if(document.getElementById('userId').value == ""){
+		showDialogCustom('사용자ID를 입력해주세요.');
+		return;
+	};
+	//메시지 유무
+	if(document.getElementById('msgWrite').value == ""){
+		showDialogCustom('메시지를 입력해주세요.');
+		return;
+	};
+	//전송대상 유무
+	if(document.getElementById('sendInfo').value == ""){
+		showDialogCustom('전송대상을 입력해주세요.');
+		return;
+	};
+	//메시지 작성 그리드
+	if(document.querySelector('#msgGrid tr.no-data')){
+		showDialogCustom('메시지 작성 버튼을 눌러주세요.');
+		return;
+	};
+	//수신거부
+	if(document.getElementById('rejectCheckDefault').checked && document.getElementById('rejectNum').value == ""){
+		showDialogCustom('수신거부 번호를 입력해주세요.');
+		return;
+	};	
+	//전송범위
+	if(document.getElementById('tranCheckDefault').checked 
+	&& document.getElementById('tranRangeStart').value == ""
+	&& document.getElementById('tranRangeEnd').value == ""){
+		showDialogCustom('수신거부 번호를 입력해주세요.');
+		return;
+	};
 	const confirmDialog = DevExpress.ui.dialog.custom({
 		showTitle: false,
 		messageHtml: "<div style='text-align: center;'>발송하시겠습니까?</div>",
@@ -549,6 +609,8 @@ function sendMessage(){
 function excelFileUpload(input) {
 	const file = input.files[0];
 	if (!file) return;
+
+	loadPanel.show();
 	
 	const formData = new FormData();
 	formData.append("file", file);
@@ -590,6 +652,9 @@ function excelFileUpload(input) {
 	.catch(err => {
 		console.error("파일 업로드 실패", err);
 		showDialogCustom('error');
+	})
+	.finally(() => {
+		loadPanel.hide();
 	});
 }
 
@@ -733,7 +798,7 @@ function createSendData() {
 	const MSG_TYPES = msg_type_value === "SMS" ? 'sms' : msg_type_value === "LMS" ? 'lms' : 'mms';
 	const rejectCheckDefault = document.getElementById('rejectCheckDefault');
 	const rejectNum = document.getElementById('rejectNum');
-	
+
 	//수신번호 체크 시
 	let message = MSG_WRITE;
 	if(rejectCheckDefault.checked && !rejectNum.disabled && rejectNum.value){
@@ -755,6 +820,41 @@ function createSendData() {
 	params.append("calleeRow", document.getElementById("calleeSelect").value);
 	params.append("tranCallee", document.getElementById("tranCallee").value.trim());
 	
+	// 수신거부 체크 안됐을 때만 다이얼로그 띄우고,
+	// 확인 시 fetch 실행, 취소 시 중단
+	if (!rejectCheckDefault.checked) {
+		DevExpress.ui.dialog.custom({
+			showTitle: false,
+			messageHtml: "<div style='text-align: center;' class='pt-3'>수신거부가 체크되어 있지 않습니다. 이대로 진행하시겠습니까?</div>",
+			buttons: [
+				{
+					text: "확인",
+					type: "default",
+					onClick: function () {
+						return { result: "ok" };
+					}
+				},
+				{
+					text: "취소",
+					onClick: function () {
+						return { result: "cancel" };
+					}
+				}
+			]
+		}).show().done(function (dialogResult) {
+			if (dialogResult.result === "ok") {
+				sendRequest(params);
+			}
+			// cancel이면 그냥 return (아무것도 안 함)
+		});
+	} else {
+		// 이미 체크돼있으면 바로 실행
+		sendRequest(params);
+	}
+}
+
+// 실제 fetch 부분
+function sendRequest(params) {
 	fetch("/api/v1/excelSend/createSendData", {
 		method: "POST",
 		headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -763,14 +863,14 @@ function createSendData() {
 	.then(res => res.json())
 	.then(data => {
 		console.log(data);
-		
+
 		const status = data.status;
-		
-		if(status == "success"){
+
+		if (status == "success") {
 			// 테이블 그리기
 			const retData = data.retData;
 			drawTable("msgGrid", retData, "N");
-		}else{
+		} else {
 			const message = data.message;
 			showDialogCustom(message);
 		}
@@ -780,7 +880,6 @@ function createSendData() {
 		showDialogCustom('error');
 	});
 }
-
 
 // 가상 스크롤 렌더링 함수
 function renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visibleRows) {
