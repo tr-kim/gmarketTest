@@ -112,9 +112,14 @@ public class ConstantsUtils {
 	public static final String LMSCLI_TBL_LARGE = "LMSCLI_TBL_LARGE";
 	public static final String MMSCLI_TBL_LARGE = "MMSCLI_TBL_LARGE";
 	
-	// Excel
+	// EXCEL
 	public static final int EXCEL_CELL_MAX = 5;
 	public static final int EXCEL_ROW_MAX = 20000;
-	public static final String EXCEL_PATH   = "C:/excel_web/excel";
+	public static final String EXCEL_PATH = "C:/excel_web/excel";
+	
+	// TXT
+	public static final int TEXT_ROW_MAX = 200000;
+	public static final String TXT_EXTENSION = ".txt";
+	public static final String TXT_PATH = "C:/excel_web/data";
 	
 }
