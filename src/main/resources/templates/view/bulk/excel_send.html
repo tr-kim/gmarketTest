@@ -35,7 +35,6 @@
 									</tr>
 								</tbody>
 							</table>
-							<div class="loadpanel"></div>
 						</div>
 					</div>
 				</div>
@@ -327,6 +326,7 @@
 				<button type="button" class="btn btn-primary px-5" id="final_send_btn" onclick="sendMessage()">즉시발송</button>
 			</li>
 		</ul>
+		<div class="loadpanel"></div>
 	</form>	
 	<th:block th:replace="~{/view/popup/reserveSend :: reserveSend}"></th:block>
 	<script th:src="@{/js/view/excel_send.js}"></script>

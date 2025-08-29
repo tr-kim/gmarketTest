@@ -1,10 +1,11 @@
-let loadPanel;
+let LOAD_PANEL;
+let EXCEL_FILE_NAME = "";
 
 $(function () {
-
-	loadPanel = $('.loadpanel').dxLoadPanel({
+	// 로딩바 최초 생성 (화면 전체 기준)
+	LOAD_PANEL = $('.loadpanel').dxLoadPanel({
 		shadingColor: 'rgba(0,0,0,0.4)',
-		position: { of: '#employee' },
+		position: { of: window },
 		visible: false,
 		showIndicator: true,
 		showPane: true,
@@ -514,65 +515,71 @@ $(function () {
 });
 
 
-let EXCEL_FILE_NAME = "";
-
-
-//숫자만 입력
+// 숫자만 입력
 function onlyNumber(element){
 	element.value = element.value.replace(/[^0-9]/g,'');
 }
 
 
-//문자 발송
+// 문자 발송
 function sendMessage(){
-	//엑셀파일 유무
-	if (!EXCEL_FILE_NAME) {
-		showDialogCustom('파일을 선택해주세요.');
+	// 파일 검사
+	if (!excelValidateRequired()) {
 		return;
 	}
-	//시트선택 유무
-	if (document.getElementById('sheet').value == "") {
-		showDialogCustom('시트를 선택해주세요.');
+	
+	// 유효성 검사
+	if (!inputValidateRequired("sheet", "시트를 선택하세요.")) {
 		return;
 	}
-	//발신, 수신번호 유무
+	
+	// 엑셀 그리드
 	const firstTh = document.querySelector('#excelGrid thead th:first-child');
 	if (firstTh && firstTh.textContent.trim() !== "발신번호") {
-		showDialogCustom('발신번호, 수신번호 설정 후 지정 버튼을 눌러주세요.');
+		const message = '발신번호, 수신번호 설정 후<br>[지정] 버튼을 누르세요.';
+		showDialogCustom(message, function (){
+			document.getElementById("tranCallback").focus();
+		});
 		return;
 	}
-	//사용자ID 유무
-	if(document.getElementById('userId').value == ""){
-		showDialogCustom('사용자ID를 입력해주세요.');
-		return;
-	};
-	//메시지 유무
-	if(document.getElementById('msgWrite').value == ""){
-		showDialogCustom('메시지를 입력해주세요.');
-		return;
-	};
-	//전송대상 유무
-	if(document.getElementById('sendInfo').value == ""){
-		showDialogCustom('전송대상을 입력해주세요.');
-		return;
-	};
-	//메시지 작성 그리드
+	
+	// 메시지 그리드
 	if(document.querySelector('#msgGrid tr.no-data')){
-		showDialogCustom('메시지 작성 버튼을 눌러주세요.');
+		const message = '내용 입력 후<br>[메시지 작성] 버튼을 누르세요.';
+		showDialogCustom(message, function (){
+			document.getElementById("msgWrite").focus();
+		});
 		return;
 	};
-	//수신거부
-	if(document.getElementById('rejectCheckDefault').checked && document.getElementById('rejectNum').value == ""){
-		showDialogCustom('수신거부 번호를 입력해주세요.');
+	
+	if (
+		!inputValidateRequired("userId", "사용자ID를 입력하세요.") ||
+		!inputValidateRequired("sendInfo", "전송대상을 입력하세요.")
+	) {
 		return;
-	};	
-	//전송범위
+	}
+	
+	// 수신거부
+	if(document.getElementById('rejectCheckDefault').checked 
+	&& document.getElementById('rejectNum').value == ""){
+		const message = '수신거부 번호를 입력하세요.';
+		showDialogCustom(message, function (){
+			document.getElementById("rejectNum").focus();
+		});
+		return;
+	};
+	
+	// 전송범위
 	if(document.getElementById('tranCheckDefault').checked 
 	&& document.getElementById('tranRangeStart').value == ""
 	&& document.getElementById('tranRangeEnd').value == ""){
-		showDialogCustom('수신거부 번호를 입력해주세요.');
+		const message = '전송범위를 입력하세요.';
+		showDialogCustom(message, function (){
+			document.getElementById("tranRangeStart").focus();
+		});
 		return;
 	};
+	
 	const confirmDialog = DevExpress.ui.dialog.custom({
 		showTitle: false,
 		messageHtml: "<div style='text-align: center;'>발송하시겠습니까?</div>",
@@ -580,7 +587,8 @@ function sendMessage(){
 			text: "발송",
 			type: "default",
 			onClick: function(e) {
-				//발송 로직 실행
+				// 발송 로직 실행
+				
 				
 				
 				
@@ -609,8 +617,9 @@ function sendMessage(){
 function excelFileUpload(input) {
 	const file = input.files[0];
 	if (!file) return;
-
-	loadPanel.show();
+	
+	// 로딩바 표시
+	showLoading(LOAD_PANEL, "#excelGrid");
 	
 	const formData = new FormData();
 	formData.append("file", file);
@@ -647,14 +656,17 @@ function excelFileUpload(input) {
 		}else{
 			const message = data.message;
 			showDialogCustom(message);
+			resetExcelGrid(input);
 		}
 	})
 	.catch(err => {
 		console.error("파일 업로드 실패", err);
 		showDialogCustom('error');
+		resetExcelGrid(input);
 	})
 	.finally(() => {
-		loadPanel.hide();
+		// 로딩바 숨김
+		hideLoading(LOAD_PANEL);
 	});
 }
 
@@ -664,10 +676,13 @@ function excelReadSheet(option) {
 	const sheetName = option.value;
 	if (!sheetName) return;
 	
-	if (!EXCEL_FILE_NAME) {
-		showDialogCustom('엑셀 파일을 선택해주세요.');
+	// 파일 검사
+	if (!excelValidateRequired()) {
 		return;
 	}
+	
+	// 로딩바 표시
+	showLoading(LOAD_PANEL, "#excelGrid");
 	
 	const params = new URLSearchParams();
 	params.append("excelFile", EXCEL_FILE_NAME);
@@ -696,18 +711,20 @@ function excelReadSheet(option) {
 	.catch(err => {
 		console.error("시트 읽기 실패:", err);
 		showDialogCustom('error');
+	})
+	.finally(() => {
+		// 로딩바 숨김
+		hideLoading(LOAD_PANEL);
 	});
 }
 
 
 // 발신번호, 수신번호 지정
 function reserve() {
-	if (!EXCEL_FILE_NAME) {
-		showDialogCustom('엑셀 파일을 선택해주세요.');
+	// 파일 검사
+	if (!excelValidateRequired()) {
 		return;
 	}
-	
-	const sheetName = document.getElementById("sheet").value;
 	
 	// 발신번호
 	const callbackSelect = document.getElementById("callbackSelect").value;
@@ -751,6 +768,11 @@ function reserve() {
 		return;
 	}
 	
+	// 로딩바 표시
+	showLoading(LOAD_PANEL, "#excelGrid");
+	
+	const sheetName = document.getElementById("sheet").value;
+	
 	const params = new URLSearchParams();
 	params.append("excelFile", EXCEL_FILE_NAME);
 	params.append("sheetName", sheetName);
@@ -786,12 +808,23 @@ function reserve() {
 	.catch(err => {
 		console.error("번호 지정 실패:", err);
 		showDialogCustom('error');
+	})
+	.finally(() => {
+		// 로딩바 숨김
+		hideLoading(LOAD_PANEL);
 	});
 }
 
 
 // 메시지 작성
 function createSendData() {
+	// 파일 검사
+	if (!excelValidateRequired()) {
+		return;
+	}
+	
+	const sheetName = document.getElementById("sheet").value;
+	
 	const MSG_TITLE = document.getElementById('msgTitle').value.trim();
 	const MSG_WRITE = document.getElementById('msgWrite').value.trim();
 	const msg_type_value = document.querySelector('.msg_type').textContent.trim();
@@ -804,8 +837,6 @@ function createSendData() {
 	if(rejectCheckDefault.checked && !rejectNum.disabled && rejectNum.value){
 		message += rejectNum.value;
 	}
-	
-	const sheetName = document.getElementById("sheet").value;
 	
 	const params = new URLSearchParams();
 	params.append("excelFile", EXCEL_FILE_NAME);
@@ -825,7 +856,7 @@ function createSendData() {
 	if (!rejectCheckDefault.checked) {
 		DevExpress.ui.dialog.custom({
 			showTitle: false,
-			messageHtml: "<div style='text-align: center;' class='pt-3'>수신거부가 체크되어 있지 않습니다. 이대로 진행하시겠습니까?</div>",
+			messageHtml: "<div style='text-align: center;' class='pt-3'>수신거부가 체크되어 있지 않습니다.<br>이대로 진행하시겠습니까?</div>",
 			buttons: [
 				{
 					text: "확인",
@@ -855,6 +886,9 @@ function createSendData() {
 
 // 실제 fetch 부분
 function sendRequest(params) {
+	// 로딩바 표시
+	showLoading(LOAD_PANEL, "#msgGrid");
+	
 	fetch("/api/v1/excelSend/createSendData", {
 		method: "POST",
 		headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -878,8 +912,40 @@ function sendRequest(params) {
 	.catch(err => {
 		console.error("메시지 작성 실패:", err);
 		showDialogCustom('error');
+	})
+	.finally(() => {
+		// 로딩바 숨김
+		hideLoading(LOAD_PANEL);
 	});
 }
+
+
+// 실패 시 초기화
+function resetExcelGrid(input) {
+	// 업로드 input 초기화
+	if (input) input.value = "";
+	
+	// 그리드 초기화
+	const excelGrid = document.getElementById("excelGrid");
+	if (excelGrid) {
+		excelGrid.style.height = "auto";
+		const tbody = excelGrid.querySelector("table tbody");
+		if (tbody) {
+			tbody.innerHTML = `
+				<tr class="no-data">
+					<td class="py-3" colspan="3">파일을 선택해주세요.</td>
+				</tr>
+			`;
+		}
+	}
+	
+	// count 초기화
+	const directInputNum = document.querySelector("span.direct_input_num");
+	if (directInputNum) {
+		directInputNum.textContent = "0";
+	}
+}
+
 
 // 가상 스크롤 렌더링 함수
 function renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visibleRows) {
@@ -1000,5 +1066,18 @@ function drawTable(containerId, data, init) {
 			tagLi.appendChild(tagOpt); // 변수선택
 		});
 	}
+}
+
+
+// 엑셀 파일 검사
+function excelValidateRequired(){
+	if (!EXCEL_FILE_NAME) {
+		const message = '파일을 선택하세요.';
+		showDialogCustom(message, function (){
+			document.getElementById("excelFile").focus();
+		});
+		return false;
+	}
+	return true;
 }
 
