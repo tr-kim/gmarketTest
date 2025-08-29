@@ -16,21 +16,22 @@
 			<li>
 				<div class="col-2 font-weight-500">수신번호</div>
 				<div class="col">
-					<div id="textGrid" class="grid">						
-						<table class="table w-100 text-center mb-0">
-							<thead>
-								<tr>
-									<th>NO</th>
-									<th>수신번호</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr class="no-data">
-									<td class="py-3" colspan="2">파일을 선택해주세요.</td>
-								</tr>
-							</tbody>
-						</table>
-						<div class="loadpanel"></div>
+					<div id="textGrid" class="grid">
+						<div class="spacer">
+							<table class="table w-100 text-center mb-0">
+								<thead>
+									<tr>
+										<th>NO</th>
+										<th>수신번호</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="no-data">
+										<td class="py-3" colspan="2">파일을 선택해주세요.</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 					<div class="duplication_filter text-end mt-1">
 						<span>입력 수신번호 <span class="direct_input_num">0</span> 건</span>
@@ -66,35 +67,36 @@
 			</li>
 			<li>
 				<div class="col-2 font-weight-500">내용</div>
-				<div class="col">	
-					<div class="d-flex grid overflow-visible">
-						<div class="msg_wrap col-5">
-						<div class="msg_wrap_hd d-flex">
-							<div class="msg_type col-3 sms py-2 px-2 text-center">
-								SMS
-							</div>	
-							<div class="msg_byte col text-end py-2 pe-2">
-								<span id="input_byte">0</span>/<span id="total_byte">80</span> byte
+					<div class="col">	
+						<div class="d-flex grid overflow-visible">
+							<div class="msg_wrap col-5">
+							<div class="msg_wrap_hd d-flex">
+								<div class="msg_type col-3 sms py-2 px-2 text-center">
+									SMS
+								</div>	
+								<div class="msg_byte col text-end py-2 pe-2">
+									<span id="input_byte">0</span>/<span id="total_byte">80</span> byte
+								</div>
 							</div>
+							<textarea name="msgWrite" id="msgWrite" class="p-3 w-100"></textarea>
 						</div>
-						<textarea name="msgWrite" id="msgWrite" class="p-3 w-100"></textarea>
+						<div class="add_option col position-relative">
+							<ul class="option_tab d-flex px-3">
+								<li class="col on py-2">이미지</li>
+							</ul>
+							<div class="option_wrap px-3 py-2 d-block">
+								<div id="dropzone-external" class="flex-box">
+									<div id="dropzone-text" class="flex-box">
+										<span>이미지를 드래그&드롭하거나 클릭해 주세요.</span>
+									</div>								
+									<div id="upload-progress"></div>
+								</div>
+								<div id="dropzone-image-list" class="row mt-3"></div>
+								<div id="file-uploader"></div>
+								<span class="img-question position-absolute end-0 bottom-0 p-3"><i class="bi bi-question-circle"></i></span>
+							</div>
+						</div>					
 					</div>
-					<div class="add_option col position-relative">
-						<ul class="option_tab d-flex px-3">
-							<li class="col on py-2">이미지</li>
-						</ul>
-						<div class="option_wrap px-3 py-2 d-block">
-							<div id="dropzone-external" class="flex-box">
-								<div id="dropzone-text" class="flex-box">
-									<span>이미지를 드래그&드롭하거나 클릭해 주세요.</span>
-								</div>								
-								<div id="upload-progress"></div>
-							</div>
-							<div id="dropzone-image-list" class="row mt-3"></div>
-							<div id="file-uploader"></div>
-							<span class="img-question position-absolute end-0 bottom-0 p-3"><i class="bi bi-question-circle"></i></span>
-						</div>
-					</div>					
 				</div>
 			</li>
 			<li class="align-items-center">
@@ -141,6 +143,7 @@
 				<button type="button" class="btn btn-primary px-5" id="final_send_btn" onclick="sendMessage()">즉시발송</button>
 			</li>
 		</ul>
+		<div class="loadpanel"></div>
 	</form>
 	<th:block th:replace="~{/view/popup/reserveSend :: reserveSend}"></th:block>
 	<script th:src="@{/js/view/file_send.js}"></script>

@@ -397,3 +397,25 @@ function showDialogCustom(message, onConfirm){
 		}]
 	}).show();
 }
+
+// 로딩바 표시
+function showLoading(loadPanel, target) {
+	loadPanel.option("position", { of: target });
+	loadPanel.show();
+}
+
+// 로딩바 숨김
+function hideLoading(loadPanel) {
+	loadPanel.hide();
+}
+
+// 입력값 체크
+function inputValidateRequired(id, message) {
+	const el = document.getElementById(id);
+	if (!el.value.trim()) {
+		// 다이얼로그가 닫힌 뒤 입력칸으로 포커스
+		showDialogCustom(message, () => el.focus());
+		return false;
+	}
+	return true;
+}
