@@ -329,6 +329,11 @@ aside .psw_chg_btn:hover{
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+#dbGrid table th,
+#dbGrid table td{
+    min-width: auto;
+    max-width: 400px;
+}
 .send .grid table tbody tr:last-child{
     border-bottom: #fff;
 }
@@ -338,6 +343,13 @@ aside .psw_chg_btn:hover{
 .send .numDelBtn:hover {
     background: #eee;
     border-radius: 2px;
+}
+.send .numSelectBtn:hover{
+    background: #eee;
+    border-radius: 2px;
+}
+.send .numSelectBtn:hover i{
+    color:#0abb26;
 }
 .send .msg_wrap_hd{
     border-bottom: 1px solid #e5e7eb;
