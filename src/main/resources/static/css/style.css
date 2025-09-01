@@ -617,3 +617,11 @@ aside .psw_chg_btn:hover{
     background-color: #ebf3fc;
     color: #0a2e4a;
 }
+/* confirmSend.html */
+.confirmSend .modal-con {
+    width: 500px;
+}
+.confirmSend textarea{
+    resize: none;
+    height: 400px;
+}

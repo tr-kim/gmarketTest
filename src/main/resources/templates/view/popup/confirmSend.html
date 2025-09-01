@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="confirmSend">
+    <div class="modal-bg confirmSend">
+        <div class="modal-wrap">
+            <div class="modal-hd">
+                <span class="font-sz-16 font-weight-600">발송 확인</span>
+                <button class="close_btn"><i class="bi bi-x-lg"></i><span class="visually-hidden">닫기</span></button>
+            </div>
+            <div class="modal-con">    
+                <textarea name="confirmMessage" id="confirmMessage" class="form-control overflow-y-auto" readonly></textarea>            
+            </div>
+            <div class="modal-ft">
+                <button type="button" class="sub-bg send_btn">확인</button>
+            </div>
+        </div>
+    </div>
+</th:block>
+</html>

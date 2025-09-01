@@ -512,6 +512,9 @@ $(function () {
 	// 		}
 	// 	})
 	// });
+	document.querySelector('.confirmSend .close_btn').addEventListener('click', function(){
+		document.querySelector('.confirmSend').classList.remove('d-block');
+	})
 });
 
 
@@ -579,39 +582,43 @@ function sendMessage(){
 		});
 		return;
 	};
+
+	//메시지확인
+	const confirmSend = document.querySelector('.confirmSend');
+	confirmSend.classList.add('d-block');
+
+	confirmSend.querySelector('.send_btn').addEventListener('click', function(){
+		confirmSend.classList.remove('d-block');
+		const confirmDialog = DevExpress.ui.dialog.custom({
+			showTitle: false,
+			messageHtml: "<div style='text-align: center;'>발송하시겠습니까?</div>",
+			buttons: [{
+				text: "발송",
+				type: "default",
+				onClick: function(e) {
+					// 발송 로직 실행
+					
+					return { result: "ok" };
+
+				}
+			}, {
+				text: "취소",
+				onClick: function(e) {
+					return { result: "cancel" };
+				}
+			}]
+		});
+
+		confirmDialog.show().done(function(dialogResult) {
+			if (dialogResult.result === "ok") {
+				console.log("발송 완료");
+			} else {
+				console.log("취소");
+			}
+		});
+	})
 	
-	const confirmDialog = DevExpress.ui.dialog.custom({
-		showTitle: false,
-		messageHtml: "<div style='text-align: center;'>발송하시겠습니까?</div>",
-		buttons: [{
-			text: "발송",
-			type: "default",
-			onClick: function(e) {
-				// 발송 로직 실행
-				
-				
-				
-				
-				
-				return { result: "ok" };
-			}
-		}, {
-			text: "취소",
-			onClick: function(e) {
-				return { result: "cancel" };
-			}
-		}]
-	});
-
-	confirmDialog.show().done(function(dialogResult) {
-		if (dialogResult.result === "ok") {
-			console.log("발송 완료");
-		} else {
-			console.log("취소");
-		}
-	});
 }
-
 
 // 엑셀 파일 업로드
 function excelFileUpload(input) {
