@@ -348,6 +348,9 @@ aside .psw_chg_btn:hover{
     background: #eee;
     border-radius: 2px;
 }
+.send .numDelBtn:hover i{
+    color:#fc0e0e;
+}
 .send .numSelectBtn:hover i{
     color:#0abb26;
 }
