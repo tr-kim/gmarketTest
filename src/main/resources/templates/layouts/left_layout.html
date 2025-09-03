@@ -50,7 +50,7 @@
 					</a>
 				</li>
 				<li th:classappend="${active == 'send' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
-					<a th:href="@{/view/send/left}">
+					<a th:href="@{/view/singleSend/left}">
 						<i class="bi bi-envelope-arrow-up me-2"></i>개별발송
 					</a>
 				</li>

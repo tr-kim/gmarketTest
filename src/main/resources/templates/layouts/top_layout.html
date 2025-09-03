@@ -68,7 +68,7 @@
 					<a th:href="@{/view/hist}"><i class="bi bi-list-task me-2"></i>이력조회</a>
 				</li>
                 <li th:classappend="${active == 'send' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
-					<a th:href="@{/view/send}"><i class="bi bi-menu-up me-2"></i>개별발송</a>
+					<a th:href="@{/view/singleSend}"><i class="bi bi-menu-up me-2"></i>개별발송</a>
 				</li>
                 <li class="sendmenu" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
                     <a href="javascript:void(0);">

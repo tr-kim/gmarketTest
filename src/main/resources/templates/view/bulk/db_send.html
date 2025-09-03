@@ -3,10 +3,199 @@
 	layout:decorate="~{${layout}}" layout:fragment="content">
 
 <body>
+	<p class="font-sz-20 font-weight-600 pt-3 text-666">DB 발송</p>
+	<form class="content row mx-0 send" id="dbSend">
+		<ul>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">대분류</div>
+				<div class="col d-flex">					
+					<select name="large-category" id="large-category" class="form-select">
+						<option value="0">옥션</option>
+						<option value="1">지마켓</option>
+					</select>	
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">메시지 분류</div>
+				<div class="col d-flex">					
+					<select name="messageType" id="messageType" class="form-select">
+						<option value="0">SMS</option>
+						<option value="1">LMS</option>
+						<option value="2">MMS</option>
+					</select>	
+				</div>
+			</li>
+			<li class="align-items-center mb-3">
+				<div class="col-2 font-weight-500">요청번호</div>
+				<div class="col">
+					<div class="d-flex align-items-center justify-content-between">
+						<input type="text" name="reserved4" id="reserved4" class="form-control me-2" value="미지정" maxlength="20" readonly>
+						<!-- <div class="reserved_num">미지정</div> -->
+						<div>
+							<button type="button" class="btn btn-primary text-nowrap">조회</button>
+						</div>
+					</div>					
+				</div>
+			</li>
+			<li>
+				<div class="col-2"></div>
+				<div class="col-10">
+					<div id="dbGrid" class="grid">
+						<div class="spacer">
+							<table class="table w-100 text-center mb-0">
+								<colgroup>
+									<col style="width: 16%;">
+									<col style="width: 26%;">
+									<col style="width: 26%;">
+									<col style="width: 16%;">
+									<col style="width: 16%;">
+								</colgroup>
+								<thead>
+									<tr>
+										<th>NO</th>
+										<th>구분</th>
+										<th>총건수</th>
+										<th>지정</th>
+										<th>삭제</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="no-data">
+										<td>1</td>
+										<td>지마켓</td>
+										<td>100,000</td>
+										<td>
+											<button type="button" class="numSelectBtn">
+												<i class="dx-icon-check"></i>
+												<span class="visually-hidden">지정</span>
+											</button>
+										</td>
+										<td>
+											<button type="button" class="numDelBtn">
+												<i class="dx-icon-close"></i>
+												<span class="visually-hidden">삭제</span>
+											</button>
+										</td>
+									</tr>
+									<!-- <tr class="no-data">
+										<td class="py-3 text-center" colspan="5">요청번호를 조회하세요.</td>
+									</tr> -->
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="duplication_filter mt-1 d-flex justify-content-end">
+						<span>검색된 내용 총 <span class="search_num">0</span> 건</span>
+						<!-- <span>&#40;검색시간 :<span class="search_time"> ~~~</span> &#41;</span> -->
+					</div>
+				</div>
+			</li>	
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">회신번호</div>
+				<div class="col d-flex">					
+					<input type="text" name="tranCallback" id="tranCallback" class="form-control" placeholder="회신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
+				</div>
+			</li>		
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">사용자ID</div>
+				<div class="col">
+					<input type="text" name="userId" id="userId" class="form-control" placeholder="사용자ID를 입력하세요." maxlength="100" th:value="${#authentication.principal.userId}">
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">제목</div>
+				<div class="col">
+					<input type="text" name="msgTitle" id="msgTitle" class="form-control" maxlength="100" placeholder="제목을 입력하면 장문으로 변경됩니다.">
+				</div>
+			</li>
+			<li>
+				<div class="col-2 font-weight-500">내용</div>
+					<div class="col">	
+						<div class="d-flex grid overflow-visible">
+							<div class="msg_wrap col-5">
+							<div class="msg_wrap_hd d-flex">
+								<div class="msg_type col-3 sms py-2 px-2 text-center">
+									SMS
+								</div>	
+								<div class="msg_byte col text-end py-2 pe-2">
+									<span id="input_byte">0</span>/<span id="total_byte">80</span> byte
+								</div>
+							</div>
+							<textarea name="msgWrite" id="msgWrite" class="p-3 w-100"></textarea>
+						</div>
+						<div class="add_option col position-relative">
+							<ul class="option_tab d-flex px-3">
+								<li class="col on py-2">이미지</li>
+							</ul>
+							<div class="option_wrap px-3 py-2 d-block">
+								<div id="dropzone-external" class="flex-box">
+									<div id="dropzone-text" class="flex-box">
+										<span>이미지를 드래그&드롭하거나 클릭해 주세요.</span>
+									</div>								
+									<div id="upload-progress"></div>
+								</div>
+								<div id="dropzone-image-list" class="row mt-3"></div>
+								<div id="file-uploader"></div>
+								<span class="img-question position-absolute end-0 bottom-0 p-3"><i class="bi bi-question-circle"></i></span>
+							</div>
+						</div>					
+					</div>
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">전송대상</div>
+				<div class="col">
+					<input type="text" name="sendInfo" id="sendInfo" class="form-control" placeholder="전송대상을 입력하세요." maxlength="100">
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">상태</div>
+				<div class="col">
+					<input type="text" name="stat" id="stat" class="form-control" maxlength="100">
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">SMS 수신여부</div>
+				<div class="col">
+					<select name="reserved3" id="reserved3" class="form-select">
+						<option value="0">확인</option>
+						<option value="1">미확인</option>
+					</select>
+				</div>
+			</li>
+			<li>
+				<div class="col-2 font-weight-500">수신거부</div>
+				<div class="col">
+					<div class="form-check me-2">
+						<input class="form-check-input" type="checkbox" value="" id="rejectCheckDefault">
+						<label class="form-check-label text-nowrap" for="rejectCheckDefault">
+						080 수신거부 번호
+						</label>
+					</div>
+					<input type="text" name="rejectNum" id="rejectNum" class="form-control" value="(거부)0800002004" maxlength="100" disabled>
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">발송시간</div>
+				<div class="col d-flex align-items-center">
+					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+						<input type="radio" class="btn-check" name="send_time" id="send_time1" autocomplete="off" checked>
+						<label class="btn send_btn px-4" for="send_time1">즉시</label>
 
-	<div style="text-align: center;">
-		<h1>G마켓 DB발송 페이지</h1>
-	</div>
+						<input type="radio" class="btn-check" name="send_time" id="send_time2" autocomplete="off">
+						<label class="btn send_btn px-4" for="send_time2">예약</label>
+					</div>
+					<div id="reserveDate" class="text-primary ms-3"></div>
+				</div>					
+			</li>
+			<li class="d-flex align-items-center justify-content-center">
+				<button type="button" class="btn btn-primary px-5" id="final_send_btn" onclick="sendMessage()">즉시발송</button>
+			</li>
+		</ul>
+		<div class="loadpanel"></div>
+	</form>
+	<th:block th:replace="~{/view/popup/reserveSend :: reserveSend}"></th:block>
+	<script th:src="@{/js/view/db_send.js}"></script>
 </body>
 
 </html>

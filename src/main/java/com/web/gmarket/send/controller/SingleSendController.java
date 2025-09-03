@@ -9,23 +9,23 @@ import com.web.gmarket.common.utils.ConstantsUtils;
 
 @Controller
 @RequestMapping("/view")
-public class SendController {
+public class SingleSendController {
 	
-	@GetMapping("/send")
-	public String send(Model model) {
+	@GetMapping("/singleSend")
+	public String singleSend(Model model) {
 		
 		model.addAttribute(ConstantsUtils.LAYOUT, "/layouts/top_layout");
 		model.addAttribute(ConstantsUtils.ACTIVE, ConstantsUtils.SEND);
 		
-		return "view/send";
+		return "view/single_send";
 	}
 	
-	@GetMapping("/send/left")
+	@GetMapping("/singleSend/left")
 	public String left(Model model) {
 		
 		model.addAttribute(ConstantsUtils.LAYOUT, "/layouts/left_layout");
 		model.addAttribute(ConstantsUtils.ACTIVE, ConstantsUtils.SEND);
 		
-		return "view/send";
+		return "view/single_send";
 	}
 }
