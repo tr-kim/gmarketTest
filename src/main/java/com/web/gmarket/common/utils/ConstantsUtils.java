@@ -11,12 +11,22 @@ public class ConstantsUtils {
 	public static final String SUCCESS = "success";
 	public static final String FAILD = "faild";
 	
+	// Success Code
 	public static final int SUCCESS_CODE = 1000;
+	
+	// Error Code
 	public static final int ERROR_CODE = 9999;
 	public static final int VALIDATE_ERROR = 9001;
-	public static final int USER_DUPLICATION = 9002;	// 사용자 중복
-	public static final int USER_NON_EXISTENCE = 9003;	// 사용자 미존재
-	public static final int DATA_DOSE_NOT_EXIST = 9004; // 누락된 데이터
+	public static final int DATA_DOSE_NOT_EXIST = 9002; 		// 누락된 데이터 정보
+	
+	// User Error Code
+	public static final int USER_DUPLICATION = 9100;			// 사용자 중복
+	public static final int USER_NON_EXISTENCE = 9101;			// 사용자 미존재
+	public static final int USESR_NOT_EXCEL_SEND = 9102; 		// 엑셀 발송 
+	
+	// File Error Code
+	public static final int NOT_FILE = 9200;		// 파일 에러
+	public static final int NOT_EXTENSION = 9201;	// 파일 형식 오류
 	
 	public static final String CODE = "code";
 	public static final String LIST = "list";
@@ -32,6 +42,10 @@ public class ConstantsUtils {
 	public static final String EUC_KR = "EUC-KR";
 	public static final String LAYOUT = "layout";
 	public static final String ACTIVE = "active";
+	
+	public static final String SMS = "sms";
+	public static final String LMS = "lms";
+	public static final String MMS = "mms";
 	
 	public static final String TABLE_NAME = "tableName";
 	public static final String BULK_MSG_KEY = "bulkMsgKey";

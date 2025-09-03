@@ -7,22 +7,40 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.gmarket.bulk.excel.dto.ExcelSendDto;
 import com.web.gmarket.bulk.excel.service.ExcelSendService;
 import com.web.gmarket.common.auth.dto.UserDetailsDto;
+import com.web.gmarket.common.utils.ConstantsUtils;
+import com.web.gmarket.common.utils.ValidateHandingUtils;
+import com.web.gmarket.common.validation.ValidationSequence;
+import com.web.gmarket.user.dto.UserDto;
+import com.web.gmarket.user.service.UserService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/excelSend")
 public class RestExcelSendController {
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private ExcelSendService excelSendService;
 	
 	/**
 	 * 엑셀 파일 업로드
@@ -181,5 +199,35 @@ public class RestExcelSendController {
 		return result;
 	}
 	
+	
+	/**
+	 * 엑셀 파일 업로드
+	 * @throws IOException 
+	 */
+	@ResponseBody
+	@PostMapping("/insert")
+	public ResponseEntity<?> insert(Authentication authentication, @Validated(ValidationSequence.class) ExcelSendDto dto, Errors errors) throws IOException {
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		UserDto userDto = (UserDto) authentication.getAuthorities();
+		
+		// 엑셀 발송 여부 체크
+		if(ConstantsUtils.FALG_N.equals(userDto.getExcelYn())) {
+			result.put(ConstantsUtils.CODE, ConstantsUtils.USESR_NOT_EXCEL_SEND);
+			result.put(ConstantsUtils.RESULT, "엑셀 발송을 할 수 없습니다.");
+			
+			return ResponseEntity.status(HttpStatus.OK).body(result);
+		}
+		
+		// 유효성 체크
+		if(ValidateHandingUtils.validateHandling(errors) != null) {
+			return ValidateHandingUtils.validateHandling(errors);
+		}
+		
+		excelSendService.insertExcelSend(userDto, dto);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+	} 
 	
 }

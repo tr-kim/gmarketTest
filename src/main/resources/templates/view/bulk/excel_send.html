@@ -251,10 +251,10 @@
 				<div class="col-2 font-weight-500">발송시간</div>
 				<div class="col d-flex align-items-center">
 					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-						<input type="radio" class="btn-check" name="send_time" id="send_time1" autocomplete="off" checked>
+						<input type="radio" class="btn-check" name="send_time" id="send_time1" value="0" autocomplete="off" checked>
 						<label class="btn send_btn px-4" for="send_time1">즉시</label>
 
-						<input type="radio" class="btn-check" name="send_time" id="send_time2" autocomplete="off">
+						<input type="radio" class="btn-check" name="send_time" id="send_time2" value="1" autocomplete="off">
 						<label class="btn send_btn px-4" for="send_time2">예약</label>
 					</div>
 					<div id="reserveDate" class="text-primary ms-3"></div>
@@ -264,10 +264,10 @@
 				<div class="col-2 font-weight-500">분할전송</div>
 				<div class="col align-items-center">
 					<div class="btn-group mb-2" role="group" aria-label="Basic radio toggle button group">
-						<input type="radio" class="btn-check" name="split_send" id="split_send1" autocomplete="off" checked>
+						<input type="radio" class="btn-check" name="split_send" id="split_send1" value="N" autocomplete="off" checked>
 						<label class="btn send_btn px-4" for="split_send1">미사용</label>
 
-						<input type="radio" class="btn-check" name="split_send" id="split_send2" autocomplete="off">
+						<input type="radio" class="btn-check" name="split_send" id="split_send2" value="Y" autocomplete="off">
 						<label class="btn send_btn px-4" for="split_send2">사용</label>
 					</div>
 					<div id="splitSendUse" class="d-flex align-items-center disabled">

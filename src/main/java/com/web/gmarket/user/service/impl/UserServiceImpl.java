@@ -2,7 +2,6 @@ package com.web.gmarket.user.service.impl;
 
 import java.security.MessageDigest;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,8 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 
 import com.web.gmarket.common.config.DynamicDataSourceService;
 import com.web.gmarket.common.utils.ConstantsUtils;
@@ -107,18 +104,6 @@ public class UserServiceImpl implements UserService {
 		passwordEncode(userDto);
 		
 		return getMapper().updateUserPassword(userDto);
-	}
-
-	@Override
-	public LinkedHashMap<String, String> validateHandling(Errors errors) {
-		LinkedHashMap<String, String> validatorResult = new LinkedHashMap<String, String>();
-
-		for (FieldError error : errors.getFieldErrors()) {
-			String validKeyName = String.format("valid_%s", error.getField());
-			validatorResult.put(validKeyName, error.getDefaultMessage());
-		}
-
-		return validatorResult;
 	}
 	
 	public static String createHash(String data) throws Exception {

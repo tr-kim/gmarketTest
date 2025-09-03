@@ -102,6 +102,12 @@ $(function () {
 			if (uploadedCount >= 3) {
 				const message = '이미지는 최대 3개까지만 업로드할 수 있습니다.';
 				showDialogCustom(message);
+				
+				// 프로그레스바 초기화
+				uploadProgressBar.option({
+					visible: false,
+					value: 0,
+				});
 				return;
 			}
 			
@@ -198,7 +204,6 @@ $(function () {
 		},
 
 	}).dxFileUploader('instance');
-	
 	
 	//예약 발송 캘린더
 	let reserveDate = "";
@@ -523,7 +528,8 @@ function onlyNumber(element){
 	element.value = element.value.replace(/[^0-9]/g,'');
 }
 
-
+let previewConfirmDialog;
+let confirmDialog;
 // 문자 발송
 function sendMessage(){
 	// 파일 검사
@@ -582,42 +588,211 @@ function sendMessage(){
 		});
 		return;
 	};
-
-	//메시지확인
-	const confirmSend = document.querySelector('.confirmSend');
-	confirmSend.classList.add('d-block');
-
-	confirmSend.querySelector('.send_btn').addEventListener('click', function(){
-		confirmSend.classList.remove('d-block');
-		const confirmDialog = DevExpress.ui.dialog.custom({
-			showTitle: false,
-			messageHtml: "<div style='text-align: center;'>발송하시겠습니까?</div>",
-			buttons: [{
-				text: "발송",
-				type: "default",
-				onClick: function(e) {
-					// 발송 로직 실행
-					
-					return { result: "ok" };
-
-				}
-			}, {
-				text: "취소",
-				onClick: function(e) {
-					return { result: "cancel" };
-				}
-			}]
-		});
-
-		confirmDialog.show().done(function(dialogResult) {
-			if (dialogResult.result === "ok") {
-				console.log("발송 완료");
-			} else {
-				console.log("취소");
-			}
-		});
-	})
 	
+	// 메시지 내용 전송
+	const func_send = function() {
+		
+		// 메시지 유형 XXX
+		const msgTypeValue = document.querySelector('.msg_type').textContent.trim();
+		if(msgTypeValue != "SMS") showDialogCustom("개발 진행 중입니다.");
+		
+		// 시트
+		const sheet = document.getElementById("sheet").value;
+		
+		// 발신번호
+		const callbackSelect = document.getElementById("callbackSelect").value;
+		const tranCallback = document.getElementById("tranCallback").value.trim();
+		
+		// 수신번호
+		const calleeSelect = document.getElementById("calleeSelect").value;
+		const tranCallee = document.getElementById("tranCallee").value.trim();
+		
+		// 대분류
+		const largeCategory = document.getElementById("large-category").value;
+		
+		// 사용자 아이디
+		const userId = document.getElementById("userId").value.trim();
+		
+		// 메시지 제목
+		const msgTitle = document.getElementById("msgTitle").value.trim();
+		
+		// 메시지 유형
+		const msgType = msgTypeValue === "SMS" ? 'sms' : msgTypeValue === "LMS" ? 'lms' : 'mms';
+		
+		// 메시지 내용
+		const msgWrite = document.getElementById('msgWrite').value.trim();
+		
+		// 전송대상
+		const sendInfo = document.getElementById('sendInfo').value.trim();
+		
+		// SMS 수신여부
+		const reserved = document.getElementById('reserved3').value;
+		
+		// 수신거부
+		const rejectCheckDefault = document.getElementById('rejectCheckDefault').checked;
+		const rejectNum = document.getElementById('rejectNum').value.trim();
+		
+		// 발송시간
+		const sendTimeChkValue = $("input[name='send_time']:checked").val();
+		const sendTime = parseReservationTime(document.getElementById('reserveDate').textContent);
+		
+		// 분할전송
+		const splitSendChkValue = $("input[name='split_send']:checked").val();
+		const splitMinute = document.getElementById('splitMinute').value;
+		const splitNum = document.getElementById('splitNum').value;
+		
+		// 전송 범위 설정
+		const tranCheckDefault = document.getElementById('tranCheckDefault').checked;
+		const tranRangeStart = document.getElementById('tranRangeStart').value;
+		const tranRangeEnd = document.getElementById('tranRangeEnd').value;
+		
+		const formData = new FormData();
+		formData.append("excelFileName", EXCEL_FILE_NAME);
+		formData.append("sheet", sheet);
+		formData.append("callbackSelect", callbackSelect === "직접입력" ? 0 : 1);
+		formData.append("callback", callbackSelect === "직접입력" ? tranCallback : callbackSelect);
+		formData.append("calleeSelect", calleeSelect === "직접입력" ? 0 : 1);
+		formData.append("callee", calleeSelect === "직접입력" ? tranCallee : calleeSelect);
+		formData.append("largeCategory", largeCategory);
+		formData.append("userId", userId);
+		formData.append("msgTitle", msgTitle);
+		formData.append("msgType", msgType);
+		formData.append("msgWrite", msgWrite);
+		formData.append("sendInfo", sendInfo);
+		formData.append("reserved", reserved);
+		formData.append("timeType", sendTimeChkValue);
+		formData.append("splitSend", splitSendChkValue);
+		formData.append("tranCheckDefault", tranCheckDefault);
+		formData.append("rejectCheckDefault", rejectCheckDefault);
+		
+		if(rejectCheckDefault) formData.append("rejectNum", rejectNum);
+		if(sendTimeChkValue === '1') formData.append("sendTime", sendTime);
+		
+		if(splitSendChkValue === 'Y') { 
+			formData.append("splitMinute", splitMinute);
+			formData.append("splitNum", splitNum);
+		}
+		
+		if(tranCheckDefault) { 
+			formData.append("tranRangeStart", tranRangeStart); 
+			formData.append("tranRangeEnd", tranRangeEnd); 
+		}
+		
+		fetch("/api/v1/excelSend/insert", {
+			method: "POST",
+			body: formData
+		})
+		.then(res => res.json())
+		.then(data => {
+			console.log(data);
+			
+			const status = data.status;
+			
+			if(status == "success") {
+				// 테이블 그리기
+				const retData = data.retData;
+				drawTable("excelGrid", retData, "Y");
+			} else {
+				const message = data.message;
+				showDialogCustom(message);
+			}
+		})
+		.catch(err => {
+			console.error("엑셀 발송 실패:", err);
+			showDialogCustom('error');
+		})
+		.finally(() => {
+		});
+	} 
+	
+	// 메시지확인 다이얼로그 중복 제거
+	if (previewConfirmDialog) {
+        previewConfirmDialog = null;
+    }
+
+	// 메시지확인 다이얼로
+	previewConfirmDialog = DevExpress.ui.dialog.custom({
+		showTitle: false,
+		messageHtml: "<div style='text-align: center;'>미리보기 화면을 보시겠습니까?</div>",
+		buttons: [
+			{ text: "확인", onClick: () => "ok" },
+			{ text: "취소", onClick: () => "cancel"}
+		]
+	});
+		
+	previewConfirmDialog.show().done(function(dialogResult) {
+		if (dialogResult === "ok") {
+			
+			//메시지 확인팝업창
+			const confirmSend = document.querySelector('.confirmSend');
+			confirmSend.classList.add('d-block');
+			
+			confirmSend.querySelector('.send_btn').addEventListener('click', function() {
+				confirmSend.classList.remove('d-block');
+				func_send(); // 메시지 보내기
+			});
+			
+		} else {
+			console.log("메시지 확인취소");
+			
+			// 다이얼로그창 중복 제거
+			if (confirmDialog) {
+		        confirmDialog = null;
+		    }
+			
+			confirmDialog = DevExpress.ui.dialog.custom({
+				showTitle: false,
+				messageHtml: "<div style='text-align: center;'>발송하시겠습니까?</div>",
+				buttons: [
+					{ text: "발송", onClick: () => "ok" },
+					{ text: "취소", onClick: () => "cancel"}
+				]
+			});
+			
+			confirmDialog.show().done(function(dialogResult) {
+				if (dialogResult === "ok") {
+					func_send(); // 메시지 보내기
+				} else {
+					console.log("취소");
+				}
+			});
+		}
+	});
+}
+
+// 예약 시간 포맷 변환 yyyyMMddHHmmssSSS
+function parseReservationTime(timeString) {
+    try {
+        // "예약 발송 시간 : " 부분 제거
+        const cleanString = timeString.replace("예약 발송 시간 : ", "");
+        
+        // 날짜와 시간 부분 분리
+        const parts = cleanString.split(" ");
+        const datePart = parts[0]; // "2025-09-25"
+        const timePart = parts.slice(1).join(" "); // "00시 00분"
+        
+        // 날짜 파싱
+        const [year, month, day] = datePart.split("-").map(Number);
+        
+        // 시간 파싱
+        const hour = parseInt(timePart.replace("시", "").split(" ")[0]);
+        const minute = parseInt(timePart.replace("분", "").split(" ")[1]);
+		
+		const date = new Date(year, month - 1, day, hour, minute);
+		
+		const getYaer = date.getFullYear();
+		const getMonth = String(date.getMonth() + 1).padStart(2, '0');
+		const getDay = String(date.getDate()).padStart(2, '0');
+		const getHour = String(date.getHours()).padStart(2, '0');
+		const getMinute = String(date.getMinutes()).padStart(2, '0');
+		const getSecond = String(date.getSeconds()).padStart(2, '0');
+		const getMillisecond = String(date.getSeconds()).padStart(2, '0');
+        
+        return `${getYaer}${getMonth}${getDay}${getHour}${getMinute}${getSecond}${getMillisecond}`;
+    } catch (error) {
+        console.error("파싱 오류:", error);
+        return null;
+    }
 }
 
 // 엑셀 파일 업로드

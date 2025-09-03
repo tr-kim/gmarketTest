@@ -655,7 +655,7 @@ function successCallback(data) {
 			dataGrid.getDataSource().reload();
 		});
 		
-	} else if (code == 9001 || code == 9002 || code == 9003) {
+	} else if (code == 9100 || code == 9101 || code == 9002) {
 		showDialogCustom(result);
 		
 	} else {

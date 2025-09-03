@@ -23,7 +23,9 @@ import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.gmarket.bulk.excel.dto.ExcelSendDto;
 import com.web.gmarket.common.utils.ConstantsUtils;
+import com.web.gmarket.user.dto.UserDto;
 
 public interface ExcelSendService {
 	
@@ -32,6 +34,14 @@ public interface ExcelSendService {
 	
 	String EXCEL_PATH = ConstantsUtils.EXCEL_PATH;
 	
+	
+	/**
+	 * 엑셀 발송
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	public int insertExcelSend(UserDto userDto, ExcelSendDto dto);
 	
 	/**
 	 * 엑셀 파일 업로드 및 시트 목록 추출

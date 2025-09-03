@@ -8,7 +8,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.RsaUtil;
+import com.web.gmarket.common.utils.ValidateHandingUtils;
 import com.web.gmarket.common.validation.ValidationSequence;
 import com.web.gmarket.user.dto.UserDto;
 import com.web.gmarket.user.service.UserService;
@@ -131,16 +131,8 @@ public class RestUserController {
 		
 		try {
 			
-			if (errors.hasErrors()) {
-				LinkedHashMap<String, String> validatorResult = userService.validateHandling(errors);
-
-				for (String key : validatorResult.keySet()) {
-					result.put(ConstantsUtils.CODE, ConstantsUtils.VALIDATE_ERROR);
-					result.put(ConstantsUtils.RESULT, validatorResult.get(key));
-					break;
-				}
-
-				return ResponseEntity.status(HttpStatus.OK).body(result);
+			if(ValidateHandingUtils.validateHandling(errors) != null) {
+				return ValidateHandingUtils.validateHandling(errors);
 			}
 
 			UserDto info = userService.selectUserInfo(userDto.getUserId(), null);
@@ -181,16 +173,8 @@ public class RestUserController {
 		
 		try {
 			
-			if (errors.hasErrors()) {
-				LinkedHashMap<String, String> validatorResult = userService.validateHandling(errors);
-
-				for (String key : validatorResult.keySet()) {
-					result.put(ConstantsUtils.CODE, ConstantsUtils.VALIDATE_ERROR);
-					result.put(ConstantsUtils.RESULT, validatorResult.get(key));
-					break;
-				}
-
-				return ResponseEntity.status(HttpStatus.OK).body(result);
+			if(ValidateHandingUtils.validateHandling(errors) != null) {
+				return ValidateHandingUtils.validateHandling(errors);
 			}
 
 			UserDto info = userService.selectUserInfo(userDto.getUserId(), null);
