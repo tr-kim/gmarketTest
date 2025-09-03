@@ -63,7 +63,7 @@ public class WebSecurityConfig {
                 		.requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico", "/assets/**", "/webfonts/**").permitAll()
                 		.requestMatchers("/index").authenticated()  																// 로그인만 하면 접근 가능
                 		.requestMatchers("/view/hist").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
-                		.requestMatchers("/view/send").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
+                		.requestMatchers("/view/singleSend").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
                 		.requestMatchers("/view/excelSend").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
                 		.requestMatchers("/view/fileSend").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
                 		.requestMatchers("/view/dbSend").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
