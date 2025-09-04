@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.web.gmarket.bulk.db.mapper.DbSendMapper">
+    
+    <resultMap id="DbSendResultMap" type="com.web.gmarket.bulk.db.dto.DbSendDto">
+        <result property="tranPr" column="TRAN_PR" />
+        <result property="reserved4" column="RESERVED4" />
+        <result property="cnt" column="CNT" />
+    </resultMap>
+    
+    <select id="selectDbSendList" resultMap="DbSendResultMap">
+        SELECT
+            RESERVED4,
+            '지마켓' AS TRAN_PR,
+            COUNT(RESERVED4) AS CNT
+        FROM ${tableName}
+        WHERE TRAN_STATUS IS NULL
+        GROUP BY RESERVED4
+        ORDER BY RESERVED4 DESC
+    </select>
+
+    <select id="selectDbSendCount" resultType="int">
+        SELECT COUNT(*) AS CNT
+        FROM ${tableName}
+        WHERE TRAN_STATUS IS NULL
+        GROUP BY RESERVED4
+        ORDER BY RESERVED4 DESC
+    </select>
+    
+</mapper>

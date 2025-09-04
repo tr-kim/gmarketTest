@@ -406,13 +406,41 @@ $(function () {
 function onlyNumber(element){
 	element.value = element.value.replace(/[^0-9]/g,'');
 }
+// 요청번호 조회
+function search() {
+    const messageType = document.getElementById('messageType').value.trim();
+
+	const companyCode = document.getElementById('large-category').value;
+
+    fetch("/api/v1/dbSend/search", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ messageType: messageType,  companyCode: companyCode})
+
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+
+        if (data.totalCount !== undefined) {
+            console.log("조회 성공:", data.data);
+        } else {
+            console.log("조회 실패:", data.message);
+        }
+    })
+    .catch(err => {
+        console.error("조회 요청 실패", err);
+    });
+}
 
 
 // 문자 발송
 function sendMessage(){
-	const reserved_num = document.querySelector('.reserved_num');
+	const reserved4 = document.getElementById('reserved4');
 	// 유효성 검사
-	if(reserved_num.textContent === "미지정" || reserved_num.textContent === ""){
+	if(reserved4.value === "미지정" || reserved4.value === ""){
 		 showDialogCustom('요청번호를 조회하여 지정해 주세요.');
 		 return;
 	}
