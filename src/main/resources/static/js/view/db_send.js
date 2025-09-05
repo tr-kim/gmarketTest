@@ -412,6 +412,8 @@ function search() {
 
 	const companyCode = document.getElementById('large-category').value;
 
+	showLoading(LOAD_PANEL, "#dbGrid");
+
     fetch("/api/v1/dbSend/search", {
         method: "POST",
         headers: {
@@ -422,19 +424,22 @@ function search() {
     })
     .then(res => res.json())
     .then(data => {
-        console.log(data);
 
         if (data.totalCount !== undefined) {
             console.log("조회 성공:", data.data);
+			drawTable("dbGrid", data.data);
         } else {
             console.log("조회 실패:", data.message);
         }
     })
     .catch(err => {
         console.error("조회 요청 실패", err);
-    });
+    })
+	.finally(() => {
+		// 로딩바 숨김
+		hideLoading(LOAD_PANEL);
+	});
 }
-
 
 // 문자 발송
 function sendMessage(){
@@ -569,23 +574,45 @@ function renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visible
 	
 	// tbody 클리어
 	while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
-	
+
 	// fragment로 필요한 행만 렌더링
 	const fragment = document.createDocumentFragment();
 	for (let i = startRow; i < endRow; i++) {
 		const tr = document.createElement("tr");
 		
-		// 행번호
+		// no
 		const tdIdx = document.createElement("td");
-		tdIdx.textContent = dataRow[i]?.idx ?? "";
-		// tdIdx.style.whiteSpace = 'pre-line'; // 줄바꿈	
+		tdIdx.textContent = dataRow[i]?.reserved4 ?? "";
 		tr.appendChild(tdIdx);
 		
-		// 수신번호
+		// 구분
 		const tdVal = document.createElement("td");
-		tdVal.textContent = dataRow[i]?.value ?? "";
-		// tdVal.style.whiteSpace = 'pre-line'; // 줄바꿈
+		tdVal.textContent = dataRow[i]?.tranPr ?? "";
 		tr.appendChild(tdVal);
+
+		//총건수
+		const tdCnt = document.createElement("td");
+		tdCnt.textContent = dataRow[i]?.cnt ?? "";
+		tr.appendChild(tdCnt);
+
+		//지정
+		const tdSelect = document.createElement("td");
+		tdSelect.innerHTML = `
+			<button type="button" class="numSelectBtn" onclick="selectBtn(this)">
+				<i class="dx-icon-check"></i>
+				<span class="visually-hidden">지정</span>
+			</button>`;
+		tr.appendChild(tdSelect);
+
+		//삭제
+		const tdDel = document.createElement("td");
+		tdDel.innerHTML = `
+			<button type="button" class="numDelBtn">
+				<i class="dx-icon-close"></i>
+				<span class="visually-hidden">삭제</span>
+			</button>
+		`;
+		tr.appendChild(tdDel);
 		
 		fragment.appendChild(tr);
 	}
@@ -602,26 +629,43 @@ function drawTable(containerId, data){
 	const table = container.querySelector("table");
 	const spacer = container.querySelector(".spacer");
 	
-	if (!data || data.length === 0) return;
-	
-	const rowLength = data.count;
-	const dataRow = data.textNumber;
-	
-	// 건수 표시
-	document.querySelector('span.direct_input_num').textContent = rowLength.toLocaleString();
-	
-	// 전화번호 목록 표시
-	const tbody = table.querySelector("tbody");
-	tbody.innerHTML = ""; // 기존 내용 제거
-	
-	// 가상 스크롤 전
-	/*textNumber.forEach(num => {
+	//if (!data || data.length === 0) return;
+	if (!data || data.length === 0) {
+		spacer.style.height = `auto`;
+		const tbody = table.querySelector("tbody");
+		tbody.innerHTML = ""; // 기존 행 제거
+
 		const tr = document.createElement("tr");
+		tr.classList.add("no-data");
+
 		const td = document.createElement("td");
-		td.textContent = num;
+		td.className = "py-3 text-center";
+		td.colSpan = 5;
+		td.textContent = "조회된 요청번호가 없습니다.";
+
 		tr.appendChild(td);
 		tbody.appendChild(tr);
-	});*/
+
+		// 건수 표시 0
+		document.querySelector("span.search_num").textContent = "0";
+
+		//미지정
+		const reserved4 = document.getElementById("reserved4");
+		reserved4.value = '미지정';
+		return;
+	};
+	
+	const rowLength = data.length;
+	//const dataRow = data.textNumber;
+	console.log('data: ', data)
+	console.log('rowLength: ' , rowLength)
+	//console.log('dataRow: ' , dataRow)
+	
+	// 건수 표시
+	document.querySelector('span.search_num').textContent = rowLength.toLocaleString();
+	
+	const tbody = table.querySelector("tbody");
+	tbody.innerHTML = ""; // 기존 내용 제거
 	
 	// 가상 스크롤 설정
 	let rowHeight = 40; // 기본 행 높이(px)
@@ -629,11 +673,18 @@ function drawTable(containerId, data){
 	
 	// 스크롤 이벤트 핸들러 등록
 	container.removeEventListener('scroll', container._scrollHandler);
-	container._scrollHandler = () => renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visibleRows);
+	container._scrollHandler = () => renderVisibleRows(container, tbody, spacer, data, rowHeight, visibleRows);
 	container.addEventListener('scroll', container._scrollHandler);
 	
 	// 초기 렌더링
 	container.scrollTop = 0;
-	renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visibleRows);
+	renderVisibleRows(container, tbody, spacer, data, rowHeight, visibleRows);
 }
 
+//요청번호 지정
+function selectBtn(btn){
+	const row = btn.closest("tbody > tr");
+	const reserved4Value = row.querySelector("td").textContent;
+	const reserved4 = document.getElementById("reserved4");
+	reserved4.value = reserved4Value.trim();
+}
