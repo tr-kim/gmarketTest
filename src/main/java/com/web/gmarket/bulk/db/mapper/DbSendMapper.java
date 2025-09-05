@@ -8,8 +8,8 @@ import com.web.gmarket.bulk.db.dto.DbSendDto;
 
 @Mapper
 public interface DbSendMapper {
-
-    List<DbSendDto> selectDbSendList(DbSendDto dbSendDto);
-
-    int selectDbSendCount(DbSendDto dbSendDto);
+	
+	List<DbSendDto> selectDbSendList(DbSendDto dbSendDto);
+	
+	int selectDbSendCount(DbSendDto dbSendDto);
 }

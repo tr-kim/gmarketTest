@@ -19,13 +19,12 @@ import com.web.gmarket.bulk.db.service.DbSendService;
 @RestController
 @RequestMapping("/api/v1/dbSend")
 public class RestDbSendController {
-	
 	private final DbSendService dbSendService;
 	
 	public RestDbSendController(DbSendService dbSendService) {
 		this.dbSendService = dbSendService;
 	}
-
+	
 	@PostMapping("/list")
 	public void list() {
 	}
@@ -37,7 +36,7 @@ public class RestDbSendController {
 	@DeleteMapping("/delete")
 	public void delete() {
 	}
-
+	
 	//요청조회
 	@PostMapping("/search")
 	public ResponseEntity<?> getDbSendList(@RequestBody DbSendDto dbSendDto) {
@@ -45,17 +44,17 @@ public class RestDbSendController {
 			List<DbSendDto> result = dbSendService.getDbSendList(dbSendDto);
 			int totalCount = dbSendService.getDbSendCount(dbSendDto);
 			
-	        Map<String, Object> response = new HashMap<>();
-	        response.put("data", result);
-	        response.put("totalCount", totalCount);
-	        
+			Map<String, Object> response = new HashMap<>();
+			response.put("data", result);
+			response.put("totalCount", totalCount);
+			
 			return ResponseEntity.ok(response);
 			
 		} catch (Exception e) {
 			Map<String, Object> error = new HashMap<>();
-	        error.put("message", "요청번호 조회 실패");
-	        error.put("error", e.getMessage());
-	        
+			error.put("message", "요청번호 조회 실패");
+			error.put("error", e.getMessage());
+			
 			return ResponseEntity
 				.status(HttpStatus.INTERNAL_SERVER_ERROR)
 				.body(error);
