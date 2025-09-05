@@ -13,7 +13,7 @@
     <select id="selectDbSendList" resultMap="DbSendResultMap">
         SELECT
             RESERVED4,
-            '지마켓' AS TRAN_PR,
+            #{tranPr} AS TRAN_PR,
             COUNT(RESERVED4) AS CNT
         FROM ${tableName}
         WHERE TRAN_STATUS IS NULL
