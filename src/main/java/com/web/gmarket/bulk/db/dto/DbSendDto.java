@@ -16,8 +16,9 @@ public class DbSendDto {
 	
 	// 조회 컬럼
 	private String reserved4;
-	private String tranPr; // '지마켓' 고정 값 들어올 컬럼
+	private String tranPr;
 	private String cnt;
+	private String resultTable;
 	
 	public Integer getCompanyCode() {
 		return companyCode;
@@ -65,5 +66,13 @@ public class DbSendDto {
 	
 	public void setCnt(String cnt) {
 		this.cnt = cnt;
+	}
+	
+	public String getResultTable() {
+		return resultTable;
+	}
+	
+	public void setResultTable(String resultTable) {
+		this.resultTable = resultTable;
 	}
 }

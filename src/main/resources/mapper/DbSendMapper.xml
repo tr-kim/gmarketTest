@@ -8,16 +8,15 @@
 		<result property="reserved4" column="RESERVED4" />
 		<result property="tranPr" column="TRAN_PR" />
 		<result property="cnt" column="CNT" />
+		<result property="resultTable" column="RESULT_TABLE" />
 	</resultMap>
 	
 	<select id="selectDbSendList" resultMap="DbSendResultMap">
 		SELECT
 			RESERVED4,
-			CASE 
-                WHEN #{companyCode} = 0 THEN '옥션'
-                ELSE '지마켓'
-            END AS TRAN_PR,
-			COUNT(RESERVED4) AS CNT
+			CASE WHEN #{companyCode} = 0 THEN '옥션' ELSE '지마켓' END AS TRAN_PR,
+			COUNT(RESERVED4) AS CNT,
+			'${tableName}' AS RESULT_TABLE
 		FROM ${tableName}
 		WHERE TRAN_STATUS IS NULL
 		GROUP BY RESERVED4
