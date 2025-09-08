@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.gmarket.bulk.db.dto.DbSendDto;
@@ -33,8 +32,8 @@ public class RestDbSendController {
 	@PutMapping("/update")
 	public void update() {
 	}
-
-	//요청조회
+	
+	//요청번호조회
 	@PostMapping("/search")
 	public ResponseEntity<?> getDbSendList(@RequestBody DbSendDto dbSendDto) {
 		try {
@@ -48,6 +47,8 @@ public class RestDbSendController {
 			return ResponseEntity.ok(response);
 			
 		} catch (Exception e) {
+			e.printStackTrace();
+			
 			Map<String, Object> error = new HashMap<>();
 			error.put("message", "요청번호 조회 실패");
 			error.put("error", e.getMessage());
@@ -57,29 +58,40 @@ public class RestDbSendController {
 				.body(error);
 		}
 	}
-		
+	
 	//요청번호삭제
 	@DeleteMapping("/delete")
-	public ResponseEntity<?> delete(@RequestBody DbSendDto dto) {
+	public ResponseEntity<?> delete(@RequestBody DbSendDto dbSendDto) {
 		try {
-			int deletedCount = dbSendService.deleteDbSend(dto);
-
 			Map<String, Object> response = new HashMap<>();
+			
+			int deletedCount = dbSendService.deleteDbSend(dbSendDto);
+			
 			if (deletedCount > 0) {
 				response.put("status", "success");
 				response.put("message", "삭제 성공");
 				return ResponseEntity.ok(response);
+				
 			} else {
 				response.put("status", "fail");
-				response.put("message", "삭제할 데이터가 없습니다.");
-				return ResponseEntity.badRequest().body(response);
+				
+				if (dbSendDto.getReserved4() == null) {
+					response.put("message", "잘못된 요청 (필수 값 없음)");
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response); // 400
+				} else {
+					response.put("message", "삭제 대상 없음");
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response); // 404
+				}
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
-			Map<String, Object> response = new HashMap<>();
-			response.put("status", "error");
-			response.put("message", "삭제 중 오류 발생");
-			return ResponseEntity.internalServerError().body(response);
+			
+			Map<String, Object> error = new HashMap<>();
+			error.put("status", "error");
+			error.put("message", "요청번호 삭제 실패");
+			
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
 		}
 	}
 

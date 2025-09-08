@@ -453,8 +453,8 @@ function reservedDelete(btn){
 		showTitle: false,
 		messageHtml: `
 		<div style='text-align: center;'>
-			${reserved4} 번호를 삭제하시겠습니까?<br>
-
+			요청번호 ${reserved4}<br>
+			삭제하시겠습니까?<br>
 		</div>`,
 		buttons: [{
 			text: "삭제",
