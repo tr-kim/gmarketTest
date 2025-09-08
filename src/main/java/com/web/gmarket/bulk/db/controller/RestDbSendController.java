@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.gmarket.bulk.db.dto.DbSendDto;
@@ -32,11 +33,7 @@ public class RestDbSendController {
 	@PutMapping("/update")
 	public void update() {
 	}
-	
-	@DeleteMapping("/delete")
-	public void delete() {
-	}
-	
+
 	//요청조회
 	@PostMapping("/search")
 	public ResponseEntity<?> getDbSendList(@RequestBody DbSendDto dbSendDto) {
@@ -60,4 +57,31 @@ public class RestDbSendController {
 				.body(error);
 		}
 	}
+		
+	//요청번호삭제
+	@DeleteMapping("/delete")
+	public ResponseEntity<?> delete(@RequestBody DbSendDto dto) {
+		try {
+			int deletedCount = dbSendService.deleteDbSend(dto);
+
+			Map<String, Object> response = new HashMap<>();
+			if (deletedCount > 0) {
+				response.put("status", "success");
+				response.put("message", "삭제 성공");
+				return ResponseEntity.ok(response);
+			} else {
+				response.put("status", "fail");
+				response.put("message", "삭제할 데이터가 없습니다.");
+				return ResponseEntity.badRequest().body(response);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Map<String, Object> response = new HashMap<>();
+			response.put("status", "error");
+			response.put("message", "삭제 중 오류 발생");
+			return ResponseEntity.internalServerError().body(response);
+		}
+	}
+
+	
 }

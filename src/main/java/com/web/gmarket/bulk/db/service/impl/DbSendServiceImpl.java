@@ -22,17 +22,8 @@ public class DbSendServiceImpl implements DbSendService {
 	public List<DbSendDto> getDbSendList(DbSendDto dbSendDto) {
 		String dbName = DBUtils.getDBName(dbSendDto.getCompanyCode());
 		
-		String tableName = "";
-		if ("sms".equals(dbSendDto.getMessageType())) {
-			tableName = "SMSCLI_TBL_LARGE";
-		} else if ("lms".equals(dbSendDto.getMessageType())) {
-			tableName = "LMSCLI_TBL_LARGE";
-		} else if ("mms".equals(dbSendDto.getMessageType())) {
-			tableName = "MMSCLI_TBL_LARGE";
-		} else {
-			tableName = "SMSCLI_TBL_LARGE";
-		}
-		dbSendDto.setTableName(tableName);
+		// 테이블명 세팅
+		dbSendDto.setTableName(resolveTableName(dbSendDto.getMessageType()));
 		
 		return getMapper(dbName).selectDbSendList(dbSendDto);
 	}
@@ -40,12 +31,32 @@ public class DbSendServiceImpl implements DbSendService {
 	@Override
 	public int getDbSendCount(DbSendDto dbSendDto) {
 		String dbName = DBUtils.getDBName(dbSendDto.getCompanyCode());
-		
 		return getMapper(dbName).selectDbSendCount(dbSendDto);
+	}
+
+	// 삭제 추가
+	@Override
+	public int deleteDbSend(DbSendDto dbSendDto) {
+		String dbName = DBUtils.getDBName(dbSendDto.getCompanyCode());
+		
+		// 테이블명 세팅
+		dbSendDto.setTableName(resolveTableName(dbSendDto.getMessageType()));
+		
+		return getMapper(dbName).deleteDbSend(dbSendDto);
 	}
 	
 	private DbSendMapper getMapper(String dbName) {
 		return dynamicDataSourceService.getMapper(dbName, DbSendMapper.class);
 	}
 	
+	// 테이블명 변환 공통화
+	private String resolveTableName(String messageType) {
+		switch (messageType) {
+			case "sms": return "SMSCLI_TBL_LARGE";
+			case "lms": return "LMSCLI_TBL_LARGE";
+			case "mms": return "MMSCLI_TBL_LARGE";
+			default: return "SMSCLI_TBL_LARGE";
+		}
+	}
 }
+

@@ -33,4 +33,10 @@
 		) TOTAL
 	</select>
 
+    <delete id="deleteDbSend" parameterType="com.web.gmarket.bulk.db.dto.DbSendDto">
+        DELETE FROM ${tableName}
+        WHERE RESERVED4 = #{reserved4}
+        AND TRAN_STATUS IS NULL
+    </delete>
+
 </mapper>

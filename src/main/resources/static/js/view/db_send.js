@@ -407,7 +407,7 @@ function onlyNumber(element){
 	element.value = element.value.replace(/[^0-9]/g,'');
 }
 // 요청번호 조회
-function search() {
+function reservedSearch() {
     const messageType = document.getElementById('messageType').value.trim();
 
 	const companyCode = document.getElementById('large-category').value;
@@ -439,6 +439,72 @@ function search() {
 		// 로딩바 숨김
 		hideLoading(LOAD_PANEL);
 	});
+}
+
+// 요청번호 삭제
+function reservedDelete(btn){
+	const row = btn.closest("tbody > tr");
+
+	const reserved4 = row.querySelector("td").textContent;
+	const companyCode = document.getElementById('large-category').value;
+    const messageType = document.getElementById('messageType').value;
+
+	const confirmDialog = DevExpress.ui.dialog.custom({
+		showTitle: false,
+		messageHtml: `
+		<div style='text-align: center;'>
+			${reserved4} 번호를 삭제하시겠습니까?<br>
+
+		</div>`,
+		buttons: [{
+			text: "삭제",
+			type: "default",
+			onClick: function(e) {
+				
+				fetch("/api/v1/dbSend/delete", {
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ 
+						reserved4: reserved4, 			
+						companyCode: companyCode,
+						messageType: messageType
+					})
+
+				})
+				.then(res => res.json())
+				.then(data => {
+					const status = data.status;
+
+					if (status == "success") {
+						console.log("삭제 성공")
+						reservedSearch();
+					} else {
+						console.log("삭제 실패")
+					}
+				})
+				.catch(err => {
+					console.error("요청 번호 삭제 실패", err);
+				});
+				return { result: "ok" };
+			}
+		}, {
+			text: "취소",
+			onClick: function(e) {
+				return { result: "cancel" };
+			}
+		}]
+	});
+
+	confirmDialog.show().done(function(dialogResult) {
+		if (dialogResult.result === "ok") {
+			console.log("삭제 완료");
+		} else {
+			console.log("취소");
+		}
+	});
+
 }
 
 // 문자 발송
@@ -487,52 +553,6 @@ function sendMessage(){
 		}
 	});
 }
-
-
-// 텍스트 파일 업로드
-function textFileUpload(input) {
-	const file = input.files[0];
-	if (!file) return;
-	
-	// 로딩바 표시
-	showLoading(LOAD_PANEL, "#textGrid");
-	
-	const formData = new FormData();
-	formData.append("file", file);
-	
-	fetch("/api/v1/fileSend/txtUpload", {
-		method: "POST",
-		body: formData
-	})
-	.then(res => res.json())
-	.then(data => {
-		console.log(data);
-		
-		const status = data.status;
-		
-		if(status == "success"){
-			const retData = data.retData;
-			TEXT_FILE_NAME = retData.txtFile;
-			
-			// 테이블 그리기
-			drawTable("textGrid", retData);
-		}else{
-			const message = data.message;
-			showDialogCustom(message);
-			resetTextGrid(input);
-		}
-	})
-	.catch(err => {
-		console.error("파일 업로드 실패", err);
-		showDialogCustom('error');
-		resetTextGrid(input);
-	})
-	.finally(() => {
-		// 로딩바 숨김
-		hideLoading(LOAD_PANEL);
-	});
-}
-
 
 // 실패 시 초기화
 function resetTextGrid(input) {
@@ -607,7 +627,7 @@ function renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visible
 		//삭제
 		const tdDel = document.createElement("td");
 		tdDel.innerHTML = `
-			<button type="button" class="numDelBtn">
+			<button type="button" class="numDelBtn" onclick="reservedDelete(this)">
 				<i class="dx-icon-close"></i>
 				<span class="visually-hidden">삭제</span>
 			</button>

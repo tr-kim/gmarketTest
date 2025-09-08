@@ -9,4 +9,6 @@ public interface DbSendService {
 	List<DbSendDto> getDbSendList(DbSendDto dbSendDto);
 	
 	int getDbSendCount(DbSendDto dbSendDto);
+
+    int deleteDbSend(DbSendDto dbSendDto);
 }

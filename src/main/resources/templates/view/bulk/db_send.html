@@ -15,7 +15,7 @@
 					</select>	
 				</div>
 			</li>
-			<li class="align-items-center">
+			<li class="align-items-center mb-2">
 				<div class="col-2 font-weight-500">메시지 분류</div>
 				<div class="col d-flex">					
 					<select name="messageType" id="messageType" class="form-select">
@@ -25,16 +25,9 @@
 					</select>	
 				</div>
 			</li>
-			<li class="align-items-center mb-3">
-				<div class="col-2 font-weight-500">요청번호</div>
-				<div class="col">
-					<div class="d-flex align-items-center justify-content-between">
-						<input type="text" name="reserved4" id="reserved4" class="form-control me-2" value="미지정" maxlength="20" readonly>
-						<!-- <div class="reserved_num">미지정</div> -->
-						<div>
-							<button type="button" class="btn btn-primary text-nowrap" onclick="search()">조회</button>
-						</div>
-					</div>					
+			<li class="align-items-center justify-content-end">
+				<div>
+					<button type="button" class="btn btn-primary text-nowrap" onclick="reservedSearch()">조회</button>
 				</div>
 			</li>
 			<li>
@@ -60,23 +53,6 @@
 									</tr>
 								</thead>
 								<tbody>
-									<!-- <tr>
-										<td>1</td>
-										<td>지마켓</td>
-										<td>100,000</td>
-										<td>
-											<button type="button" class="numSelectBtn">
-												<i class="dx-icon-check"></i>
-												<span class="visually-hidden">지정</span>
-											</button>
-										</td>
-										<td>
-											<button type="button" class="numDelBtn">
-												<i class="dx-icon-close"></i>
-												<span class="visually-hidden">삭제</span>
-											</button>
-										</td>
-									</tr> -->
 									<tr class="no-data">
 										<td class="py-3 text-center" colspan="5">요청번호를 조회하세요.</td>
 									</tr>
@@ -90,6 +66,13 @@
 					</div>
 				</div>
 			</li>	
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">요청번호</div>
+				<div class="col">
+					<input type="text" name="reserved4" id="reserved4" class="form-control me-2" value="미지정" maxlength="20" readonly>					
+				</div>
+			</li>
+			
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">회신번호</div>
 				<div class="col d-flex">					
