@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.web.gmarket.bulk.db.mapper.DbSendMapper">
+
+	<resultMap id="DbSendResultMap" type="com.web.gmarket.bulk.db.dto.DbSendDto">
+		<result property="reserved4" column="RESERVED4" />
+		<result property="tranPr" column="TRAN_PR" />
+		<result property="cnt" column="CNT" />
+		<result property="resultTable" column="RESULT_TABLE" />
+	</resultMap>
+	
+	<select id="selectDbSendList" resultMap="DbSendResultMap">
+		SELECT
+			RESERVED4,
+			CASE WHEN #{companyCode} = 0 THEN '옥션' ELSE '지마켓' END AS TRAN_PR,
+			COUNT(RESERVED4) AS CNT,
+			'${tableName}' AS RESULT_TABLE
+		FROM ${tableName}
+		WHERE TRAN_STATUS IS NULL
+		GROUP BY RESERVED4
+		ORDER BY RESERVED4 DESC
+	</select>
+	
+	<select id="selectDbSendCount" resultType="int">
+		SELECT COUNT(*) AS CNT
+		FROM (
+			SELECT RESERVED4
+			FROM ${tableName}
+			WHERE TRAN_STATUS IS NULL
+			GROUP BY RESERVED4
+		) TOTAL
+	</select>
+
+    <delete id="deleteDbSend" parameterType="com.web.gmarket.bulk.db.dto.DbSendDto">
+        DELETE FROM ${tableName}
+        WHERE RESERVED4 = #{reserved4}
+        AND TRAN_STATUS IS NULL
+    </delete>
+
+</mapper>
