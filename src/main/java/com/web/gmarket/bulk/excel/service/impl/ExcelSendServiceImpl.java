@@ -27,7 +27,6 @@ import com.web.gmarket.bulk.excel.service.ExcelSendService;
 import com.web.gmarket.common.config.DynamicDataSourceService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.DBUtils;
-import com.web.gmarket.send.mapper.SendMapper;
 import com.web.gmarket.user.dto.UserDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -84,7 +83,6 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 					
 					switch(msgType) {
 						case ConstantsUtils.SMS:
-							getSendMapper(dbName).insertSmsEvent(null);
 					}
 					
 				}
@@ -550,9 +548,5 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 	
 	public BroadcastMsgMapper getBroadcastMsgMapper(String dbName) {
 		return dynamicDataSourceService.getMapper(dbName, BroadcastMsgMapper.class);
-	}
-	
-	public SendMapper getSendMapper(String dbName) {
-		return dynamicDataSourceService.getMapper(dbName, SendMapper.class);
 	}
 }
