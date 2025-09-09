@@ -8,6 +8,7 @@
 		<result property="reserved4" column="RESERVED4" />
 		<result property="tranPr" column="TRAN_PR" />
 		<result property="cnt" column="CNT" />
+		<result property="resultCompany" column="RESULT_COMPANY" />
 		<result property="resultTable" column="RESULT_TABLE" />
 	</resultMap>
 	
@@ -19,6 +20,7 @@
 			RESERVED4,
 			CASE WHEN #{companyCode} = 0 THEN '옥션' ELSE '지마켓' END AS TRAN_PR,
 			COUNT(RESERVED4) AS CNT,
+			'${companyCode}' AS RESULT_COMPANY,
 			'${tableName}' AS RESULT_TABLE
 		FROM ${tableName}
 		WHERE TRAN_STATUS IS NULL

@@ -17,7 +17,8 @@ public class DbSendDto {
 	// 조회 컬럼
 	private String reserved4;
 	private String tranPr;
-	private String cnt;
+	private Integer cnt;
+	private Integer resultCompany;
 	private String resultTable;
 	
 	public Integer getCompanyCode() {
@@ -60,12 +61,20 @@ public class DbSendDto {
 		this.tranPr = tranPr;
 	}
 	
-	public String getCnt() {
+	public Integer getCnt() {
 		return cnt;
 	}
 	
-	public void setCnt(String cnt) {
+	public void setCnt(Integer cnt) {
 		this.cnt = cnt;
+	}
+	
+	public Integer getResultCompany() {
+		return resultCompany;
+	}
+	
+	public void setResultCompany(Integer resultCompany) {
+		this.resultCompany = resultCompany;
 	}
 	
 	public String getResultTable() {
