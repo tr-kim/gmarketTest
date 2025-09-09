@@ -406,40 +406,51 @@ $(function () {
 function onlyNumber(element){
 	element.value = element.value.replace(/[^0-9]/g,'');
 }
+
+
 // 요청번호 조회
-function reservedSearch() {
-    const messageType = document.getElementById('messageType').value.trim();
-
-	const companyCode = document.getElementById('large-category').value;
-
+function reservedSearch(){
+	// 로딩바 표시
 	showLoading(LOAD_PANEL, "#dbGrid");
-
+	
+	const messageType = document.getElementById('messageType').value.trim();
+	const companyCode = document.getElementById('large-category').value.trim();
+	
     fetch("/api/v1/dbSend/search", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ messageType: messageType,  companyCode: companyCode})
-
+        body: JSON.stringify({
+			messageType: messageType,
+			companyCode: companyCode
+		})
     })
     .then(res => res.json())
     .then(data => {
-
-        if (data.totalCount !== undefined) {
-            console.log("조회 성공:", data.data);
-			drawTable("dbGrid", data.data);
+		console.log(data);
+		
+		const totalCount = data.totalCount;
+		
+        if (totalCount !== undefined) {
+			// 테이블 그리기
+			const retData = data.data;
+			drawTable("dbGrid", retData);
         } else {
-            console.log("조회 실패:", data.message);
+			const message = data.message;
+			showDialogCustom(message);
         }
     })
     .catch(err => {
-        console.error("조회 요청 실패", err);
+        console.error("요청번호 조회 실패", err);
+		showDialogCustom('error');
     })
 	.finally(() => {
 		// 로딩바 숨김
 		hideLoading(LOAD_PANEL);
 	});
 }
+
 
 // 요청번호 삭제
 function reservedDelete(btn){
@@ -460,7 +471,6 @@ function reservedDelete(btn){
 			text: "삭제",
 			type: "default",
 			onClick: function(e) {
-				
 				fetch("/api/v1/dbSend/delete", {
 					method: "DELETE",
 					headers: {
@@ -474,17 +484,21 @@ function reservedDelete(btn){
 				})
 				.then(res => res.json())
 				.then(data => {
+					console.log(data);
+					
 					const status = data.status;
-
+					
 					if (status == "success") {
-						console.log("삭제 성공")
+						//재조회
 						reservedSearch();
 					} else {
-						console.log("삭제 실패")
+						const message = data.message;
+						showDialogCustom(message);
 					}
 				})
 				.catch(err => {
-					console.error("요청 번호 삭제 실패", err);
+					console.error("요청번호 삭제 실패", err);
+					showDialogCustom('error');
 				});
 				return { result: "ok" };
 			}
@@ -505,6 +519,7 @@ function reservedDelete(btn){
 	});
 
 }
+
 
 // 문자 발송
 function sendMessage(){
@@ -552,6 +567,7 @@ function sendMessage(){
 		}
 	});
 }
+
 
 // 실패 시 초기화
 function resetTextGrid(input) {
@@ -655,26 +671,25 @@ function drawTable(containerId, data){
 	const table = container.querySelector("table");
 	const spacer = container.querySelector(".spacer");
 	
-	//if (!data || data.length === 0) return;
 	if (!data || data.length === 0) {
 		spacer.style.height = `auto`;
 		const tbody = table.querySelector("tbody");
 		tbody.innerHTML = ""; // 기존 행 제거
-
+		
 		const tr = document.createElement("tr");
 		tr.classList.add("no-data");
-
+		
 		const td = document.createElement("td");
 		td.className = "py-3 text-center";
 		td.colSpan = 5;
-		td.textContent = "조회된 요청번호가 없습니다.";
-
+		td.textContent = "조회된 데이터가 없습니다.";
+		
 		tr.appendChild(td);
 		tbody.appendChild(tr);
-
+		
 		// 건수 표시 0
 		document.querySelector("span.search_num").textContent = "0";
-
+		
 		//미지정
 		const reserved4 = document.getElementById("reserved4");
 		reserved4.value = '미지정';
@@ -682,14 +697,11 @@ function drawTable(containerId, data){
 	};
 	
 	const rowLength = data.length;
-	//const dataRow = data.textNumber;
-	console.log('data: ', data)
-	console.log('rowLength: ' , rowLength)
-	//console.log('dataRow: ' , dataRow)
 	
 	// 건수 표시
 	document.querySelector('span.search_num').textContent = rowLength.toLocaleString();
 	
+	// 요청번호 목록 표시
 	const tbody = table.querySelector("tbody");
 	tbody.innerHTML = ""; // 기존 내용 제거
 	
@@ -707,6 +719,7 @@ function drawTable(containerId, data){
 	renderVisibleRows(container, tbody, spacer, data, rowHeight, visibleRows);
 }
 
+
 //요청번호 지정
 function selectBtn(btn){
 	const row = btn.closest("tbody > tr");
@@ -714,3 +727,4 @@ function selectBtn(btn){
 	const reserved4 = document.getElementById("reserved4");
 	reserved4.value = reserved4Value.trim();
 }
+
