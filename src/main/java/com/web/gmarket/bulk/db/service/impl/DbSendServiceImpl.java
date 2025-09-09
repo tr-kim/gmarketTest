@@ -36,14 +36,13 @@ public class DbSendServiceImpl implements DbSendService {
 
 	// 삭제 추가
 	@Override
-	public int deleteDbSend(DbSendDto dbSendDto) {
-		String dbName = DBUtils.getDBName(dbSendDto.getCompanyCode());
-		
-		// 테이블명 세팅
-		dbSendDto.setTableName(resolveTableName(dbSendDto.getMessageType()));
-		
-		return getMapper(dbName).deleteDbSend(dbSendDto);
-	}
+    public int deleteDbSend(DbSendDto dbSendDto) {
+       
+        dbSendDto.setTableName(dbSendDto.getResultTable());
+
+        String dbName = DBUtils.getDBName(dbSendDto.getCompanyCode());
+        return getMapper(dbName).deleteDbSend(dbSendDto);
+    }
 	
 	private DbSendMapper getMapper(String dbName) {
 		return dynamicDataSourceService.getMapper(dbName, DbSendMapper.class);

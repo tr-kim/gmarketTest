@@ -444,10 +444,11 @@ function reservedSearch() {
 // 요청번호 삭제
 function reservedDelete(btn){
 	const row = btn.closest("tbody > tr");
+	const tds = row.querySelectorAll("td");
 
-	const reserved4 = row.querySelector("td").textContent;
-	const companyCode = document.getElementById('large-category').value;
-    const messageType = document.getElementById('messageType').value;
+	const reserved4 = tds[0].textContent;
+	const companyCode = tds[1].textContent == '옥션'? 0 : 1 ;
+	const resultTable = row.getAttribute("data-result-table");
 
 	const confirmDialog = DevExpress.ui.dialog.custom({
 		showTitle: false,
@@ -468,8 +469,8 @@ function reservedDelete(btn){
 					},
 					body: JSON.stringify({ 
 						reserved4: reserved4, 			
-						companyCode: companyCode,
-						messageType: messageType
+						resultTable: resultTable,
+						companyCode: companyCode
 					})
 
 				})
@@ -599,6 +600,7 @@ function renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visible
 	const fragment = document.createDocumentFragment();
 	for (let i = startRow; i < endRow; i++) {
 		const tr = document.createElement("tr");
+		tr.setAttribute('data-result-table', dataRow[i]?.resultTable ?? "");
 		
 		// no
 		const tdIdx = document.createElement("td");
