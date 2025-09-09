@@ -444,12 +444,11 @@ function reservedSearch() {
 // 요청번호 삭제
 function reservedDelete(btn){
 	const row = btn.closest("tbody > tr");
-	const tds = row.querySelectorAll("td");
-
-	const reserved4 = tds[0].textContent;
-	const companyCode = tds[1].textContent == '옥션'? 0 : 1 ;
+	
+	const reserved4 = row.getAttribute("data-reserved4");
+	const resultCompany = row.getAttribute("data-result-company");
 	const resultTable = row.getAttribute("data-result-table");
-
+	
 	const confirmDialog = DevExpress.ui.dialog.custom({
 		showTitle: false,
 		messageHtml: `
@@ -468,11 +467,10 @@ function reservedDelete(btn){
 						"Content-Type": "application/json"
 					},
 					body: JSON.stringify({ 
-						reserved4: reserved4, 			
-						resultTable: resultTable,
-						companyCode: companyCode
+						reserved4: reserved4,
+						resultCompany: resultCompany,
+						resultTable: resultTable
 					})
-
 				})
 				.then(res => res.json())
 				.then(data => {
@@ -595,14 +593,20 @@ function renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visible
 	
 	// tbody 클리어
 	while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
-
+	
 	// fragment로 필요한 행만 렌더링
 	const fragment = document.createDocumentFragment();
 	for (let i = startRow; i < endRow; i++) {
 		const tr = document.createElement("tr");
-		tr.setAttribute('data-result-table', dataRow[i]?.resultTable ?? "");
 		
-		// no
+		// tr에 data-* 속성 지정
+		tr.setAttribute('data-result-company', dataRow[i]?.resultCompany ?? ""); // 조회된 대분류
+		tr.setAttribute('data-result-table', dataRow[i]?.resultTable ?? ""); // 조회된 테이블명
+		tr.setAttribute("data-reserved4", dataRow[i]?.reserved4 ?? ""); // 요청번호
+		tr.setAttribute("data-tran-pr", dataRow[i]?.tranPr ?? ""); // 구분
+		tr.setAttribute("data-count", dataRow[i]?.cnt ?? ""); // 총건수
+		
+		// NO(요청번호)
 		const tdIdx = document.createElement("td");
 		tdIdx.textContent = dataRow[i]?.reserved4 ?? "";
 		tr.appendChild(tdIdx);
@@ -611,13 +615,13 @@ function renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visible
 		const tdVal = document.createElement("td");
 		tdVal.textContent = dataRow[i]?.tranPr ?? "";
 		tr.appendChild(tdVal);
-
-		//총건수
+		
+		// 총건수
 		const tdCnt = document.createElement("td");
 		tdCnt.textContent = dataRow[i]?.cnt ?? "";
 		tr.appendChild(tdCnt);
-
-		//지정
+		
+		// 지정
 		const tdSelect = document.createElement("td");
 		tdSelect.innerHTML = `
 			<button type="button" class="numSelectBtn" onclick="selectBtn(this)">
@@ -625,7 +629,7 @@ function renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visible
 				<span class="visually-hidden">지정</span>
 			</button>`;
 		tr.appendChild(tdSelect);
-
+		
 		//삭제
 		const tdDel = document.createElement("td");
 		tdDel.innerHTML = `

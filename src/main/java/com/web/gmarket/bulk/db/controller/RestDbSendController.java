@@ -33,7 +33,7 @@ public class RestDbSendController {
 	public void update() {
 	}
 	
-	//요청번호조회
+	//요청번호 조회
 	@PostMapping("/search")
 	public ResponseEntity<?> getDbSendList(@RequestBody DbSendDto dbSendDto) {
 		try {
@@ -59,7 +59,7 @@ public class RestDbSendController {
 		}
 	}
 	
-	//요청번호삭제
+	//요청번호 삭제
 	@DeleteMapping("/delete")
 	public ResponseEntity<?> delete(@RequestBody DbSendDto dbSendDto) {
 		try {
