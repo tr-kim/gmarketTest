@@ -244,3 +244,20 @@ input, textarea{
     --bs-btn-disabled-bg: transparent;
     --bs-btn-disabled-border-color: #0f6cbd;
 }
+.progressBar .dx-progressbar-container {
+    height: 15px;
+    background-color: #e6e6e6;
+    border-radius: 3px;
+}
+.progressBar .modal-con{
+    width: 400px;
+}
+.progressBar .dx-trackbar-wrapper.dx-progressbar-wrapper{
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+}
+.progressBar .dx-progressbar-status{
+    margin-bottom: .5rem;
+    margin-top: 0;
+}

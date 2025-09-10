@@ -12,7 +12,6 @@ public interface DbSendMapper {
 	List<DbSendDto> selectDbSendList(DbSendDto dbSendDto);
 	
 	int selectDbSendCount(DbSendDto dbSendDto);
-
-    int deleteDbSend(DbSendDto dbSendDto);
-
+	
+	int deleteDbSend(DbSendDto dbSendDto);
 }

@@ -207,7 +207,45 @@ window.addEventListener('load', function() {
 		});
 	}
 
+	const progressBarStatus = $('#progressBarStatus').dxProgressBar({
+		min: 0,
+		max: 100,
+		width: '100%',
+		showStatus: true,
+		elementAttr: { 'aria-label': 'Progress Bar' },
+		statusFormat(ratio) {
+			return `Loading: ${Math.round(ratio * 100)}%`;
+		}
+	}).dxProgressBar('instance');
+
+	// 전체 데이터 건수
+	const total = 50; 
+	let processed = 0;
+
+	// 데이터 처리하면서 진행률 업데이트
+	function processData() {
+
+		processed++;
+
+		const percent = Math.round((processed / total) * 100);
+		progressBarStatus.option('value', percent);
+
+		if (processed >= total) {
+			console.log("모든 데이터 처리 완료");
+		}
+	}
+
+	// 0.5초마다 데이터 처리
+	const interval = setInterval(() => {
+		processData();
+		if (processed >= total) {
+			clearInterval(interval);
+		}
+	}, 500);
+
 })
+
+
 
 function getAjax(url, param, successCallback, errorCallback) {
 	$.ajax({
