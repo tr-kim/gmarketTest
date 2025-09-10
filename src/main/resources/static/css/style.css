@@ -640,3 +640,21 @@ aside .psw_chg_btn:hover{
     resize: none;
     height: 400px;
 }
+/* db */
+#file-uploader .dx-fileuploader-wrapper{
+    padding: 0;
+}
+.dx-fileuploader-input-wrapper .dx-fileuploader-button{
+    width: 100%;
+    background-color: rgb(183 183 183 / 10%);
+    padding: 10px;
+    border-color: var(--dx-color-border);
+    min-height: 5rem;
+}
+.dx-fileuploader-input-wrapper .dx-fileuploader-button .dx-button-text{
+    font-weight: 100;
+    opacity: 0.5;
+}
+#dbSend .img-question:hover::before{
+    content: "이미지는 최대 2개 까지 가능합니다.";
+}
