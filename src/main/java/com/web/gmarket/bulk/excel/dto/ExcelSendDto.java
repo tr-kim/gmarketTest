@@ -101,16 +101,21 @@ public class ExcelSendDto {
 	private String splitSend = ConstantsUtils.FALG_N;
 	
 	// 분할 전송
-	private Integer splitMinute;
-	private Integer splitNum;
+	private Integer splitMinute = 0;
+	private Integer splitNum = 0;
 	
 	// 전송 범위 여부
 	private boolean tranCheckDefault = false;
 	
 	// 전송 범위
-	private Integer tranRangeStart;
-	private Integer tranRangeEnd;
+	private Integer tranRangeStart = 0;
+	private Integer tranRangeEnd = 0;
 	
 	// 이미지 유형 0 : image_path_1, 1 : image_path_1, image_path_2, 기타 image_path_2
-	private Integer preViewFlag;
+	private Integer preViewFlag = 0;
+	
+	// 이미지 경로
+	private String imagePath01;
+	private String imagePath02;
+	private String imagePath03;
 }

@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,8 +31,7 @@ import com.web.gmarket.common.auth.dto.UserDetailsDto;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.ValidateHandingUtils;
 import com.web.gmarket.common.validation.ValidationSequence;
-import com.web.gmarket.user.dto.UserDto;
-import com.web.gmarket.user.service.UserService;
+import com.web.gmarket.common.vo.UploadProgress;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,11 +41,10 @@ import lombok.extern.slf4j.Slf4j;
 public class RestExcelSendController {
 	
 	@Autowired
-	private UserService userService;
-	
-	@Autowired
 	private ExcelSendService excelSendService;
 	
+	private final Map<String, UploadProgress> uploadStatus = new ConcurrentHashMap<>();
+	   
 	/**
 	 * 엑셀 파일 업로드
 	 * @throws IOException 
@@ -206,28 +209,51 @@ public class RestExcelSendController {
 	 */
 	@ResponseBody
 	@PostMapping("/insert")
-	public ResponseEntity<?> insert(Authentication authentication, @Validated(ValidationSequence.class) ExcelSendDto dto, Errors errors) throws IOException {
+	public ResponseEntity<?> insert(Authentication authentication, @Validated(ValidationSequence.class) ExcelSendDto dto, Errors errors) {
 		
 		Map<String, Object> result = new HashMap<>();
 		
-		UserDto userDto = (UserDto) authentication.getAuthorities();
-		
-		// 엑셀 발송 여부 체크
-		if(ConstantsUtils.FALG_N.equals(userDto.getExcelYn())) {
-			result.put(ConstantsUtils.CODE, ConstantsUtils.USESR_NOT_EXCEL_SEND);
-			result.put(ConstantsUtils.RESULT, "엑셀 발송을 할 수 없습니다.");
+		try {
+			
+			UserDetailsDto userDto = (UserDetailsDto) authentication.getPrincipal();
+			
+			// 엑셀 발송 여부 체크
+			if(ConstantsUtils.FALG_N.equals(userDto.getExcelYn())) {
+				result.put(ConstantsUtils.CODE, ConstantsUtils.USESR_NOT_EXCEL_SEND);
+				result.put(ConstantsUtils.RESULT, "엑셀 발송을 할 수 없습니다.");
+				
+				return ResponseEntity.status(HttpStatus.OK).body(result);
+			}
+			
+			// 유효성 체크
+			if(ValidateHandingUtils.validateHandling(errors) != null) {
+				return ValidateHandingUtils.validateHandling(errors);
+			}
+			
+			String jobId = UUID.randomUUID().toString();
+			uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "시작"));
+			
+			CompletableFuture.runAsync(() -> excelSendService.insertExcelSend(dto, uploadStatus, jobId));
+			
+			result.put(ConstantsUtils.CODE, ConstantsUtils.SUCCESS);
+			result.put(ConstantsUtils.RESULT, jobId);
 			
 			return ResponseEntity.status(HttpStatus.OK).body(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage());
+			
+			result.put(ConstantsUtils.CODE, ConstantsUtils.FAILD);
+			result.put(ConstantsUtils.RESULT, "엑셀 발송 중 에러가 발생했습니다.");
+			
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
-		
-		// 유효성 체크
-		if(ValidateHandingUtils.validateHandling(errors) != null) {
-			return ValidateHandingUtils.validateHandling(errors);
-		}
-		
-		excelSendService.insertExcelSend(userDto, dto);
-		
-		return ResponseEntity.status(HttpStatus.OK).body(result);
 	} 
+	
+	@GetMapping("/uploadStatus/{jobId}")
+    public ResponseEntity<UploadProgress> getUploadStatus(@PathVariable("jobId") String jobId) {
+        UploadProgress progress = uploadStatus.get(jobId);
+        return ResponseEntity.ok(progress != null ? progress : new UploadProgress(0, 0, 0, "작업을 찾을 수 없음"));
+    }
 	
 }

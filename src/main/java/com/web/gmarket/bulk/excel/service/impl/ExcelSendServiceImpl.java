@@ -9,6 +9,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -25,9 +27,11 @@ import com.web.gmarket.bulk.excel.dto.ExcelSendDto;
 import com.web.gmarket.bulk.excel.mapper.ExcelSendMapper;
 import com.web.gmarket.bulk.excel.service.ExcelSendService;
 import com.web.gmarket.common.config.DynamicDataSourceService;
+import com.web.gmarket.common.dto.CommonSendDto;
+import com.web.gmarket.common.mapper.CommonSendMapper;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.DBUtils;
-import com.web.gmarket.user.dto.UserDto;
+import com.web.gmarket.common.vo.UploadProgress;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,76 +43,126 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 	private DynamicDataSourceService dynamicDataSourceService;
 
 	@Override
-	@SuppressWarnings({"rawtypes" })
-	public int insertExcelSend(UserDto userDto, ExcelSendDto dto) {
+	public void insertExcelSend(ExcelSendDto dto, Map<String, UploadProgress> uploadStatus, String jobId) {
 
 		String dbName = DBUtils.getDBName(dto.getLargeCategory());
-		int resultCnt = -1;
-		
+
+		// 초기값 설정
+		List<String> cloneMessage = new ArrayList<>(); // 메시지 내용
+		List<String> cloneSubject = new ArrayList<>(); // 메시지 제목
+		List<List<String>> cellData = new ArrayList<>(); // 엑셀 데이터
+
 		try {
-			
-			ArrayList excelData[] = getExcelData(dto);
-			
+
+			uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "엑셀 데이터 가져오기 시작"));
+			// 엑셀 데이터 가져오기
+			int maxRows = getExcelData(dto, cellData, cloneMessage, cloneSubject, uploadStatus, jobId);
+			uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "엑셀 데이터 가져오기 성공"));
+
 			// yyyyMMddHHmmssSSS => yyyy-MM-dd HH:mm:ss:SSS 변환
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS");
-			LocalDateTime date = LocalDateTime.parse(excelData[0].get(2).toString(), formatter);
-			String regTime = dto.getTimeType() == 0 ? "CONVERT(char(20), GETDATE(), 120)" : date.toString();
-			int bulkCnt = dto.isTranCheckDefault() ? dto.getTranRangeEnd() : excelData.length;					// 대량 발송 갯수
-			
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+			String reqTime = dto.getTimeType() == 0 ? "CONVERT(CHAR(20), GETDATE(), 120)" : LocalDateTime.parse(cellData.get(0).get(2).toString(), formatter).toString();
+
+			int bulkCnt = dto.isTranCheckDefault() ? dto.getTranRangeEnd() : cellData.size(); // 대량 발송 갯수
+			String bMsgKey = String.format("%s%s", Long.toString(System.currentTimeMillis()).substring(0, 10), dto.getUserId()); // 대량 발송 키 생성
+
 			BroadcastMsgDto broadcastMsgDto = BroadcastMsgDto.builder()
-					.bMsgKey(String.format("%s%s", Long.toString(System.currentTimeMillis()).substring(0, 10), dto.getUserId()))
+					.bMsgKey(bMsgKey)
 					.loginId(dto.getUserId())
 					.userId(dto.getUserId())
-					.title((String) excelData[0].get(1))
+					.title(cloneSubject.get(0).trim())
+					.msg(cloneMessage.get(0).trim())
+					.callbackNo(cellData.get(0).get(1))
 					.cnt(bulkCnt)
 					.succCnt(0)
 					.failCnt(0)
 					.status(1)
 					.svcType(String.format("%s_%s", "EXCEL", dto.getMsgType().toUpperCase()))
 					.sendInfo(dto.getSendInfo())
-					.reqTime(regTime)
+					.reqTime(reqTime)
+					.timeType(dto.getTimeType())
 					.build();
+
+			// 대량 발송 등록
+			getBroadcastMsgMapper(dbName).insertBroadcastMsg(broadcastMsgDto);
+
+			int cnt = dto.isTranCheckDefault() ? dto.getTranRangeEnd() : maxRows;
+			int k = dto.isTranCheckDefault() ? dto.getTranRangeStart() - 1 : 0;
+
+			uploadStatus.put(jobId, new UploadProgress(0, 0, cnt, "엑셀 데이터 DB 등록 시작"));
 			
-			int cnt = getBroadcastMsgMapper(dbName).insertBroadcastMsg(broadcastMsgDto);
-			int sendCnt = 1;
-			int k = dto.isTranCheckDefault() ? dto.getTranRangeStart() - 1 : 0;;
-			
-			if(cnt > 0) {
+			if (cnt > 0) {
+
+				int succCnt = 0;
+				int failCnt = 0;
+				int sendCnt = 1;
 				String msgType = dto.getMsgType();
-				
-				
-				
-				for(;k < bulkCnt; k++, sendCnt++) {
-					String sReqTime = dto.getTimeType() == 0 ? "CONVERT(char(20), GETDATE(), 120)" : (String) excelData[k].get(2);
+
+				for (; k < bulkCnt; k++, sendCnt++) {
+
+					var item = cellData.get(k);
 					
-					switch(msgType) {
-						case ConstantsUtils.SMS:
+					String sReqTime = dto.getTimeType() == 0 ? "CONVERT(char(20), GETDATE(), 120)" : LocalDateTime.parse(item.get(2).toString(), formatter).toString();
+
+					CommonSendDto commonSendDto = CommonSendDto.builder().build();
+					commonSendDto.setTranDate(sReqTime);
+					commonSendDto.setTranPhone(((String) item.get(0)).trim());
+					commonSendDto.setTranCallback(((String) item.get(1)).trim());
+					commonSendDto.setTranStatus(1);
+					if (ConstantsUtils.LMS.equals(msgType) || ConstantsUtils.MMS.equals(msgType)) commonSendDto.setTranTitle(cloneSubject.get(k).toString());
+					commonSendDto.setTranMsg(cloneMessage.get(k).toString());
+					commonSendDto.setBMsgKey(bMsgKey);
+					commonSendDto.setReserved3(dto.getReserved());
+
+					int flagCnt = 0;
+					switch (msgType) {
+					case ConstantsUtils.SMS:
+						flagCnt = getCommonSendMapper(dbName).insertSmsEvent(commonSendDto);
+						break;
+					case ConstantsUtils.LMS:
+						flagCnt = getCommonSendMapper(dbName).insertLmsEvent(commonSendDto);
+						break;
+					case ConstantsUtils.MMS:
+						flagCnt = getCommonSendMapper(dbName).insertMmsEvent(commonSendDto);
+						break;
+					default:
+						break;
 					}
+
+					getBroadcastMsgMapper(dbName).updateBroadcastMsg(bMsgKey, flagCnt > 0 ? succCnt++ : failCnt++, flagCnt > 0 ? ConstantsUtils.FALG_T : ConstantsUtils.FALG_F);
 					
+					int progress = (sendCnt * 100) / cnt;
+					uploadStatus.put(jobId, new UploadProgress(progress, sendCnt, cnt, String.format("%d/%d 행 처리 완료", sendCnt, cnt)));
 				}
-				resultCnt = getMapper(dbName).insertExcelSend(dto);
 			}
 			
+			uploadStatus.put(jobId, new UploadProgress(100, cnt, cnt, String.format("엑셀 데이터 완료", cnt, cnt)));
+
 		} catch (ArrayIndexOutOfBoundsException e) {
+			uploadStatus.put(jobId, new UploadProgress(0, 0, 100, "엑셀 데이터 DB 등록 오류 발생"));
 			log.error(e.getMessage());
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
+			uploadStatus.put(jobId, new UploadProgress(0, 0, 100, "엑셀 데이터 DB 등록 오류 발생"));
 			log.error(e.getMessage());
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
+			uploadStatus.put(jobId, new UploadProgress(0, 0, 100, "엑셀 데이터 DB 등록 오류 발생"));
 			log.error(e.getMessage());
 			e.printStackTrace();
 		} catch (Exception e) {
+			uploadStatus.put(jobId, new UploadProgress(0, 0, 100, "엑셀 데이터 DB 등록 오류 발생"));
 			log.error(e.getMessage());
 			e.printStackTrace();
 		}
-
-		return resultCnt;
 	}
 
 	// 엑셀에 있는 데이터를 ArrayList에 담기
 	@SuppressWarnings({ "resource", "unchecked", "rawtypes" })
-	public static ArrayList[] getExcelData(ExcelSendDto dto) throws FileNotFoundException, IllegalArgumentException, ArrayIndexOutOfBoundsException, Exception {
+	public static int getExcelData(ExcelSendDto dto, List<List<String>> cellData, List<String> cloneMessage,
+			List<String> cloneSubject, Map<String, UploadProgress> uploadStatus, String jobId)
+			throws FileNotFoundException, IllegalArgumentException, ArrayIndexOutOfBoundsException, Exception {
+
 		
 		String excelName = dto.getExcelFileName();
 		String sheetName = dto.getSheet();
@@ -116,9 +170,11 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 		File file = new File(filePath);
 
+		uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "엑셀 파일 확인"));
 		if (!file.exists()) {
 			throw new FileNotFoundException("엑셀 파일을 찾을 수 없습니다: " + excelName);
 		}
+		uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "엑셀 파일 읽기 성공"));
 
 		String extension = getFileExtension(filePath);
 
@@ -132,16 +188,16 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 		try (FileInputStream fis = new FileInputStream(file)) {
 			switch (extension.toLowerCase()) {
-				case "xlsx":
-					workbook = new XSSFWorkbook(fis);
-					sheetNum = workbook.getNumberOfSheets();
-					break;
-				case "xls":
-					workbook = new HSSFWorkbook(fis);
-					sheetNum = workbook.getNumberOfSheets();
-					break;
-				default:
-					throw new IllegalArgumentException("지원하지 않는 파일 형식입니다: " + extension);
+			case "xlsx":
+				workbook = new XSSFWorkbook(fis);
+				sheetNum = workbook.getNumberOfSheets();
+				break;
+			case "xls":
+				workbook = new HSSFWorkbook(fis);
+				sheetNum = workbook.getNumberOfSheets();
+				break;
+			default:
+				throw new IllegalArgumentException("지원하지 않는 파일 형식입니다: " + extension);
 			}
 		}
 
@@ -160,6 +216,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 		sheet = workbook.getSheetAt(sheetCount);
 		int maxRows = sheet.getLastRowNum() + 1; // 행 수는 +1
 		int maxCells = 0;
+
 		for (Row row : sheet) {
 			if (row != null && row.getLastCellNum() > maxCells) {
 				maxCells = row.getLastCellNum();
@@ -167,25 +224,35 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 		}
 
 		// 수신거부 체크인 경우 메시지 내용 + 수신거버 번호, 아닌 경우 메시지 내용
-		String content = dto.isRejectCheckDefault() ? String.format("%s%s", dto.getMsgWrite(), dto.getRejectNum())
-				: dto.getMsgWrite();
+		String content = dto.isRejectCheckDefault() ? String.format("%s%s", dto.getMsgWrite(), dto.getRejectNum()) : dto.getMsgWrite();
 		String subject = dto.getMsgTitle();
 
-		String excelValue = "";
-		String calleeValue = "";
-		String callbackValue = "";
-		char code = 'A';
+//		String[] cloneMessage = new String[maxRows];
+//		for (int i = 0; i < maxRows; i++) {
+//			cloneMessage[i] = content;
+//		}
 
-		int calleeFlag = dto.getCalleeSelect();
-		int callbackFlag = dto.getCallbackSelect();
+//		String[] cloneSubject = new String[maxRows];
+//		for (int i = 0; i < maxRows; i++) {
+//			cloneSubject[i] = subject;
+//		}
 
-		Calendar cal = null;
+//		String[] cellData = new ArrayList[maxRows];
+//		for (int i = 0; i < maxRows; i++) {
+//			cellData[i] = new ArrayList();
+//		}
 
-		// 0 : 직접 입력일 경우 입력된 번호, 1 : 아닌 경우 시트 로우 값
-		String callee = dto.getCalleeSelect() == 0 ? dto.getCallee()
-				: String.format("%d", dto.getCallee().charAt(0) - 'A');
-		String callback = dto.getCallbackSelect() == 0 ? dto.getCallback()
-				: String.format("%d", dto.getCallback().charAt(0) - 'A');
+		for (int i = 0; i < maxRows; i++) {
+			cloneMessage.add(content);
+		}
+
+		for (int i = 0; i < maxRows; i++) {
+			cloneSubject.add(subject);
+		}
+
+		for (int i = 0; i < maxRows; i++) {
+			cellData.add(new ArrayList());
+		}
 
 		// 전송 유형 0 : 즉시, 1 : 예약
 		int timeType = dto.getTimeType();
@@ -193,39 +260,43 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 		// 분할 유형 true > 1 : 분할, false > 0
 		int shareType = dto.isTranCheckDefault() ? 1 : 0;
 
-		String cloneMessage[] = new String[maxRows];
-		for (int i = 0; i < maxRows; i++) {
-			cloneMessage[i] = content;
-		}
+		// 0 : 직접 입력일 경우 입력된 번호, 1 : 아닌 경우 시트 Row 값
+		String callee = dto.getCalleeSelect() == 0 ? dto.getCallee() : String.format("%d", dto.getCallee().charAt(0) - 'A');
+		String callback = dto.getCallbackSelect() == 0 ? dto.getCallback() : String.format("%d", dto.getCallback().charAt(0) - 'A');
 
-		String cloneSubject[] = new String[maxRows];
-		for (int i = 0; i < maxRows; i++) {
-			cloneSubject[i] = subject;
-		}
+		// 수신번호 유형 0 : 직접입력, 1 : 시트 선택
+		int calleeFlag = dto.getCalleeSelect();
 
-		ArrayList cellData[] = new ArrayList[maxRows];
-		for (int i = 0; i < maxRows; i++) {
-			cellData[i] = new ArrayList();
-		}
-
+		// 발신번호 유형 0 : 직접입력, 1 : 시트 선택
+		int callbackFlag = dto.getCallbackSelect();
+		
+		// 날짜 형식 변환
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
-		LocalDateTime date = LocalDateTime.parse(dto.getSendTime(), formatter);
+		
+		// 분할 전송 아닌 경우 현재시간, 전송인 경우 입력된 값으로 변환
+		LocalDateTime date = ConstantsUtils.FALG_N.equals(dto.getSplitSend()) ? LocalDateTime.now() : LocalDateTime.parse(dto.getSendTime(), formatter);
 
-		int int_strY1 = -1;
-		int int_strM1 = -1;
-		int int_strD1 = -1;
-		int int_reqHour = -1;
-		int int_reqMin = -1;
-		int int_reqSec = -1;
+		int intStrY1 = -1;
+		int intStrM1 = -1;
+		int intStrD1 = -1;
+		int intReqHour = -1;
+		int intReqMin = -1;
+		int intReqSec = -1;
 		int perMinuteFlag = 0;
 		int cntFlag = 0;
 
 		int tranCnt = dto.getSplitNum();
 		int perMinute = dto.getSplitMinute();
 
+		String excelValue = "";
+		String calleeValue = "";
+		String callbackValue = "";
+		char code = 'A';
+
 		Date day = null;
 		SimpleDateFormat sdf = null;
-
+		Calendar cal = null;
+		
 		for (int j = 0; j < maxRows; j++) {
 			Row row = sheet.getRow(j);
 			code = 'A';
@@ -260,19 +331,19 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 					if (callbackCell != null) {
 						switch (callbackCell.getCellType()) { // 셀의내용의 타입 선택
-							case NUMERIC:
-								callbackValue = "" + (int) callbackCell.getNumericCellValue(); // double형 -> long형
-								break;
-							case STRING:
-								callbackValue = "" + callbackCell.getStringCellValue(); // String
-								break;
-							case BLANK:
-								callbackValue = "";
-								break;
-							case ERROR:
-								callbackValue = "" + callbackCell.getErrorCellValue(); // byte
-								break;
-							default:
+						case NUMERIC:
+							callbackValue = "" + (int) callbackCell.getNumericCellValue(); // double형 -> long형
+							break;
+						case STRING:
+							callbackValue = "" + callbackCell.getStringCellValue(); // String
+							break;
+						case BLANK:
+							callbackValue = "";
+							break;
+						case ERROR:
+							callbackValue = "" + callbackCell.getErrorCellValue(); // byte
+							break;
+						default:
 						}
 					} else {
 						callbackValue = "";
@@ -284,27 +355,30 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 					if (cell != null) {
 						switch (cell.getCellType()) { // 셀의내용의 타입 선택
-							case NUMERIC:
-								excelValue = "" + (int) cell.getNumericCellValue(); // double형 -> long형
-								break;
-							case STRING:
-								excelValue = "" + cell.getStringCellValue(); // String
-								break;
-							case BLANK:
-								excelValue = "";
-								break;
-							case ERROR:
-								excelValue = "" + cell.getErrorCellValue(); // byte
-								break;
-							default:
+						case NUMERIC:
+							excelValue = "" + (int) cell.getNumericCellValue(); // double형 -> long형
+							break;
+						case STRING:
+							excelValue = "" + cell.getStringCellValue(); // String
+							break;
+						case BLANK:
+							excelValue = "";
+							break;
+						case ERROR:
+							excelValue = "" + cell.getErrorCellValue(); // byte
+							break;
+						default:
 						}
 
 						// 메세지 출력
 						try {
-							
-							cloneMessage[j] = cloneMessage[j].replace("[%" + code + "%]", excelValue);
-							cloneSubject[j] = cloneSubject[j].replace("[%" + code + "%]", excelValue);
-							
+
+//							cloneMessage[j] = cloneMessage[j].replace("[%" + code + "%]", excelValue);
+//							cloneSubject[j] = cloneSubject[j].replace("[%" + code + "%]", excelValue);
+
+							cloneMessage.add(cloneMessage.get(j).replace("[%" + code + "%]", excelValue));
+							cloneSubject.add(cloneSubject.get(j).replace("[%" + code + "%]", excelValue));
+
 						} catch (ArrayIndexOutOfBoundsException e) {
 							throw new ArrayIndexOutOfBoundsException(e.getMessage());
 						}
@@ -313,14 +387,17 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 					if (c == 0) {
 
 						// 수신번호 저장 [0]
-						cellData[j].add((calleeFlag == 1 ? calleeValue : callee));
+//						cellData[j].add((calleeFlag == 1 ? calleeValue : callee));
+						cellData.get(j).add(calleeFlag == 1 ? calleeValue : callee);
 
 						// 회신번호 저장 [1]
-						cellData[j].add((callbackFlag == 1 ? callbackValue : callback));
+//						cellData[j].add((callbackFlag == 1 ? callbackValue : callback));
+						cellData.get(j).add(callbackFlag == 1 ? callbackValue : callback);
 
 						// 전송시간 출력 [2]
 						if (timeType == 0) { // 즉시
-							cellData[j].add("즉시전송");
+//							cellData[j].add("즉시전송");
+							cellData.get(j).add("즉시전송");
 
 						} else if (timeType == 1) { // 예약
 
@@ -329,58 +406,59 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 								if (perMinuteFlag == 0) {
 									// timeType
 									// 0: 즉시 1:예약
-									int_strY1 = date.getYear();
-									int_strM1 = date.getMonthValue();
-									int_strD1 = date.getDayOfMonth();
-									int_reqHour = date.getHour();
-									int_reqMin = date.getMinute();
-									int_reqSec = date.getSecond();
+									intStrY1 = date.getYear();
+									intStrM1 = date.getMonthValue();
+									intStrD1 = date.getDayOfMonth();
+									intReqHour = date.getHour();
+									intReqMin = date.getMinute();
+									intReqSec = date.getSecond();
 									perMinuteFlag = 1;
 								} else {
 									if (cntFlag % tranCnt == 0) {
-										int_reqMin += perMinute;
+										intReqMin += perMinute;
 									}
 								}
 
 								cntFlag++;
 
-								if (int_reqMin > 59) {
-									int_reqHour += (int_reqMin / 60); // 60으로 나눠지는만큼 몫이 더해져야할 시간이므로 더해준다.
-									int_reqMin %= 60;
+								if (intReqMin > 59) {
+									intReqHour += (intReqMin / 60); // 60으로 나눠지는만큼 몫이 더해져야할 시간이므로 더해준다.
+									intReqMin %= 60;
 
-									if (int_reqHour > 23) { // 시간이 24시간이상일경우 날짜를 하루 더해준다.
-										int_strD1 += (int_reqHour / 24);
-										int_reqHour %= 24;
-										
-										int[] addMonthAndDate =  checkValidDate(int_strY1, int_strM1, int_strD1);
-										int_strY1 = addMonthAndDate[0]; // 변환된 년
-										int_strM1 = addMonthAndDate[1]; // 변환된 월
-										int_strD1 = addMonthAndDate[2]; // 변환된 일
+									if (intReqHour > 23) { // 시간이 24시간이상일경우 날짜를 하루 더해준다.
+										intStrD1 += (intReqHour / 24);
+										intReqHour %= 24;
+
+										int[] addMonthAndDate = checkValidDate(intStrY1, intStrM1, intStrD1);
+										intStrY1 = addMonthAndDate[0]; // 변환된 년
+										intStrM1 = addMonthAndDate[1]; // 변환된 월
+										intStrD1 = addMonthAndDate[2]; // 변환된 일
 									}
 								}
 
-								cal.set(int_strY1, int_strM1 - 1, int_strD1, int_reqHour, int_reqMin, int_reqSec);
+								cal.set(intStrY1, intStrM1 - 1, intStrD1, intReqHour, intReqMin, intReqSec);
 								day = cal.getTime();
 								sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
 							} else { // 분할전송이 아닐시
 
 								cal = Calendar.getInstance();
-								cal.set(date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth(), date.getHour(), date.getMinute(), date.getSecond());
+								cal.set(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute(), date.getSecond());
 								day = cal.getTime();
 								sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 							}
 
 							log.info("sdf.format(day) = [" + sdf.format(day) + "]");
-							
+
 							// 예약시간 저장 [2]
-							cellData[j].add(sdf.format(day));
+//							cellData[j].add(sdf.format(day));
+							cellData.get(j).add(sdf.format(day));
 						}
 					}
-					
+
 					code++;
 				}
-				
+
 			} else {
 				excelValue = "";
 				calleeValue = "";
@@ -389,9 +467,12 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 				for (short c = 0; c < maxCells; c++) {
 					try {
 
-						cloneMessage[j] = cloneMessage[j].replace("[%" + code + "%]", "");
-						cloneSubject[j] = cloneSubject[j].replace("[%" + code + "%]", "");
-						
+//						cloneMessage[j] = cloneMessage[j].replace("[%" + code + "%]", "");
+//						cloneSubject[j] = cloneSubject[j].replace("[%" + code + "%]", "");
+
+						cloneMessage.add(cloneMessage.get(j).replace("[%" + code + "%]", ""));
+						cloneSubject.add(cloneSubject.get(j).replace("[%" + code + "%]", ""));
+
 					} catch (ArrayIndexOutOfBoundsException e) {
 						throw new ArrayIndexOutOfBoundsException(e.getMessage());
 					}
@@ -399,68 +480,71 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 					if (c == 0) {
 
 						// 수신번호 저장 [0]
-						cellData[j].add((calleeFlag == 1 ? calleeValue : callee));
+//						cellData[j].add((calleeFlag == 1 ? calleeValue : callee));
+						cellData.get(j).add(calleeFlag == 1 ? calleeValue : callee);
 
 						// 회신번호 저장 [1]
-						cellData[j].add((callbackFlag == 1 ? callbackValue : callback));
+//						cellData[j].add((callbackFlag == 1 ? callbackValue : callback));
+						cellData.get(j).add(callbackFlag == 1 ? callbackValue : callback);
 
 						// 전송시간 출력 [2]
 						if (timeType == 0) { // 즉시
-							cellData[j].add("즉시전송");
+//							cellData[j].add("즉시전송");
+							cellData.get(j).add("즉시전송");
 
 						} else if (timeType == 1) { // 예약
 							if (shareType == 1) { // 분할전송일시
 								cal = Calendar.getInstance();
-								
+
 								if (perMinuteFlag == 0) {
 									// timeType
 									// 0: 즉시 1:예약
-									int_strY1 = date.getYear();
-									int_strM1 = date.getMonthValue();
-									int_strD1 = date.getDayOfMonth();
-									int_reqHour = date.getHour();
-									int_reqMin = date.getMinute();
-									int_reqSec = date.getSecond();
+									intStrY1 = date.getYear();
+									intStrM1 = date.getMonthValue();
+									intStrD1 = date.getDayOfMonth();
+									intReqHour = date.getHour();
+									intReqMin = date.getMinute();
+									intReqSec = date.getSecond();
 									perMinuteFlag = 1;
 								} else {
 									if (cntFlag % tranCnt == 0) {
-										int_reqMin += perMinute;
+										intReqMin += perMinute;
 									}
 								}
-								
-								cntFlag++;
-								
-								if (int_reqMin > 59) {
-									int_reqHour += (int_reqMin / 60); // 60으로 나눠지는만큼 몫이 더해져야할 시간이므로 더해준다.
-									int_reqMin %= 60;
-									if (int_reqHour > 23) { // 시간이 24시간이상일경우 날짜를 하루 더해준다.
-										int_strD1 += (int_reqHour / 24);
-										int_reqHour %= 24;
 
-										int[] addMonthAndDate = checkValidDate(int_strY1, int_strM1, int_strD1);
-										
-										int_strY1 = addMonthAndDate[0]; // 변환된 년
-										int_strM1 = addMonthAndDate[1]; // 변환된 월
-										int_strD1 = addMonthAndDate[2]; // 변환된 일
+								cntFlag++;
+
+								if (intReqMin > 59) {
+									intReqHour += (intReqMin / 60); // 60으로 나눠지는만큼 몫이 더해져야할 시간이므로 더해준다.
+									intReqMin %= 60;
+									if (intReqHour > 23) { // 시간이 24시간이상일경우 날짜를 하루 더해준다.
+										intStrD1 += (intReqHour / 24);
+										intReqHour %= 24;
+
+										int[] addMonthAndDate = checkValidDate(intStrY1, intStrM1, intStrD1);
+
+										intStrY1 = addMonthAndDate[0]; // 변환된 년
+										intStrM1 = addMonthAndDate[1]; // 변환된 월
+										intStrD1 = addMonthAndDate[2]; // 변환된 일
 									}
 								}
-								
-								cal.set(int_strY1, int_strM1 - 1, int_strD1, int_reqHour, int_reqMin, int_reqSec);
+
+								cal.set(intStrY1, intStrM1 - 1, intStrD1, intReqHour, intReqMin, intReqSec);
 								day = cal.getTime();
 								sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 							} else { // 분할전송이 아닐시
 
 								cal = Calendar.getInstance();
-								cal.set(date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth(),
-										date.getHour(), date.getMinute(), date.getSecond());
+								cal.set(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute(), date.getSecond());
 								day = cal.getTime();
 								sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 							}
-							
+
 							log.info("sdf.format(day) = [" + sdf.format(day) + "]");
-							
+
 							// 예약시간 저장 [2]
-							cellData[j].add(sdf.format(day));
+//							cellData[j].add(sdf.format(day));
+							cellData.get(j).add(sdf.format(day));
 						}
 					}
 				}
@@ -468,11 +552,8 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 			}
 		}
 
-		return cellData;
+		return maxRows;
 	}
-	
-	
-	
 
 	// 확장자 가져오기
 	private static String getFileExtension(String fileName) {
@@ -499,7 +580,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 			addMonthAndDate[1] = month;
 			addMonthAndDate[2] = date;
 		}
-		
+
 		return addMonthAndDate;
 	}
 
@@ -545,8 +626,12 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 	public ExcelSendMapper getMapper(String dbName) {
 		return dynamicDataSourceService.getMapper(dbName, ExcelSendMapper.class);
 	}
-	
+
 	public BroadcastMsgMapper getBroadcastMsgMapper(String dbName) {
 		return dynamicDataSourceService.getMapper(dbName, BroadcastMsgMapper.class);
+	}
+
+	public CommonSendMapper getCommonSendMapper(String dbName) {
+		return dynamicDataSourceService.getMapper(dbName, CommonSendMapper.class);
 	}
 }

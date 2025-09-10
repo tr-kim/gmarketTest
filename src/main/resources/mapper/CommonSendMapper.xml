@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.web.gmarket.common.mapper.CommonSendMapper">
+	
+	<insert id="insertSmsEvent" parameterType="com.web.gmarket.common.dto.CommonSendDto">
+		/*
+			CommonSendMapper.insertSmsEvent
+		*/
+		<choose>
+			<when test="timeType > 0">
+				INSERT INTO SMSCLI_TBL_EVENT(
+					TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_MSG, B_MSG_KEY, RESERVED3
+				) VALUES(
+					#{tranPhone}, #{tranCallback}, #{tranStatus}, #{tranDate}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}
+				)
+			</when>
+			<otherwise>
+				INSERT INTO SMSCLI_TBL_EVENT(
+					TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_MSG, B_MSG_KEY, RESERVED3
+				) VALUES(
+					#{tranPhone}, #{tranCallback}, #{tranStatus}, ${tranDate}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}
+				)
+			</otherwise>
+		</choose>
+	</insert>
+	
+	<insert id="insertLmsEvent" parameterType="com.web.gmarket.common.dto.CommonSendDto">
+		/*
+			CommonSendMapper.insertLmsEvent
+		*/
+		<choose>
+			<when test="timeType > 0">
+				INSERT INTO LMSCLI_TBL_EVENT(
+					TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_TITLE, TRAN_MSG, B_MSG_KEY, RESERVED3
+				) VALUES(
+					#{tranPhone}, #{tranCallback}, #{tranStatus}, #{tranDate}, #{tranTitle}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}
+				)
+			</when>
+			<otherwise>
+				INSERT INTO LMSCLI_TBL_EVENT(
+					TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_TITLE, TRAN_MSG, B_MSG_KEY, RESERVED3
+				) VALUES(
+					#{tranPhone}, #{tranCallback}, #{tranStatus}, ${tranDate}, #{tranTitle}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}
+				)
+			</otherwise>
+		</choose>
+	</insert>
+	
+	<insert id="insertMmsEvent" parameterType="com.web.gmarket.common.dto.CommonSendDto">
+		/*
+			CommonSendMapper.insertMmsEvent
+		*/
+		<choose>
+			<when test="timeType > 0">
+				INSERT INTO MMSCLI_TBL_EVENT(
+					TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_TITLE, TRAN_MSG, B_MSG_KEY, RESERVED3, IMAGE_PATH_01, IMAGE_PATH_02, IMAGE_PATH_03
+				) VALUES(
+					#{tranPhone}, #{tranCallback}, #{tranStatus}, #{tranDate},  #{tranTitle}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}, #{imagePath01}, #{imagePath02}, #{imagePath03}
+				)
+			</when>
+			<otherwise>
+				INSERT INTO MMSCLI_TBL_EVENT(
+					TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_TITLE, TRAN_MSG, B_MSG_KEY, RESERVED3, IMAGE_PATH_01, IMAGE_PATH_02, IMAGE_PATH_03
+				) VALUES(
+					#{tranPhone}, #{tranCallback}, #{tranStatus}, ${tranDate},  #{tranTitle}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}, #{imagePath01}, #{imagePath02}, #{imagePath03}
+				)
+			</otherwise>
+		</choose>
+	</insert>
+	
+</mapper>

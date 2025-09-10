@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.gmarket.bulk.excel.dto.ExcelSendDto;
 import com.web.gmarket.common.utils.ConstantsUtils;
-import com.web.gmarket.user.dto.UserDto;
+import com.web.gmarket.common.vo.UploadProgress;
 
 public interface ExcelSendService {
 	
@@ -41,7 +41,7 @@ public interface ExcelSendService {
 	 * @param dto
 	 * @return
 	 */
-	public int insertExcelSend(UserDto userDto, ExcelSendDto dto);
+	public void insertExcelSend(ExcelSendDto dto, Map<String, UploadProgress> uploadStatus, String jobId);
 	
 	/**
 	 * 엑셀 파일 업로드 및 시트 목록 추출

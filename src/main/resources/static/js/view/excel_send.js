@@ -531,7 +531,13 @@ function onlyNumber(element){
 let previewConfirmDialog;
 let confirmDialog;
 // 문자 발송
-function sendMessage(){
+function sendMessage() {
+	
+	if(userExcelUse == "N" || userExcelUse == null || userExcelUse == "") {
+		alert("현재 계정은 엑셀 발송이 제한되어 있습니다. 자세한 내용은 관리자에게 문의하세요.");
+		return;
+	}
+	
 	// 파일 검사
 	if (!excelValidateRequired()) {
 		return;
@@ -686,12 +692,14 @@ function sendMessage(){
 		.then(data => {
 			console.log(data);
 			
-			const status = data.status;
+			const status = data.code;
 			
 			if(status == "success") {
+				
+				uploadStatusCheck(data.result);
 				// 테이블 그리기
-				const retData = data.retData;
-				drawTable("excelGrid", retData, "Y");
+//				const retData = data.retData;
+//				drawTable("excelGrid", retData, "Y");
 			} else {
 				const message = data.message;
 				showDialogCustom(message);
@@ -1261,5 +1269,21 @@ function excelValidateRequired(){
 		return false;
 	}
 	return true;
+}
+
+// 엑셀 업로드 상태 체크(프로그레스 바)
+function uploadStatusCheck(jobId) {
+	const interval = setInterval(() => {
+        fetch(`/api/v1/excelSend/uploadStatus/${jobId}`)
+            .then(response => response.json())
+            .then(data => {
+				console.log(data.progress, data.message);
+                // updateProgress(data.progress, data.message);
+                
+                if (data.complete) {
+                    clearInterval(interval);
+                }
+            });
+    }, 1000); // 1초마다 체크
 }
 

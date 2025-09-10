@@ -3,14 +3,41 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.web.gmarket.bulk.broad.mapper.BroadcastMsgMapper">
+
 	<insert id="insertBroadcastMsg" parameterType="com.web.gmarket.bulk.broad.dto.BroadcastMsgDto">
 		/*
 			BroadcastMsgMapper.insertBroadcastMsg 대량 발송 등록
 		*/
-		INSERT INTO T_BROADCAST_MSG (
-			B_MSG_KEY, LOGIN_ID, USER_ID, TITLE, MSG, IN_TIME,	CALLBACK_NO, REQ_TIME, CNT, SUCC_CNT, FAIL_CNT, STATUS, SVC_TYPE, SEND_INFO
-		) VALUES(
-			#{bMsgKey}, #{loginId}, #{userId}, #{title}, CAST(#{msg} AS VARCHAR(2000)), GETDATE(), #{callbackNo}, #{regTime}, #{cnt}, #{succCnt}, #{failCnt}, #{status}, #{svcType}, #{sendInfo}
-		)
+		<choose>
+			<when test="timeType > 0">
+				INSERT INTO T_BROADCAST_MSG (
+					B_MSG_KEY, LOGIN_ID, USER_ID, TITLE, MSG, IN_TIME, CALLBACK_NO, REQ_TIME, CNT, SUCC_CNT, FAIL_CNT, STATUS, SVC_TYPE, SEND_INFO
+				) VALUES(
+					#{bMsgKey}, #{loginId}, #{userId}, #{title}, CAST(#{msg} AS VARCHAR(2000)), GETDATE(), #{callbackNo}, #{reqTime}, #{cnt}, #{succCnt}, #{failCnt}, #{status}, #{svcType}, #{sendInfo}
+				)
+			</when>
+			<otherwise>
+				INSERT INTO T_BROADCAST_MSG (
+					B_MSG_KEY, LOGIN_ID, USER_ID, TITLE, MSG, IN_TIME, CALLBACK_NO, REQ_TIME, CNT, SUCC_CNT, FAIL_CNT, STATUS, SVC_TYPE, SEND_INFO
+				) VALUES(
+					#{bMsgKey}, #{loginId}, #{userId}, #{title}, CAST(#{msg} AS VARCHAR(2000)), GETDATE(), #{callbackNo}, ${reqTime}, #{cnt}, #{succCnt}, #{failCnt}, #{status}, #{svcType}, #{sendInfo}
+				)
+			</otherwise>
+		</choose>
 	</insert>
+	
+	<update id="updateBroadcastMsg">
+		/*
+			BroadcastMsgMapper.updateBroadcastMsg 대량 발송 성공 / 실패 카운트 업데이트
+		*/
+		<choose>
+			<when test='cntType != null and cntType == "T"'>
+				UPDATE T_BROADCAST_MSG SET SUCC_CNT = #{cnt} WHERE B_MSG_KEY = #{bMsgKey}
+			</when>
+			<otherwise>
+				UPDATE T_BROADCAST_MSG SET FAIL_CNT = #{cnt} WHERE B_MSG_KEY = #{bMsgKey}
+			</otherwise>
+		</choose>
+	</update>
+	
 </mapper>

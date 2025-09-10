@@ -62,4 +62,9 @@ public class BroadcastMsgDto {
 	// 발송 테이블에 INSERT를 하지 못한 갯수
 	private Integer failCnt;
 	
+	
+	
+	// 발송시간 유형 0 : 즉시, 1 : 예약
+	private Integer timeType;
+	
 }
