@@ -8,66 +8,60 @@
 		/*
 			CommonSendMapper.insertSmsEvent
 		*/
-		<choose>
-			<when test="timeType > 0">
-				INSERT INTO SMSCLI_TBL_EVENT(
-					TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_MSG, B_MSG_KEY, RESERVED3
-				) VALUES(
-					#{tranPhone}, #{tranCallback}, #{tranStatus}, #{tranDate}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}
-				)
-			</when>
-			<otherwise>
-				INSERT INTO SMSCLI_TBL_EVENT(
-					TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_MSG, B_MSG_KEY, RESERVED3
-				) VALUES(
-					#{tranPhone}, #{tranCallback}, #{tranStatus}, ${tranDate}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}
-				)
-			</otherwise>
-		</choose>
+		INSERT INTO SMSCLI_TBL_EVENT(
+			TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_MSG, B_MSG_KEY, RESERVED3
+		) VALUES (
+			#{tranPhone}, #{tranCallback}, #{tranStatus},
+			<choose>
+				<when test="timeType > 0"> 
+				#{tranDate}
+				</when>
+				<otherwise>
+				${tranDate}
+				</otherwise>
+			</choose>
+			, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}
+		)
 	</insert>
 	
 	<insert id="insertLmsEvent" parameterType="com.web.gmarket.common.dto.CommonSendDto">
 		/*
 			CommonSendMapper.insertLmsEvent
 		*/
-		<choose>
-			<when test="timeType > 0">
-				INSERT INTO LMSCLI_TBL_EVENT(
-					TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_TITLE, TRAN_MSG, B_MSG_KEY, RESERVED3
-				) VALUES(
-					#{tranPhone}, #{tranCallback}, #{tranStatus}, #{tranDate}, #{tranTitle}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}
-				)
-			</when>
-			<otherwise>
-				INSERT INTO LMSCLI_TBL_EVENT(
-					TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_TITLE, TRAN_MSG, B_MSG_KEY, RESERVED3
-				) VALUES(
-					#{tranPhone}, #{tranCallback}, #{tranStatus}, ${tranDate}, #{tranTitle}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}
-				)
-			</otherwise>
-		</choose>
+		INSERT INTO LMSCLI_TBL_EVENT(
+			TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_TITLE, TRAN_MSG, B_MSG_KEY, RESERVED3
+		) VALUES (
+			#{tranPhone}, #{tranCallback}, #{tranStatus}, 
+			<choose>
+				<when test="timeType > 0"> 
+				#{tranDate}
+				</when>
+				<otherwise>
+				${tranDate}
+				</otherwise>
+			</choose>
+			, #{tranTitle}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}
+		)
 	</insert>
 	
 	<insert id="insertMmsEvent" parameterType="com.web.gmarket.common.dto.CommonSendDto">
 		/*
 			CommonSendMapper.insertMmsEvent
 		*/
-		<choose>
-			<when test="timeType > 0">
-				INSERT INTO MMSCLI_TBL_EVENT(
-					TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_TITLE, TRAN_MSG, B_MSG_KEY, RESERVED3, IMAGE_PATH_01, IMAGE_PATH_02, IMAGE_PATH_03
-				) VALUES(
-					#{tranPhone}, #{tranCallback}, #{tranStatus}, #{tranDate},  #{tranTitle}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}, #{imagePath01}, #{imagePath02}, #{imagePath03}
-				)
-			</when>
-			<otherwise>
-				INSERT INTO MMSCLI_TBL_EVENT(
-					TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_TITLE, TRAN_MSG, B_MSG_KEY, RESERVED3, IMAGE_PATH_01, IMAGE_PATH_02, IMAGE_PATH_03
-				) VALUES(
-					#{tranPhone}, #{tranCallback}, #{tranStatus}, ${tranDate},  #{tranTitle}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}, #{imagePath01}, #{imagePath02}, #{imagePath03}
-				)
-			</otherwise>
-		</choose>
+		INSERT INTO MMSCLI_TBL_EVENT (
+			TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_TITLE, TRAN_MSG, B_MSG_KEY, RESERVED3, IMAGE_PATH_01, IMAGE_PATH_02, IMAGE_PATH_03
+		) VALUES (
+			#{tranPhone}, #{tranCallback}, #{tranStatus}, 
+			<choose>
+				<when test="timeType > 0"> 
+				#{tranDate}
+				</when>
+				<otherwise>
+				${tranDate}
+				</otherwise>
+			</choose>
+			,  #{tranTitle}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}, #{imagePath01}, #{imagePath02}, #{imagePath03}
+		)
 	</insert>
 	
 </mapper>

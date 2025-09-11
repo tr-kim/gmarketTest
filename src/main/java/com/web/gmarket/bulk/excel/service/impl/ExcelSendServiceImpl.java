@@ -119,6 +119,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 					commonSendDto.setTranMsg(cloneMessage.get(k).toString());
 					commonSendDto.setBMsgKey(bMsgKey);
 					commonSendDto.setReserved3(dto.getReserved());
+					commonSendDto.setTimeType(dto.getTimeType());
 					
 					// MMS, LMS인 경우 제목 등록
 					if (ConstantsUtils.LMS.equals(msgType) || ConstantsUtils.MMS.equals(msgType)) commonSendDto.setTranTitle(cloneSubject.get(k).toString());

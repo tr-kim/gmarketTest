@@ -1,5 +1,6 @@
 let LOAD_PANEL;
 let EXCEL_FILE_NAME = "";
+let MAX_ROWS = 0;
 
 $(function () {
 	// 로딩바 최초 생성 (화면 전체 기준)
@@ -585,15 +586,43 @@ function sendMessage() {
 	};
 	
 	// 전송범위
-	if(document.getElementById('tranCheckDefault').checked 
-	&& document.getElementById('tranRangeStart').value == ""
-	&& document.getElementById('tranRangeEnd').value == ""){
-		const message = '전송범위를 입력하세요.';
-		showDialogCustom(message, function (){
-			document.getElementById("tranRangeStart").focus();
-		});
-		return;
-	};
+	let tranRangeStart = document.getElementById('tranRangeStart').value;
+	let tranRangeEnd = document.getElementById('tranRangeEnd').value;
+	
+	if(document.getElementById('tranCheckDefault').checked) {
+		if(tranRangeStart == "" && tranRangeEnd == "") {
+			const message = '전송범위를 입력하세요.';
+			showDialogCustom(message, function (){
+				document.getElementById("tranRangeStart").focus();
+			});
+			return;
+		} else if(Number(tranRangeStart) == 0 || Number(tranRangeEnd) == 0) {
+			const message = '전송범위는 최소 1행부터 시작됩니다.';
+			showDialogCustom(message, function() {
+				if(tranRangeStart == 0) {
+					document.getElementById("tranRangeStart").focus();
+				} else if(tranRangeEnd == 0) {
+					document.getElementById("tranRangeEnd").focus();
+				}
+			});
+			
+			return;
+		} else if(Number(tranRangeStart) > Number(tranRangeEnd)) {
+			const message = '전송시작 범위가 잘못 입력되었습니다.';
+			showDialogCustom(message, function() {
+				document.getElementById("tranRangeStart").focus();
+			});
+			
+			return;
+		} else if(Number(MAX_ROWS) < Number(tranRangeEnd)) {
+			const message = '전송범위를 초과하였습니다.';
+			showDialogCustom(message, function() {
+				document.getElementById("tranRangeEnd").focus();
+			});
+			
+			return;
+		}
+	}
 	
 	// 메시지 내용 전송
 	const func_send = function() {
@@ -662,35 +691,35 @@ function sendMessage() {
 		const tranRangeEnd = document.getElementById('tranRangeEnd').value;
 		
 		const formData = new FormData();
-		formData.append("excelFileName", EXCEL_FILE_NAME);
-		formData.append("sheet", sheet);
-		formData.append("callbackSelect", callbackSelect === "직접입력" ? 0 : 1);
-		formData.append("callback", callbackSelect === "직접입력" ? tranCallback : callbackSelect);
-		formData.append("calleeSelect", calleeSelect === "직접입력" ? 0 : 1);
-		formData.append("callee", calleeSelect === "직접입력" ? tranCallee : calleeSelect);
-		formData.append("largeCategory", largeCategory);
-		formData.append("userId", userId);
-		formData.append("msgTitle", msgTitle);
-		formData.append("msgType", msgType);
-		formData.append("msgWrite", msgWrite);
-		formData.append("sendInfo", sendInfo);
-		formData.append("reserved", reserved);
-		formData.append("timeType", sendTimeChkValue);
-		formData.append("splitSend", splitSendChkValue);
-		formData.append("tranCheckDefault", tranCheckDefault);
-		formData.append("rejectCheckDefault", rejectCheckDefault);
+		formData.append("excelFileName", EXCEL_FILE_NAME);												// 엑셀 파일 이름
+		formData.append("sheet", sheet);																// 시트 이름
+		formData.append("callbackSelect", callbackSelect === "직접입력" ? 0 : 1);							// 발신 번호 유형 0: 직접입력, 1: 시트 선택
+		formData.append("callback", callbackSelect === "직접입력" ? tranCallback : callbackSelect);		// 발신 번호
+		formData.append("calleeSelect", calleeSelect === "직접입력" ? 0 : 1);								// 수신 번호 유형 0: 직접입력, 1: 시트 선택
+		formData.append("callee", calleeSelect === "직접입력" ? tranCallee : calleeSelect);				// 수신 번호
+		formData.append("largeCategory", largeCategory);												// 대분류 0: 옥션, 1: 지마켓
+		formData.append("userId", userId);																// 사용자 아이디
+		formData.append("msgTitle", msgTitle);															// 메시지 제목 LMS, MMS만 적용
+		formData.append("msgType", msgType);															// 메시지 유형 SMS, LMS, MMS
+		formData.append("msgWrite", msgWrite);															// 메시지 내용
+		formData.append("sendInfo", sendInfo);															// 전송 대상
+		formData.append("reserved", reserved);															// SMS 수신 여부 확인 0: 확인, 1: 미확인
+		formData.append("timeType", sendTimeChkValue);													// 발송 시간 확인 0: 즉시, 1: 예약
+		formData.append("splitSend", splitSendChkValue);												// 분할 전송 확인 N: 미사용, Y: 사용
+		formData.append("tranCheckDefault", tranCheckDefault);											// 전송 범위 확인 true, false
+		formData.append("rejectCheckDefault", rejectCheckDefault);										// 080 수신거부 번호 확인 true, false 
 		
-		if(rejectCheckDefault) formData.append("rejectNum", rejectNum);
-		if(sendTimeChkValue === '1') formData.append("sendTime", sendTime);
+		if(rejectCheckDefault) formData.append("rejectNum", rejectNum);									// 수신거부 번호
+		if(sendTimeChkValue === '1') formData.append("sendTime", sendTime);								// 예약 시간
 		
 		if(splitSendChkValue === 'Y') { 
-			formData.append("splitMinute", splitMinute);
-			formData.append("splitNum", splitNum);
+			formData.append("splitMinute", splitMinute);												// 분할 전송 분
+			formData.append("splitNum", splitNum);														// 분한 전송 건수
 		}
 		
 		if(tranCheckDefault) { 
-			formData.append("tranRangeStart", tranRangeStart); 
-			formData.append("tranRangeEnd", tranRangeEnd); 
+			formData.append("tranRangeStart", tranRangeStart);											// 전송 범위 최솟값
+			formData.append("tranRangeEnd", tranRangeEnd); 												// 전송 번위 최댓값
 		}
 		
 		fetch("/api/v1/excelSend/insert", {
@@ -902,6 +931,9 @@ function excelReadSheet(option) {
 			// 테이블 그리기
 			const retData = data.retData;
 			drawTable("excelGrid", retData, "Y");
+		
+			// 엑셀 ROW 수 저장 헤더 부분 제외
+			MAX_ROWS = retData.length - 1;
 		}else{
 			const message = data.message;
 			showDialogCustom(message);
@@ -1289,15 +1321,16 @@ function uploadStatusCheck(jobId) {
 				// console.log(data);
 				
 				processTotal = data.total;
-				processed = data.current;
+				processed = data.current; 
 				
 				processData();
                 
 				// 상태 체크 중지
                 if (data.complete || processed >= processTotal) {
 					alert("엑셀 발송이 완료되었습니다.");
+					uploadStatuRemove(jobId);
+					clearInterval(interval);
 					location.reload(true);	// 페이지 새로고침
-                    clearInterval(interval);
                 }
 			}).catch(err => {
 				console.error("엑셀 발송 상태 체크:", err);
@@ -1306,5 +1339,16 @@ function uploadStatusCheck(jobId) {
 				clearInterval(interval);
 			});
     }, 3000); // 3초마다 체크
+}
+
+// 엑셀 발송 상태 삭제
+function uploadStatuRemove(jobId) {
+	fetch(`/api/v1/excelSend/uploadStatus/delete/${jobId}`)
+    .then(response => response.json())
+    .then(data => {
+		console.log(data);
+	}).catch(err => {
+		console.error("엑셀 발송 상태 삭제:", err);
+	});
 }
 

@@ -230,6 +230,7 @@ public class RestExcelSendController {
 				return ValidateHandingUtils.validateHandling(errors);
 			}
 			
+			// 엑셀 발송 중인 상태 저장
 			String jobId = UUID.randomUUID().toString();
 			uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "시작"));
 			
@@ -250,10 +251,27 @@ public class RestExcelSendController {
 		}
 	} 
 	
+	/**
+	 * 엑셀 발송 상태 체크
+	 * 
+	 * @param jobId
+	 * @return
+	 */
 	@GetMapping("/uploadStatus/{jobId}")
     public ResponseEntity<UploadProgress> getUploadStatus(@PathVariable("jobId") String jobId) {
         UploadProgress progress = uploadStatus.get(jobId);
         return ResponseEntity.ok(progress != null ? progress : new UploadProgress(0, 0, 0, "작업을 찾을 수 없음"));
+    }
+	
+	/**
+	 * 엑셀 발송 상태 삭제
+	 * 
+	 * @param jobId
+	 * @return
+	 */
+	@GetMapping("/uploadStatus/delete/{jobId}")
+    public ResponseEntity<?> getUploadStatusDel(@PathVariable("jobId") String jobId) {
+        return ResponseEntity.ok(uploadStatus.remove(jobId));
     }
 	
 }
