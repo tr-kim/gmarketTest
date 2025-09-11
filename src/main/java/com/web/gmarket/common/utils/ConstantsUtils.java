@@ -136,4 +136,10 @@ public class ConstantsUtils {
 	public static final String TXT_EXTENSION = ".txt";
 	public static final String TXT_PATH = "C:/excel_web/data";
 	
+	// IMAGE
+	public static final String SINGLE_IMAGE_PATH   = "C:/excel_web/img/single/";
+	public static final String EXCEL_IMAGE_PATH   = "C:/excel_web/img/excel/";
+	public static final String FILE_IMAGE_PATH   = "C:/excel_web/img/file/";
+	public static final String DB_IMAGE_PATH = "C:/excel_web/img/db/";
+	
 }

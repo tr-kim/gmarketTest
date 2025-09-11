@@ -337,15 +337,21 @@ aside .psw_chg_btn:hover{
 .send .grid table tbody tr:last-child{
     border-bottom: #fff;
 }
+.send .grid table tbody tr:hover{
+    background: #f0f7ff;
+}
+.send .grid table tbody tr:hover td{
+    background: transparent;
+}
 .send .grid .dx-bordered-bottom-view{
     max-height: 10rem;
 }
 .send .numDelBtn:hover {
-    background: #eee;
+    background: #dae9ff;
     border-radius: 2px;
 }
 .send .numSelectBtn:hover{
-    background: #eee;
+    background: #dae9ff;
     border-radius: 2px;
 }
 .send .numDelBtn:hover i{
@@ -477,6 +483,7 @@ aside .psw_chg_btn:hover{
 #msgGrid table,
 #excelGrid table,
 #textGrid table {
+    border-spacing: 0;
     border-collapse: separate;
 }
 #dropzone-external {
@@ -552,7 +559,8 @@ aside .psw_chg_btn:hover{
     content: "";
 }
 .img-question:hover::before{
-    content: "이미지는 최대 3개 까지 가능합니다.";
+    content: "이미지는 JPG로 최대 2개 까지 가능하며,\A 파일당 100K까지 지원합니다. ";
+    white-space:pre;
 }
 /* 모달 */
 /* reserveSend.html */
@@ -654,7 +662,4 @@ aside .psw_chg_btn:hover{
 .dx-fileuploader-input-wrapper .dx-fileuploader-button .dx-button-text{
     font-weight: 100;
     opacity: 0.5;
-}
-#dbSend .img-question:hover::before{
-    content: "이미지는 최대 2개 까지 가능합니다.";
 }
