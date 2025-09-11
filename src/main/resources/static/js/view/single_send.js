@@ -66,50 +66,36 @@ $(function () {
 		});
 	});
 	
-	
-	// function toggleDropZoneActive(dropZone, isActive) {
-	// 	dropZone.classList.toggle('dropzone-active', isActive);
-	// }
-	
-	
-		// 이미지 등록
+	// 이미지 등록
 	$('#file-uploader').dxFileUploader({
 		multiple: true,
 		allowedFileExtensions: ['.jpg'],
 		maxFileSize: 100 * 1024,
 		uploadMode: 'useButtons',
-		uploadMethod: 'POST', 
-		uploadUrl: '/files/upload/fileUpload',
+		uploadMethod: 'POST',
+		uploadUrl: '/files/upload/fileUpload',   
+		uploadCustomData: {                   
+			sendType: 'SINGLE'
+		},
 		onValueChanged(e) {
-			
 			const maxFiles = 2;
 
 			if (e.value.length > maxFiles) {
-				// 앞 2개만 유지
 				const limitedFiles = e.value.slice(0, maxFiles);
-
-				// FileUploader value 리셋 후 다시 세팅 (UI 갱신 강제)
 				e.component.reset();
 				e.component.option('value', limitedFiles);
-
 				showDialogCustom(`이미지는 최대 ${maxFiles}개까지만 업로드할 수 있습니다.`);
 			}
 		},
 		onUploadStarted(e) {
-			// 업로드 전에 커스텀 데이터 추가
-			console.log('Upload started', e);
 			const files = e.component.option('value');
-			const imgNumFlag = files.length;
-			const fileName1 = files[0]?.name || '';
-			const fileName2 = files[1]?.name || '';
-			const sendType = 'SINGLE';
-
-			e.requestData = { 
-				imgNumFlag: imgNumFlag,
-				fileName1: fileName1,
-				fileName2: fileName2,
-				sendType: sendType
-			};
+			e.component.option("uploadCustomData", {
+				imgNumFlag: files.length,
+				fileName1: files[0]?.name || '',
+				fileName2: files[1]?.name || '',
+				sendType: 'SINGLE'
+			});
+			console.log("Upload started, data:", e.component.option("uploadCustomData"));
 		},
 		onUploaded(e) {
 			console.log('Uploaded', e);

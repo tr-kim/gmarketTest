@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,7 @@ public class FileUploadController {
 			
 			)
 	{
+
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
@@ -48,9 +50,22 @@ public class FileUploadController {
 			LocalDate today = LocalDate.now();
 			String folderMonth = today.format(DateTimeFormatter.ofPattern("yyyyMM"));   // 202509
 			String folderDate = today.format(DateTimeFormatter.ofPattern("yyyyMMdd"));  // 20250910
+
+			// 현재 시간
+			LocalDateTime now = LocalDateTime.now();
+			String fileDate   = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")); // 20250910123045
 			
 			// 폴더 경로
-			String path = ConstantsUtils.DB_IMAGE_PATH;
+			String path;
+			if ("SINGLE".equalsIgnoreCase(sendType.trim())) {
+				path = ConstantsUtils.SINGLE_IMAGE_PATH;
+			} else if ("EXCEL".equalsIgnoreCase(sendType.trim())) {
+				path = ConstantsUtils.EXCEL_IMAGE_PATH;
+			} else if ("FILE".equalsIgnoreCase(sendType.trim())) {
+				path = ConstantsUtils.FILE_IMAGE_PATH;
+			} else {
+				path = ConstantsUtils.DB_IMAGE_PATH; // 기본값
+			}
 			
 			Path monthPath = Paths.get(path, folderMonth);
 			Path datePath  = Paths.get(monthPath.toString(), folderDate);
@@ -64,7 +79,11 @@ public class FileUploadController {
 			for (MultipartFile file : files) {
 				if (!file.isEmpty()) {
 					String originalFileName = file.getOriginalFilename();
-					Path filePath = datePath.resolve(originalFileName); // C:/path/파일명
+
+					// 새 파일명 = 날짜 + 원래 파일명
+					String newFileName = fileDate + "_" + originalFileName;
+
+					Path filePath = datePath.resolve(newFileName); // C:/path/20250910/20250910123045_d.jpg
 					Files.write(filePath, file.getBytes());
 				}
 			}
