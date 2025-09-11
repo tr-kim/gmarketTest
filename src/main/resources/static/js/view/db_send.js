@@ -316,6 +316,15 @@ function reservedSearch(){
 }
 
 
+// 요청번호 지정
+function reservedDesign(btn){
+	const row = btn.closest("tbody > tr");
+	const reserved4Value = row.querySelector("td").textContent;
+	const reserved4 = document.getElementById("reserved4");
+	reserved4.value = reserved4Value.trim();
+}
+
+
 // 요청번호 삭제
 function reservedDelete(btn){
 	const row = btn.closest("tbody > tr");
@@ -436,33 +445,6 @@ function sendMessage(){
 }
 
 
-// 실패 시 초기화
-function resetTextGrid(input) {
-	// 업로드 input 초기화
-	if (input) input.value = "";
-	
-	// 그리드 초기화
-	const textGrid = document.getElementById("textGrid");
-	if (textGrid) {
-		textGrid.style.height = "auto";
-		const tbody = textGrid.querySelector("table tbody");
-		if (tbody) {
-			tbody.innerHTML = `
-				<tr class="no-data">
-					<td class="py-3" colspan="2">파일을 선택해주세요.</td>
-				</tr>
-			`;
-		}
-	}
-	
-	// count 초기화
-	const directInputNum = document.querySelector("span.direct_input_num");
-	if (directInputNum) {
-		directInputNum.textContent = "0";
-	}
-}
-
-
 // 가상 스크롤 렌더링 함수
 function renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visibleRows) {
 	const rowLength = dataRow.length;
@@ -507,7 +489,7 @@ function renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visible
 		// 지정
 		const tdSelect = document.createElement("td");
 		tdSelect.innerHTML = `
-			<button type="button" class="numSelectBtn" onclick="selectBtn(this)">
+			<button type="button" class="designBtn" onclick="reservedDesign(this)">
 				<i class="dx-icon-check"></i>
 				<span class="visually-hidden">지정</span>
 			</button>`;
@@ -516,7 +498,7 @@ function renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visible
 		//삭제
 		const tdDel = document.createElement("td");
 		tdDel.innerHTML = `
-			<button type="button" class="numDelBtn" onclick="reservedDelete(this)">
+			<button type="button" class="deleteBtn" onclick="reservedDelete(this)">
 				<i class="dx-icon-close"></i>
 				<span class="visually-hidden">삭제</span>
 			</button>
@@ -584,14 +566,5 @@ function drawTable(containerId, data){
 	// 초기 렌더링
 	container.scrollTop = 0;
 	renderVisibleRows(container, tbody, spacer, data, rowHeight, visibleRows);
-}
-
-
-//요청번호 지정
-function selectBtn(btn){
-	const row = btn.closest("tbody > tr");
-	const reserved4Value = row.querySelector("td").textContent;
-	const reserved4 = document.getElementById("reserved4");
-	reserved4.value = reserved4Value.trim();
 }
 
