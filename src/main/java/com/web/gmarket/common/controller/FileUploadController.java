@@ -28,7 +28,10 @@ public class FileUploadController {
 			@RequestParam("files[]") List<MultipartFile> files,
 			@RequestParam(value = "imgNumFlag", required = false) String imgNumFlag,
 			@RequestParam(value = "fileName1", required = false) String fileName1,
-			@RequestParam(value = "fileName2", required = false) String fileName2)
+			@RequestParam(value = "fileName2", required = false) String fileName2,
+			@RequestParam(value = "sendType", required = false) String sendType
+			
+			)
 	{
 		Map<String, Object> response = new HashMap<>();
 		

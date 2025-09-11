@@ -26,176 +26,49 @@ $(function () {
 		dropZone.classList.toggle('dropzone-active', isActive);
 	}
 	
-	
-	//이미지 업로드 프로그래스바
-	const uploadProgressBar = $('#upload-progress').dxProgressBar({
-		min: 0,
-		max: 100,
-		width: '30%',
-		showStatus: false,
-		visible: false,
-	}).dxProgressBar('instance');
-	
-	
-	//이미지 등록	
+	// 이미지 등록
 	$('#file-uploader').dxFileUploader({
-		dialogTrigger: '#dropzone-external',
-		dropZone: '#dropzone-external',
 		multiple: true,
-		allowedFileExtensions: ['.jpg', '.jpeg', '.gif', '.png'],
+		allowedFileExtensions: ['.jpg'],
 		maxFileSize: 100 * 1024,
-		uploadMode: 'instantly',
-		uploadUrl: 'https://js.devexpress.com/Demos/NetCore/FileUploader/Upload',
-		visible: false,
-		onDropZoneEnter({ component, dropZoneElement, event }) {
-			if (dropZoneElement.id === 'dropzone-external') {
-				const items = event.originalEvent.dataTransfer.items;
-				
-				const allowedFileExtensions = component.option('allowedFileExtensions');
-				const draggedFileExtension = `.${items[0].type.replace(/^image\//, '')}`;
-				
-				const isSingleFileDragged = items.length === 1;
-				const isValidFileExtension = allowedFileExtensions.includes(draggedFileExtension);
-				
-				if (isSingleFileDragged && isValidFileExtension) {
-					toggleDropZoneActive(dropZoneElement, true);
-				}
+		uploadMode: 'useButtons',
+		uploadMethod: 'POST', 
+		uploadUrl: '/files/upload/fileUpload',
+		onValueChanged(e) {
+			
+			const maxFiles = 2;
+
+			if (e.value.length > maxFiles) {
+				// 앞 2개만 유지
+				const limitedFiles = e.value.slice(0, maxFiles);
+
+				// FileUploader value 리셋 후 다시 세팅 (UI 갱신 강제)
+				e.component.reset();
+				e.component.option('value', limitedFiles);
+
+				showDialogCustom(`이미지는 최대 ${maxFiles}개까지만 업로드할 수 있습니다.`);
 			}
 		},
-		onDropZoneLeave(e) {
-			if (e.dropZoneElement.id === 'dropzone-external') {
-				toggleDropZoneActive(e.dropZoneElement, false);
-			}
-		},       
-		onUploaded(e) {
-			const uploadedCount = document.querySelectorAll('#dropzone-image-list .col-4').length;
-			
-			if (uploadedCount >= 3) {
-				const message = '이미지는 최대 3개까지만 업로드할 수 있습니다.';
-				showDialogCustom(message);
-				return;
-			}
-			
-			const { file } = e;
-			const fileReader = new FileReader();
-			
-			fileReader.onload = function () {
-				toggleDropZoneActive(document.getElementById('dropzone-external'), false);
-				
-				const colDiv = document.createElement('div');
-				colDiv.className = 'col-4 position-relative';
-				
-				const img = document.createElement('img');
-				img.src = fileReader.result;
-				img.classList.add('img-fluid', 'rounded');
-				
-				const deleteBtn = document.createElement('button');
-				deleteBtn.innerHTML = '&times;';
-				deleteBtn.className = 'btn btn-sm btn-dark position-absolute top-0 end-0 m-1';
-				deleteBtn.style.zIndex = '10';
-				
-				deleteBtn.addEventListener('click', () => {
-					colDiv.remove();
-					
-					const uploader = $("#file-uploader").dxFileUploader("instance");
-					const currentFiles = uploader.option("value") || [];
-					
-					// 삭제할 파일 이름과 비교해서 제외한 새 배열 생성
-					const newFiles = currentFiles.filter(f => f.name !== file.name);
-					
-					uploader.option("value", newFiles);
-					
-					// 변경된 상태 반영
-					handleInput();
-				});
-				
-				colDiv.appendChild(img);
-				colDiv.appendChild(deleteBtn);
-				document.getElementById('dropzone-image-list').appendChild(colDiv);
+		onUploadStarted(e) {
+			// 업로드 전에 커스텀 데이터 추가
+			console.log('Upload started', e);
+			const files = e.component.option('value');
+			const imgNumFlag = files.length;
+			const fileName1 = files[0]?.name || '';
+			const fileName2 = files[1]?.name || '';
+			const sendType = 'FILE';
+
+			e.requestData = { 
+				imgNumFlag: imgNumFlag,
+				fileName1: fileName1,
+				fileName2: fileName2,
+				sendType: sendType
 			};
-			
-			fileReader.readAsDataURL(file);
-			
-			uploadProgressBar.option({
-				visible: false,
-				value: 0,
-			});
 		},
-		onProgress(e) {
-			uploadProgressBar.option('value', (e.bytesLoaded / e.bytesTotal) * 100);
-		},
-		onUploadStarted() {
-			uploadProgressBar.option('visible', true);
-		},
-		onValueChanged: function (e) {
-			const allowedFileExtensions = ['.jpg', '.jpeg', '.gif', '.png'];
-			const invalidFiles = [];
-			const oversizedFiles = [];
-
-			const validFiles = (e.value || []).filter(file => {
-				const extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
-				const isValidExt = allowedFileExtensions.includes(extension);
-				const isValidSize = file.size <= 100 * 1024; // 100KB 이하
-
-				if (!isValidExt) {
-					invalidFiles.push(file.name);
-				}
-				if (!isValidSize) {
-					oversizedFiles.push(file.name);
-				}
-
-				return isValidExt && isValidSize;
-			});
-
-			if (invalidFiles.length > 0) {
-				const message = `허용되지 않은 파일 형식입니다:\n${invalidFiles.join(', ')}`;
-				showDialogCustom(message);
-				console.warn('업로드 불가 파일 있음:', invalidFiles);
-			}
-
-			if (oversizedFiles.length > 0) {
-				showDialogCustom(`파일 크기가 100KB를 초과합니다:\n${oversizedFiles.join(', ')}`);
-				console.warn('크기 초과 파일 있음:', oversizedFiles);
-			}
-
-			if (invalidFiles.length > 0 || oversizedFiles.length > 0) {
-				// 허용되지 않은 파일 또는 크기 초과 파일 제거
-				const uploader = $("#file-uploader").dxFileUploader("instance");
-				uploader.option("value", validFiles); // 유효한 파일만 다시 설정
-				return;
-			}
-
-			handleInput(); // 유효한 경우만 처리
-		},
-		// onValueChanged: function (e) {
-
-		// 	const allowedFileExtensions = ['.jpg', '.jpeg', '.gif', '.png'];
-		// 	const invalidFiles = []; 
-
-		// 	const validFiles = (e.value || []).filter(file => {
-		// 		const extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
-		// 		const isValid = allowedFileExtensions.includes(extension);
-		// 		if (!isValid) {
-		// 			invalidFiles.push(file.name);
-		// 		}
-		// 		return isValid;
-		// 	});
-
-		// 	if (invalidFiles.length > 0) {
-		// 		const message = `허용되지 않은 파일 형식입니다:\n${invalidFiles.join(', ')}`;
-		// 		showDialogCustom(message);
-		// 		console.warn('업로드 불가 파일 있음:', invalidFiles);
-
-		// 		// 허용되지 않은 파일 제거
-		// 		const uploader = $("#file-uploader").dxFileUploader("instance");
-		// 		uploader.option("value", validFiles); // 유효한 파일만 다시 설정
-		// 		return;
-		// 	}
-
-		// 	handleInput(); // 유효한 경우만 처리
-		// },
-
-	}).dxFileUploader('instance');
+		onUploaded(e) {
+			console.log('Uploaded', e);
+		}
+	});
 	
 	
 	//예약 발송 캘린더

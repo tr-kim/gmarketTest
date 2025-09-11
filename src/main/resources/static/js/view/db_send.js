@@ -24,18 +24,7 @@ $(function () {
 	
 	function toggleDropZoneActive(dropZone, isActive) {
 		dropZone.classList.toggle('dropzone-active', isActive);
-	}
-	
-	
-	//이미지 업로드 프로그래스바
-	const uploadProgressBar = $('#upload-progress').dxProgressBar({
-		min: 0,
-		max: 100,
-		width: '30%',
-		showStatus: false,
-		visible: false,
-	}).dxProgressBar('instance');
-	
+	}	
 	
 	// 이미지 등록
 	$('#file-uploader').dxFileUploader({
@@ -44,7 +33,7 @@ $(function () {
 		maxFileSize: 100 * 1024,
 		uploadMode: 'useButtons',
 		uploadMethod: 'POST', 
-		uploadUrl: '/api/v1/dbSend/fileUpload',
+		uploadUrl: '/files/upload/fileUpload',
 		onValueChanged(e) {
 			
 			const maxFiles = 2;
@@ -67,11 +56,13 @@ $(function () {
 			const imgNumFlag = files.length;
 			const fileName1 = files[0]?.name || '';
 			const fileName2 = files[1]?.name || '';
+			const sendType = 'DB';
 
 			e.requestData = { 
 				imgNumFlag: imgNumFlag,
 				fileName1: fileName1,
-				fileName2: fileName2
+				fileName2: fileName2,
+				sendType: sendType
 			};
 		},
 		onUploaded(e) {
