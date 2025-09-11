@@ -1,3 +1,8 @@
+// 전체 데이터 건수
+let processTotal = 0; 
+let processed = 0;
+let progressBarStatus;
+
 window.addEventListener('load', function() {
 	//상단메뉴일때
 	if (document.querySelector('header')) {
@@ -206,46 +211,44 @@ window.addEventListener('load', function() {
 			passwordChg.classList.remove('d-block');
 		});
 	}
-
-	const progressBarStatus = $('#progressBarStatus').dxProgressBar({
-		min: 0,
-		max: 100,
-		width: '100%',
-		showStatus: true,
-		elementAttr: { 'aria-label': 'Progress Bar' },
-		statusFormat(ratio) {
-			return `Loading: ${Math.round(ratio * 100)}%`;
-		}
-	}).dxProgressBar('instance');
-
-	// 전체 데이터 건수
-	const total = 50; 
-	let processed = 0;
-
-	// 데이터 처리하면서 진행률 업데이트
-	function processData() {
-
-		processed++;
-
-		const percent = Math.round((processed / total) * 100);
-		progressBarStatus.option('value', percent);
-
-		if (processed >= total) {
-			console.log("모든 데이터 처리 완료");
-		}
-	}
-
+	
 	// 0.5초마다 데이터 처리
-	const interval = setInterval(() => {
-		processData();
-		if (processed >= total) {
-			clearInterval(interval);
-		}
-	}, 500);
+//	const interval = setInterval(() => {
+//		processData();
+//		if (processed >= processTotal) {
+//			clearInterval(interval);
+//		}
+//	}, 500);
+	
+	progressBarStatus = $('#progressBarStatus').dxProgressBar({
+			min: 0,
+			max: 100,
+			width: '100%',
+			showStatus: true,
+			elementAttr: { 'aria-label': 'Progress Bar' },
+			statusFormat(ratio) {
+				return `Loading: ${Math.round(ratio * 100)}%`;
+			}
+	}).dxProgressBar('instance');
+});
 
-})
+// 데이터 처리하면서 진행률 업데이트
+function processData() {
 
+	// processed++;
 
+	// 프로그레스 바 노출
+	document.querySelector('.progressBar').classList.replace('d-none', 'd-block');
+
+	const percent = Math.round((processed / processTotal) * 100);
+	progressBarStatus.option('value', percent);
+
+	if (processed >= processTotal) {
+		console.log("모든 데이터 처리 완료");
+		// 프로그레스 바 비노출
+		document.querySelector('.progressBar').classList.replace('d-block', 'd-none');
+	}
+}
 
 function getAjax(url, param, successCallback, errorCallback) {
 	$.ajax({

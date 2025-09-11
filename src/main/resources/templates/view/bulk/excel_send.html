@@ -328,7 +328,7 @@
 		<div class="loadpanel"></div>
 	</form>
 	<script th:inline="javascript">
-		let userExcelUse = /*[[${#authentication.principal.excelYn}]]*/ -1;
+		let userExcelUse = /*[[${#authentication.principal.excelYn}]]*/ 'N';
 	</script>
 	<th:block th:replace="~{/view/popup/reserveSend :: reserveSend}"></th:block>
 	<th:block th:replace="~{/view/popup/confirmSend :: confirmSend}"></th:block>

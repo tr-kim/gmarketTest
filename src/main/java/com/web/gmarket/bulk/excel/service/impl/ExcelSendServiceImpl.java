@@ -58,10 +58,14 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 			// 엑셀 데이터 가져오기
 			int maxRows = getExcelData(dto, cellData, cloneMessage, cloneSubject, uploadStatus, jobId);
 			uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "엑셀 데이터 가져오기 성공"));
+			
+			// String yyyyMMddHHmmssSSS => Date yyyyMMddHHmmssSSS 변환
+			DateTimeFormatter orgFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+			LocalDateTime dateTime1 = LocalDateTime.parse(cellData.get(0).get(2).toString(), orgFormatter);
 
 			// yyyyMMddHHmmssSSS => yyyy-MM-dd HH:mm:ss:SSS 변환
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-			String reqTime = dto.getTimeType() == 0 ? "CONVERT(CHAR(20), GETDATE(), 120)" : LocalDateTime.parse(cellData.get(0).get(2).toString(), formatter).toString();
+			String reqTime = dto.getTimeType() == 0 ? "CONVERT(CHAR(20), GETDATE(), 120)" : dateTime1.format(formatter);
 
 			int bulkCnt = dto.isTranCheckDefault() ? dto.getTranRangeEnd() : cellData.size(); // 대량 발송 갯수
 			String bMsgKey = String.format("%s%s", Long.toString(System.currentTimeMillis()).substring(0, 10), dto.getUserId()); // 대량 발송 키 생성
@@ -102,31 +106,36 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 					var item = cellData.get(k);
 					
-					String sReqTime = dto.getTimeType() == 0 ? "CONVERT(char(20), GETDATE(), 120)" : LocalDateTime.parse(item.get(2).toString(), formatter).toString();
+					// String yyyyMMddHHmmssSSS => Date yyyyMMddHHmmssSSS 변환
+					LocalDateTime dateTime2 = LocalDateTime.parse(item.get(2).toString(), orgFormatter);
+					
+					String sReqTime = dto.getTimeType() == 0 ? "CONVERT(char(20), GETDATE(), 120)" : dateTime2.format(formatter);
 
 					CommonSendDto commonSendDto = CommonSendDto.builder().build();
 					commonSendDto.setTranDate(sReqTime);
 					commonSendDto.setTranPhone(((String) item.get(0)).trim());
 					commonSendDto.setTranCallback(((String) item.get(1)).trim());
 					commonSendDto.setTranStatus(1);
-					if (ConstantsUtils.LMS.equals(msgType) || ConstantsUtils.MMS.equals(msgType)) commonSendDto.setTranTitle(cloneSubject.get(k).toString());
 					commonSendDto.setTranMsg(cloneMessage.get(k).toString());
 					commonSendDto.setBMsgKey(bMsgKey);
 					commonSendDto.setReserved3(dto.getReserved());
+					
+					// MMS, LMS인 경우 제목 등록
+					if (ConstantsUtils.LMS.equals(msgType) || ConstantsUtils.MMS.equals(msgType)) commonSendDto.setTranTitle(cloneSubject.get(k).toString());
 
 					int flagCnt = 0;
 					switch (msgType) {
-					case ConstantsUtils.SMS:
-						flagCnt = getCommonSendMapper(dbName).insertSmsEvent(commonSendDto);
-						break;
-					case ConstantsUtils.LMS:
-						flagCnt = getCommonSendMapper(dbName).insertLmsEvent(commonSendDto);
-						break;
-					case ConstantsUtils.MMS:
-						flagCnt = getCommonSendMapper(dbName).insertMmsEvent(commonSendDto);
-						break;
-					default:
-						break;
+						case ConstantsUtils.SMS:
+							flagCnt = getCommonSendMapper(dbName).insertSmsEvent(commonSendDto);
+							break;
+						case ConstantsUtils.LMS:
+							flagCnt = getCommonSendMapper(dbName).insertLmsEvent(commonSendDto);
+							break;
+						case ConstantsUtils.MMS:
+							flagCnt = getCommonSendMapper(dbName).insertMmsEvent(commonSendDto);
+							break;
+						default:
+							throw new IllegalArgumentException(String.format("%s%s", "혀용되지 않은 메시지 타입입니다 : ", msgType));
 					}
 
 					getBroadcastMsgMapper(dbName).updateBroadcastMsg(bMsgKey, flagCnt > 0 ? succCnt++ : failCnt++, flagCnt > 0 ? ConstantsUtils.FALG_T : ConstantsUtils.FALG_F);
@@ -139,19 +148,19 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 			uploadStatus.put(jobId, new UploadProgress(100, cnt, cnt, String.format("엑셀 데이터 완료", cnt, cnt)));
 
 		} catch (ArrayIndexOutOfBoundsException e) {
-			uploadStatus.put(jobId, new UploadProgress(0, 0, 100, "엑셀 데이터 DB 등록 오류 발생"));
+			uploadStatus.put(jobId, new UploadProgress(0, 0, 100, String.format("%s%s", "엑셀 데이터 DB 등록 오류 발생 : ", e.getMessage())));
 			log.error(e.getMessage());
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			uploadStatus.put(jobId, new UploadProgress(0, 0, 100, "엑셀 데이터 DB 등록 오류 발생"));
+			uploadStatus.put(jobId, new UploadProgress(0, 0, 100, String.format("%s%s", "엑셀 데이터 DB 등록 오류 발생 : ", e.getMessage())));
 			log.error(e.getMessage());
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			uploadStatus.put(jobId, new UploadProgress(0, 0, 100, "엑셀 데이터 DB 등록 오류 발생"));
+			uploadStatus.put(jobId, new UploadProgress(0, 0, 100, String.format("%s%s", "엑셀 데이터 DB 등록 오류 발생 : ", e.getMessage())));
 			log.error(e.getMessage());
 			e.printStackTrace();
 		} catch (Exception e) {
-			uploadStatus.put(jobId, new UploadProgress(0, 0, 100, "엑셀 데이터 DB 등록 오류 발생"));
+			uploadStatus.put(jobId, new UploadProgress(0, 0, 100, String.format("%s%s", "엑셀 데이터 DB 등록 오류 발생 : ", e.getMessage())));
 			log.error(e.getMessage());
 			e.printStackTrace();
 		}
@@ -167,13 +176,12 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 		String excelName = dto.getExcelFileName();
 		String sheetName = dto.getSheet();
 		String filePath = String.format("%s/%s", ConstantsUtils.EXCEL_PATH, excelName);
-
 		File file = new File(filePath);
 
 		uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "엑셀 파일 확인"));
-		if (!file.exists()) {
-			throw new FileNotFoundException("엑셀 파일을 찾을 수 없습니다: " + excelName);
-		}
+		
+		if (!file.exists()) throw new FileNotFoundException("엑셀 파일을 찾을 수 없습니다: " + excelName);
+		
 		uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "엑셀 파일 읽기 성공"));
 
 		String extension = getFileExtension(filePath);
@@ -188,16 +196,16 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 		try (FileInputStream fis = new FileInputStream(file)) {
 			switch (extension.toLowerCase()) {
-			case "xlsx":
-				workbook = new XSSFWorkbook(fis);
-				sheetNum = workbook.getNumberOfSheets();
-				break;
-			case "xls":
-				workbook = new HSSFWorkbook(fis);
-				sheetNum = workbook.getNumberOfSheets();
-				break;
-			default:
-				throw new IllegalArgumentException("지원하지 않는 파일 형식입니다: " + extension);
+				case "xlsx":
+					workbook = new XSSFWorkbook(fis);
+					sheetNum = workbook.getNumberOfSheets();
+					break;
+				case "xls":
+					workbook = new HSSFWorkbook(fis);
+					sheetNum = workbook.getNumberOfSheets();
+					break;
+				default:
+					throw new IllegalArgumentException(String.format("%s%s", "지원하지 않는 파일 형식입니다: ", extension));
 			}
 		}
 
@@ -208,9 +216,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 			sheetNames[i] = workbook.getSheetName(i);
 
-			if (sheetNames[i].equals(sheetName)) {
-				sheetCount = i;
-			}
+			if (sheetNames[i].equals(sheetName)) sheetCount = i;
 		}
 
 		sheet = workbook.getSheetAt(sheetCount);
@@ -244,13 +250,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 		for (int i = 0; i < maxRows; i++) {
 			cloneMessage.add(content);
-		}
-
-		for (int i = 0; i < maxRows; i++) {
 			cloneSubject.add(subject);
-		}
-
-		for (int i = 0; i < maxRows; i++) {
 			cellData.add(new ArrayList());
 		}
 
@@ -282,6 +282,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 		int intReqHour = -1;
 		int intReqMin = -1;
 		int intReqSec = -1;
+		
 		int perMinuteFlag = 0;
 		int cntFlag = 0;
 
@@ -302,6 +303,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 			code = 'A';
 
 			if (row != null) {
+				
 				if (calleeFlag == 1) { // 시트 선택
 					calleeCell = row.getCell(Short.parseShort(callee));
 
@@ -331,19 +333,20 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 					if (callbackCell != null) {
 						switch (callbackCell.getCellType()) { // 셀의내용의 타입 선택
-						case NUMERIC:
-							callbackValue = "" + (int) callbackCell.getNumericCellValue(); // double형 -> long형
-							break;
-						case STRING:
-							callbackValue = "" + callbackCell.getStringCellValue(); // String
-							break;
-						case BLANK:
-							callbackValue = "";
-							break;
-						case ERROR:
-							callbackValue = "" + callbackCell.getErrorCellValue(); // byte
-							break;
-						default:
+							case NUMERIC:
+								callbackValue = "" + (int) callbackCell.getNumericCellValue(); // double형 -> long형
+								break;
+							case STRING:
+								callbackValue = "" + callbackCell.getStringCellValue(); // String
+								break;
+							case BLANK:
+								callbackValue = "";
+								break;
+							case ERROR:
+								callbackValue = "" + callbackCell.getErrorCellValue(); // byte
+								break;
+							default:
+								break;
 						}
 					} else {
 						callbackValue = "";
@@ -355,19 +358,20 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 					if (cell != null) {
 						switch (cell.getCellType()) { // 셀의내용의 타입 선택
-						case NUMERIC:
-							excelValue = "" + (int) cell.getNumericCellValue(); // double형 -> long형
-							break;
-						case STRING:
-							excelValue = "" + cell.getStringCellValue(); // String
-							break;
-						case BLANK:
-							excelValue = "";
-							break;
-						case ERROR:
-							excelValue = "" + cell.getErrorCellValue(); // byte
-							break;
-						default:
+							case NUMERIC:
+								excelValue = "" + (int) cell.getNumericCellValue(); // double형 -> long형
+								break;
+							case STRING:
+								excelValue = "" + cell.getStringCellValue(); // String
+								break;
+							case BLANK:
+								excelValue = "";
+								break;
+							case ERROR:
+								excelValue = "" + cell.getErrorCellValue(); // byte
+								break;
+							default:
+								break;
 						}
 
 						// 메세지 출력
@@ -403,6 +407,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 							if (shareType == 1) { // 분할전송일시
 								cal = Calendar.getInstance();
+								
 								if (perMinuteFlag == 0) {
 									// timeType
 									// 0: 즉시 1:예약
@@ -506,6 +511,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 									intReqMin = date.getMinute();
 									intReqSec = date.getSecond();
 									perMinuteFlag = 1;
+									
 								} else {
 									if (cntFlag % tranCnt == 0) {
 										intReqMin += perMinute;
@@ -517,6 +523,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 								if (intReqMin > 59) {
 									intReqHour += (intReqMin / 60); // 60으로 나눠지는만큼 몫이 더해져야할 시간이므로 더해준다.
 									intReqMin %= 60;
+									
 									if (intReqHour > 23) { // 시간이 24시간이상일경우 날짜를 하루 더해준다.
 										intStrD1 += (intReqHour / 24);
 										intReqHour %= 24;
@@ -568,11 +575,13 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 		// 넘어온 날짜가 해당월의 날짜보다 높을시에
 		// 같거나 작을 경우에는 그대로 출력하면 되므로
 		if (date > maxDates) {
+			
 			if ((date / maxDates == 1) && month == 12) {
 				addMonthAndDate[0] = ++year;
 			} else {
 				addMonthAndDate[0] = year;
 			}
+			
 			addMonthAndDate[1] = checkMaxMonth((date / maxDates) + month);
 			addMonthAndDate[2] = date % maxDates;
 		} else {
@@ -599,13 +608,14 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 		month[9] = 31; // 10월
 		month[10] = 30; // 11월
 		month[11] = 31; // 12월
+		
 		return month[currentMonth - 1];
 	}
 
 	// 최대 월 가져오기
 	public static int checkMaxMonth(int month) {
-		if (month > 12)
-			month -= 12;
+		if (month > 12) month -= 12;
+		
 		return month;
 	}
 
@@ -620,6 +630,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 				}
 			}
 		}
+		
 		return 28;
 	}
 

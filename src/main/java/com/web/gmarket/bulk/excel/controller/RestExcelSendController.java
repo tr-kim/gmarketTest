@@ -235,7 +235,7 @@ public class RestExcelSendController {
 			
 			CompletableFuture.runAsync(() -> excelSendService.insertExcelSend(dto, uploadStatus, jobId));
 			
-			result.put(ConstantsUtils.CODE, ConstantsUtils.SUCCESS);
+			result.put(ConstantsUtils.CODE, ConstantsUtils.SUCCESS_CODE);
 			result.put(ConstantsUtils.RESULT, jobId);
 			
 			return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -243,7 +243,7 @@ public class RestExcelSendController {
 			e.printStackTrace();
 			log.error(e.getMessage());
 			
-			result.put(ConstantsUtils.CODE, ConstantsUtils.FAILD);
+			result.put(ConstantsUtils.CODE, ConstantsUtils.ERROR_CODE);
 			result.put(ConstantsUtils.RESULT, "엑셀 발송 중 에러가 발생했습니다.");
 			
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);

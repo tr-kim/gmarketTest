@@ -600,7 +600,10 @@ function sendMessage() {
 		
 		// 메시지 유형 XXX
 		const msgTypeValue = document.querySelector('.msg_type').textContent.trim();
-		if(msgTypeValue != "SMS") showDialogCustom("개발 진행 중입니다.");
+		if(msgTypeValue == "MMS") {
+			showDialogCustom("개발 진행 중입니다.");
+			return;
+		}
 		
 		// 시트
 		const sheet = document.getElementById("sheet").value;
@@ -615,6 +618,12 @@ function sendMessage() {
 		
 		// 대분류
 		const largeCategory = document.getElementById("large-category").value;
+		
+		// XXX
+		if(largeCategory == 0) {
+			showDialogCustom("개발 진행 중입니다.");
+			return;
+		}
 		
 		// 사용자 아이디
 		const userId = document.getElementById("userId").value.trim();
@@ -692,17 +701,17 @@ function sendMessage() {
 		.then(data => {
 			console.log(data);
 			
-			const status = data.code;
+			const code = data.code;
+			const result = data.result;
 			
-			if(status == "success") {
+			if(code == 1000) {
 				
-				uploadStatusCheck(data.result);
+				uploadStatusCheck(result);
 				// 테이블 그리기
 //				const retData = data.retData;
 //				drawTable("excelGrid", retData, "Y");
 			} else {
-				const message = data.message;
-				showDialogCustom(message);
+				showDialogCustom(result);
 			}
 		})
 		.catch(err => {
@@ -794,7 +803,7 @@ function parseReservationTime(timeString) {
 		const getHour = String(date.getHours()).padStart(2, '0');
 		const getMinute = String(date.getMinutes()).padStart(2, '0');
 		const getSecond = String(date.getSeconds()).padStart(2, '0');
-		const getMillisecond = String(date.getSeconds()).padStart(2, '0');
+		const getMillisecond = String(date.getSeconds()).padStart(3, '0');
         
         return `${getYaer}${getMonth}${getDay}${getHour}${getMinute}${getSecond}${getMillisecond}`;
     } catch (error) {
@@ -1271,19 +1280,31 @@ function excelValidateRequired(){
 	return true;
 }
 
-// 엑셀 업로드 상태 체크(프로그레스 바)
+// 엑셀 발송 상태 체크(프로그레스 바)
 function uploadStatusCheck(jobId) {
 	const interval = setInterval(() => {
         fetch(`/api/v1/excelSend/uploadStatus/${jobId}`)
             .then(response => response.json())
             .then(data => {
-				console.log(data.progress, data.message);
-                // updateProgress(data.progress, data.message);
+				// console.log(data);
+				
+				processTotal = data.total;
+				processed = data.current;
+				
+				processData();
                 
-                if (data.complete) {
+				// 상태 체크 중지
+                if (data.complete || processed >= processTotal) {
+					alert("엑셀 발송이 완료되었습니다.");
+					location.reload(true);	// 페이지 새로고침
                     clearInterval(interval);
                 }
-            });
-    }, 1000); // 1초마다 체크
+			}).catch(err => {
+				console.error("엑셀 발송 상태 체크:", err);
+				alert("엑셀 발송 도중 에러가 발생하였습니다.");
+				document.querySelector('.progressBar').classList.replace('d-block', 'd-none');
+				clearInterval(interval);
+			});
+    }, 3000); // 3초마다 체크
 }
 
