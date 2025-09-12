@@ -319,9 +319,10 @@ function reservedSearch(){
 // 요청번호 지정
 function reservedDesign(btn){
 	const row = btn.closest("tbody > tr");
-	const reserved4Value = row.querySelector("td").textContent;
+	
+	const dataReserved4 = row.getAttribute("data-reserved4");
 	const reserved4 = document.getElementById("reserved4");
-	reserved4.value = reserved4Value.trim();
+	reserved4.value = dataReserved4.trim();
 }
 
 
@@ -329,9 +330,9 @@ function reservedDesign(btn){
 function reservedDelete(btn){
 	const row = btn.closest("tbody > tr");
 	
-	const reserved4 = row.getAttribute("data-reserved4");
-	const resultCompany = row.getAttribute("data-result-company");
-	const resultTable = row.getAttribute("data-result-table");
+	const reserved4 = row.getAttribute("data-reserved4").trim();
+	const resultCompany = row.getAttribute("data-result-company").trim();
+	const resultTable = row.getAttribute("data-result-table").trim();
 	
 	const confirmDialog = DevExpress.ui.dialog.custom({
 		showTitle: false,
