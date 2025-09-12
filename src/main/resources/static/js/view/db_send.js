@@ -13,18 +13,13 @@ $(function () {
 		hideOnOutsideClick: false,
 	}).dxLoadPanel('instance');
 	
-	const MSG_TITLE = document.getElementById('msgTitle');
 	const MSG_WRITE = document.getElementById('msgWrite');
-	const MSG_TYPES = document.querySelector('.msg_type');
 	const INPUT_BYTE = document.getElementById('input_byte');
-	const TOTAL_BYTE = document.getElementById('total_byte');
+	
+	
 	const FINAL_SEND_BTN = document.getElementById('final_send_btn');
 	
 	MSG_WRITE.placeholder = "내용을 입력해 주세요.\n80byte 초과 시 장문 문자로,\n이미지 추가 시 포토 문자로 자동 전환 됩니다.";	
-	
-	function toggleDropZoneActive(dropZone, isActive) {
-		dropZone.classList.toggle('dropzone-active', isActive);
-	}	
 	
 	// 이미지 등록
 	$('#file-uploader').dxFileUploader({
@@ -38,6 +33,24 @@ $(function () {
 			sendType: 'DB'
 		},
 		onValueChanged(e) {
+			const inputWrapper = document.getElementById('file-uploader');
+			const exist = document.querySelectorAll('.dx-fileuploader-file-container');
+			let imgCheck = document.querySelector('.img-check');
+
+			if (exist.length > 0) {
+				
+				if (!imgCheck) {
+					imgCheck = document.createElement('div');
+					imgCheck.classList.add('img-check');
+					imgCheck.innerHTML = `이미지 체크 안 됨`;
+					inputWrapper.appendChild(imgCheck);
+				}
+			} else {
+				
+				if (imgCheck) {
+					imgCheck.remove();
+				}
+			}
 			const maxFiles = 2;
 
 			if (e.value.length > maxFiles) {
@@ -46,6 +59,7 @@ $(function () {
 				e.component.option('value', limitedFiles);
 				showDialogCustom(`이미지는 최대 ${maxFiles}개까지만 업로드할 수 있습니다.`);
 			}
+
 		},
 		onUploadStarted(e) {
 			const files = e.component.option('value');
@@ -59,9 +73,15 @@ $(function () {
 		},
 		onUploaded(e) {
 			console.log('Uploaded', e);
+			let imgCheck = document.querySelector('.img-check');
+			imgCheck.innerHTML = `이미지 체크 완료`;
 		}
 	});
 	
+	
+
+	
+
 	//예약 발송 캘린더
 	let reserveDate = "";
 	
@@ -168,58 +188,10 @@ $(function () {
 		}
 	})
 
-	//문자 타입 표시
-	function setMsgType(idx, byteLength) {
-		const types = ['SMS', 'LMS', 'MMS'];
-		const classMap = ['sms', 'lms', 'mms'];
-		const byteNum = ['80', '2000', '2000'];
-		
-		// 기존 클래스 제거
-		classMap.forEach(cls => MSG_TYPES.classList.remove(cls));
-		
-		// 유효한 인덱스일 때만 적용
-		if (idx >= 0 && idx < types.length) {
-			MSG_TYPES.textContent = types[idx];
-			MSG_TYPES.classList.add(classMap[idx]);
-			TOTAL_BYTE.textContent = byteNum[idx];
-		}
-		
-		INPUT_BYTE.textContent = byteLength;
-	}
+	/*
+	
 
-	//080 수신거부
-	document.getElementById('rejectCheckDefault').addEventListener('change', function () {
-		const input = document.getElementById('rejectNum');
-		input.disabled = !this.checked;
-		 handleInput();
-	});	
-
-	//문자 byte 표시
-	function getByteLength(str) {
-		let resultStr = "";
-		let size = 0;
-
-		for (let i = 0; i < str.length; i++) {
-			const ch = str.charAt(i);
-			const byteSize = new Blob([ch]).size;
-			const addSize = (byteSize === 2 || byteSize === 3) ? 2 : 1;
-
-			if (size + addSize > 2000) {
-				showDialogCustom(`최대 2000byte까지 입력 가능합니다.`);
-				break;
-			}
-
-			resultStr += ch;
-			size += addSize;
-		}
-
-		if (str !== resultStr) {
-			
-			MSG_WRITE.value = resultStr;
-		}
-
-		return size;
-	}
+	
 	
 	//이미지 확인
 	function hasImage() {
@@ -229,37 +201,69 @@ $(function () {
 		
 		return files.length > 0;
 	}
+*/
+	//080 수신거부
+	const rejectCheck = document.getElementById('rejectCheckDefault');
+	const input = document.getElementById('rejectNum');
 
-	//입력 이벤트 핸들링
+	// DOM 로드될 때 상태 반영
+	input.disabled = !rejectCheck.checked;
+	handleInput();
+
+	// 체크박스 상태 변경될 때 반영
+	rejectCheck.addEventListener('change', function () {
+		input.disabled = !this.checked;
+		handleInput();
+	});
+
+	// 문자 byte 표시
+	function getByteLength(str, maxByte) {
+		let resultStr = "";
+		let size = 0;
+
+		for (let i = 0; i < str.length; i++) {
+			const ch = str.charAt(i);
+			const byteSize = new Blob([ch]).size;
+			const addSize = (byteSize === 2 || byteSize === 3) ? 2 : 1;
+
+			if (size + addSize > maxByte) {
+				break;
+			}
+
+			resultStr += ch;
+			size += addSize;
+		}
+
+		return { text: resultStr, size };
+	}
+
+	// 입력 이벤트 핸들링
 	function handleInput() {
-    const titleContent = MSG_TITLE.value;
-    const titleByteLength = getByteLength(titleContent);
+		const maxByte = parseInt(document.getElementById("total_byte").textContent, 10) || 2000;
 
-    const writeContent = MSG_WRITE.value;
-    const writeByteLength = getByteLength(writeContent);
+		let rejectNumSize = 0;
+		if (!document.getElementById('rejectNum').disabled) {
+			const rejectNumContent = document.getElementById('rejectNum').value;
+			// 여기서도 getByteLength로 동일하게 처리
+			rejectNumSize = getByteLength(rejectNumContent, maxByte).size;
+		}
 
-    let totalByteLength = writeByteLength; // 기본은 내용 바이트 수
+		// MSG_WRITE는 (최대값 - rejectNum 크기) 만큼만 허용
+		const allowedByte = maxByte - rejectNumSize;
+		const msgResult = getByteLength(MSG_WRITE.value, allowedByte);
 
-    // rejectCheckDefault가 활성화(checked)되어 있고 rejectNum도 입력되면 바이트 합산
-    if (!document.getElementById('rejectNum').disabled) {
-        const rejectNumContent = document.getElementById('rejectNum').value;
-        const rejectNumByteLength = getByteLength(rejectNumContent);
-        totalByteLength += rejectNumByteLength;
-    }
+		// MSG_WRITE 내용 잘라서 반영
+		if (MSG_WRITE.value !== msgResult.text) {
+			showDialogCustom(`최대 ${maxByte}byte까지 입력 가능합니다.`);
+			MSG_WRITE.value = msgResult.text;
+		}
 
-    const hasImg = hasImage();
-
-    if (hasImg) {
-        setMsgType(2, totalByteLength); // MMS
-    } else if (titleContent.trim() !== '' || totalByteLength > 80) {
-        setMsgType(1, totalByteLength); // LMS
-    } else {
-        setMsgType(0, totalByteLength); // SMS
-    }
-}
+		// 합산 결과
+		const totalByteLength = rejectNumSize + msgResult.size;
+		INPUT_BYTE.textContent = totalByteLength;
+	}
 
 	const rejectNum = document.getElementById('rejectNum')
-	MSG_TITLE.addEventListener("input", handleInput); //제목
 	MSG_WRITE.addEventListener("input", handleInput); //내용
 	rejectNum.addEventListener("input", handleInput); //080 수신거부 번호
 	
@@ -312,6 +316,7 @@ function reservedSearch(){
 	.finally(() => {
 		// 로딩바 숨김
 		hideLoading(LOAD_PANEL);
+		initSend();
 	});
 }
 
@@ -323,8 +328,43 @@ function reservedDesign(btn){
 	const dataReserved4 = row.getAttribute("data-reserved4");
 	const reserved4 = document.getElementById("reserved4");
 	reserved4.value = dataReserved4.trim();
+
+	const resultTable = row.getAttribute("data-result-table").trim();
+	
+	setMsgType(resultTable);
 }
 
+// 요청번호 지정 시 문자 타입 표시
+function setMsgType(resultTable) {
+	const MSG_TYPES = document.querySelector('.msg_type');
+	const TOTAL_BYTE = document.getElementById('total_byte');
+	
+
+	let idx = "";
+
+	if(resultTable === "SMSCLI_TBL_LARGE"){
+		idx = 0;
+	}else if(resultTable === "LMSCLI_TBL_LARGE"){
+		idx = 1;
+	}else if(resultTable === "MMSCLI_TBL_LARGE"){
+		idx = 2;
+	}
+
+	const types = ['SMS', 'LMS', 'MMS'];
+	const classMap = ['sms', 'lms', 'mms'];
+	const byteNum = ['80', '2000', '2000'];
+	
+	// 기존 클래스 제거
+	classMap.forEach(cls => MSG_TYPES.classList.remove(cls));
+	
+	// 유효한 인덱스일 때만 적용
+	if (idx >= 0 && idx < types.length) {
+		MSG_TYPES.textContent = types[idx];
+		MSG_TYPES.classList.add(classMap[idx]);
+		TOTAL_BYTE.textContent = byteNum[idx];
+	}
+	
+}
 
 // 요청번호 삭제
 function reservedDelete(btn){
@@ -398,6 +438,11 @@ function reservedDelete(btn){
 // 문자 발송
 function sendMessage(){
 	const reserved4 = document.getElementById('reserved4');
+	const msgType = document.querySelector('.msg_type').textContent.trim();
+    const uploader = $('#file-uploader').dxFileUploader('instance');
+    const files = uploader.option('value');
+	const imgCheck = document.querySelector('.img-check');
+
 	// 유효성 검사
 	if(reserved4.value === "미지정" || reserved4.value === ""){
 		 const message = '요청번호를 조회 후 지정하세요.';
@@ -406,6 +451,18 @@ function sendMessage(){
 		 });
 		 return;
 	}
+
+	 // MMS인데 이미지 없으면 경고
+    if (msgType === "MMS" && (!files || files.length === 0)) {
+        showDialogCustom("이미지를 등록해주세요.");
+        return; 
+    }
+
+	if (msgType === "MMS" && ((!imgCheck) || imgCheck.textContent.trim() === "이미지 체크 안 됨")){
+		showDialogCustom("이미지 체크를 해주세요.");
+        return; 
+	}
+
 	if (		
 		!inputValidateRequired("tranCallback", "회신번호를 입력하세요.") ||
 		!inputValidateRequired("userId", "사용자ID를 입력하세요.") ||
@@ -569,3 +626,21 @@ function drawTable(containerId, data){
 	renderVisibleRows(container, tbody, spacer, data, rowHeight, visibleRows);
 }
 
+//초기화
+function initSend(){
+	document.getElementById('msgWrite').value = "";
+	document.getElementById('reserved4').value = "미지정";
+	document.getElementById('msgTitle').value = "";
+	document.getElementById('tranCallback').value = "";
+	document.getElementById('sendInfo').value = "";
+	document.getElementById('stat').value = "";
+
+	const uploader = $('#file-uploader').dxFileUploader('instance');
+	uploader.reset(); // 파일 목록 초기화
+
+	// img-check 메시지도 초기화
+	let imgCheck = document.querySelector('.img-check');
+	if (imgCheck) {
+		imgCheck.innerHTML = `이미지 체크 안 됨`;
+	}
+}

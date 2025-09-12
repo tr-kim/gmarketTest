@@ -346,18 +346,18 @@ aside .psw_chg_btn:hover{
 .send .grid .dx-bordered-bottom-view{
     max-height: 10rem;
 }
-.send .numDelBtn:hover {
+.send .deleteBtn:hover {
     background: #dae9ff;
     border-radius: 2px;
 }
-.send .numSelectBtn:hover{
+.send .designBtn:hover{
     background: #dae9ff;
     border-radius: 2px;
 }
-.send .numDelBtn:hover i{
+.send .deleteBtn:hover i{
     color:#fc0e0e;
 }
-.send .numSelectBtn:hover i{
+.send .designBtn:hover i{
     color:#0abb26;
 }
 .send .msg_wrap_hd{
@@ -408,6 +408,13 @@ aside .psw_chg_btn:hover{
 }
 .send .msg_wrap{
     border-right: 1px solid #e5e7eb;
+}
+.img-check {
+    position: absolute;
+    right: 0;
+    top: 158px;
+    color: #666;
+    font-size: 12px;
 }
 .option_tab li{
     border-bottom: 3px solid #ddd;
