@@ -25,7 +25,7 @@ $(function () {
 	const fileUploader = $('#file-uploader').dxFileUploader({
 		multiple: true,
 		allowedFileExtensions: ['.jpg'],
-		maxFileSize: 100 * 1024,
+		maxFileSize: 100 * 1024, // 100KB
 		uploadMode: 'useButtons',
 		uploadMethod: 'POST',
 		uploadUrl: '/files/upload/fileUpload',   
@@ -38,6 +38,17 @@ $(function () {
 			uploadButton.hide();
 		},
 		onValueChanged(e) {
+			const maxCount = 2;
+			const fileCount = e.value.length;
+			
+			if (fileCount > maxCount) {
+				const limitedFiles = e.value.slice(0, maxCount);
+				e.component.reset();
+				e.component.option('value', limitedFiles);
+				showDialogCustom(`이미지는 최대 ${maxCount}장까지 등록 가능합니다.`);
+			}
+			
+			// 이미지 체크
 			const inputWrapper = document.getElementById('file-uploader');
 			const exist = document.querySelectorAll('.dx-fileuploader-file-container');
 			let imgCheck = document.querySelector('.img-check');
@@ -47,21 +58,13 @@ $(function () {
 					imgCheck = document.createElement('div');
 					imgCheck.classList.add('img-check');
 					imgCheck.innerHTML = `이미지 체크 필요`;
+					imgCheck.style.color = 'red';
 					inputWrapper.appendChild(imgCheck);
 				}
 			} else {
 				if (imgCheck) {
 					imgCheck.remove();
 				}
-			}
-			
-			const maxFiles = 2;
-			
-			if (e.value.length > maxFiles) {
-				const limitedFiles = e.value.slice(0, maxFiles);
-				e.component.reset();
-				e.component.option('value', limitedFiles);
-				showDialogCustom(`이미지는 최대 ${maxFiles}장까지 등록 가능합니다.`);
 			}
 		},
 		onUploadStarted(e) {
@@ -74,21 +77,22 @@ $(function () {
 			});
 		},
 		onUploaded(e) {
-			console.log('Uploaded', e);
+			// 이미지 체크
 			let imgCheck = document.querySelector('.img-check');
 			imgCheck.innerHTML = `이미지 체크 완료`;
-			imgCheck.style.color = 'red';
-
+			imgCheck.style.color = 'green';
+			
+			// 이미지 미리보기
 			const files = e.component.option('value');
 			const previewArea = document.getElementById('preview-area');
 			previewArea.innerHTML = ""; // 기존 썸네일 초기화
-
+			
 			files.forEach(file => {
 				const reader = new FileReader();
 				reader.onload = function(event) {
 					const img = document.createElement('img');
 					img.src = event.target.result;
-					img.style.width = "100px";   // 썸네일 크기
+					img.style.width = "100px"; // 썸네일 크기
 					previewArea.appendChild(img);
 				};
 				reader.readAsDataURL(file);

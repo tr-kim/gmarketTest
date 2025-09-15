@@ -86,22 +86,20 @@
             "dxDateRangeBox-endDateOutOfRangeMessage": "End date is out of range",
             "dxDateRangeBox-startDateLabel": "Start Date",
             "dxDateRangeBox-endDateLabel": "End Date",
-            //"dxFileUploader-selectFile": "Select a file",
-            "dxFileUploader-selectFile": "이미지를 드래그&드롭하거나 클릭해 주세요.",
-            //"dxFileUploader-dropFile": "or Drop a file here", 
-            "dxFileUploader-dropFile": "", 
-            "dxFileUploader-bytes": "bytes",
+            "dxFileUploader-selectFile": "이미지를 드래그&드롭하거나 클릭해 주세요.", // Select a file
+            "dxFileUploader-dropFile": "", // or Drop a file here
+            "dxFileUploader-bytes": "바이트", // bytes
             "dxFileUploader-kb": "KB",
             "dxFileUploader-Mb": "MB",
             "dxFileUploader-Gb": "GB",
-            "dxFileUploader-upload": "이미지 체크",
-            "dxFileUploader-uploaded": "업로드 됨",
-            "dxFileUploader-readyToUpload": "업로드 준비완료",
-            "dxFileUploader-uploadAbortedMessage": "Upload cancelled",
-            "dxFileUploader-uploadFailedMessage": "업로드 실패",
-            "dxFileUploader-invalidFileExtension": "File type is not allowed",
-            "dxFileUploader-invalidMaxFileSize": "파일 크기 초과",
-            "dxFileUploader-invalidMinFileSize": "File is too small",
+            "dxFileUploader-upload": "이미지 체크", // Upload
+            "dxFileUploader-uploaded": "업로드 완료", // Uploaded
+            "dxFileUploader-readyToUpload": "업로드 대기 중", // Ready to upload
+            "dxFileUploader-uploadAbortedMessage": "업로드가 취소되었습니다.", // Upload cancelled
+            "dxFileUploader-uploadFailedMessage": "업로드 실패", // Upload failed
+            "dxFileUploader-invalidFileExtension": "허용되지 않는 파일 형식입니다.", // File type is not allowed
+            "dxFileUploader-invalidMaxFileSize": "파일 크기가 너무 큽니다.", // File is too large
+            "dxFileUploader-invalidMinFileSize": "파일 크기가 너무 작습니다.", //File is too small
             "dxRangeSlider-ariaFrom": "From",
             "dxRangeSlider-ariaTill": "Till",
             "dxSwitch-switchedOnText": "ON",
