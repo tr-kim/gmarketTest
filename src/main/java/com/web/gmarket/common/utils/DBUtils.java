@@ -8,8 +8,8 @@ public class DBUtils {
 		switch (code) {
 			case ConstantsUtils.AUCTION_CODE:
 				return ConstantsUtils.DB_AUCTION;
-			case ConstantsUtils.GMAREKT_CODE:
-				return ConstantsUtils.DB_GMAREKT;
+			case ConstantsUtils.GMARKET_CODE:
+				return ConstantsUtils.DB_GMARKET;
 			default:
 				return ConstantsUtils.DB_AUCTION;
 		}

@@ -38,7 +38,7 @@ public class StatServiceImpl implements StatService {
 		switch (statDto.getCompanyCode()) {
 			case ConstantsUtils.AUCTION_CODE:
 				return selectAuctionStatListCount(statDto);
-			case ConstantsUtils.GMAREKT_CODE:
+			case ConstantsUtils.GMARKET_CODE:
 				return selectGmarketStatListCount(statDto);
 			default:
 				return selectAuctionStatListCount(statDto);
@@ -51,7 +51,7 @@ public class StatServiceImpl implements StatService {
 		switch (statDto.getCompanyCode()) {
 			case ConstantsUtils.AUCTION_CODE:
 				return selectAuctionStatList(statDto);
-			case ConstantsUtils.GMAREKT_CODE:
+			case ConstantsUtils.GMARKET_CODE:
 				return selectGmarketStatList(statDto);
 			default:
 				return selectAuctionStatList(statDto);
@@ -90,7 +90,7 @@ public class StatServiceImpl implements StatService {
 
 	// 지마켓 목록 갯수
 	public int selectGmarketStatListCount(StatDto statDto) {
-		return getMapper(ConstantsUtils.DB_GMAREKT).selectGmarketStatListCount(statDto);
+		return getMapper(ConstantsUtils.DB_GMARKET).selectGmarketStatListCount(statDto);
 	}
 
 	// 지마켓 목록 조회
@@ -99,7 +99,7 @@ public class StatServiceImpl implements StatService {
 		statDto.setStartDate(dateFormatConvert(statDto.getTimeType(), statDto.getStartDate()));
 		statDto.setEndDate(dateFormatConvert(statDto.getTimeType(), statDto.getEndDate()));
 
-		return getMapper(ConstantsUtils.DB_GMAREKT).selectGmarketStatList(statDto);
+		return getMapper(ConstantsUtils.DB_GMARKET).selectGmarketStatList(statDto);
 	}
 
 	// 날짜 포맷변환

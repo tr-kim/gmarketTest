@@ -242,7 +242,7 @@ public class RestExcelSendController {
 			return ResponseEntity.status(HttpStatus.OK).body(result);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error(e.getMessage());
+			log.error("엑셀 발송 중 에러가 발생했습니다:", e.getMessage());
 			
 			result.put(ConstantsUtils.CODE, ConstantsUtils.ERROR_CODE);
 			result.put(ConstantsUtils.RESULT, "엑셀 발송 중 에러가 발생했습니다.");
@@ -260,7 +260,7 @@ public class RestExcelSendController {
 	@GetMapping("/uploadStatus/{jobId}")
     public ResponseEntity<UploadProgress> getUploadStatus(@PathVariable("jobId") String jobId) {
         UploadProgress progress = uploadStatus.get(jobId);
-        return ResponseEntity.ok(progress != null ? progress : new UploadProgress(0, 0, 0, "작업을 찾을 수 없음"));
+        return ResponseEntity.ok(progress != null ? progress : new UploadProgress(-1, 0, 0, "작업을 찾을 수 없음"));
     }
 	
 	/**

@@ -216,7 +216,7 @@ $(function() {
 	}).dxSelectBox("instance");
 	
 	// 사용자 등급 및 회사 업체에 따라 select box option 설정
-	var largeCategoryData = [ { code: -1, name: '선택하세요' } ];
+	let largeCategoryData = [ { code: -1, name: '선택하세요' } ];
 	
 	if((userGrade == 0 || (userGrade == 1 && companyCode == 0))) {
 		largeCategoryData.push({ code: 0, name: '옥션' });

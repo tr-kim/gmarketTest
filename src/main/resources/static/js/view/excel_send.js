@@ -1,5 +1,6 @@
 let LOAD_PANEL;
 let EXCEL_FILE_NAME = "";
+let IMAGE_FILE_NAME = new Array();
 let MAX_ROWS = 0;
 
 $(function () {
@@ -69,6 +70,7 @@ $(function () {
 				const limitedFiles = e.value.slice(0, maxFiles);
 				e.component.reset();
 				e.component.option('value', limitedFiles);
+				IMAGE_FILE_NAME = new Array(); 	// 이미지 이름 저장 목록 초기화
 				showDialogCustom(`이미지는 최대 ${maxFiles}개까지만 업로드할 수 있습니다.`);
 			}
 		},
@@ -83,7 +85,21 @@ $(function () {
 			console.log("Upload started, data:", e.component.option("uploadCustomData"));
 		},
 		onUploaded(e) {
-			console.log('Uploaded', e);
+			// console.log('Uploaded', e);
+			
+	        // JSON 응답 처리
+	        try {
+				
+				// XMLHttpRequest 객체
+				let xhr = e.request;
+	            let json = JSON.parse(xhr.responseText);
+				
+				IMAGE_FILE_NAME.push(json.fileName);
+				console.log("IMAGE_FILE_NAME : ", IMAGE_FILE_NAME);
+				
+	        } catch (err) {
+	            console.warn("Not a JSON response:", xhr.responseText);
+	        }
 		}
 	});
 	
@@ -124,7 +140,7 @@ $(function () {
 	})();
 	
 	function reserveDateTextContent(){
-		document.querySelector('.reserveSend .date').textContent= reserveDate;
+		document.querySelector('.reserveSend .date').textContent = reserveDate;
 	}
 	
 	//예약 발송 모달 열기,닫기
@@ -416,19 +432,15 @@ let confirmDialog;
 function sendMessage() {
 	
 	if(userExcelUse == "N" || userExcelUse == null || userExcelUse == "") {
-		alert("현재 계정은 엑셀 발송이 제한되어 있습니다. 자세한 내용은 관리자에게 문의하세요.");
+		showDialogCustom("현재 계정은 엑셀 발송이 제한되어 있습니다. 자세한 내용은 관리자에게 문의하세요.");
 		return;
 	}
 	
 	// 파일 검사
-	if (!excelValidateRequired()) {
-		return;
-	}
+	if (!excelValidateRequired()) return;
 	
 	// 유효성 검사
-	if (!inputValidateRequired("sheet", "시트를 선택하세요.")) {
-		return;
-	}
+	if (!inputValidateRequired("sheet", "시트를 선택하세요.")) return; 
 	
 	// 엑셀 그리드
 	const firstTh = document.querySelector('#excelGrid thead th:first-child');
@@ -449,12 +461,7 @@ function sendMessage() {
 		return;
 	};
 	
-	if (
-		!inputValidateRequired("userId", "사용자ID를 입력하세요.") ||
-		!inputValidateRequired("sendInfo", "전송대상을 입력하세요.")
-	) {
-		return;
-	}
+	if (!inputValidateRequired("userId", "사용자ID를 입력하세요.") || !inputValidateRequired("sendInfo", "전송대상을 입력하세요.")) return;
 	
 	// 수신거부
 	if(document.getElementById('rejectCheckDefault').checked 
@@ -511,7 +518,7 @@ function sendMessage() {
 		// 메시지 유형 XXX
 		const msgTypeValue = document.querySelector('.msg_type').textContent.trim();
 		if(msgTypeValue == "MMS") {
-			showDialogCustom("개발 진행 중입니다.");
+			showDialogCustom("MMS 개발 진행 중입니다.");
 			return;
 		}
 		
@@ -531,7 +538,7 @@ function sendMessage() {
 		
 		// XXX
 		if(largeCategory == 0) {
-			showDialogCustom("개발 진행 중입니다.");
+			showDialogCustom("Auction 개발 진행 중입니다.");
 			return;
 		}
 		
@@ -590,17 +597,32 @@ function sendMessage() {
 		formData.append("tranCheckDefault", tranCheckDefault);											// 전송 범위 확인 true, false
 		formData.append("rejectCheckDefault", rejectCheckDefault);										// 080 수신거부 번호 확인 true, false 
 		
+		// 수신번호 체크한 경우
 		if(rejectCheckDefault) formData.append("rejectNum", rejectNum);									// 수신거부 번호
+		
+		// 발송 시간 - 예약인 경우
 		if(sendTimeChkValue === '1') formData.append("sendTime", sendTime);								// 예약 시간
 		
+		// 분할 전송 체크한 경우
 		if(splitSendChkValue === 'Y') { 
 			formData.append("splitMinute", splitMinute);												// 분할 전송 분
 			formData.append("splitNum", splitNum);														// 분한 전송 건수
 		}
 		
+		// 전송 범위 체크한 경우
 		if(tranCheckDefault) { 
 			formData.append("tranRangeStart", tranRangeStart);											// 전송 범위 최솟값
 			formData.append("tranRangeEnd", tranRangeEnd); 												// 전송 번위 최댓값
+		}
+		
+		// 이미지 파일 이름
+		if(msgType == "mms" && IMAGE_FILE_NAME.length > 0) {
+			if(IMAGE_FILE_NAME.length == 1) {
+				formData.append("imageName01", IMAGE_FILE_NAME[0]);
+			} else if(IMAGE_FILE_NAME.length == 2) {
+				formData.append("imageName01", IMAGE_FILE_NAME[1]);
+				formData.append("imageName02", IMAGE_FILE_NAME[2]);
+			}
 		}
 		
 		fetch("/api/v1/excelSend/insert", {
@@ -614,15 +636,8 @@ function sendMessage() {
 			const code = data.code;
 			const result = data.result;
 			
-			if(code == 1000) {
-				
-				uploadStatusCheck(result);
-				// 테이블 그리기
-//				const retData = data.retData;
-//				drawTable("excelGrid", retData, "Y");
-			} else {
-				showDialogCustom(result);
-			}
+			if(code == 1000)  uploadStatusCheck(result);
+			else showDialogCustom(result);
 		})
 		.catch(err => {
 			console.error("엑셀 발송 실패:", err);
@@ -690,6 +705,7 @@ function sendMessage() {
 // 예약 시간 포맷 변환 yyyyMMddHHmmssSSS
 function parseReservationTime(timeString) {
     try {
+		
         // "예약 발송 시간 : " 부분 제거
         const cleanString = timeString.replace("예약 발송 시간 : ", "");
         
@@ -1201,21 +1217,28 @@ function uploadStatusCheck(jobId) {
             .then(data => {
 				// console.log(data);
 				
-				processTotal = data.total;
-				processed = data.current; 
+				// 에러 처리
+				if(data.progress == -1) {
+					showDialogCustom("엑셀 발송 도중 에러가 발생하였습니다.");
+					document.querySelector('.progressBar').classList.replace('d-block', 'd-none');
+					clearInterval(interval);
+				}
+				
+				PROCESS_TOTAL = data.total;
+				PROCESSED = data.current; 
 				
 				processData();
                 
 				// 상태 체크 중지
-                if (data.complete || processed >= processTotal) {
-					alert("엑셀 발송이 완료되었습니다.");
+                if (data.complete || PROCESSED >= PROCESS_TOTAL) {
+					showDialogCustom("엑셀 발송이 완료되었습니다.");
 					uploadStatuRemove(jobId);
 					clearInterval(interval);
 					location.reload(true);	// 페이지 새로고침
                 }
 			}).catch(err => {
 				console.error("엑셀 발송 상태 체크:", err);
-				alert("엑셀 발송 도중 에러가 발생하였습니다.");
+				showDialogCustom("엑셀 발송 도중 에러가 발생하였습니다.");
 				document.querySelector('.progressBar').classList.replace('d-block', 'd-none');
 				clearInterval(interval);
 			});

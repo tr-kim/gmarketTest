@@ -8,8 +8,10 @@ spring:
     resources:
       add-mappings: true
       static-locations: classpath:/static/
+      #static-locations: file:src/main/resources/static/
   thymeleaf:
     prefix: classpath:/templates/
+    #prefix: file:src/main/resources/templates/
     check-template-location: true
     suffix: .html
     mode: HTML
@@ -37,6 +39,7 @@ spring:
         idle-timeout: 600000
         connection-timeout: 30000
         pool-name: HikariCP-AU
+
 logging:
   level:
     root: info
@@ -46,3 +49,34 @@ jwt:
 
 active:
   file:-path: C:\\ExcelWebSetup.exe
+
+ftp:
+  window-path: D:/FTP
+  connection-timeout: 10000
+  gmarkt:
+    active:
+      host: 121.254.131.252
+      port: 21
+      username: gmarketnh\\smsadm
+      password: Dptmdpadptm!21
+      path: /img/
+    stanby:
+      host: 121.254.131.251
+      port: 21
+      username: gmarketnh\\smsadm
+      password: Dptmdpadptm!21
+      path: /img/
+  auction:
+    active:
+      host: 192.168.10.171
+      port: 21
+      username: auct_dom\\smsadm08f
+      password: P@ssw0rd1!
+      path: /img/
+    stanby:
+      host: 192.168.10.172
+      port: 21
+      username: auct_dom\\smsadm08f
+      password: P@ssw0rd1!
+      path: /img/
+

@@ -140,6 +140,6 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	public UserMapper getMapper() {
-		return dynamicDataSourceService.getMapper(ConstantsUtils.DB_GMAREKT, UserMapper.class);
+		return dynamicDataSourceService.getMapper(ConstantsUtils.DB_GMARKET, UserMapper.class);
 	}
 }

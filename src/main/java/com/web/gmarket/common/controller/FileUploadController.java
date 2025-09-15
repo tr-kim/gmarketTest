@@ -82,9 +82,12 @@ public class FileUploadController {
 
 					// 새 파일명 = 날짜 + 원래 파일명
 					String newFileName = fileDate + "_" + originalFileName;
-
+					
 					Path filePath = datePath.resolve(newFileName); // C:/path/20250910/20250910123045_d.jpg
 					Files.write(filePath, file.getBytes());
+					
+					// 파일 이름 추가
+					response.put("fileName", newFileName);
 				}
 			}
 			

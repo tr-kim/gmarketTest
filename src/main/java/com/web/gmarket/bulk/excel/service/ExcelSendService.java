@@ -34,7 +34,6 @@ public interface ExcelSendService {
 	
 	String EXCEL_PATH = ConstantsUtils.EXCEL_PATH;
 	
-	
 	/**
 	 * 엑셀 발송
 	 * 
@@ -248,27 +247,18 @@ public interface ExcelSendService {
 							case FORMULA:
 								excelValue = cell.getCellFormula();
 								break;
-								
 							case NUMERIC:
-								if (DateUtil.isCellDateFormatted(cell)) {
-									excelValue = new SimpleDateFormat("yyyy-MM-dd").format(cell.getDateCellValue());
-								} else {
-									excelValue = String.valueOf((int) cell.getNumericCellValue());
-								}
+								excelValue = DateUtil.isCellDateFormatted(cell) ?  new SimpleDateFormat("yyyy-MM-dd").format(cell.getDateCellValue()) : String.valueOf((int) cell.getNumericCellValue());
 								break;
-								
 							case STRING:
 								excelValue = cell.getStringCellValue();
 								break;
-								
 							case BLANK:
 								excelValue = "";
 								break;
-								
 							case BOOLEAN:
 								excelValue = String.valueOf(cell.getBooleanCellValue());
 								break;
-								
 							case ERROR:
 								excelValue = String.valueOf(cell.getErrorCellValue());
 								break;

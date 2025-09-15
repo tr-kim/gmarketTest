@@ -1,7 +1,7 @@
 // 전체 데이터 건수
-let processTotal = 0; 
-let processed = 0;
-let progressBarStatus;
+let PROCESS_TOTAL = 0; 
+let PROCESSED = 0;
+let PROGRESS_BAR_STATUS;
 
 window.addEventListener('load', function() {
 	//상단메뉴일때
@@ -220,7 +220,7 @@ window.addEventListener('load', function() {
 //		}
 //	}, 500);
 	
-	progressBarStatus = $('#progressBarStatus').dxProgressBar({
+	PROGRESS_BAR_STATUS = $('#progressBarStatus').dxProgressBar({
 			min: 0,
 			max: 100,
 			width: '100%',
@@ -240,10 +240,10 @@ function processData() {
 	// 프로그레스 바 노출
 	document.querySelector('.progressBar').classList.replace('d-none', 'd-block');
 
-	const percent = Math.round((processed / processTotal) * 100);
-	progressBarStatus.option('value', percent);
+	const percent = Math.round((PROCESSED / PROCESS_TOTAL) * 100);
+	PROGRESS_BAR_STATUS.option('value', percent);
 
-	if (processed >= processTotal) {
+	if (PROCESSED >= PROCESS_TOTAL) {
 		console.log("모든 데이터 처리 완료");
 		// 프로그레스 바 비노출
 		document.querySelector('.progressBar').classList.replace('d-block', 'd-none');

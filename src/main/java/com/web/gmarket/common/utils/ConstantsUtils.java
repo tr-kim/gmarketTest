@@ -42,6 +42,7 @@ public class ConstantsUtils {
 	public static final String EUC_KR = "EUC-KR";
 	public static final String LAYOUT = "layout";
 	public static final String ACTIVE = "active";
+	public static final String STANBY = "stanby";
 	
 	public static final String SMS = "sms";
 	public static final String LMS = "lms";
@@ -98,12 +99,12 @@ public class ConstantsUtils {
 	public static final int TOTAL_GRAPH_TIME = 60; // Graph Reload 시간 간격(초단위, ex) 1분 => 60)
 	
 	// DB Connection Type
-	public static final String DB_GMAREKT = "gmarket";
+	public static final String DB_GMARKET = "gmarket";
 	public static final String DB_AUCTION = "auction";
 	
 	// Company Code
 	public static final int AUCTION_CODE = 0;
-	public static final int GMAREKT_CODE = 1;
+	public static final int GMARKET_CODE = 1;
 	
 	// SVC_TYPE_TABLE
 	public static final String EXCEL_SMS = "EXCEL_SMS";

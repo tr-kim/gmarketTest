@@ -30,7 +30,7 @@ public class DynamicDataSourceConfig {
     @Bean
     @Primary
     DataSource dynamicDataSource() {
-		Hikari hikari = properties.getDatasource().get(ConstantsUtils.DB_GMAREKT).getHikari();
+		Hikari hikari = properties.getDatasource().get(ConstantsUtils.DB_GMARKET).getHikari();
 
 		if (hikari == null) {
 			throw new IllegalStateException("기본 DB(db) 설정이 없습니다.");

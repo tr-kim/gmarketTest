@@ -103,5 +103,170 @@
     "name": "active.file:-path",
     "type": "java.lang.String",
     "description": "A description for 'active.file:-path'"
+  },
+  {
+    "name": "ftp.gmarkt.active.host",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarkt.active.host'"
+  },
+  {
+    "name": "ftp.gmarkt.stanby.host",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarkt.stanby.host'"
+  },
+  {
+    "name": "ftp.gmarkt.active.port",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarkt.active.port'"
+  },
+  {
+    "name": "ftp.gmarkt.active.username",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarkt.active.username'"
+  },
+  {
+    "name": "ftp.gmarkt.active.password",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarkt.active.password'"
+  },
+  {
+    "name": "ftp.gmarkt.active.path",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarkt.active.path'"
+  },
+  {
+    "name": "ftp.gmarkt.stanby.port",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarkt.stanby.port'"
+  },
+  {
+    "name": "ftp.gmarkt.stanby.username",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarkt.stanby.username'"
+  },
+  {
+    "name": "ftp.gmarkt.stanby.password",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarkt.stanby.password'"
+  },
+  {
+    "name": "ftp.gmarkt.stanby.path",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarkt.stanby.path'"
+  },
+  {
+    "name": "ftp.auction.active.host",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.auction.active.host'"
+  },
+  {
+    "name": "ftp.auction.active.port",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.auction.active.port'"
+  },
+  {
+    "name": "ftp.auction.active.username",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.auction.active.username'"
+  },
+  {
+    "name": "ftp.auction.active.password",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.auction.active.password'"
+  },
+  {
+    "name": "ftp.auction.active.path",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.auction.active.path'"
+  },
+  {
+    "name": "ftp.auction.stanby.host",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.auction.stanby.host'"
+  },
+  {
+    "name": "ftp.auction.stanby.port",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.auction.stanby.port'"
+  },
+  {
+    "name": "ftp.auction.stanby.username",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.auction.stanby.username'"
+  },
+  {
+    "name": "ftp.auction.stanby.password",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.auction.stanby.password'"
+  },
+  {
+    "name": "ftp.auction.stanby.path",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.auction.stanby.path'"
+  },
+  {
+    "name": "ftp.window",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.window'"
+  },
+  {
+    "name": "ftp.gmarket.active.host",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarket.active.host'"
+  },
+  {
+    "name": "ftp.gmarket.active.port",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarket.active.port'"
+  },
+  {
+    "name": "ftp.gmarket.active.username",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarket.active.username'"
+  },
+  {
+    "name": "ftp.gmarket.active.password",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarket.active.password'"
+  },
+  {
+    "name": "ftp.gmarket.active.path",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarket.active.path'"
+  },
+  {
+    "name": "ftp.gmarket.stanby.host",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarket.stanby.host'"
+  },
+  {
+    "name": "ftp.gmarket.stanby.port",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarket.stanby.port'"
+  },
+  {
+    "name": "ftp.gmarket.stanby.username",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarket.stanby.username'"
+  },
+  {
+    "name": "ftp.gmarket.stanby.password",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarket.stanby.password'"
+  },
+  {
+    "name": "ftp.gmarket.stanby.path",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.gmarket.stanby.path'"
+  },
+  {
+    "name": "ftp.connection-timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.connection-timeout'"
+  },
+  {
+    "name": "ftp.window-path",
+    "type": "java.lang.String",
+    "description": "A description for 'ftp.window-path'"
   }
 ]}

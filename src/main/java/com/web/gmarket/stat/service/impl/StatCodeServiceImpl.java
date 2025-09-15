@@ -28,6 +28,6 @@ public class StatCodeServiceImpl implements StatCodeService {
 	}
 	
 	public StatCodeMapper getMapper() {
-		return dynamicDataSourceService.getMapper(ConstantsUtils.DB_GMAREKT, StatCodeMapper.class);
+		return dynamicDataSourceService.getMapper(ConstantsUtils.DB_GMARKET, StatCodeMapper.class);
 	}
 }

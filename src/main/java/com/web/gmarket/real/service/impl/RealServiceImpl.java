@@ -32,10 +32,10 @@ public class RealServiceImpl implements RealService {
 		Map<String, List<RealDto>> result = new HashMap<>();
 		
 		List<StatCodeDto> auctionCodeList = statCodeService.selectStatCodeList(ConstantsUtils.AUCTION_CODE, 0);
-		List<StatCodeDto> gmarketCodeList = statCodeService.selectStatCodeList(ConstantsUtils.GMAREKT_CODE, 0);
+		List<StatCodeDto> gmarketCodeList = statCodeService.selectStatCodeList(ConstantsUtils.GMARKET_CODE, 0);
 		
 		result.put(ConstantsUtils.AUCTION, getMapper(ConstantsUtils.DB_AUCTION).selectRealHistTotalList(totalMonTime, alarmFlag, getCodeList(auctionCodeList)));
-		result.put(ConstantsUtils.GMAREKT, getMapper(ConstantsUtils.DB_GMAREKT).selectRealHistTotalList(totalMonTime, alarmFlag, getCodeList(gmarketCodeList)));
+		result.put(ConstantsUtils.GMAREKT, getMapper(ConstantsUtils.DB_GMARKET).selectRealHistTotalList(totalMonTime, alarmFlag, getCodeList(gmarketCodeList)));
 		
 		return result;
 	}
@@ -48,8 +48,8 @@ public class RealServiceImpl implements RealService {
 			case ConstantsUtils.AUCTION_CODE:
 				codeList = getCodeList(statCodeService.selectStatCodeList(ConstantsUtils.AUCTION_CODE, 0));
 				break;
-			case ConstantsUtils.GMAREKT_CODE:
-				codeList = getCodeList(statCodeService.selectStatCodeList(ConstantsUtils.GMAREKT_CODE, 0));
+			case ConstantsUtils.GMARKET_CODE:
+				codeList = getCodeList(statCodeService.selectStatCodeList(ConstantsUtils.GMARKET_CODE, 0));
 				break;
 			default:
 				codeList = getCodeList(statCodeService.selectStatCodeList(ConstantsUtils.AUCTION_CODE, 0));

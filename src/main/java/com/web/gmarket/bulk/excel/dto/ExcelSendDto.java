@@ -114,6 +114,11 @@ public class ExcelSendDto {
 	// 이미지 유형 0 : image_path_1, 1 : image_path_1, image_path_2, 기타 image_path_2
 	private Integer preViewFlag = 0;
 	
+	// 이미지 이름
+	private String imageName01;
+	private String imageName02;
+	private String imageName03;
+	
 	// 이미지 경로
 	private String imagePath01;
 	private String imagePath02;

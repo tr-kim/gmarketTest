@@ -49,7 +49,7 @@
 			CommonSendMapper.insertMmsEvent
 		*/
 		INSERT INTO MMSCLI_TBL_EVENT (
-			TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_TITLE, TRAN_MSG, B_MSG_KEY, RESERVED3, IMAGE_PATH_01, IMAGE_PATH_02, IMAGE_PATH_03
+			TRAN_PHONE, TRAN_CALLBACK, TRAN_STATUS, TRAN_DATE, TRAN_TITLE, TRAN_MSG, B_MSG_KEY, RESERVED3, IMAGE_PATH_01, IMAGE_PATH_02
 		) VALUES (
 			#{tranPhone}, #{tranCallback}, #{tranStatus}, 
 			<choose>
@@ -60,7 +60,7 @@
 				${tranDate}
 				</otherwise>
 			</choose>
-			,  #{tranTitle}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}, #{imagePath01}, #{imagePath02}, #{imagePath03}
+			,  #{tranTitle}, CAST(#{tranMsg} AS VARCHAR(2000)), #{bMsgKey}, #{reserved3}, #{imagePath01}, #{imagePath02}
 		)
 	</insert>
 	
