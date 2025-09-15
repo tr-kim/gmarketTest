@@ -65,11 +65,10 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 			
 			// String yyyyMMddHHmmssSSS => Date yyyyMMddHHmmssSSS 변환
 			DateTimeFormatter orgFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
-			LocalDateTime dateTime1 = LocalDateTime.parse(cellData.get(0).get(2).toString(), orgFormatter);
 
 			// yyyyMMddHHmmssSSS => yyyy-MM-dd HH:mm:ss:SSS 변환
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-			String reqTime = dto.getTimeType() == 0 ? "CONVERT(CHAR(20), GETDATE(), 120)" : dateTime1.format(formatter);
+			String reqTime = dto.getTimeType() == 0 ? "CONVERT(CHAR(20), GETDATE(), 120)" : LocalDateTime.parse(cellData.get(0).get(2).toString(), orgFormatter).format(formatter);
 
 			int bulkCnt = dto.isTranCheckDefault() ? dto.getTranRangeEnd() : maxRows; // 대량 발송 갯수
 			String bMsgKey = String.format("%s%s", Long.toString(System.currentTimeMillis()).substring(0, 10), dto.getUserId()); // 대량 발송 키 생성
@@ -120,10 +119,8 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 					var item = cellData.get(k);
 					
 					// String yyyyMMddHHmmssSSS => Date yyyyMMddHHmmssSSS 변환
-					LocalDateTime dateTime2 = LocalDateTime.parse(item.get(2).toString(), orgFormatter);
-					
 					// 날짜 설정
-					String sReqTime = dto.getTimeType() == 0 ? "CONVERT(char(20), GETDATE(), 120)" : dateTime2.format(formatter);
+					String sReqTime = dto.getTimeType() == 0 ? "CONVERT(char(20), GETDATE(), 120)" : LocalDateTime.parse(item.get(2).toString(), orgFormatter).format(formatter);
 
 					// 데이터 설정
 					CommonSendDto commonSendDto = CommonSendDto.builder().build();
