@@ -22,7 +22,7 @@ $(function () {
 	MSG_WRITE.placeholder = "내용을 입력해 주세요.\n80byte 초과 시 장문 문자로,\n이미지 추가 시 포토 문자로 자동 전환 됩니다.";	
 	
 	// 이미지 등록
-	$('#file-uploader').dxFileUploader({
+	const fileUploader = $('#file-uploader').dxFileUploader({
 		multiple: true,
 		allowedFileExtensions: ['.jpg'],
 		maxFileSize: 100 * 1024,
@@ -32,34 +32,37 @@ $(function () {
 		uploadCustomData: {                   
 			sendType: 'DB'
 		},
+		onContentReady(e) {
+			// 내부 업로드 버튼 숨김
+			const uploadButton = e.element.find(".dx-fileuploader-upload-button");
+			uploadButton.hide();
+		},
 		onValueChanged(e) {
 			const inputWrapper = document.getElementById('file-uploader');
 			const exist = document.querySelectorAll('.dx-fileuploader-file-container');
 			let imgCheck = document.querySelector('.img-check');
-
+			
 			if (exist.length > 0) {
-				
 				if (!imgCheck) {
 					imgCheck = document.createElement('div');
 					imgCheck.classList.add('img-check');
-					imgCheck.innerHTML = `이미지 체크 안 됨`;
+					imgCheck.innerHTML = `이미지 체크 필요`;
 					inputWrapper.appendChild(imgCheck);
 				}
 			} else {
-				
 				if (imgCheck) {
 					imgCheck.remove();
 				}
 			}
+			
 			const maxFiles = 2;
-
+			
 			if (e.value.length > maxFiles) {
 				const limitedFiles = e.value.slice(0, maxFiles);
 				e.component.reset();
 				e.component.option('value', limitedFiles);
-				showDialogCustom(`이미지는 최대 ${maxFiles}개까지만 업로드할 수 있습니다.`);
+				showDialogCustom(`이미지는 최대 ${maxFiles}장까지 등록 가능합니다.`);
 			}
-
 		},
 		onUploadStarted(e) {
 			const files = e.component.option('value');
@@ -69,19 +72,37 @@ $(function () {
 				fileName2: files[1]?.name || '',
 				sendType: 'DB'
 			});
-			console.log("Upload started, data:", e.component.option("uploadCustomData"));
 		},
 		onUploaded(e) {
 			console.log('Uploaded', e);
 			let imgCheck = document.querySelector('.img-check');
 			imgCheck.innerHTML = `이미지 체크 완료`;
 		}
-	});
+	}).dxFileUploader('instance');
 	
-	
+	//이미지 체크
+	$('#imgCheckBtn').dxButton({
+		text: '이미지 체크',
+		type: 'danger',
+		onClick() {
+			if (fileUploader.option('value').length === 0) {
+				showDialogCustom('이미지 파일을 선택하세요.');
+				return;
+			}
+			
+			fileUploader.upload(); // 업로드 실행
+		}
+	}).dxButton('instance');
 
+	//이미지 미리보기
+	$('#imgPreviewBtn').dxButton({
+		text: '이미지 미리보기',
+		type: 'normal',
+		onClick() {
+			
+		}
+	}).dxButton('instance');
 	
-
 	//예약 발송 캘린더
 	let reserveDate = "";
 	
@@ -458,7 +479,7 @@ function sendMessage(){
         return; 
     }
 
-	if (msgType === "MMS" && ((!imgCheck) || imgCheck.textContent.trim() === "이미지 체크 안 됨")){
+	if (msgType === "MMS" && ((!imgCheck) || imgCheck.textContent.trim() === "이미지 체크 필요")){
 		showDialogCustom("이미지 체크를 해주세요.");
         return; 
 	}
@@ -641,6 +662,6 @@ function initSend(){
 	// img-check 메시지도 초기화
 	let imgCheck = document.querySelector('.img-check');
 	if (imgCheck) {
-		imgCheck.innerHTML = `이미지 체크 안 됨`;
+		imgCheck.innerHTML = `이미지 체크 필요`;
 	}
 }

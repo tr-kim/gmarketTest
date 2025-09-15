@@ -566,7 +566,7 @@ aside .psw_chg_btn:hover{
     content: "";
 }
 .img-question:hover::before{
-    content: "이미지는 JPG로 최대 2개 까지 가능하며,\A 파일당 100K까지 지원합니다. ";
+    content: "JPG 최대 2장까지 가능하며,\A 파일당 100K까지 지원합니다. ";
     white-space:pre;
 }
 /* 모달 */
