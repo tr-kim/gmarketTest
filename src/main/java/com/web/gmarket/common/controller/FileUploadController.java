@@ -30,11 +30,8 @@ public class FileUploadController {
 			@RequestParam(value = "imgNumFlag", required = false) String imgNumFlag,
 			@RequestParam(value = "fileName1", required = false) String fileName1,
 			@RequestParam(value = "fileName2", required = false) String fileName2,
-			@RequestParam(value = "sendType", required = false) String sendType
-			
-			)
-	{
-
+			@RequestParam(value = "sendType", required = true) String sendType
+	) {
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
@@ -50,21 +47,17 @@ public class FileUploadController {
 			LocalDate today = LocalDate.now();
 			String folderMonth = today.format(DateTimeFormatter.ofPattern("yyyyMM"));   // 202509
 			String folderDate = today.format(DateTimeFormatter.ofPattern("yyyyMMdd"));  // 20250910
-
-			// 현재 시간
-			LocalDateTime now = LocalDateTime.now();
-			String fileDate   = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")); // 20250910123045
 			
 			// 폴더 경로
-			String path;
+			String path = null;
 			if ("SINGLE".equalsIgnoreCase(sendType.trim())) {
 				path = ConstantsUtils.SINGLE_IMAGE_PATH;
 			} else if ("EXCEL".equalsIgnoreCase(sendType.trim())) {
 				path = ConstantsUtils.EXCEL_IMAGE_PATH;
 			} else if ("FILE".equalsIgnoreCase(sendType.trim())) {
 				path = ConstantsUtils.FILE_IMAGE_PATH;
-			} else {
-				path = ConstantsUtils.DB_IMAGE_PATH; // 기본값
+			} else if ("DB".equalsIgnoreCase(sendType.trim())) {
+				path = ConstantsUtils.DB_IMAGE_PATH;
 			}
 			
 			Path monthPath = Paths.get(path, folderMonth);
@@ -79,20 +72,20 @@ public class FileUploadController {
 			for (MultipartFile file : files) {
 				if (!file.isEmpty()) {
 					String originalFileName = file.getOriginalFilename();
-
-					// 새 파일명 = 날짜 + 원래 파일명
+					
+					// 현재 시간
+					LocalDateTime now = LocalDateTime.now();
+					String fileDate   = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmSSS")); // 밀리초
+					
 					String newFileName = fileDate + "_" + originalFileName;
 					
-					Path filePath = datePath.resolve(newFileName); // C:/path/20250910/20250910123045_d.jpg
+					Path filePath = datePath.resolve(newFileName); // C:/path/202509111704963_sample.jpg
 					Files.write(filePath, file.getBytes());
 					
 					// 파일 이름 추가
 					response.put("fileName", newFileName);
 				}
 			}
-			
-			// DB 저장
-			// dbSendService.saveImage(imgNumFlag, fileName1, fileName2);
 			
 			response.put("status", "success");
 			response.put("message", "업로드 성공");

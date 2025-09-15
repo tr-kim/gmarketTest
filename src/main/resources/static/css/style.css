@@ -346,18 +346,18 @@ aside .psw_chg_btn:hover{
 .send .grid .dx-bordered-bottom-view{
     max-height: 10rem;
 }
-.send .numDelBtn:hover {
+.send .deleteBtn:hover {
     background: #dae9ff;
     border-radius: 2px;
 }
-.send .numSelectBtn:hover{
+.send .designBtn:hover{
     background: #dae9ff;
     border-radius: 2px;
 }
-.send .numDelBtn:hover i{
+.send .deleteBtn:hover i{
     color:#fc0e0e;
 }
-.send .numSelectBtn:hover i{
+.send .designBtn:hover i{
     color:#0abb26;
 }
 .send .msg_wrap_hd{
@@ -409,6 +409,13 @@ aside .psw_chg_btn:hover{
 .send .msg_wrap{
     border-right: 1px solid #e5e7eb;
 }
+.img-check {
+    position: absolute;
+    right: 0;
+    top: 130px;
+    color: #666;
+    font-size: 12px;
+}
 .option_tab li{
     border-bottom: 3px solid #ddd;
     text-align: center;
@@ -426,6 +433,10 @@ aside .psw_chg_btn:hover{
 }
 .option_wrap li{
     text-align: center;
+}
+.option_wrap .btn_wrap {
+    top: 390px;
+    left: 18px;
 }
 #message::placeholder{
     color: #ccc;
@@ -559,7 +570,7 @@ aside .psw_chg_btn:hover{
     content: "";
 }
 .img-question:hover::before{
-    content: "이미지는 JPG로 최대 2개 까지 가능하며,\A 파일당 100K까지 지원합니다. ";
+    content: "JPG 최대 2장까지 가능하며,\A 파일당 100K까지 지원합니다. ";
     white-space:pre;
 }
 /* 모달 */
@@ -663,3 +674,7 @@ aside .psw_chg_btn:hover{
     font-weight: 100;
     opacity: 0.5;
 }
+/* imgPreview.html */
+/* .imgPreview .modal-con {
+    width: 600px;
+} */
