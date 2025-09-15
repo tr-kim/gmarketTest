@@ -83,20 +83,19 @@ $(function () {
 			imgCheck.style.color = 'green';
 			
 			// 이미지 미리보기
-			const files = e.component.option('value');
-			const previewArea = document.getElementById('preview-area');
-			previewArea.innerHTML = ""; // 기존 썸네일 초기화
-			
-			files.forEach(file => {
+			const file = e.file;
+			if (e.request.status === 200) {  // 서버 응답 성공했을 때만
+				const previewArea = document.getElementById('preview-area');
+				
 				const reader = new FileReader();
 				reader.onload = function(event) {
 					const img = document.createElement('img');
 					img.src = event.target.result;
-					img.style.width = "100px"; // 썸네일 크기
+					img.style.width = "100px";   // 썸네일 크기
 					previewArea.appendChild(img);
 				};
 				reader.readAsDataURL(file);
-			});
+			}
 		}
 	}).dxFileUploader('instance');
 	
@@ -123,7 +122,7 @@ $(function () {
 			const imgCheck = document.querySelector('.img-check');
 			if (exist.length == 0 || imgCheck.textContent.trim() === "이미지 체크 필요") {
 				
-					showDialogCustom('이미지 체크를 해주세요.');
+					showDialogCustom('이미지를 체크해주세요.');
 					return;
 							
 			}
@@ -512,7 +511,7 @@ function sendMessage(){
     }
 
 	if (msgType === "MMS" && ((!imgCheck) || imgCheck.textContent.trim() === "이미지 체크 필요")){
-		showDialogCustom("이미지 체크를 해주세요.");
+		showDialogCustom("이미지를 체크해주세요.");
         return; 
 	}
 
