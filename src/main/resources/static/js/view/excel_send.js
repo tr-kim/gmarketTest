@@ -636,7 +636,7 @@ function sendMessage() {
 			const code = data.code;
 			const result = data.result;
 			
-			if(code == 1000)  uploadStatusCheck(result);
+			if(code == 1000) uploadStatusCheck(result);
 			else showDialogCustom(result);
 		})
 		.catch(err => {
@@ -667,7 +667,13 @@ function sendMessage() {
 			
 			//메시지 확인팝업창
 			const confirmSend = document.querySelector('.confirmSend');
+			const confirmMessage = document.getElementById('confirmMessage');	
 			confirmSend.classList.add('d-block');
+			
+			const rejectCheckDefault = document.getElementById('rejectCheckDefault').checked;
+			const rejectNum = document.getElementById('rejectNum').value.trim();
+			const msgWrite = document.getElementById('msgWrite').value.trim();
+			confirmMessage.textContent = rejectCheckDefault ? msgWrite + rejectNum : msgWrite;
 			
 			confirmSend.querySelector('.send_btn').addEventListener('click', function() {
 				confirmSend.classList.remove('d-block');
@@ -1095,7 +1101,7 @@ function renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visible
 		const tr = document.createElement("tr");
 		dataRow[i].forEach(cell => {
 			const td = document.createElement("td");
-			td.textContent = cell ?? "";
+			td.textContent = decodeHtmlEntities(cell) ?? "";
 			// td.style.whiteSpace = 'pre-line'; // 줄바꿈
 			tr.appendChild(td);
 		});
@@ -1219,9 +1225,10 @@ function uploadStatusCheck(jobId) {
 				
 				// 에러 처리
 				if(data.progress == -1) {
-					showDialogCustom("엑셀 발송 도중 에러가 발생하였습니다.");
-					document.querySelector('.progressBar').classList.replace('d-block', 'd-none');
 					clearInterval(interval);
+					showDialogCustom("엑셀 발송 도중 에러가 발생하였습니다.", function() {
+						document.querySelector('.progressBar').classList.replace('d-block', 'd-none');
+					});
 				}
 				
 				PROCESS_TOTAL = data.total;
@@ -1231,18 +1238,22 @@ function uploadStatusCheck(jobId) {
                 
 				// 상태 체크 중지
                 if (data.complete || PROCESSED >= PROCESS_TOTAL) {
-					showDialogCustom("엑셀 발송이 완료되었습니다.");
-					uploadStatuRemove(jobId);
 					clearInterval(interval);
-					location.reload(true);	// 페이지 새로고침
+					showDialogCustom("엑셀 발송이 완료되었습니다.", function() {
+						uploadStatuRemove(jobId);
+						location.reload(true);	// 페이지 새로고침
+					});
+					
                 }
 			}).catch(err => {
 				console.error("엑셀 발송 상태 체크:", err);
-				showDialogCustom("엑셀 발송 도중 에러가 발생하였습니다.");
-				document.querySelector('.progressBar').classList.replace('d-block', 'd-none');
 				clearInterval(interval);
+				showDialogCustom("엑셀 발송 도중 에러가 발생하였습니다.", function() {
+					document.querySelector('.progressBar').classList.replace('d-block', 'd-none');
+				});
+				
 			});
-    }, 3000); // 3초마다 체크
+    }, 1000); // 3초마다 체크
 }
 
 // 엑셀 발송 상태 삭제

@@ -460,3 +460,8 @@ function inputValidateRequired(id, message) {
 	}
 	return true;
 }
+
+// 특수문자 치환 ex &#40; => (
+function decodeHtmlEntities(str) {
+  return new DOMParser().parseFromString(str, "text/html").documentElement.textContent;
+}
