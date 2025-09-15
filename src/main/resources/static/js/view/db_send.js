@@ -77,6 +77,22 @@ $(function () {
 			console.log('Uploaded', e);
 			let imgCheck = document.querySelector('.img-check');
 			imgCheck.innerHTML = `이미지 체크 완료`;
+			imgCheck.style.color = 'red';
+
+			const files = e.component.option('value');
+			const previewArea = document.getElementById('preview-area');
+			previewArea.innerHTML = ""; // 기존 썸네일 초기화
+
+			files.forEach(file => {
+				const reader = new FileReader();
+				reader.onload = function(event) {
+					const img = document.createElement('img');
+					img.src = event.target.result;
+					img.style.width = "100px";   // 썸네일 크기
+					previewArea.appendChild(img);
+				};
+				reader.readAsDataURL(file);
+			});
 		}
 	}).dxFileUploader('instance');
 	
@@ -99,9 +115,21 @@ $(function () {
 		text: '이미지 미리보기',
 		type: 'normal',
 		onClick() {
-			
+			const exist = document.querySelectorAll('.dx-fileuploader-file-container');
+			const imgCheck = document.querySelector('.img-check');
+			if (exist.length == 0 || imgCheck.textContent.trim() === "이미지 체크 필요") {
+				
+					showDialogCustom('이미지 체크를 해주세요.');
+					return;
+							
+			}
+			document.querySelector('.imgPreview').classList.add("d-block");
 		}
 	}).dxButton('instance');
+
+	document.querySelector('.imgPreview .close_btn').addEventListener('click', function(){
+		document.querySelector('.imgPreview').classList.remove("d-block");
+	})
 	
 	//예약 발송 캘린더
 	let reserveDate = "";

@@ -412,7 +412,7 @@ aside .psw_chg_btn:hover{
 .img-check {
     position: absolute;
     right: 0;
-    top: 158px;
+    top: 130px;
     color: #666;
     font-size: 12px;
 }
@@ -433,6 +433,10 @@ aside .psw_chg_btn:hover{
 }
 .option_wrap li{
     text-align: center;
+}
+.option_wrap .btn_wrap {
+    top: 390px;
+    left: 18px;
 }
 #message::placeholder{
     color: #ccc;
@@ -670,3 +674,7 @@ aside .psw_chg_btn:hover{
     font-weight: 100;
     opacity: 0.5;
 }
+/* imgPreview.html */
+/* .imgPreview .modal-con {
+    width: 600px;
+} */
