@@ -39,9 +39,7 @@ $(function () {
 			uploadButton.hide();
 		},
 		onValueChanged(e) {
-			// 썸네일 표시, 파일명 리턴 등 문제
-			// 기존 파일을 초기화하고, 선택한 파일만 재설정
-			
+			// 기존 파일 초기화 후 선택한 파일로 재설정(썸네일, 파일명 리턴 등 문제)
 			if (updatingFiles) return; // 재진입 방지
 			updatingFiles = true;
 			
@@ -69,7 +67,7 @@ $(function () {
 			const inputWrapper = document.getElementById('file-uploader');
 			const exist = document.querySelectorAll('.dx-fileuploader-file-container');
 			let imgCheck = document.querySelector('.img-check');
-
+			
 			if (exist.length > 0) {
 				if (!imgCheck) {
 					// 처음 한 번만 생성
@@ -136,9 +134,9 @@ $(function () {
 	
 	//이미지 미리보기
 	$('#imgPreviewBtn').dxButton({
-		stylingMode: 'outlined',
 		text: '미리보기',
 		type: 'danger',
+		stylingMode: 'outlined',
 		onClick() {
 			const exist = document.querySelectorAll('.dx-fileuploader-file-container');
 			const imgCheck = document.querySelector('.img-check');
@@ -151,12 +149,36 @@ $(function () {
 	}).dxButton('instance');
 
 	//이미지 초기화
-	$('#imgClearBtn').dxButton({
-		
+	$('#imgResetBtn').dxButton({
 		text: '초기화',
-		type: 'normal',
+		type: 'default',
+		stylingMode: 'outlined',
 		onClick() {
-			fileUploader.reset();
+			const confirmDialog = DevExpress.ui.dialog.custom({
+				showTitle: false,
+				messageHtml: "<div style='text-align: center;'>초기화하시겠습니까?</div>",
+				buttons: [{
+					text: "확인",
+					type: "default",
+					onClick: function(e) {
+						fileUploader.reset();
+						return { result: "ok" };
+					}
+				}, {
+					text: "취소",
+					onClick: function(e) {
+						return { result: "cancel" };
+					}
+				}]
+			});
+			
+			confirmDialog.show().done(function(dialogResult) {
+				if (dialogResult.result === "ok") {
+					console.log("초기화 완료");
+				} else {
+					console.log("취소");
+				}
+			});
 		}
 	}).dxButton('instance');
 	
