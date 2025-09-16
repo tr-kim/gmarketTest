@@ -69,15 +69,17 @@ $(function () {
 			const inputWrapper = document.getElementById('file-uploader');
 			const exist = document.querySelectorAll('.dx-fileuploader-file-container');
 			let imgCheck = document.querySelector('.img-check');
-			
+
 			if (exist.length > 0) {
 				if (!imgCheck) {
+					// 처음 한 번만 생성
 					imgCheck = document.createElement('div');
 					imgCheck.classList.add('img-check');
-					imgCheck.innerHTML = `이미지 체크 필요`;
-					imgCheck.style.color = 'red';
 					inputWrapper.appendChild(imgCheck);
 				}
+				// 내용과 스타일은 매번 갱신
+				imgCheck.innerHTML = `이미지 체크 필요`;
+				imgCheck.style.color = 'red';
 			} else {
 				if (imgCheck) {
 					imgCheck.remove();
@@ -98,6 +100,7 @@ $(function () {
 		onUploaded(e) {
 			// 이미지 체크 표시
 			let imgCheck = document.querySelector('.img-check');
+			imgCheck.innerHTML = ``;
 			imgCheck.innerHTML = `이미지 체크 완료`;
 			imgCheck.style.color = 'green';
 			
