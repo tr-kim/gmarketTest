@@ -272,8 +272,76 @@ aside .psw_chg_btn:hover{
 #real_send_hist .content {
     min-height: 22rem;
 }
-#real_send_hist .card{
+#real_send_hist ul.gmarket .card{
     border-radius: 5px;
+    background-color: #d5f6d6;
+    border: 1px solid #d5f6d6;
+    height: 100%;
+    overflow: hidden;
+}
+#real_send_hist ul.auction .card{
+    border-radius: 5px;
+    background-color: #d5e8f6;
+    border: 1px solid #d5e8f6;
+    height: 100%;
+    overflow: hidden;
+}
+#real_send_hist ul.smileCash .card{
+    border-radius: 5px;
+    background-color: #f9fcd5;
+    border: 1px solid #f9fcd5;
+    height: 100%;
+    overflow: hidden;
+}
+#real_send_hist ul.auction + p{
+    margin-top: 1.7rem;
+}
+#real_send_hist .card-body{
+    padding: .2rem .3rem;
+}
+#real_send_hist > .row>* {
+    padding-right: calc(var(--bs-gutter-x) * 0);
+}
+.serviceName{
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.processFile{
+    background-color: #ffffff80;
+    border-radius: 5px;
+    padding: .2rem .3rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+.processFileName{
+    font-size: 11px;
+}
+.processFileStatWrap{
+    text-align: left;
+}
+.processFileStat{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10px;
+    gap: 3px;
+}
+.statColor{
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #999;
+}
+.statColor.red{
+    background-color: red;
+}
+.statColor.green{
+    background-color: green;
+}
+.statColor.gray{
+    background-color: #999;
 }
 /* send.html */
 /* excel_send.html */
