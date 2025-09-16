@@ -136,8 +136,9 @@ $(function () {
 	
 	//이미지 미리보기
 	$('#imgPreviewBtn').dxButton({
-		text: '이미지 미리보기',
-		type: 'normal',
+		stylingMode: 'outlined',
+		text: '미리보기',
+		type: 'danger',
 		onClick() {
 			const exist = document.querySelectorAll('.dx-fileuploader-file-container');
 			const imgCheck = document.querySelector('.img-check');
@@ -146,6 +147,16 @@ $(function () {
 				return;
 			}
 			document.querySelector('.imgPreview').classList.add("d-block");
+		}
+	}).dxButton('instance');
+
+	//이미지 초기화
+	$('#imgClearBtn').dxButton({
+		
+		text: '초기화',
+		type: 'normal',
+		onClick() {
+			fileUploader.reset();
 		}
 	}).dxButton('instance');
 	

@@ -3,78 +3,110 @@
 	layout:decorate="~{${layout}}" layout:fragment="content">
 
 <body>
-	<p class="font-sz-20 font-weight-600 pt-3 text-666">실시간 발송현황</p>
-	<div class="row h-100" id="real_send_hist">		
-		<div class="col-12 mb-3 pe-2">					
-			<canvas id="total_chart" class="content w-100" height="300"></canvas>
-			<div class="d-flex justify-content-end mt-1">
-				<button type="button" id="total_btn" class="btn btn-primary font-sz-12">시작/중지</button>
-			</div>	
-		</div>
-		<div class="col-6 mb-3 ps-2">
-			<canvas id="gmarket_total_chart" class="content w-100" height="300"></canvas>
-			<div class="d-flex justify-content-end mt-1">
-				<button type="button" id="gmarket_total_btn" class="btn btn-primary font-sz-12">시작/중지</button>
-			</div>					
-		</div>
-		<div class="col-6 mb-3 ps-2">
-			<canvas id="auction_total_chart" class="content w-100" height="300"></canvas>
-			<div class="d-flex justify-content-end mt-1">
-				<button type="button" id="auction_total_btn" class="btn btn-primary font-sz-12">시작/중지</button>
+	<div class="real_wrap position-absolute w-100 top-0 start-0 px-3">
+		<p class="font-sz-20 font-weight-600 pt-3 text-666">실시간 발송현황</p>
+		<div class="row" id="real_send_hist">
+			<div class="row col-6">
+				<ul class="col-6">
+					<li class="col">
+						<div class="card">
+
+						</div>
+					</li>
+					<li class="col">
+						<div class="card">
+
+						</div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+					<li class="col">
+						<div class="card"></div>
+					</li>
+				</ul>
+				<ul class="col-6">
+
+				</ul>
 			</div>
-		</div>
-		<div class="col-6 mb-3 ps-2">
-			<canvas id="gmarket_chart_01" class="content w-100" height="300"></canvas>
-			<div class="d-flex justify-content-end mt-1">
-				<button type="button" id="gmarket_chart_01_btn" class="btn btn-primary font-sz-12">시작/중지</button>
-			</div>	
-		</div>
-		<div class="col-6 mb-3 ps-2">
-			<canvas id="auction_chart_01" class="content w-100" height="300"></canvas>
-			<div class="d-flex justify-content-end mt-1">
-				<button type="button" id="auction_chart_01_btn" class="btn btn-primary font-sz-12">시작/중지</button>
-			</div>		
-		</div>
-		<div class="col-6 mb-3 ps-2">
-			<canvas id="gmarket_chart_02" class="content w-100" height="300"></canvas>
-			<div class="d-flex justify-content-end mt-1">
-				<button type="button" id="gmarket_chart_02_btn" class="btn btn-primary font-sz-12">시작/중지</button>
-			</div>	
-		</div>
-		<div class="col-6 mb-3 ps-2">
-			<canvas id="auction_chart_02" class="content w-100" height="300"></canvas>
-			<div class="d-flex justify-content-end mt-1">
-				<button type="button" id="auction_chart_02_btn" class="btn btn-primary font-sz-12">시작/중지</button>
-			</div>	
-		</div>
-		<div class="col-6 mb-3 ps-2">
-			<canvas id="gmarket_chart_03" class="content w-100" height="300"></canvas>
-			<div class="d-flex justify-content-end mt-1">
-				<button type="button" id="gmarket_chart_03_btn" class="btn btn-primary font-sz-12">시작/중지</button>
-			</div>	
-		</div>
-		<div class="col-6 mb-3 ps-2">
-			<canvas id="auction_chart_03" class="content w-100" height="300"></canvas>
-			<div class="d-flex justify-content-end mt-1">
-				<button type="button" id="auction_chart_03_btn" class="btn btn-primary font-sz-12">시작/중지</button>
-			</div>	
-		</div>
-		<div class="col-6 mb-3 ps-2">
-			<canvas id="gmarket_chart_04" class="content w-100" height="300"></canvas>
-			<div class="d-flex justify-content-end mt-1">
-				<button type="button" id="gmarket_chart_04_btn" class="btn btn-primary font-sz-12">시작/중지</button>
-			</div>	
-		</div>
-		<div class="col-6 mb-3 ps-2">
-			<canvas id="auction_chart_04" class="content w-100" height="300"></canvas>
-			<div class="d-flex justify-content-end mt-1">
-				<button type="button" id="auction_chart_04_btn" class="btn btn-primary font-sz-12">시작/중지</button>
-			</div>	
+			<div class="col-6"></div>
 		</div>
 	</div>
 
-	<script th:src="@{/js/chart/chart.umd.js}"></script>
-	<script th:src="@{/js/view/real_send_hist.js}"></script>
+	<!-- <script th:src="@{/js/chart/chart.umd.js}"></script> -->
+	<!-- <script th:src="@{/js/view/real_send_hist.js}"></script> -->
 </body>
 
 </html>

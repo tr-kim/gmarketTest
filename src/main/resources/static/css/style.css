@@ -179,6 +179,7 @@ a.logout:hover{
 /* leftMenu.html */
 .aside-m{
     margin-left: 15rem;
+    position: relative;
 }
 aside{
     position: fixed;
@@ -270,6 +271,9 @@ aside .psw_chg_btn:hover{
 /* real_send_hist.html */
 #real_send_hist .content {
     min-height: 22rem;
+}
+#real_send_hist .card{
+    border-radius: 5px;
 }
 /* send.html */
 /* excel_send.html */
