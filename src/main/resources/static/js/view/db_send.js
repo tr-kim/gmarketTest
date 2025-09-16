@@ -22,6 +22,7 @@ $(function () {
 	MSG_WRITE.placeholder = "내용을 입력해 주세요.\n80byte 초과 시 장문 문자로,\n이미지 추가 시 포토 문자로 자동 전환 됩니다.";	
 	
 	// 이미지 등록
+	let updatingFiles = false;
 	const fileUploader = $('#file-uploader').dxFileUploader({
 		multiple: true,
 		allowedFileExtensions: ['.jpg'],
@@ -38,17 +39,33 @@ $(function () {
 			uploadButton.hide();
 		},
 		onValueChanged(e) {
-			const maxCount = 2;
-			const fileCount = e.value.length;
+			// 썸네일 표시, 파일명 리턴 등 문제
+			// 기존 파일을 초기화하고, 선택한 파일만 재설정
 			
-			if (fileCount > maxCount) {
-				const limitedFiles = e.value.slice(0, maxCount);
-				e.component.reset();
-				e.component.option('value', limitedFiles);
+			if (updatingFiles) return; // 재진입 방지
+			updatingFiles = true;
+			
+			// 미리보기 초기화
+			const previewArea = document.getElementById('preview-area');
+			previewArea.innerHTML = "";
+			
+			// 현재 선택된 파일 저장
+			const files = e.value || [];
+			const maxCount = 2;
+			
+			// 기존 파일 초기화
+			e.component.reset();
+			
+			// 최대 개수 제한 적용
+			const limitedFiles = files.slice(0, maxCount);
+			if (files.length > maxCount) {
 				showDialogCustom(`이미지는 최대 ${maxCount}장까지 등록 가능합니다.`);
 			}
 			
-			// 이미지 체크
+			// 현재 선택한 파일만 다시 세팅
+			e.component.option('value', limitedFiles);
+			
+			// 이미지 체크 표시
 			const inputWrapper = document.getElementById('file-uploader');
 			const exist = document.querySelectorAll('.dx-fileuploader-file-container');
 			let imgCheck = document.querySelector('.img-check');
@@ -66,6 +83,8 @@ $(function () {
 					imgCheck.remove();
 				}
 			}
+			
+			updatingFiles = false;
 		},
 		onUploadStarted(e) {
 			const files = e.component.option('value');
@@ -77,25 +96,24 @@ $(function () {
 			});
 		},
 		onUploaded(e) {
-			// 이미지 체크
+			// 이미지 체크 표시
 			let imgCheck = document.querySelector('.img-check');
 			imgCheck.innerHTML = `이미지 체크 완료`;
 			imgCheck.style.color = 'green';
 			
 			// 이미지 미리보기
 			const file = e.file;
-			if (e.request.status === 200) {  // 서버 응답 성공했을 때만
+			console.log(file);
+			
+			const reader = new FileReader();
+			reader.onload = function() {
 				const previewArea = document.getElementById('preview-area');
-				
-				const reader = new FileReader();
-				reader.onload = function(event) {
-					const img = document.createElement('img');
-					img.src = event.target.result;
-					img.style.width = "100px";   // 썸네일 크기
-					previewArea.appendChild(img);
-				};
-				reader.readAsDataURL(file);
-			}
+				const img = document.createElement('img');
+				img.src = reader.result;
+				img.style.width = "100px"; // 썸네일 크기
+				previewArea.appendChild(img);
+			};
+			reader.readAsDataURL(file);
 		}
 	}).dxFileUploader('instance');
 	
@@ -112,7 +130,7 @@ $(function () {
 			fileUploader.upload(); // 업로드 실행
 		}
 	}).dxButton('instance');
-
+	
 	//이미지 미리보기
 	$('#imgPreviewBtn').dxButton({
 		text: '이미지 미리보기',
@@ -121,15 +139,13 @@ $(function () {
 			const exist = document.querySelectorAll('.dx-fileuploader-file-container');
 			const imgCheck = document.querySelector('.img-check');
 			if (exist.length == 0 || imgCheck.textContent.trim() === "이미지 체크 필요") {
-				
-					showDialogCustom('이미지를 체크해주세요.');
-					return;
-							
+				showDialogCustom('이미지를 체크해주세요.');
+				return;
 			}
 			document.querySelector('.imgPreview').classList.add("d-block");
 		}
 	}).dxButton('instance');
-
+	
 	document.querySelector('.imgPreview .close_btn').addEventListener('click', function(){
 		document.querySelector('.imgPreview').classList.remove("d-block");
 	})
