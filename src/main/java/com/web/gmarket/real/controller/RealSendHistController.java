@@ -28,4 +28,10 @@ public class RealSendHistController {
 		
 		return "view/real_send_hist";
 	}
+	
+	@GetMapping("/real/open")
+	public String open(Model model) {
+		
+		return "empty";
+	}
 }

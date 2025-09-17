@@ -71,7 +71,29 @@
 					</ul>
 				</div>
 			</div>
-			<div class="col-6"></div>
+			<div class="col-6">
+				<div class="col-12 mb-3 pe-2">					
+					<canvas id="action_chart" class="content w-100" height="350"></canvas>
+					<div class="d-flex justify-content-end mt-1">
+						<button type="button" id="btn1" class="btn btn-primary font-sz-12" style="margin-right: 10px;">관리</button>
+						<a href="/view/real/open" target="_blank" id="btn2" class="btn btn-primary font-sz-12">상세</a>
+					</div>
+				</div>
+				<div class="col-12 mb-3 pe-2">					
+					<canvas id="gmarket_chart" class="content w-100" height="350"></canvas>
+					<div class="d-flex justify-content-end mt-1">
+						<button type="button" id="btn3" class="btn btn-primary font-sz-12" style="margin-right: 10px;">관리</button>
+						<a href="/view/real/open" target="_blank" id="btn4" class="btn btn-primary font-sz-12">상세</a>
+					</div>	
+				</div>
+				<div class="col-12 mb-3 pe-2">					
+					<canvas id="smile_cash_chart" class="content w-100" height="350"></canvas>
+					<div class="d-flex justify-content-end mt-1">
+						<button type="button" id="btn5" class="btn btn-primary font-sz-12" style="margin-right: 10px;">관리</button>
+						<a href="/view/real/open" target="_blank" id="btn6" class="btn btn-primary font-sz-12">상세</a>
+					</div>
+				</div>
+			</div>
 		</div>
 		<div class="p-2"></div>
 	</div>
@@ -80,6 +102,7 @@
 	<!-- <script th:src="@{/js/view/real_send_hist.js}"></script> -->
 </body>
 </html>
+<script th:src="@{/js/chart/chart.umd.js}"></script>
 <script>
 	window.onload = function() {
 		const gmarket = document.querySelector('ul.gmarket');
@@ -247,4 +270,297 @@
 			smileCash.appendChild(li);
 		}
 	};
+	
+	const ctx1 = document.getElementById('action_chart').getContext('2d');
+	const myChart1 = new Chart(ctx1, {
+		type: 'line',
+		data: {
+  			labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+			datasets: [
+				{
+					label: 'KT-SME-ENG'
+					, data: [65, 59, 80, 81, 56, 55, 40]
+					, borderColor: 'rgba(255, 0, 0, 1)'
+					, backgroundColor: 'rgba(255, 0, 0, 0.2)'
+					, fill: false
+					, tension: 0.1
+				},
+				{
+					label: 'KT-SMS-EVENT-GMA'
+					, data: [37, 56, 78, 34, 23, 86, 34]
+					, borderColor: 'rgba(0, 0, 255, 1)'
+					, backgroundColor: 'rgba(0, 0, 255, 0.2)'
+					, fill: false
+					, tension: 0.1
+				},
+				{
+					label: 'KT-SMS-STATP-GMA'
+					, data: [12, 32, 55, 22, 55, 64, 21]
+					, borderColor: 'rgba(255, 255, 0, 1)'
+					, backgroundColor: 'rgba(255, 255, 0, 0.2)'
+					, fill: false
+					, tension: 0.1
+				},
+				{
+					label: 'KT-MMS-LARGE-GMA'
+					, data: [53, 21, 56, 77, 42, 23, 41]
+					, borderColor: 'rgba(0, 255, 255, 1)'
+					, backgroundColor: 'rgba(0, 255, 255, 0.2)'
+					, fill: false
+					, tension: 0.1
+				},
+				{
+					label: 'KT-MMS-EVENT-GMA'
+					, data: [75, 87, 34, 65, 78, 44, 12]
+					, borderColor: 'rgba(255, 0, 255, 1)'
+					, backgroundColor: 'rgba(255, 0, 255, 0.2)'
+					, fill: false
+					, tension: 0.1
+				},
+				{
+					label: 'KT-SMS-MO4MMS'
+					, data: []
+					, borderColor: 'rgba(255, 165, 0, 1)'
+					, backgroundColor: 'rgba(255, 165, 0, 0.2)'
+					, fill: false
+					, tension: 0.1
+				},
+				{
+					label: 'KT-MMS-NON-GMA'
+					, data: [53, 23, 56, 32, 32, 23, 56]
+					, borderColor: 'rgba(255, 255, 255, 1)'
+					, backgroundColor: 'rgba(255, 255, 255, 0.2)'
+					, fill: false
+					, tension: 0.1
+				},
+				{
+					label: 'KT-SMS-STATP-GMA-2CON'
+					, data: [43, 54, 23, 12, 54, 76, 97]
+					, borderColor: 'rgba(0, 255, 0, 1)'
+					, backgroundColor: 'rgba(0, 255, 0, 0.2)'
+					, fill: false
+					, tension: 0.1
+				},
+				{
+					label: 'KT-MMS-NON-GMA'
+					, data: [53, 23, 56, 32, 32, 23, 56]
+					, borderColor: 'rgba(255, 255, 255, 1)'
+					, backgroundColor: 'rgba(255, 255, 255, 0.2)'
+					, fill: false
+					, tension: 0.1
+				},
+				{
+					label: 'KT-SMS-STATP-GMA-2CON'
+					, data: [43, 54, 23, 12, 54, 76, 97]
+					, borderColor: 'rgba(0, 255, 0, 1)'
+					, backgroundColor: 'rgba(0, 255, 0, 0.2)'
+					, fill: false
+					, tension: 0.1
+				}
+			],
+			fill: false
+		},
+	  options: {
+	    responsive: true,
+	    scales: {
+	      x: {
+	        beginAtZero: true
+	      },
+	      y: {
+	        beginAtZero: true
+	      }
+	    },
+		plugins: {
+            legend: {
+                position: 'top',
+            },
+			title: {
+				display: true,
+				text: 'ACTION'
+			},
+        }
+	  }
+	});
+	
+	const ctx2 = document.getElementById('gmarket_chart').getContext('2d');
+	const myChart2 = new Chart(ctx2, {
+	  type: 'line',
+	  data: {
+	    			labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+	  			datasets: [
+	  				{
+	  					label: 'KT-SME-ENG'
+	  					, data: [65, 59, 80, 81, 56, 55, 40]
+	  					, borderColor: 'rgba(255, 0, 0, 1)'
+	  					, backgroundColor: 'rgba(255, 0, 0, 0.2)'
+	  					, fill: false
+	  					, tension: 0.1
+	  				},
+	  				{
+	  					label: 'KT-SMS-EVENT-GMA'
+	  					, data: [37, 56, 78, 34, 23, 86, 34]
+	  					, borderColor: 'rgba(0, 0, 255, 1)'
+	  					, backgroundColor: 'rgba(0, 0, 255, 0.2)'
+	  					, fill: false
+	  					, tension: 0.1
+	  				},
+	  				{
+	  					label: 'KT-SMS-STATP-GMA'
+	  					, data: [12, 32, 55, 22, 55, 64, 21]
+	  					, borderColor: 'rgba(255, 255, 0, 1)'
+	  					, backgroundColor: 'rgba(255, 255, 0, 0.2)'
+	  					, fill: false
+	  					, tension: 0.1
+	  				},
+	  				{
+	  					label: 'KT-MMS-LARGE-GMA'
+	  					, data: [53, 21, 56, 77, 42, 23, 41]
+	  					, borderColor: 'rgba(0, 255, 255, 1)'
+	  					, backgroundColor: 'rgba(0, 255, 255, 0.2)'
+	  					, fill: false
+	  					, tension: 0.1
+	  				},
+	  				{
+	  					label: 'KT-MMS-EVENT-GMA'
+	  					, data: [75, 87, 34, 65, 78, 44, 12]
+	  					, borderColor: 'rgba(255, 0, 255, 1)'
+	  					, backgroundColor: 'rgba(255, 0, 255, 0.2)'
+	  					, fill: false
+	  					, tension: 0.1
+	  				},
+	  				{
+	  					label: 'KT-SMS-MO4MMS'
+	  					, data: []
+	  					, borderColor: 'rgba(255, 165, 0, 1)'
+	  					, backgroundColor: 'rgba(255, 165, 0, 0.2)'
+	  					, fill: false
+	  					, tension: 0.1
+	  				},
+	  				{
+	  					label: 'KT-MMS-NON-GMA'
+	  					, data: [53, 23, 56, 32, 32, 23, 56]
+	  					, borderColor: 'rgba(255, 255, 255, 1)'
+	  					, backgroundColor: 'rgba(255, 255, 255, 0.2)'
+	  					, fill: false
+	  					, tension: 0.1
+	  				},
+					{
+						label: 'KT-MMS-NON-GMA'
+						, data: [53, 23, 56, 32, 32, 23, 56]
+						, borderColor: 'rgba(255, 255, 255, 1)'
+						, backgroundColor: 'rgba(255, 255, 255, 0.2)'
+						, fill: false
+						, tension: 0.1
+					},
+					{
+						label: 'KT-SMS-STATP-GMA-2CON'
+						, data: [43, 54, 23, 12, 54, 76, 97]
+						, borderColor: 'rgba(0, 255, 0, 1)'
+						, backgroundColor: 'rgba(0, 255, 0, 0.2)'
+						, fill: false
+						, tension: 0.1
+					},
+					{
+						label: 'KT-MMS-NON-GMA'
+						, data: [53, 23, 56, 32, 32, 23, 56]
+						, borderColor: 'rgba(255, 255, 255, 1)'
+						, backgroundColor: 'rgba(255, 255, 255, 0.2)'
+						, fill: false
+						, tension: 0.1
+					},
+					{
+						label: 'KT-SMS-STATP-GMA-2CON'
+						, data: [43, 54, 23, 12, 54, 76, 97]
+						, borderColor: 'rgba(0, 255, 0, 1)'
+						, backgroundColor: 'rgba(0, 255, 0, 0.2)'
+						, fill: false
+						, tension: 0.1
+					}
+	  			],
+	  			fill: false
+	  		},
+	  options: {
+	    responsive: true,
+	    scales: {
+	      x: {
+	        beginAtZero: true
+	      },
+	      y: {
+	        beginAtZero: true
+	      }
+	    },
+		plugins: {
+            legend: {
+                position: 'right',
+            },
+			title: {
+				display: true,
+				text: 'GMARKET'
+			},
+        }
+	  }
+	});
+	
+	const ctx3 = document.getElementById('smile_cash_chart').getContext('2d');
+	const myChart3 = new Chart(ctx3, {
+	  type: 'line',
+	  data: {
+	    			labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+	  			datasets: [
+	  				{
+	  					label: 'KT-SME-ENG'
+	  					, data: [65, 59, 80, 81, 56, 55, 40]
+	  					, borderColor: 'rgba(255, 0, 0, 1)'
+	  					, backgroundColor: 'rgba(255, 0, 0, 0.2)'
+	  					, fill: false
+	  					, tension: 0.1
+	  				},
+	  				{
+	  					label: 'KT-SMS-EVENT-GMA'
+	  					, data: [37, 56, 78, 34, 23, 86, 34]
+	  					, borderColor: 'rgba(0, 0, 255, 1)'
+	  					, backgroundColor: 'rgba(0, 0, 255, 0.2)'
+	  					, fill: false
+	  					, tension: 0.1
+	  				},
+	  				{
+	  					label: 'KT-SMS-STATP-GMA'
+	  					, data: [12, 32, 55, 22, 55, 64, 21]
+	  					, borderColor: 'rgba(255, 255, 0, 1)'
+	  					, backgroundColor: 'rgba(255, 255, 0, 0.2)'
+	  					, fill: false
+	  					, tension: 0.1
+	  				},
+	  				{
+	  					label: 'KT-MMS-LARGE-GMA'
+	  					, data: [53, 21, 56, 77, 42, 23, 41]
+	  					, borderColor: 'rgba(0, 255, 255, 1)'
+	  					, backgroundColor: 'rgba(0, 255, 255, 0.2)'
+	  					, fill: false
+	  					, tension: 0.1
+	  				}
+	  			],
+	  			fill: false
+	  		},
+	  options: {
+	    responsive: true,
+	    scales: {
+	      x: {
+	        beginAtZero: true
+	      },
+	      y: {
+	        beginAtZero: true
+	      }
+	    },
+		plugins: {
+            legend: {
+                position: 'right',
+            },
+			title: {
+				display: true,
+				text: 'SMILE_CASH'
+			},
+        }
+	  }
+	});
 </script>
