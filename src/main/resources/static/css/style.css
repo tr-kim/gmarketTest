@@ -293,6 +293,9 @@ aside .psw_chg_btn:hover{
     height: 100%;
     overflow: hidden;
 }
+#real_send_hist ul > li.real2{
+    width: 240px;
+}
 #real_send_hist ul.auction + p{
     margin-top: 1.7rem;
 }
@@ -301,6 +304,72 @@ aside .psw_chg_btn:hover{
 }
 #real_send_hist > .row>* {
     padding-right: calc(var(--bs-gutter-x) * 0);
+}
+#real_send_hist p {
+    width: 78px;
+}
+#real_send_hist table{
+    font-size: 12px;
+}
+#real_send_hist table td,
+#real_send_hist table th{
+    text-align: center;
+    border-right: 1px solid #dee2e6;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: .3rem;
+    background-color: #fff;
+} 
+#real_send_hist table td:last-child,
+#real_send_hist table th:last-child{
+    border-right: none;
+} 
+#real_send_hist table tbody tr:last-child{
+    border-bottom: 1px solid #fff;
+}
+.marquee{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    height: 66px;
+}
+.marqueereverse {
+    display: inline-block;
+    position: absolute;
+}
+.marqueereverse.delay {
+    animation-fill-mode: both;
+}
+.marqueereverse.gmarket {
+    animation: slidereversemarquee 340s linear infinite;
+}
+.marqueereverse.gmarket.delay {
+    animation-delay: -170s;
+}
+.marqueereverse.auction {
+    animation: slidereversemarquee 400s linear infinite;
+}
+.marqueereverse.auction.delay {
+    animation-delay: -200s;
+}
+.marqueereverse.on {
+    -webkit-animation-play-state: paused;
+    animation-play-state: paused;
+}
+/* .marqueereverse:hover {
+    -webkit-animation-play-state: paused;
+    animation-play-state: paused
+} */
+#real_send_hist ul.marqueereverse.delay.gmarket .card{
+    /* background-color: #dc3545; */
+}
+@keyframes slidereversemarquee {
+    0% {transform:translateX(100%);}
+    100% { transform:translateX(-100%);}
 }
 .serviceName{
     font-size: 12px;
@@ -333,6 +402,15 @@ aside .psw_chg_btn:hover{
     height: 7px;
     border-radius: 50%;
     background-color: #999;
+}
+.statColor.real3{
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    line-height: 18px;
+    font-size: 10px;
+    color: #fff;
+    font-weight: 500;
 }
 .statColor.red{
     background-color: red;
