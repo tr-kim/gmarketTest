@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lagn="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{${layout}}" layout:fragment="content">
+
+<body>
+	<div class="real_wrap position-absolute w-100 top-0 start-0 px-3 hv-100">
+		<p class="font-sz-20 font-weight-600 pt-3 text-666">실시간 발송현황</p>
+		<div class="row" id="real_send_hist">
+			<div class="row col-6"> 
+				<div class="col-6">
+					<p class="font-sz-14 mb-1 font-weight-600">지마켓</p>
+					<ul class="gap-1 d-flex flex-column gmarket">											
+						<!-- <li class="col">
+							<div class="card gmarket">
+								<div class="card-body d-flex align-items-center justify-content-between">	
+									<div class="serviceName">KT-SMS-STATP-GMA-2CON</div>
+									<div class="processFiles d-flex gap-1">
+										<div class="processFile gap-2">
+											<div class="processFileName">DBP</div>
+											<div class="processFileStatWrap">
+												<div class="processFileStat">
+													<div>PS</div>
+													<span class="statColor"></span>
+												</div>
+												<div class="processFileStat">
+													<div>DB</div>
+													<span class="statColor red"></span>
+												</div>
+											</div>
+										</div>
+										<div class="processFile gap-2">
+											<div class="processFileName">IFP01</div>
+											<div class="processFileStatWrap">
+												<div class="processFileStat">
+													<div>PS</div>
+													<span class="statColor green"></span>
+												</div>
+												<div class="processFileStat">
+													<div>DB</div>
+													<span class="statColor green"></span>
+												</div>
+											</div>
+										</div>
+										<div class="processFile gap-2">
+											<div class="processFileName">MEMMON</div>
+											<div class="processFileStatWrap">
+												<div class="processFileStat">
+													<div>PS</div>
+													<span class="statColor green"></span>
+												</div>
+												<div class="processFileStat">
+													<div>DB</div>
+													<span class="statColor red"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>							
+							</div>
+						</li>									 -->
+					</ul>
+				</div>				
+				<div class="col-6">
+					<p class="font-sz-14 mb-1 font-weight-600">옥션</p>
+					<ul class="gap-1 d-flex flex-column auction">
+
+					</ul>
+					<p class="font-sz-14 mb-1 font-weight-600">스마일 캐시</p>
+					<ul class="gap-1 d-flex flex-column smileCash">
+
+					</ul>
+				</div>
+			</div>
+			<div class="col-6"></div>
+		</div>
+		<div class="p-2"></div>
+	</div>
+
+	<!-- <script th:src="@{/js/chart/chart.umd.js}"></script> -->
+	<!-- <script th:src="@{/js/view/real_send_hist.js}"></script> -->
+</body>
+</html>
+<script>
+	window.onload = function() {
+		const gmarket = document.querySelector('ul.gmarket');
+		for(let i=0; i<27; i++){
+			const li = document.createElement('li');
+			li.classList.add('col');
+			li.innerHTML = `
+				<div class="card">
+					<div class="card-body d-flex align-items-center justify-content-between">	
+						<div class="serviceName text-nowrap font-weight-600">KT-SMS-STATP-GMA-2CON</div>
+						<div class="processFiles d-flex gap-1">
+							<div class="processFile gap-2">
+								<div class="processFileName">DBP</div>
+								<div class="processFileStatWrap">
+									<div class="processFileStat">
+										<div>PS</div>
+										<span class="statColor"></span>
+									</div>
+									<div class="processFileStat">
+										<div>DB</div>
+										<span class="statColor red"></span>
+									</div>
+								</div>
+							</div>
+							<div class="processFile gap-2">
+								<div class="processFileName">IFP01</div>
+								<div class="processFileStatWrap">
+									<div class="processFileStat">
+										<div>PS</div>
+										<span class="statColor green"></span>
+									</div>
+									<div class="processFileStat">
+										<div>DB</div>
+										<span class="statColor green"></span>
+									</div>
+								</div>
+							</div>
+							<div class="processFile gap-2">
+								<div class="processFileName">MEMMON</div>
+								<div class="processFileStatWrap">
+									<div class="processFileStat">
+										<div>PS</div>
+										<span class="statColor green"></span>
+									</div>
+									<div class="processFileStat">
+										<div>DB</div>
+										<span class="statColor red"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>							
+				</div>
+			`;
+			gmarket.appendChild(li);
+		}
+
+		const auction = document.querySelector('ul.auction');
+		for(let i=0; i<22; i++){
+			const li = document.createElement('li');
+			li.classList.add('col');
+			li.innerHTML = `
+				<div class="card">
+					<div class="card-body d-flex align-items-center justify-content-between">	
+						<div class="serviceName text-nowrap font-weight-600">KT-SMS-STATP-GMA-2CON</div>
+						<div class="processFiles d-flex gap-1">
+							<div class="processFile gap-2">
+								<div class="processFileName">DBP</div>
+								<div class="processFileStatWrap">
+									<div class="processFileStat">
+										<div>PS</div>
+										<span class="statColor"></span>
+									</div>
+									<div class="processFileStat">
+										<div>DB</div>
+										<span class="statColor red"></span>
+									</div>
+								</div>
+							</div>
+							<div class="processFile gap-2">
+								<div class="processFileName">IFP01</div>
+								<div class="processFileStatWrap">
+									<div class="processFileStat">
+										<div>PS</div>
+										<span class="statColor green"></span>
+									</div>
+									<div class="processFileStat">
+										<div>DB</div>
+										<span class="statColor green"></span>
+									</div>
+								</div>
+							</div>
+							<div class="processFile gap-2">
+								<div class="processFileName">MEMMON</div>
+								<div class="processFileStatWrap">
+									<div class="processFileStat">
+										<div>PS</div>
+										<span class="statColor green"></span>
+									</div>
+									<div class="processFileStat">
+										<div>DB</div>
+										<span class="statColor red"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>							
+				</div>
+			`;
+			auction.appendChild(li);
+		}
+
+		const smileCash = document.querySelector('ul.smileCash');
+		for(let i=0; i<4; i++){
+			const li = document.createElement('li');
+			li.classList.add('col');
+			li.innerHTML = `
+				<div class="card">
+					<div class="card-body d-flex align-items-center justify-content-between">	
+						<div class="serviceName text-nowrap font-weight-600">KT-SMS-STATP-GMA-2CON</div>
+						<div class="processFiles d-flex gap-1">
+							<div class="processFile gap-2">
+								<div class="processFileName">DBP</div>
+								<div class="processFileStatWrap">
+									<div class="processFileStat">
+										<div>PS</div>
+										<span class="statColor"></span>
+									</div>
+									<div class="processFileStat">
+										<div>DB</div>
+										<span class="statColor red"></span>
+									</div>
+								</div>
+							</div>
+							<div class="processFile gap-2">
+								<div class="processFileName">IFP01</div>
+								<div class="processFileStatWrap">
+									<div class="processFileStat">
+										<div>PS</div>
+										<span class="statColor green"></span>
+									</div>
+									<div class="processFileStat">
+										<div>DB</div>
+										<span class="statColor green"></span>
+									</div>
+								</div>
+							</div>
+							<div class="processFile gap-2">
+								<div class="processFileName">MEMMON</div>
+								<div class="processFileStatWrap">
+									<div class="processFileStat">
+										<div>PS</div>
+										<span class="statColor green"></span>
+									</div>
+									<div class="processFileStat">
+										<div>DB</div>
+										<span class="statColor red"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>							
+				</div>
+			`;
+			smileCash.appendChild(li);
+		}
+	};
+</script>
