@@ -29,9 +29,21 @@ public class RealSendHistController {
 		return "view/real_send_hist";
 	}
 	
-	@GetMapping("/real/open")
-	public String open(Model model) {
+	@GetMapping("/real/detail/gmarket")
+	public String gmarketDetail() {
 		
-		return "empty";
+		return "detailGmarket";
+	}
+	
+	@GetMapping("/real/detail/auction")
+	public String auctionDetail() {
+		
+		return "detailAuction";
+	}
+	
+	@GetMapping("/real/detail/smilecash")
+	public String smilecashDetail() {
+		
+		return "detailSmilecash";
 	}
 }
