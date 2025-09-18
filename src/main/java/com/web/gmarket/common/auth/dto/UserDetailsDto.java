@@ -1,6 +1,5 @@
 package com.web.gmarket.common.auth.dto;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @AllArgsConstructor
-public class UserDetailsDto implements UserDetails, Serializable {
+public class UserDetailsDto implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 

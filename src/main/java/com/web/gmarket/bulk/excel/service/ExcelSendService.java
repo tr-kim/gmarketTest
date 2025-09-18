@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,6 +64,11 @@ public interface ExcelSendService {
 		String nowStr = sdf.format(new Date());
 		
 		String originalFilename = file.getOriginalFilename();
+		if (originalFilename == null) {
+			result.put("status", "error");
+			result.put("message", "엑셀 파일 이름이 존재하지 않습니다.");
+			return result;
+		}
 		String ext = "";
 		int dotIndex = originalFilename.lastIndexOf(".");
 		if (dotIndex != -1) {

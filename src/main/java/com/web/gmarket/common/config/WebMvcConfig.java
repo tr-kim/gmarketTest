@@ -6,9 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.web.gmarket.common.utils.HtmlEscapingObjectMappingFactory;
+
 
 /**
  * XSS Filter 사용 시 Request Raw Body로 넘어오는 JSON에 대한 필터 등록 
@@ -24,7 +26,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	}
 
 	@Override
-	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+	public void configureMessageConverters(@NonNull List<HttpMessageConverter<?>> converters) {
 
 		try {
 			MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter(
