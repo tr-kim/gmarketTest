@@ -8,12 +8,8 @@ import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.crypto.Cipher;
 
@@ -50,7 +46,7 @@ class GmarketApplicationTests {
         String str = "20250714100009";
         System.out.println(String.valueOf(Integer.valueOf(str) - Integer.valueOf(inputFormat.format(date))));
         
-        List<String> list = new ArrayList<>();
+//        List<String> list = new ArrayList<>();
         
 	}
 	
