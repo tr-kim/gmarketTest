@@ -234,7 +234,13 @@ public class RestExcelSendController {
 			String jobId = UUID.randomUUID().toString();
 			uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "시작"));
 			
-			CompletableFuture.runAsync(() -> excelSendService.insertExcelSend(dto, uploadStatus, jobId));
+			CompletableFuture.runAsync(() -> {
+			    try {
+			        excelSendService.insertExcelSend(dto, uploadStatus, jobId);
+			    } catch (Exception e) {
+			        throw new RuntimeException(e);
+			    }
+			});
 			
 			result.put(ConstantsUtils.CODE, ConstantsUtils.SUCCESS_CODE);
 			result.put(ConstantsUtils.RESULT, jobId);
@@ -242,7 +248,7 @@ public class RestExcelSendController {
 			return ResponseEntity.status(HttpStatus.OK).body(result);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error("엑셀 발송 중 에러가 발생했습니다:", e.getMessage());
+			log.error("엑셀 발송 중 에러가 발생했습니다.", e);
 			
 			result.put(ConstantsUtils.CODE, ConstantsUtils.ERROR_CODE);
 			result.put(ConstantsUtils.RESULT, "엑셀 발송 중 에러가 발생했습니다.");
