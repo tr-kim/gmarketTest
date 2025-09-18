@@ -420,14 +420,6 @@ $(function () {
 	})
 });
 
-
-// 숫자만 입력
-function onlyNumber(element){
-	element.value = element.value.replace(/[^0-9]/g,'');
-}
-
-let previewConfirmDialog;
-let confirmDialog;
 // 문자 발송
 function sendMessage() {
 	
@@ -647,22 +639,15 @@ function sendMessage() {
 		});
 	} 
 	
-	// 메시지확인 다이얼로그 중복 제거
-	if (previewConfirmDialog) {
-        previewConfirmDialog = null;
-    }
-
 	// 메시지확인 다이얼로
-	previewConfirmDialog = DevExpress.ui.dialog.custom({
+	DevExpress.ui.dialog.custom({
 		showTitle: false,
 		messageHtml: "<div style='text-align: center;'>미리보기 화면을 보시겠습니까?</div>",
 		buttons: [
 			{ text: "확인", onClick: () => "ok" },
 			{ text: "취소", onClick: () => "cancel"}
 		]
-	});
-		
-	previewConfirmDialog.show().done(function(dialogResult) {
+	}).show().done(function(dialogResult) {
 		if (dialogResult === "ok") {
 			
 			//메시지 확인팝업창
@@ -678,26 +663,19 @@ function sendMessage() {
 			confirmSend.querySelector('.send_btn').addEventListener('click', function() {
 				confirmSend.classList.remove('d-block');
 				func_send(); // 메시지 보내기
-			});
+			}, { once: true });
 			
 		} else {
 			console.log("메시지 확인취소");
 			
-			// 다이얼로그창 중복 제거
-			if (confirmDialog) {
-		        confirmDialog = null;
-		    }
-			
-			confirmDialog = DevExpress.ui.dialog.custom({
+			DevExpress.ui.dialog.custom({
 				showTitle: false,
 				messageHtml: "<div style='text-align: center;'>발송하시겠습니까?</div>",
 				buttons: [
 					{ text: "발송", onClick: () => "ok" },
 					{ text: "취소", onClick: () => "cancel"}
 				]
-			});
-			
-			confirmDialog.show().done(function(dialogResult) {
+			}).show().done(function(dialogResult) {
 				if (dialogResult === "ok") {
 					func_send(); // 메시지 보내기
 				} else {
@@ -708,40 +686,56 @@ function sendMessage() {
 	});
 }
 
-// 예약 시간 포맷 변환 yyyyMMddHHmmssSSS
-function parseReservationTime(timeString) {
-    try {
-		
-        // "예약 발송 시간 : " 부분 제거
-        const cleanString = timeString.replace("예약 발송 시간 : ", "");
-        
-        // 날짜와 시간 부분 분리
-        const parts = cleanString.split(" ");
-        const datePart = parts[0]; // "2025-09-25"
-        const timePart = parts.slice(1).join(" "); // "00시 00분"
-        
-        // 날짜 파싱
-        const [year, month, day] = datePart.split("-").map(Number);
-        
-        // 시간 파싱
-        const hour = parseInt(timePart.replace("시", "").split(" ")[0]);
-        const minute = parseInt(timePart.replace("분", "").split(" ")[1]);
-		
-		const date = new Date(year, month - 1, day, hour, minute);
-		
-		const getYaer = date.getFullYear();
-		const getMonth = String(date.getMonth() + 1).padStart(2, '0');
-		const getDay = String(date.getDate()).padStart(2, '0');
-		const getHour = String(date.getHours()).padStart(2, '0');
-		const getMinute = String(date.getMinutes()).padStart(2, '0');
-		const getSecond = String(date.getSeconds()).padStart(2, '0');
-		const getMillisecond = String(date.getSeconds()).padStart(3, '0');
-        
-        return `${getYaer}${getMonth}${getDay}${getHour}${getMinute}${getSecond}${getMillisecond}`;
-    } catch (error) {
-        console.error("파싱 오류:", error);
-        return null;
-    }
+// 엑셀 발송 상태 체크(프로그레스 바)
+function uploadStatusCheck(jobId) {
+	const interval = setInterval(() => {
+        fetch(`/api/v1/excelSend/uploadStatus/${jobId}`)
+            .then(response => response.json())
+            .then(data => {
+				// console.log(data);
+				
+				// 에러 처리
+				if(data.progress == -1) {
+					clearInterval(interval);
+					showDialogCustom("엑셀 발송 도중 에러가 발생하였습니다.", function() {
+						document.querySelector('.progressBar').classList.replace('d-block', 'd-none');
+					});
+				}
+				
+				PROCESS_TOTAL = data.total;
+				PROCESSED = data.current; 
+				
+				processData();
+                
+				// 상태 체크 중지
+                if (data.complete || PROCESSED >= PROCESS_TOTAL) {
+					clearInterval(interval);
+					showDialogCustom("엑셀 발송이 완료되었습니다.", function() {
+						uploadStatuRemove(jobId);
+						location.reload(true);	// 페이지 새로고침
+					});
+					
+                }
+			}).catch(err => {
+				console.error("엑셀 발송 상태 체크:", err);
+				clearInterval(interval);
+				showDialogCustom("엑셀 발송 도중 에러가 발생하였습니다.", function() {
+					document.querySelector('.progressBar').classList.replace('d-block', 'd-none');
+				});
+				
+			});
+    }, 1000); // 1초마다 체크
+}
+
+// 엑셀 발송 상태 삭제
+function uploadStatuRemove(jobId) {
+	fetch(`/api/v1/excelSend/uploadStatus/delete/${jobId}`)
+    .then(response => response.json())
+    .then(data => {
+		console.log(data);
+	}).catch(err => {
+		console.error("엑셀 발송 상태 삭제:", err);
+	});
 }
 
 // 엑셀 파일 업로드
@@ -1214,56 +1208,3 @@ function excelValidateRequired(){
 	}
 	return true;
 }
-
-// 엑셀 발송 상태 체크(프로그레스 바)
-function uploadStatusCheck(jobId) {
-	const interval = setInterval(() => {
-        fetch(`/api/v1/excelSend/uploadStatus/${jobId}`)
-            .then(response => response.json())
-            .then(data => {
-				// console.log(data);
-				
-				// 에러 처리
-				if(data.progress == -1) {
-					clearInterval(interval);
-					showDialogCustom("엑셀 발송 도중 에러가 발생하였습니다.", function() {
-						document.querySelector('.progressBar').classList.replace('d-block', 'd-none');
-					});
-				}
-				
-				PROCESS_TOTAL = data.total;
-				PROCESSED = data.current; 
-				
-				processData();
-                
-				// 상태 체크 중지
-                if (data.complete || PROCESSED >= PROCESS_TOTAL) {
-					clearInterval(interval);
-					showDialogCustom("엑셀 발송이 완료되었습니다.", function() {
-						uploadStatuRemove(jobId);
-						location.reload(true);	// 페이지 새로고침
-					});
-					
-                }
-			}).catch(err => {
-				console.error("엑셀 발송 상태 체크:", err);
-				clearInterval(interval);
-				showDialogCustom("엑셀 발송 도중 에러가 발생하였습니다.", function() {
-					document.querySelector('.progressBar').classList.replace('d-block', 'd-none');
-				});
-				
-			});
-    }, 1000); // 3초마다 체크
-}
-
-// 엑셀 발송 상태 삭제
-function uploadStatuRemove(jobId) {
-	fetch(`/api/v1/excelSend/uploadStatus/delete/${jobId}`)
-    .then(response => response.json())
-    .then(data => {
-		console.log(data);
-	}).catch(err => {
-		console.error("엑셀 발송 상태 삭제:", err);
-	});
-}
-

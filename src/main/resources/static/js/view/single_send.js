@@ -469,13 +469,6 @@ $(function () {
 	
 });
 
-
-//숫자만 입력
-function onlyNumber(element){
-	element.value = element.value.replace(/[^0-9]/g,'');
-}
-
-
 //직접입력 추가
 function addDirectNumber(){
 	const nameInput = document.getElementById("directName");
