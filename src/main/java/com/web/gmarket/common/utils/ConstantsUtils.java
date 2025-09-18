@@ -11,20 +11,21 @@ public class ConstantsUtils {
 	public static final String SUCCESS = "success";
 	public static final String FAILD = "faild";
 	
-	// Success Code
+	// SUCCESS CODE
 	public static final int SUCCESS_CODE = 1000;
 	
-	// Error Code
+	// ERROR CODE
 	public static final int ERROR_CODE = 9999;
 	public static final int VALIDATE_ERROR = 9001;
 	public static final int DATA_DOSE_NOT_EXIST = 9002; 		// 누락된 데이터 정보
 	
-	// User Error Code
+	// USER ERROR CODE
 	public static final int USER_DUPLICATION = 9100;			// 사용자 중복
 	public static final int USER_NON_EXISTENCE = 9101;			// 사용자 미존재
-	public static final int USESR_NOT_EXCEL_SEND = 9102; 		// 엑셀 발송 
+	public static final int USESR_NOT_EXCEL_SEND = 9102; 		// 엑셀 발송
+	public static final int USESR_NOT_FILE_SEND = 9103; 		// 파일 발송
 	
-	// File Error Code
+	// FILE ERROR CODE
 	public static final int NOT_FILE = 9200;		// 파일 에러
 	public static final int NOT_EXTENSION = 9201;	// 파일 형식 오류
 	
@@ -36,6 +37,8 @@ public class ConstantsUtils {
 	public static final String REASON = "reason";
 	public static final String RESULT = "result";
 	public static final String TOTAL_COUNT = "totalCount";
+	public static final String SUCCESS_COUNT = "successCount";
+	public static final String FAILD_COUNT = "faildCount";
 	public static final String GMAREKT = "gmarket";
 	public static final String AUCTION = "auction";
 	public static final String SHA_512 = "SHA-512";
@@ -56,7 +59,7 @@ public class ConstantsUtils {
 	public static final String CNT_DUP = "cntDup";
 	public static final String CNT_SEND_FAIL = "cntSendFail";
 	
-	// Page Type
+	// PAGE TYPE
 	public static final String STAT = "stat";
 	public static final String WAIT = "wait";
 	public static final String USER = "user";
@@ -71,7 +74,7 @@ public class ConstantsUtils {
 	public static final String APPLICATION_JSON = "application/json";
 	public static final String AUTHORIZATION = "Authorization";
 	
-	// User Role
+	// USER ROLE
 	public static final String ROLE_SUPER = "ROLE_SUPER";
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_USER = "ROLE_USER";
@@ -93,16 +96,16 @@ public class ConstantsUtils {
 	public static final String RSA_MODULUS = "RSA_MODULUS";
 	public static final String RSA_EXPONENT = "RSA_EXPONENT";
 	
-	// Real Send Hist
+	// REAL SEND HIST
 	public static final int TOTAL_MON_TIME = 1; // ex) 5분 => 5
 	public static final int ALARM_FLAG = 2; // 알람에 대한 데이터를 가져오는 기준 => 1 -> 현재시간부터 (현재시간 - TOTAL_MON_TIME(분)) 까지의 데이터, 2 -> 최근전송시간부터 (최근전송시간 - TOTAL_MON_TIME(분)) 까지의 데이터
 	public static final int TOTAL_GRAPH_TIME = 60; // Graph Reload 시간 간격(초단위, ex) 1분 => 60)
 	
-	// DB Connection Type
+	// DB CONNECTION TYPE
 	public static final String DB_GMARKET = "gmarket";
 	public static final String DB_AUCTION = "auction";
 	
-	// Company Code
+	// COMPANY CODE
 	public static final int AUCTION_CODE = 0;
 	public static final int GMARKET_CODE = 1;
 	
@@ -142,5 +145,13 @@ public class ConstantsUtils {
 	public static final String EXCEL_IMAGE_PATH   = "C:/excel_web/img/excel/";
 	public static final String FILE_IMAGE_PATH   = "C:/excel_web/img/file/";
 	public static final String DB_IMAGE_PATH = "C:/excel_web/img/db/";
+	
+	// CALLBACK NUM
+	public static final String GMARKET_CALLBACK_NUM = "15665701";
+	public static final String AUCTION_CALLBACK_NUM = "15880184";
+	
+	// REJECT NUM
+	public static final String GMARKET_REJECT_NUM = "(거부)0800002004";
+	public static final String AUCTION_REJECT_NUM = "(거부)0803990000";
 	
 }
