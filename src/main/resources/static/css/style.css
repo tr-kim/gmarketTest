@@ -296,37 +296,15 @@ aside .psw_chg_btn:hover{
 #real_send_hist ul > li.real2{
     width: 240px;
 }
-#real_send_hist ul.auction + p{
-    margin-top: 1.7rem;
-}
+
 #real_send_hist .card-body{
     padding: .2rem .3rem;
 }
-#real_send_hist > .row>* {
-    padding-right: calc(var(--bs-gutter-x) * 0);
-}
-#real_send_hist p {
+#real_send_hist > p {
     width: 78px;
 }
-#real_send_hist table{
-    font-size: 12px;
-}
-#real_send_hist table td,
-#real_send_hist table th{
-    text-align: center;
-    border-right: 1px solid #dee2e6;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    padding: .3rem;
-    background-color: #fff;
-} 
-#real_send_hist table td:last-child,
-#real_send_hist table th:last-child{
-    border-right: none;
-} 
-#real_send_hist table tbody tr:last-child{
-    border-bottom: 1px solid #fff;
+.col-real > .row>* {
+    padding-right: calc(var(--bs-gutter-x) * 0);
 }
 .marquee{
     display: flex;
@@ -360,13 +338,6 @@ aside .psw_chg_btn:hover{
     -webkit-animation-play-state: paused;
     animation-play-state: paused;
 }
-/* .marqueereverse:hover {
-    -webkit-animation-play-state: paused;
-    animation-play-state: paused
-} */
-#real_send_hist ul.marqueereverse.delay.gmarket .card{
-    /* background-color: #dc3545; */
-}
 @keyframes slidereversemarquee {
     0% {transform:translateX(100%);}
     100% { transform:translateX(-100%);}
@@ -376,26 +347,31 @@ aside .psw_chg_btn:hover{
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.processFileName{
+    font-size: 11px;
+}
 .processFile{
-    background-color: #ffffff80;
+    font-size: 11px;
+    margin: 0;
+    white-space: nowrap;
+    width: 53.6px;
+}
+.processFile.ifp{
+    width: 105.6px;
+}
+.processFileStat{
+    background-color: #ffffff;
     border-radius: 5px;
     padding: .2rem .3rem;
     text-align: center;
     display: flex;
     align-items: center;
-}
-.processFileName{
-    font-size: 11px;
-}
-.processFileStatWrap{
-    text-align: left;
-}
-.processFileStat{
-    display: flex;
-    align-items: center;
     justify-content: space-between;
-    font-size: 10px;
     gap: 3px;
+}
+.processFileStat.ifp{
+    width: 105.6px;
+    justify-content: start;
 }
 .statColor{
     width: 7px;
@@ -420,6 +396,57 @@ aside .psw_chg_btn:hover{
 }
 .statColor.gray{
     background-color: #999;
+}
+.row-real table td,
+.row-real table th{
+    text-align: center;
+    white-space: nowrap;
+    border-right: 1px solid #dee2e6;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: .3rem;
+    background-color: #fff;
+}
+.row-real .hist_grid_right{
+    border-right: 1px solid #333;
+}
+.row-real .hist_grid_bottom{
+    border-bottom: 1px solid #333;
+}
+.row-real .hist_grid_top{
+    border-top: 1px solid #333;
+}
+.row-real .hist_grid_left{
+    border-left: 1px solid #333;
+}
+.row-real table th:last-child,
+.row-real table td:last-child{
+    border-right: 1px solid #333;
+}
+.col-real .gmarket .serviceName{
+    /* background-color: #d5f6d6; */
+}
+.col-real .processFileStat{
+    background-color: #ffffff;
+    border-radius: 0px;
+    padding: 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+}
+.col-real .list-group-item {
+    padding: .2rem .3rem;
+}
+.col-real .dbp_ifp_wrap .card{
+    border: 0;
+}
+#real_send_hist.col-real ul.gmarket .card,
+#real_send_hist.col-real ul.auction .card,
+#real_send_hist.col-real ul.smileCash .card{
+    background-color: #fff;
+    border: 1px solid #dee2e6;
 }
 /* send.html */
 /* excel_send.html */
