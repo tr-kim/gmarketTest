@@ -9,9 +9,11 @@
     <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>C:/gmarket/gmarket.log</file>
         <ImmediateFlush>true</ImmediateFlush>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>C:/gmarket/backup/gmarket_%d{yyyy-MM-dd}.log</fileNamePattern>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>C:/gmarket/backup/gmarket_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<maxHistory>90</maxHistory>
+			<maxFileSize>50MB</maxFileSize>
+        	<totalSizeCap>5GB</totalSizeCap>
 		</rollingPolicy>
 		<encoder>
 	       <pattern>%boldMagenta(%d{MM-dd HH:mm:ss}) [%boldYellow(%-5level)] %cyan(%logger{5}.%M) - %msg %n</pattern>
@@ -21,22 +23,23 @@
 	<appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>C:/gmarket/error/error.log</file>
         <ImmediateFlush>true</ImmediateFlush>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>C:/gmarket/backup/error/error_%d{yyyy-MM-dd}.log</fileNamePattern>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>C:/gmarket/backup/error/error_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<maxHistory>90</maxHistory>
+			<maxFileSize>50MB</maxFileSize>
+        	<totalSizeCap>5GB</totalSizeCap>
 		</rollingPolicy>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+	        <level>ERROR</level>
+	    </filter>
 		<encoder>
 	       <pattern>%boldMagenta(%d{MM-dd HH:mm:ss}) [%boldYellow(%-5level)] %cyan(%logger{5}.%M) - %msg %n</pattern>
 	    </encoder>
 	</appender>
 	
-    <root level="ERROR">
-        <appender-ref ref="STDOUT" />
-        <appender-ref ref="ERROR" />
-    </root>
-    
-    <root level="INFO">
-        <appender-ref ref="STDOUT" />
-        <appender-ref ref="ROLLING" />
-    </root>
+	<root level="INFO">
+	    <appender-ref ref="STDOUT" />
+	    <appender-ref ref="ROLLING" />
+	    <appender-ref ref="ERROR" />
+	</root>
 </configuration>

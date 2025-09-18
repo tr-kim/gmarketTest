@@ -3,8 +3,6 @@ package com.web.gmarket.bulk.excel.service.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +21,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.web.gmarket.bulk.broad.dto.BroadcastMsgDto;
 import com.web.gmarket.bulk.broad.mapper.BroadcastMsgMapper;
@@ -35,6 +34,7 @@ import com.web.gmarket.common.mapper.CommonSendMapper;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.DBUtils;
 import com.web.gmarket.common.utils.FtpUtils;
+import com.web.gmarket.common.vo.FtpDto;
 import com.web.gmarket.common.vo.UploadProgress;
 
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +47,8 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 	private DynamicDataSourceService dynamicDataSourceService;
 
 	@Override
-	public void insertExcelSend(ExcelSendDto dto, Map<String, UploadProgress> uploadStatus, String jobId) {
+	@Transactional(rollbackFor = Exception.class)
+	public void insertExcelSend(ExcelSendDto dto, Map<String, UploadProgress> uploadStatus, String jobId) throws Exception {
 
 		String dbName = DBUtils.getDBName(dto.getLargeCategory());
 
@@ -73,6 +74,23 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 			int bulkCnt = dto.isTranCheckDefault() ? dto.getTranRangeEnd() : maxRows; // 대량 발송 갯수
 			String bMsgKey = String.format("%s%s", Long.toString(System.currentTimeMillis()).substring(0, 10), dto.getUserId()); // 대량 발송 키 생성
 
+			// MMS일 경우 이미지 파일 업로드
+			if(ConstantsUtils.MMS.equals(dto.getMsgType())) {
+				FTPClient ftpClient = FtpUtils.createConnection(dto.getLargeCategory(), ConstantsUtils.ACTIVE);
+				
+				FtpDto ftpDto = FtpDto.builder()
+						.largeCategory(dto.getLargeCategory())
+						.msgType(dto.getMsgType())
+						.imageName01(dto.getImageName01())
+						.imageName02(dto.getImageName02())
+						.build();
+				
+				FtpUtils.uploadFile(ftpClient, ftpDto);
+				
+//				FTPClient ftp2 = FtpUtils.createConnection(dto.getLargeCategory(), ConstantsUtils.STANBY);
+//				FtpUtils.uploadFile(ftp2, dto);
+			}
+			
 			// 데이터 설정
 			BroadcastMsgDto broadcastMsgDto = BroadcastMsgDto.builder()
 					.bMsgKey(bMsgKey)
@@ -90,15 +108,6 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 					.reqTime(reqTime)
 					.timeType(dto.getTimeType())
 					.build();
-			
-			// MMS일 경우 이미지 파일 업로드
-			if(ConstantsUtils.MMS.equals(dto.getMsgType())) {
-				FTPClient ftp1 = FtpUtils.createConnection(dto.getLargeCategory(), ConstantsUtils.ACTIVE);
-				FtpUtils.uploadFile(ftp1, dto);
-				
-//				FTPClient ftp2 = FtpUtils.createConnection(dto.getLargeCategory(), ConstantsUtils.STANBY);
-//				FtpUtils.uploadFile(ftp2, dto);
-			}
 			
 			// 대량 발송 등록
 			getBroadcastMsgMapper(dbName).insertBroadcastMsg(broadcastMsgDto);
@@ -156,7 +165,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 							throw new IllegalArgumentException(String.format("%s%s", "혀용되지 않은 메시지 타입입니다 : ", msgType));
 					}
 
-					getBroadcastMsgMapper(dbName).updateBroadcastMsg(bMsgKey, flagCnt > 0 ? succCnt++ : failCnt++, flagCnt > 0 ? ConstantsUtils.FALG_T : ConstantsUtils.FALG_F);
+					getBroadcastMsgMapper(dbName).updateBroadcastMsg(bMsgKey, flagCnt > 0 ? ++succCnt : ++failCnt, flagCnt > 0 ? ConstantsUtils.FALG_T : ConstantsUtils.FALG_F);
 					
 					int progress = (int) (((float) sendCnt / bulkCnt) * 100);
 					uploadStatus.put(jobId, new UploadProgress(progress, sendCnt, bulkCnt, String.format("%d/%d 행 처리 완료", sendCnt, bulkCnt)));
@@ -165,30 +174,9 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 			
 			uploadStatus.put(jobId, new UploadProgress(100, bulkCnt, bulkCnt, String.format("엑셀 데이터 완료", bulkCnt, bulkCnt)));
 
-		} catch (ArrayIndexOutOfBoundsException e) {
-			uploadStatus.put(jobId, new UploadProgress(-1, 0, 0, "엑셀 데이터 가공 오류"));
-			log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 엑셀 데이터 가공 오류: {}", e.getMessage());
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			uploadStatus.put(jobId, new UploadProgress(-1, 0, 0, "파일 미존재"));
-			log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 파일 미존재: {}", e.getMessage());
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			uploadStatus.put(jobId, new UploadProgress(-1, 0, 0, "파일 오류 발생"));
-			log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 파일 오류 발생: {}", e.getMessage());
-			e.printStackTrace();
-		} catch (SocketException e) {
-			uploadStatus.put(jobId, new UploadProgress(-1, 0, 0, "FTP 소캣 오류 발생"));
-			log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FTP 소캣 오류 발생: {}", e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
-			uploadStatus.put(jobId, new UploadProgress(-1, 0, 0, "FTP 파일 업로드 오류 발생"));
-			log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FTP 파일 업로드 오류 발생: {}", e.getMessage());
-			e.printStackTrace();
 		} catch (Exception e) {
 			uploadStatus.put(jobId, new UploadProgress(-1, 0, 0, "엑셀 데이터 DB 등록 오류 발생"));
-			log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 엑셀 데이터 DB 등록 오류 발생: {}", e.getMessage());
-			e.printStackTrace();
+			throw e;
 		}
 	}
 

@@ -1,5 +1,6 @@
 let LOAD_PANEL;
 let TEXT_FILE_NAME = "";
+let TOTAL_COUNT = 0;
 
 $(function () {
 	// 로딩바 최초 생성 (화면 전체 기준)
@@ -296,13 +297,6 @@ $(function () {
 	});
 });
 
-
-// 숫자만 입력
-function onlyNumber(element){
-	element.value = element.value.replace(/[^0-9]/g,'');
-}
-
-
 // 문자 발송
 function sendMessage(){
 	// 파일선택
@@ -324,38 +318,213 @@ function sendMessage(){
 		return;
 	}
 	
-	const confirmDialog = DevExpress.ui.dialog.custom({
+	// 메시지 내용 전송
+	const func_send = function() {
+		
+		// 메시지 유형 XXX
+		const msgTypeValue = document.querySelector('.msg_type').textContent.trim();
+		if(msgTypeValue == "MMS") {
+			showDialogCustom("MMS 개발 진행 중입니다.");
+			return;
+		}
+		
+		// 발신번호
+		const callbackNo = document.getElementById("callbackNo").value;
+		
+		// 대분류
+		const largeCategory = document.getElementById("large-category").value;
+		
+		// XXX
+		if(largeCategory == 0) {
+			showDialogCustom("Auction 개발 진행 중입니다.");
+			return;
+		}
+		
+		// 사용자 아이디
+		const userId = document.getElementById("userId").value.trim();
+		
+		// 메시지 제목
+		const msgTitle = document.getElementById("msgTitle").value.trim();
+		
+		// 메시지 유형
+		const msgType = msgTypeValue === "SMS" ? 'sms' : msgTypeValue === "LMS" ? 'lms' : 'mms';
+		
+		// 메시지 내용
+		const msgWrite = document.getElementById('msgWrite').value.trim();
+		
+		// 전송대상
+		const sendInfo = document.getElementById('sendInfo').value.trim();
+		
+		// SMS 수신여부
+		const reserved = document.getElementById('reserved3').value;
+		
+		// 수신거부
+		const rejectCheckDefault = document.getElementById('rejectCheckDefault').checked;
+		const rejectNum = document.getElementById('rejectNum').value.trim();
+		
+		// 발송시간
+		const sendTimeChkValue = $("input[name='send_time']:checked").val();
+		const sendTime = parseReservationTime(document.getElementById('reserveDate').textContent);
+		
+		const formData = new FormData();
+		formData.append("textFileName", TEXT_FILE_NAME);												// 텍스트 파일 이름
+		formData.append("callbackNo", callbackNo);														// 발신 번호
+		formData.append("largeCategory", largeCategory);												// 대분류 0: 옥션, 1: 지마켓
+		formData.append("userId", userId);																// 사용자 아이디
+		formData.append("msgTitle", msgTitle);															// 메시지 제목 LMS, MMS만 적용
+		formData.append("msgType", msgType);															// 메시지 유형 SMS, LMS, MMS
+		formData.append("msgWrite", msgWrite);															// 메시지 내용
+		formData.append("sendInfo", sendInfo);															// 전송 대상
+		formData.append("reserved", reserved);															// SMS 수신 여부 확인 0: 확인, 1: 미확인
+		formData.append("timeType", sendTimeChkValue);													// 발송 시간 확인 0: 즉시, 1: 예약
+		formData.append("rejectCheckDefault", rejectCheckDefault);										// 080 수신거부 번호 확인 true, false 
+		formData.append("totalCount", TOTAL_COUNT);														// 수신번호 갯수
+		
+		// 수신번호 체크한 경우
+		if(rejectCheckDefault) formData.append("rejectNum", rejectNum);									// 수신거부 번호
+		
+		// 발송 시간 - 예약인 경우
+		if(sendTimeChkValue === '1') formData.append("sendTime", sendTime);								// 예약 시간
+		
+		// 이미지 파일 이름
+		if(msgType == "mms" && IMAGE_FILE_NAME.length > 0) {
+			if(IMAGE_FILE_NAME.length == 1) {
+				formData.append("imageName01", IMAGE_FILE_NAME[0]);
+			} else if(IMAGE_FILE_NAME.length == 2) {
+				formData.append("imageName01", IMAGE_FILE_NAME[1]);
+				formData.append("imageName02", IMAGE_FILE_NAME[2]);
+			}
+		}
+		
+		fetch("/api/v1/fileSend/insert", {
+			method: "POST",
+			body: formData
+		})
+		.then(res => res.json())
+		.then(data => {
+			console.log(data);
+			
+			const code = data.code;
+			const result = data.result;
+			
+			if(code == 1000) {
+				const totalCnt = result.totalCount;
+				const succCnt = result.successCount;
+				const failCnt = result.faildCount;
+				
+				const msg = msgTypeValue+" 총 "+ totalCnt +" 건 완료되었습니다. (성공 : "+ succCnt +" 건, 실패 : "+ failCnt +" 건)";
+				showDialogCustom(msg, function() {
+					location.reload(true);	// 페이지 새로고침
+				});
+				
+			} else showDialogCustom(result);
+		})
+		.catch(err => {
+			console.error("파일 발송 실패:", err);
+			showDialogCustom('error');
+		})
+		.finally(() => {
+		});
+	}
+	
+	// 메시지확인 다이얼로
+	DevExpress.ui.dialog.custom({
 		showTitle: false,
-		messageHtml: "<div style='text-align: center;'>발송하시겠습니까?</div>",
-		buttons: [{
-			text: "발송",
-			type: "default",
-			onClick: function(e) {
-				// 발송 로직 실행
-				
-				
-				
-				
-				
-				return { result: "ok" };
-			}
-		}, {
-			text: "취소",
-			onClick: function(e) {
-				return { result: "cancel" };
-			}
-		}]
-	});
-
-	confirmDialog.show().done(function(dialogResult) {
-		if (dialogResult.result === "ok") {
-			console.log("발송 완료");
+		messageHtml: "<div style='text-align: center;'>미리보기 화면을 보시겠습니까?</div>",
+		buttons: [
+			{ text: "확인", onClick: () => "ok" },
+			{ text: "취소", onClick: () => "cancel"}
+		]
+	}).show().done(function(result) {
+		if (result === "ok") {
+			
+			//메시지 확인팝업창
+			const confirmSend = document.querySelector('.confirmSend');
+			const confirmMessage = document.getElementById('confirmMessage');	
+			confirmSend.classList.add('d-block');
+			
+			const rejectCheckDefault = document.getElementById('rejectCheckDefault').checked;
+			const rejectNum = document.getElementById('rejectNum').value.trim();
+			const msgWrite = document.getElementById('msgWrite').value.trim();
+			confirmMessage.textContent = rejectCheckDefault ? msgWrite + rejectNum : msgWrite;
+			
+			confirmSend.querySelector('.send_btn').addEventListener('click', function() {
+				confirmSend.classList.remove('d-block');
+				func_send(); // 메시지 보내기
+			}, { once: true });
+			
 		} else {
-			console.log("취소");
+			console.log("메시지 확인취소");
+			
+			DevExpress.ui.dialog.custom({
+				showTitle: false,
+				messageHtml: "<div style='text-align: center;'>발송하시겠습니까?</div>",
+				buttons: [
+					{ text: "발송", onClick: () => "ok" },
+					{ text: "취소", onClick: () => "cancel"}
+				]
+			}).show().done(function(dialogResult) {
+				if (dialogResult === "ok") {
+					func_send(); // 메시지 보내기
+				} else {
+					console.log("취소");
+				}
+			});
 		}
 	});
 }
 
+// 발송 상태 체크(프로그레스 바)
+function uploadStatusCheck(jobId) {
+	const interval = setInterval(() => {
+        fetch(`/api/v1/fileSend/uploadStatus/${jobId}`)
+            .then(response => response.json())
+            .then(data => {
+				// console.log(data);
+				
+				// 에러 처리
+				if(data.progress == -1) {
+					clearInterval(interval);
+					showDialogCustom("발송 도중 에러가 발생하였습니다.", function() {
+						document.querySelector('.progressBar').classList.replace('d-block', 'd-none');
+					});
+				}
+				
+				PROCESS_TOTAL = data.total;
+				PROCESSED = data.current; 
+				
+				processData();
+                
+				// 상태 체크 중지
+                if (data.complete || PROCESSED >= PROCESS_TOTAL) {
+					clearInterval(interval);
+					showDialogCustom("발송이 완료되었습니다.", function() {
+						uploadStatuRemove(jobId);
+						location.reload(true);	// 페이지 새로고침
+					});
+					
+                }
+			}).catch(err => {
+				console.error("발송 상태 체크:", err);
+				clearInterval(interval);
+				showDialogCustom("발송 도중 에러가 발생하였습니다.", function() {
+					document.querySelector('.progressBar').classList.replace('d-block', 'd-none');
+				});
+				
+			});
+    }, 1000); // 1초마다 체크
+}
+
+// 발송 상태 삭제
+function uploadStatuRemove(jobId) {
+	fetch(`/api/v1/fileSend/uploadStatus/delete/${jobId}`)
+    .then(response => response.json())
+    .then(data => {
+		console.log(data);
+	}).catch(err => {
+		console.error("발송 상태 삭제:", err);
+	});
+}
 
 // 텍스트 파일 업로드
 function textFileUpload(input) {
@@ -381,6 +550,7 @@ function textFileUpload(input) {
 		if(status == "success"){
 			const retData = data.retData;
 			TEXT_FILE_NAME = retData.txtFile;
+			TOTAL_COUNT = retData.count;
 			
 			// 테이블 그리기
 			drawTable("textGrid", retData);

@@ -465,3 +465,53 @@ function inputValidateRequired(id, message) {
 function decodeHtmlEntities(str) {
   return new DOMParser().parseFromString(str, "text/html").documentElement.textContent;
 }
+
+// 수신 거부 번호 설정
+function setRejectNum() {
+	if(!document.getElementById("rejectNum")) {
+		return;
+	}
+	
+	document.getElementById("rejectNum").value = document.getElementById("large-category").value == 0 ? AUCTION_REJECT_NUM : GMARKET_REJECT_NUM;
+}
+
+// 숫자만 입력
+function onlyNumber(element){
+	element.value = element.value.replace(/[^0-9]/g,'');
+}
+
+// 예약 시간 포맷 변환 yyyyMMddHHmmssSSS
+function parseReservationTime(timeString) {
+    try {
+		
+        // "예약 발송 시간 : " 부분 제거
+        const cleanString = timeString.replace("예약 발송 시간 : ", "");
+        
+        // 날짜와 시간 부분 분리
+        const parts = cleanString.split(" ");
+        const datePart = parts[0]; // "2025-09-25"
+        const timePart = parts.slice(1).join(" "); // "00시 00분"
+        
+        // 날짜 파싱
+        const [year, month, day] = datePart.split("-").map(Number);
+        
+        // 시간 파싱
+        const hour = parseInt(timePart.replace("시", "").split(" ")[0]);
+        const minute = parseInt(timePart.replace("분", "").split(" ")[1]);
+		
+		const date = new Date(year, month - 1, day, hour, minute);
+		
+		const getYaer = date.getFullYear();
+		const getMonth = String(date.getMonth() + 1).padStart(2, '0');
+		const getDay = String(date.getDate()).padStart(2, '0');
+		const getHour = String(date.getHours()).padStart(2, '0');
+		const getMinute = String(date.getMinutes()).padStart(2, '0');
+		const getSecond = String(date.getSeconds()).padStart(2, '0');
+		const getMillisecond = String(date.getSeconds()).padStart(3, '0');
+        
+        return `${getYaer}${getMonth}${getDay}${getHour}${getMinute}${getSecond}${getMillisecond}`;
+    } catch (error) {
+        console.error("파싱 오류:", error);
+        return null;
+    }
+}

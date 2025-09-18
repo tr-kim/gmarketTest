@@ -83,8 +83,8 @@ public class ExcelSendDto {
 	// 수신 거부 여부
 	private boolean rejectCheckDefault = false;
 	
-	// 수신 거부 번호
-	private String rejectNum;
+	// 수신 거부 번호 옥션(default), 지마켓
+	private String rejectNum = ConstantsUtils.AUCTION_REJECT_NUM;
 	
 	// 발송시간 유형 0 : 즉시, 1 : 예약
 	private Integer timeType = 0;
@@ -117,10 +117,8 @@ public class ExcelSendDto {
 	// 이미지 이름
 	private String imageName01;
 	private String imageName02;
-	private String imageName03;
 	
 	// 이미지 경로
 	private String imagePath01;
 	private String imagePath02;
-	private String imagePath03;
 }

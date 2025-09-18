@@ -36,11 +36,13 @@ public interface ExcelSendService {
 	
 	/**
 	 * 엑셀 발송
-	 * 
+	 *
 	 * @param dto
-	 * @return
+	 * @param uploadStatus
+	 * @param jobId
+	 * @throws Exception 
 	 */
-	public void insertExcelSend(ExcelSendDto dto, Map<String, UploadProgress> uploadStatus, String jobId);
+	public void insertExcelSend(ExcelSendDto dto, Map<String, UploadProgress> uploadStatus, String jobId) throws Exception;
 	
 	/**
 	 * 엑셀 파일 업로드 및 시트 목록 추출
