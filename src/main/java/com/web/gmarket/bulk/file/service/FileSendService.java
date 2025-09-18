@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.gmarket.bulk.file.dto.FileSendDto;
 import com.web.gmarket.common.utils.ConstantsUtils;
 
 public interface FileSendService {
@@ -21,6 +22,17 @@ public interface FileSendService {
 	String TXT_EXTENSION = ConstantsUtils.TXT_EXTENSION;
 	String TXT_PATH   = ConstantsUtils.TXT_PATH;
 	
+	
+	/**
+	 * 파일 전송
+	 * 
+	 * @param dto
+	 * @param uploadStatus
+	 * @param jobId
+	 * @return
+	 * @throws Exception 
+	 */
+	public Map<String, Integer> insertFileSend(FileSendDto dto) throws Exception;
 	
     /**
      * 텍스트 파일 업로드 및 데이터 파싱

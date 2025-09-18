@@ -14,8 +14,8 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.web.gmarket.bulk.excel.dto.ExcelSendDto;
 import com.web.gmarket.common.config.FtpProperties;
+import com.web.gmarket.common.vo.FtpDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,7 +90,7 @@ public class FtpUtils {
      * 파일 업로드
      * @throws IOException 
      */
-    public static void uploadFile(FTPClient ftpClient, ExcelSendDto dto) throws IOException, IllegalArgumentException {
+    public static void uploadFile(FTPClient ftpClient, FtpDto dto) throws IOException, IllegalArgumentException {
     	
     	FileInputStream fileInput1 = null;
     	FileInputStream fileInput2 = null;

@@ -16,6 +16,8 @@ public class FileSendController {
 		
 		model.addAttribute(ConstantsUtils.LAYOUT, "/layouts/top_layout");
 		model.addAttribute(ConstantsUtils.ACTIVE, ConstantsUtils.FILE_SEND);
+		model.addAttribute("GMARKET_REJECT_NUM", ConstantsUtils.GMARKET_REJECT_NUM);
+		model.addAttribute("AUCTION_REJECT_NUM", ConstantsUtils.AUCTION_REJECT_NUM);
 		
 		return "view/bulk/file_send";
 	}
@@ -25,6 +27,8 @@ public class FileSendController {
 		
 		model.addAttribute(ConstantsUtils.LAYOUT, "/layouts/left_layout");
 		model.addAttribute(ConstantsUtils.ACTIVE, ConstantsUtils.FILE_SEND);
+		model.addAttribute("GMARKET_REJECT_NUM", ConstantsUtils.GMARKET_REJECT_NUM);
+		model.addAttribute("AUCTION_REJECT_NUM", ConstantsUtils.AUCTION_REJECT_NUM);
 		
 		return "view/bulk/file_send";
 	}
