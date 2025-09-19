@@ -35,7 +35,8 @@ $(function () {
 	largeCategoryInstance = $('#large-category').dxSelectBox({
 		dataSource: [
 			{ code: 0, name: '옥션' },
-			{ code: 1, name: '지마켓' }
+			{ code: 1, name: '지마켓' },
+			{ code: 2, name: '스마일캐시' }
 		],
 		displayExpr: 'name',
 		valueExpr: 'code',

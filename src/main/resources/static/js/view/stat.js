@@ -282,6 +282,7 @@ $(function() {
 					switch (rowData.companyCode) {
 						case 0: return "옥션";
 						case 1: return "지마켓";
+						case 2: return "스마일캐시";
 						default: return "선택하세요";
 					}
 				}

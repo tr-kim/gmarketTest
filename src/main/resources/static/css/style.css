@@ -180,6 +180,7 @@ a.logout:hover{
 .aside-m{
     margin-left: 15rem;
     position: relative;
+    background: #fdfdfd;
 }
 aside{
     position: fixed;
@@ -189,6 +190,8 @@ aside{
     color: #666;
     top: 0;
     left: 0;
+    border-right: 1px solid #ddd;
+    z-index: 1;
 }
 aside li{
     width: 100%;
