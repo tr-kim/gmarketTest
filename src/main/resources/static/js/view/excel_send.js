@@ -275,12 +275,19 @@ $(function () {
 	});	
 
 	//080 수신거부
-	document.getElementById('rejectCheckDefault').addEventListener('change', function () {
-		const input = document.getElementById('rejectNum');
-		input.disabled = !this.checked;
-		 handleInput();
-	});	
+	const rejectCheck = document.getElementById('rejectCheckDefault');
+	const input = document.getElementById('rejectNum');
 
+	// DOM 로드될 때 상태 반영
+	input.disabled = !rejectCheck.checked;
+	handleInput();
+
+	// 체크박스 상태 변경될 때 반영
+	rejectCheck.addEventListener('change', function () {
+		input.disabled = !this.checked;
+		handleInput();
+	});
+	
 	//문자 byte 표시
 	function getByteLength(str) {
 		let resultStr = "";

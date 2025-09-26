@@ -233,12 +233,12 @@
 				<div class="col-2 font-weight-500">수신거부</div>
 				<div class="col">
 					<div class="form-check me-2">
-						<input class="form-check-input" type="checkbox" value="" id="rejectCheckDefault">
+						<input class="form-check-input" type="checkbox" value="" id="rejectCheckDefault" checked>
 						<label class="form-check-label text-nowrap" for="rejectCheckDefault">
 						080 수신거부 번호
 						</label>
 					</div>
-					<input type="text" name="rejectNum" id="rejectNum" class="form-control" th:value="${AUCTION_REJECT_NUM}" maxlength="100" disabled>
+					<input type="text" name="rejectNum" id="rejectNum" class="form-control" th:value="${AUCTION_REJECT_NUM}" maxlength="100">
 				</div>
 			</li>
 			<li class="align-items-center">
