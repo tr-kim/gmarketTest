@@ -9,70 +9,83 @@ $(function () {
 	
 	MSG_WRITE.placeholder = "내용을 입력해 주세요.\n80byte 초과 시 장문 문자로,\n이미지 추가 시 포토 문자로 자동 전환 됩니다.";
 	
+	
+	//수신번호 옵션(직접입력, 주소록, 엑셀파일)
+	const tabButtons = document.querySelectorAll('.tab li button');
+	const tabs = document.querySelectorAll('.tab li');
+	const callbacks = document.querySelectorAll('.callback_wrap');
+	
+	tabButtons.forEach((button, index) => {
+		button.addEventListener('click', (e) => {
+			e.preventDefault();
+			// .tab li에 on 클래스 조정
+			tabs.forEach((li, liIdx) => {
+				if (liIdx === index) {
+					li.classList.add('on');
+				} else {
+					li.classList.remove('on');
+				}
+			});
+			
+			// .callback_wrap에 d-block 클래스 조정
+			callbacks.forEach((wrap, wrapIdx) => {
+				if (wrapIdx === index) {
+					wrap.classList.add('d-block');
+				} else {
+					wrap.classList.remove('d-block');
+				}
+			});
+		});
+	});
+	
+	
+	//내용 옵션(이미지, 변수선택, 특수문자)
+	const optabButtons = document.querySelectorAll('.option_tab li button');
+	const optabs = document.querySelectorAll('.option_tab li');
+	const options = document.querySelectorAll('.option_wrap');
+	
+	optabButtons.forEach((button, index) => {
+		button.addEventListener('click', (e) => {
+			e.preventDefault();
+			// .tab li에 on 클래스 조정
+			optabs.forEach((li, liIdx) => {
+				if (liIdx === index) {
+					li.classList.add('on');
+				} else {
+					li.classList.remove('on');
+				}
+			});
+			
+			options.forEach((wrap, wrapIdx) => {
+				if (wrapIdx === index) {
+					wrap.classList.add('d-block');
+				} else {
+					wrap.classList.remove('d-block');
+				}
+			});
+		});
+	});
+	
 	// 이미지 등록
-	let updatingFiles = false;
-	const fileUploader = $('#file-uploader').dxFileUploader({
+	$('#file-uploader').dxFileUploader({
 		multiple: true,
 		allowedFileExtensions: ['.jpg'],
-		maxFileSize: 100 * 1024, // 100KB
+		maxFileSize: 100 * 1024,
 		uploadMode: 'useButtons',
 		uploadMethod: 'POST',
 		uploadUrl: '/files/upload/fileUpload',   
 		uploadCustomData: {                   
 			sendType: 'SINGLE'
 		},
-		onContentReady(e) {
-			// 내부 업로드 버튼 숨김
-			const uploadButton = e.element.find(".dx-fileuploader-upload-button");
-			uploadButton.hide();
-		},
 		onValueChanged(e) {
-			// 기존 파일 초기화 후 선택한 파일로 재설정(썸네일, 파일명 리턴 등 문제)
-			if (updatingFiles) return; // 재진입 방지
-			updatingFiles = true;
-			
-			// 미리보기 초기화
-			const previewArea = document.getElementById('preview-area');
-			previewArea.innerHTML = "";
-			
-			// 현재 선택된 파일 저장
-			const files = e.value || [];
-			const maxCount = 2;
-			
-			// 기존 파일 초기화
-			e.component.reset();
-			
-			// 최대 개수 제한 적용
-			const limitedFiles = files.slice(0, maxCount);
-			if (files.length > maxCount) {
-				showDialogCustom(`이미지는 최대 ${maxCount}장까지 등록 가능합니다.`);
+			const maxFiles = 2;
+
+			if (e.value.length > maxFiles) {
+				const limitedFiles = e.value.slice(0, maxFiles);
+				e.component.reset();
+				e.component.option('value', limitedFiles);
+				showDialogCustom(`이미지는 최대 ${maxFiles}개까지만 업로드할 수 있습니다.`);
 			}
-			
-			// 현재 선택한 파일만 다시 세팅
-			e.component.option('value', limitedFiles);
-			
-			// 이미지 체크 표시
-			const inputWrapper = document.getElementById('file-uploader');
-			const exist = document.querySelectorAll('.dx-fileuploader-file-container');
-			let imgCheck = document.querySelector('.img-check');
-			
-			if (exist.length > 0) {
-				if (!imgCheck) {
-					// 처음 한 번만 생성
-					imgCheck = document.createElement('div');
-					imgCheck.classList.add('img-check');
-					inputWrapper.appendChild(imgCheck);
-				}
-				// 내용과 스타일은 매번 갱신
-				imgCheck.innerHTML = `이미지 체크 필요`;
-				imgCheck.style.color = 'red';
-			} else {
-				if (imgCheck) {
-					imgCheck.remove();
-				}
-			}
-			
-			updatingFiles = false;
 		},
 		onUploadStarted(e) {
 			const files = e.component.option('value');
@@ -82,97 +95,12 @@ $(function () {
 				fileName2: files[1]?.name || '',
 				sendType: 'SINGLE'
 			});
+			console.log("Upload started, data:", e.component.option("uploadCustomData"));
 		},
 		onUploaded(e) {
-			// 이미지 체크 표시
-			let imgCheck = document.querySelector('.img-check');
-			imgCheck.innerHTML = ``;
-			imgCheck.innerHTML = `이미지 체크 완료`;
-			imgCheck.style.color = 'green';
-			
-			// 이미지 미리보기
-			const file = e.file;
-			console.log(file);
-			
-			const reader = new FileReader();
-			reader.onload = function() {
-				const previewArea = document.getElementById('preview-area');
-				const img = document.createElement('img');
-				img.src = reader.result;
-				img.style.width = "100px"; // 썸네일 크기
-				previewArea.appendChild(img);
-			};
-			reader.readAsDataURL(file);
+			console.log('Uploaded', e);
 		}
-	}).dxFileUploader('instance');
-	
-	//이미지 체크
-	$('#imgCheckBtn').dxButton({
-		text: '이미지 체크',
-		type: 'danger',
-		onClick() {
-			if (fileUploader.option('value').length === 0) {
-				showDialogCustom('이미지 파일을 선택하세요.');
-				return;
-			}
-			
-			fileUploader.upload(); // 업로드 실행
-		}
-	}).dxButton('instance');
-	
-	//이미지 미리보기
-	$('#imgPreviewBtn').dxButton({
-		text: '미리보기',
-		type: 'danger',
-		stylingMode: 'outlined',
-		onClick() {
-			const exist = document.querySelectorAll('.dx-fileuploader-file-container');
-			const imgCheck = document.querySelector('.img-check');
-			if (exist.length == 0 || imgCheck.textContent.trim() === "이미지 체크 필요") {
-				showDialogCustom('이미지를 체크해주세요.');
-				return;
-			}
-			document.querySelector('.imgPreview').classList.add("d-block");
-		}
-	}).dxButton('instance');
-
-	//이미지 초기화
-	$('#imgResetBtn').dxButton({
-		text: '초기화',
-		type: 'default',
-		stylingMode: 'outlined',
-		onClick() {
-			const confirmDialog = DevExpress.ui.dialog.custom({
-				showTitle: false,
-				messageHtml: "<div style='text-align: center;'>초기화하시겠습니까?</div>",
-				buttons: [{
-					text: "확인",
-					type: "default",
-					onClick: function(e) {
-						fileUploader.reset();
-						return { result: "ok" };
-					}
-				}, {
-					text: "취소",
-					onClick: function(e) {
-						return { result: "cancel" };
-					}
-				}]
-			});
-			
-			confirmDialog.show().done(function(dialogResult) {
-				if (dialogResult.result === "ok") {
-					console.log("초기화 완료");
-				} else {
-					console.log("취소");
-				}
-			});
-		}
-	}).dxButton('instance');
-	
-	document.querySelector('.imgPreview .close_btn').addEventListener('click', function(){
-		document.querySelector('.imgPreview').classList.remove("d-block");
-	})
+	});
 	
 	
 	//예약 발송 캘린더
@@ -303,18 +231,11 @@ $(function () {
 	}
 
 	//080 수신거부
-	const rejectCheck = document.getElementById('rejectCheckDefault');
-	const input = document.getElementById('rejectNum');
-
-	// DOM 로드될 때 상태 반영
-	input.disabled = !rejectCheck.checked;
-	handleInput();
-
-	// 체크박스 상태 변경될 때 반영
-	rejectCheck.addEventListener('change', function () {
+	document.getElementById('checkDefault').addEventListener('change', function () {
+		const input = document.getElementById('rejectNum');
 		input.disabled = !this.checked;
-		handleInput();
-	});
+		 handleInput();
+	});	
 
 	//문자 byte 표시
 	function getByteLength(str) {
@@ -440,6 +361,110 @@ $(function () {
 				MSG_WRITE.dispatchEvent(new Event('input'));
 			}
 		})
+	});
+	
+	
+	//내 문자함    
+	const bookmarkMsg = document.querySelector('.bookmarkMsg');
+	document.getElementById('bookmark_btn').addEventListener('click', function(){
+		bookmarkMsg.classList.add('d-block');
+		document.querySelector('body').classList.add('on');
+	});
+	
+	const close_btns = document.querySelectorAll('.bookmarkMsg .close_btn');
+	close_btns.forEach(close_btn => {
+		close_btn.addEventListener('click', function() {
+			bookmarkMsg.classList.remove('d-block');
+			document.querySelector('body').classList.remove('on');
+		})
+	})
+
+	//내 문자함 레이아웃
+	const store = [
+		{ b_msg_key: "0000001", msg: "1자일리톨스톤레몬향캔디 과량 섭취 시 설사를 일으킬 수 잇씁니다." },
+		{ b_msg_key: "0000002", msg: "2흠,,,( •̀ ω •́ )✧" },
+		{ b_msg_key: "0000003", msg: "3자일리톨스톤레몬향캔디 과량 섭취 시 설사를 일으킬 수 잇씁니다. 제품이 단단하므로 섭취 시 치아손상에 주의하세요. 제품을 삼킬 경우 질식 또는 식도 손상의 위험이 있습니다. 동물에게 먹이지 마세요. 부정, 불량 식품신고는 국번없이 1399, 본 제품은 공정거래위원회 고시 소비자분쟁해결 기준에 의거 교환 또는 보상을 받을 수 있습니다." },
+		{ b_msg_key: "0000004", msg: "4메가커피" },
+		{ b_msg_key: "0000005", msg: "5완료 할당량에 도달했습니다." },
+		{ b_msg_key: "0000006", msg: "6제품이 단단하므로 섭취 시 치아손상에 주의하세요. 제품을 삼킬 경우 질식 또는 식도 손상의 위험이 있습니다. 동물에게 먹이지 마세요. 부정, 불량 식품신고는 국번없이 1399, 본 제품은 공정거래위원회 고시 소비자분쟁해결 기준에 의거 교환 또는 보상을 받을 수 있습니다." },
+		{ b_msg_key: "0000007", msg: "7완료 할당량에 도달했습니다." },
+		{ b_msg_key: "0000008", msg: "8완료 할당량에 도달했습니다." },
+		{ b_msg_key: "0000009", msg: "9제품이 단단하므로 섭취 시 치아손상에 주의하세요. 제품을 삼킬 경우 질식 또는 식도 손상의 위험이 있습니다. 동물에게 먹이지 마세요. 부정, 불량 식품신고는 국번없이 1399, 본 제품은 공정거래위원회 고시 소비자분쟁해결 기준에 의거 교환 또는 보상을 받을 수 있습니다." },
+	]
+	$('#msg-card-view').dxCardView({
+		dataSource: store,
+		keyExpr: "b_msg_key",
+		remoteOperations: false,
+		cardsPerRow: '3',
+		cardMinWidth: 200,
+		cardHeight:200,
+		wordWrapEnabled: true,				
+		editing: {			
+			allowDeleting: true,
+			popup: {
+				width: 700,
+				height: 400,
+			},
+			form: {
+				items: [{
+					dataField: 'msg',
+					editorType: 'dxSelectBox',
+					editorOptions: {
+						dataSource: ['Low', 'Normal', 'High', 'Urgent'],
+					},
+				}]
+			},
+			texts: {
+				confirmDeleteMessage: '정말 삭제하시겠습니까?', 
+			}
+		},
+		columns: [			
+			{
+				dataField: 'msg',	
+				caption: "",
+				label: {
+					visible: false
+				},			 				
+			},			
+		],
+		searchPanel: {
+			visible: true,
+			width: 250,
+			placeholder:'찾을 내용을 입력하세요.',
+		},
+		toolbar: {
+			items: [
+				{
+					location: "before",
+					template: function() {
+					return $("<div>")
+						.attr("id", "totalCount")
+						.css({ fontSize: "17px", color: "#333", padding: "0 5px" });
+					}
+				},
+				"searchPanel"
+			]
+		},
+		onContentReady: function(e) {
+			const totalCount = e.component.totalCount();
+			$("#totalCount").text(`총 ${totalCount}건`);
+		}
+		
+	});
+	//내 문자 선택
+	document.addEventListener('click', function (e) {
+		// 카드(content) 내부 클릭인지 확인
+		const card = e.target.closest('.dx-cardview-card-content');
+		if (card) {
+			const content = card.querySelector('.dx-cardview-field-value');
+			if (content) {
+				MSG_WRITE.value="";
+				insertAtCursor(MSG_WRITE, content.textContent.trim() );
+				MSG_WRITE.dispatchEvent(new Event('input'));
+			}
+			bookmarkMsg.classList.remove('d-block');
+			document.querySelector('body').classList.remove('on');
+		}
 	});
 	
 });
