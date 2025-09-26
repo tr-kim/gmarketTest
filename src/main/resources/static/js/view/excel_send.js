@@ -24,7 +24,6 @@ $(function () {
 	
 	MSG_WRITE.placeholder = "내용을 입력해 주세요.\n80byte 초과 시 장문 문자로,\n이미지 추가 시 포토 문자로 자동 전환 됩니다.";
 	
-	
 	//내용 옵션(이미지, 변수선택, 특수문자)
 	const optabButtons = document.querySelectorAll('.option_tab li button');
 	const optabs = document.querySelectorAll('.option_tab li');
@@ -53,26 +52,70 @@ $(function () {
 	});
 
 	// 이미지 등록
-	$('#file-uploader').dxFileUploader({
+	let updatingFiles = false;
+	const fileUploader = $('#file-uploader').dxFileUploader({
 		multiple: true,
 		allowedFileExtensions: ['.jpg'],
-		maxFileSize: 100 * 1024,
+		maxFileSize: 100 * 1024, // 100KB
 		uploadMode: 'useButtons',
 		uploadMethod: 'POST',
 		uploadUrl: '/files/upload/fileUpload',   
 		uploadCustomData: {                   
 			sendType: 'EXCEL'
 		},
+		onContentReady(e) {
+			// 내부 업로드 버튼 숨김
+			const uploadButton = e.element.find(".dx-fileuploader-upload-button");
+			uploadButton.hide();
+		},
 		onValueChanged(e) {
-			const maxFiles = 2;
-
-			if (e.value.length > maxFiles) {
-				const limitedFiles = e.value.slice(0, maxFiles);
-				e.component.reset();
-				e.component.option('value', limitedFiles);
-				IMAGE_FILE_NAME = new Array(); 	// 이미지 이름 저장 목록 초기화
-				showDialogCustom(`이미지는 최대 ${maxFiles}개까지만 업로드할 수 있습니다.`);
+			// 기존 파일 초기화 후 선택한 파일로 재설정(썸네일, 파일명 리턴 등 문제)
+			if (updatingFiles) return; // 재진입 방지
+			updatingFiles = true;
+			
+			// 미리보기 초기화
+			const previewArea = document.getElementById('preview-area');
+			previewArea.innerHTML = "";
+			
+			// 현재 선택된 파일 저장
+			IMAGE_FILE_NAME = [];
+			const files = e.value || [];
+			const maxCount = 2;
+			
+			// 기존 파일 초기화
+			e.component.reset();
+			
+			// 최대 개수 제한 적용
+			const limitedFiles = files.slice(0, maxCount);
+			if (files.length > maxCount) {
+				showDialogCustom(`이미지는 최대 ${maxCount}장까지 등록 가능합니다.`);
 			}
+			
+			// 현재 선택한 파일만 다시 세팅
+			e.component.option('value', limitedFiles);
+			
+			// 이미지 체크 표시
+			const inputWrapper = document.getElementById('file-uploader');
+			const exist = document.querySelectorAll('.dx-fileuploader-file-container');
+			let imgCheck = document.querySelector('.img-check');
+			
+			if (exist.length > 0) {
+				if (!imgCheck) {
+					// 처음 한 번만 생성
+					imgCheck = document.createElement('div');
+					imgCheck.classList.add('img-check');
+					inputWrapper.appendChild(imgCheck);
+				}
+				// 내용과 스타일은 매번 갱신
+				imgCheck.innerHTML = `이미지 체크 필요`;
+				imgCheck.style.color = 'red';
+			} else {
+				if (imgCheck) {
+					imgCheck.remove();
+				}
+			}
+			
+			updatingFiles = false;
 		},
 		onUploadStarted(e) {
 			const files = e.component.option('value');
@@ -82,25 +125,104 @@ $(function () {
 				fileName2: files[1]?.name || '',
 				sendType: 'EXCEL'
 			});
-			console.log("Upload started, data:", e.component.option("uploadCustomData"));
 		},
 		onUploaded(e) {
-			// console.log('Uploaded', e);
+			// 응답 JSON
+			const response = JSON.parse(e.request.response);
+			console.log("이미지 업로드 결과:", response);
 			
-	        // JSON 응답 처리
-	        try {
+			if (response.status === "success") {
+				IMAGE_FILE_NAME.push(response.fileName);
+				console.log("누적 파일명:", IMAGE_FILE_NAME);
 				
-				// XMLHttpRequest 객체
-				let xhr = e.request;
-	            let json = JSON.parse(xhr.responseText);
+				// 이미지 체크 표시
+				let imgCheck = document.querySelector('.img-check');
+				imgCheck.innerHTML = ``;
+				imgCheck.innerHTML = `이미지 체크 완료`;
+				imgCheck.style.color = 'green';
 				
-				IMAGE_FILE_NAME.push(json.fileName);
-				console.log("IMAGE_FILE_NAME : ", IMAGE_FILE_NAME);
-				
-	        } catch (err) {
-	            console.warn("Not a JSON response:", xhr.responseText);
-	        }
+				// 이미지 미리보기
+				const file = e.file;
+				const reader = new FileReader();
+				reader.onload = function() {
+					const previewArea = document.getElementById('preview-area');
+					const img = document.createElement('img');
+					img.src = reader.result;
+					img.style.width = "100px"; // 썸네일 크기
+					previewArea.appendChild(img);
+				};
+				reader.readAsDataURL(file);
+			}
 		}
+	}).dxFileUploader('instance');
+
+	//이미지 체크
+	$('#imgCheckBtn').dxButton({
+		text: '이미지 체크',
+		type: 'danger',
+		onClick() {
+			if (fileUploader.option('value').length === 0) {
+				showDialogCustom('이미지 파일을 선택하세요.');
+				return;
+			}
+			
+			fileUploader.upload(); // 업로드 실행
+		}
+	}).dxButton('instance');
+
+	//이미지 미리보기
+	$('#imgPreviewBtn').dxButton({
+		text: '미리보기',
+		type: 'danger',
+		stylingMode: 'outlined',
+		onClick() {
+			const exist = document.querySelectorAll('.dx-fileuploader-file-container');
+			const imgCheck = document.querySelector('.img-check');
+			if (exist.length == 0 || imgCheck.textContent.trim() === "이미지 체크 필요") {
+				showDialogCustom('이미지를 체크해주세요.');
+				return;
+			}
+			document.querySelector('.imgPreview').classList.add("d-block");
+		}
+	}).dxButton('instance');
+
+	//이미지 초기화
+	$('#imgResetBtn').dxButton({
+		text: '초기화',
+		type: 'default',
+		stylingMode: 'outlined',
+		onClick() {
+			const confirmDialog = DevExpress.ui.dialog.custom({
+				showTitle: false,
+				messageHtml: "<div style='text-align: center;'>초기화하시겠습니까?</div>",
+				buttons: [{
+					text: "확인",
+					type: "default",
+					onClick: function(e) {
+						IMAGE_FILE_NAME = [];
+						fileUploader.reset();
+						return { result: "ok" };
+					}
+				}, {
+					text: "취소",
+					onClick: function(e) {
+						return { result: "cancel" };
+					}
+				}]
+			});
+			
+			confirmDialog.show().done(function(dialogResult) {
+				if (dialogResult.result === "ok") {
+					console.log("초기화 완료");
+				} else {
+					console.log("취소");
+				}
+			});
+		}
+	}).dxButton('instance');
+
+	document.querySelector('.imgPreview .close_btn').addEventListener('click', function(){
+		document.querySelector('.imgPreview').classList.remove("d-block");
 	});
 	
 	//예약 발송 캘린더
@@ -614,14 +736,12 @@ function sendMessage() {
 			formData.append("tranRangeEnd", tranRangeEnd); 												// 전송 번위 최댓값
 		}
 		
-		// 이미지 파일 이름
-		if(msgType == "mms" && IMAGE_FILE_NAME.length > 0) {
-			if(IMAGE_FILE_NAME.length == 1) {
-				formData.append("imageName01", IMAGE_FILE_NAME[0]);
-			} else if(IMAGE_FILE_NAME.length == 2) {
-				formData.append("imageName01", IMAGE_FILE_NAME[1]);
-				formData.append("imageName02", IMAGE_FILE_NAME[2]);
-			}
+		// 이미지 파일명
+		if(msgType === "mms" && IMAGE_FILE_NAME.length > 0){
+			IMAGE_FILE_NAME.forEach((name, idx) => {
+				const key = `imageName${String(idx + 1).padStart(2, '0')}`; // imageName01, imageName02 ...
+				formData.append(key, name);
+			});
 		}
 		
 		fetch("/api/v1/excelSend/insert", {

@@ -16,8 +16,6 @@ $(function () {
 	
 	const MSG_WRITE = document.getElementById('msgWrite');
 	const INPUT_BYTE = document.getElementById('input_byte');
-	
-	
 	const FINAL_SEND_BTN = document.getElementById('final_send_btn');
 	
 	MSG_WRITE.placeholder = "내용을 입력해 주세요.\n80byte 초과 시 장문 문자로,\n이미지 추가 시 포토 문자로 자동 전환 됩니다.";	
@@ -49,6 +47,7 @@ $(function () {
 			previewArea.innerHTML = "";
 			
 			// 현재 선택된 파일 저장
+			IMAGE_FILE_NAME = [];
 			const files = e.value || [];
 			const maxCount = 2;
 			
@@ -85,7 +84,6 @@ $(function () {
 				}
 			}
 			
-			IMAGE_FILE_NAME = new Array(); 	// 이미지 이름 저장 목록 초기화
 			updatingFiles = false;
 		},
 		onUploadStarted(e) {
@@ -98,28 +96,32 @@ $(function () {
 			});
 		},
 		onUploaded(e) {
-			// 이미지 체크 표시
-			let imgCheck = document.querySelector('.img-check');
-			imgCheck.innerHTML = ``;
-			imgCheck.innerHTML = `이미지 체크 완료`;
-			imgCheck.style.color = 'green';
+			// 응답 JSON
+			const response = JSON.parse(e.request.response);
+			console.log("이미지 업로드 결과:", response);
 			
-			// 이미지 미리보기
-			const file = e.file;
-			console.log(file);
-			
-			// 이미지 이름 추가
-			IMAGE_FILE_NAME.push(file.name);
-			
-			const reader = new FileReader();
-			reader.onload = function() {
-				const previewArea = document.getElementById('preview-area');
-				const img = document.createElement('img');
-				img.src = reader.result;
-				img.style.width = "100px"; // 썸네일 크기
-				previewArea.appendChild(img);
-			};
-			reader.readAsDataURL(file);
+			if (response.status === "success") {
+				IMAGE_FILE_NAME.push(response.fileName);
+				console.log("누적 파일명:", IMAGE_FILE_NAME);
+				
+				// 이미지 체크 표시
+				let imgCheck = document.querySelector('.img-check');
+				imgCheck.innerHTML = ``;
+				imgCheck.innerHTML = `이미지 체크 완료`;
+				imgCheck.style.color = 'green';
+				
+				// 이미지 미리보기
+				const file = e.file;
+				const reader = new FileReader();
+				reader.onload = function() {
+					const previewArea = document.getElementById('preview-area');
+					const img = document.createElement('img');
+					img.src = reader.result;
+					img.style.width = "100px"; // 썸네일 크기
+					previewArea.appendChild(img);
+				};
+				reader.readAsDataURL(file);
+			}
 		}
 	}).dxFileUploader('instance');
 	
@@ -166,6 +168,7 @@ $(function () {
 					text: "확인",
 					type: "default",
 					onClick: function(e) {
+						IMAGE_FILE_NAME = [];
 						fileUploader.reset();
 						return { result: "ok" };
 					}
@@ -189,7 +192,7 @@ $(function () {
 	
 	document.querySelector('.imgPreview .close_btn').addEventListener('click', function(){
 		document.querySelector('.imgPreview').classList.remove("d-block");
-	})
+	});
 	
 	//예약 발송 캘린더
 	let reserveDate = "";
@@ -644,19 +647,17 @@ function sendMessage(){
 		formData.append("totalCount", TOTAL_COUNT);								// 총 건수
 		
 		// 수신번호 체크한 경우
-		if(rejectCheckDefault) formData.append("rejectNum", rejectNum);									
+		if(rejectCheckDefault) formData.append("rejectNum", rejectNum);			// 수신거부 번호					
 		
 		// 발송 시간 - 예약인 경우
-		if(sendTimeChkValue === '1') formData.append("sendTime", sendTime);	
+		if(sendTimeChkValue === '1') formData.append("sendTime", sendTime);		// 예약 시간
 		
-		// 이미지 파일 이름
-		if(msgType == "mms" && IMAGE_FILE_NAME.length > 0) {
-			if(IMAGE_FILE_NAME.length == 1) {
-				formData.append("imageName01", IMAGE_FILE_NAME[0]);
-			} else if(IMAGE_FILE_NAME.length == 2) {
-				formData.append("imageName01", IMAGE_FILE_NAME[1]);
-				formData.append("imageName02", IMAGE_FILE_NAME[2]);
-			}
+		// 이미지 파일명
+		if(msgType === "mms" && IMAGE_FILE_NAME.length > 0){
+			IMAGE_FILE_NAME.forEach((name, idx) => {
+				const key = `imageName${String(idx + 1).padStart(2, '0')}`; // imageName01, imageName02 ...
+				formData.append(key, name);
+			});
 		}
 		
 		fetch("/api/v1/dbSend/insert", {

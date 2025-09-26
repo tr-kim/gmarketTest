@@ -86,7 +86,12 @@
 								<li class="col on py-2">이미지</li>
 							</ul>
 							<div class="option_wrap px-3 py-2 d-block">								
-								<div id="file-uploader"></div>
+								<div id="file-uploader" class="position-relative"></div>
+								<div class="btn_wrap d-flex align-items-center position-absolute">
+									<div id="imgCheckBtn" class="me-1"></div>
+									<div id="imgPreviewBtn" class="me-1"></div>
+									<div id="imgResetBtn"></div>
+								</div>
 								<span class="img-question position-absolute end-0 bottom-0 p-3"><i class="bi bi-question-circle"></i></span>
 							</div>
 						</div>					
@@ -140,6 +145,7 @@
 		<div class="loadpanel"></div>
 	</form>
 	<th:block th:replace="~{/view/popup/reserveSend :: reserveSend}"></th:block>
+	<th:block th:replace="~{/view/popup/imgPreview :: imgPreview}"></th:block>
 	<th:block th:replace="~{/view/popup/confirmSend :: confirmSend}"></th:block>
 	<script th:src="@{/js/view/file_send.js}"></script>
 </body>
