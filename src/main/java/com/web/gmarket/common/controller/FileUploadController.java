@@ -82,14 +82,13 @@ public class FileUploadController {
 					Path filePath = datePath.resolve(newFileName); // C:/path/202509111704963_sample.jpg
 					Files.write(filePath, file.getBytes());
 					
-					// 파일 이름 추가
+					// 파일명 리턴
 					response.put("fileName", newFileName);
 				}
 			}
 			
 			response.put("status", "success");
 			response.put("message", "업로드 성공");
-			response.put("count", files.size());
 			return ResponseEntity
 					.status(HttpStatus.OK)
 					.body(response);

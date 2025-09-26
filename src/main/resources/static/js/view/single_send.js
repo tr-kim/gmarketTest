@@ -1,4 +1,17 @@
+let LOAD_PANEL;
+let IMAGE_FILE_NAME = new Array();
+
 $(function () {
+	// 로딩바 최초 생성 (화면 전체 기준)
+	LOAD_PANEL = $('.loadpanel').dxLoadPanel({
+		shadingColor: 'rgba(0,0,0,0.4)',
+		position: { of: window },
+		visible: false,
+		showIndicator: true,
+		showPane: true,
+		shading: true,
+		hideOnOutsideClick: false,
+	}).dxLoadPanel('instance');
 	
 	const MSG_TITLE = document.getElementById('msgTitle');
 	const MSG_WRITE = document.getElementById('msgWrite');
@@ -36,6 +49,7 @@ $(function () {
 			previewArea.innerHTML = "";
 			
 			// 현재 선택된 파일 저장
+			IMAGE_FILE_NAME = [];
 			const files = e.value || [];
 			const maxCount = 2;
 			
@@ -84,28 +98,35 @@ $(function () {
 			});
 		},
 		onUploaded(e) {
-			// 이미지 체크 표시
-			let imgCheck = document.querySelector('.img-check');
-			imgCheck.innerHTML = ``;
-			imgCheck.innerHTML = `이미지 체크 완료`;
-			imgCheck.style.color = 'green';
+			// 응답 JSON
+			const response = JSON.parse(e.request.response);
+			console.log("이미지 업로드 결과:", response);
 			
-			// 이미지 미리보기
-			const file = e.file;
-			console.log(file);
-			
-			const reader = new FileReader();
-			reader.onload = function() {
-				const previewArea = document.getElementById('preview-area');
-				const img = document.createElement('img');
-				img.src = reader.result;
-				img.style.width = "100px"; // 썸네일 크기
-				previewArea.appendChild(img);
-			};
-			reader.readAsDataURL(file);
+			if (response.status === "success") {
+				IMAGE_FILE_NAME.push(response.fileName);
+				console.log("누적 파일명:", IMAGE_FILE_NAME);
+				
+				// 이미지 체크 표시
+				let imgCheck = document.querySelector('.img-check');
+				imgCheck.innerHTML = ``;
+				imgCheck.innerHTML = `이미지 체크 완료`;
+				imgCheck.style.color = 'green';
+				
+				// 이미지 미리보기
+				const file = e.file;
+				const reader = new FileReader();
+				reader.onload = function() {
+					const previewArea = document.getElementById('preview-area');
+					const img = document.createElement('img');
+					img.src = reader.result;
+					img.style.width = "100px"; // 썸네일 크기
+					previewArea.appendChild(img);
+				};
+				reader.readAsDataURL(file);
+			}
 		}
 	}).dxFileUploader('instance');
-	
+
 	//이미지 체크
 	$('#imgCheckBtn').dxButton({
 		text: '이미지 체크',
@@ -119,7 +140,7 @@ $(function () {
 			fileUploader.upload(); // 업로드 실행
 		}
 	}).dxButton('instance');
-	
+
 	//이미지 미리보기
 	$('#imgPreviewBtn').dxButton({
 		text: '미리보기',
@@ -149,6 +170,7 @@ $(function () {
 					text: "확인",
 					type: "default",
 					onClick: function(e) {
+						IMAGE_FILE_NAME = [];
 						fileUploader.reset();
 						return { result: "ok" };
 					}
@@ -169,11 +191,10 @@ $(function () {
 			});
 		}
 	}).dxButton('instance');
-	
+
 	document.querySelector('.imgPreview .close_btn').addEventListener('click', function(){
 		document.querySelector('.imgPreview').classList.remove("d-block");
-	})
-	
+	});
 	
 	//예약 발송 캘린더
 	let reserveDate = "";
