@@ -10,18 +10,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.web.gmarket.common.config.DynamicDataSourceService;
+import com.web.gmarket.common.service.CommonService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.DBUtils;
 import com.web.gmarket.wait.dto.WaitDto;
-import com.web.gmarket.wait.mapper.WaitMapper;
 import com.web.gmarket.wait.service.WaitService;
 
 @Service
 public class WaitServiceImpl implements WaitService {
 	
 	@Autowired
-	private DynamicDataSourceService dynamicDataSourceService;
+	private CommonService commonService;
 
 	//타입별 테이블명 치환
 	private static final Map<String, String> SVC_TYPE_TABLE_MAP = new HashMap<>();
@@ -45,7 +44,7 @@ public class WaitServiceImpl implements WaitService {
     	
     	String dbName = DBUtils.getDBName(waitDto.getCompanyCode());
     	
-        return getMapper(dbName).selectWaitList(waitDto);
+        return commonService.getWaitMapper(dbName).selectWaitList(waitDto);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class WaitServiceImpl implements WaitService {
     	
     	String dbName = DBUtils.getDBName(waitDto.getCompanyCode());
     	
-        return getMapper(dbName).selectWaitCount(waitDto);
+        return commonService.getWaitMapper(dbName).selectWaitCount(waitDto);
     }
     
 	@Override
@@ -81,10 +80,10 @@ public class WaitServiceImpl implements WaitService {
 	            param.put(ConstantsUtils.TABLE_NAME, tableName);
 	            param.put(ConstantsUtils.BULK_MSG_KEY, bulkMsgKey);
 	            
-	            int deletedCount = getMapper(dbName).deleteWaitMsg(param);
+	            int deletedCount = commonService.getWaitMapper(dbName).deleteWaitMsg(param);
 	            
 				if (deletedCount > 0) {
-					getMapper(dbName).deleteBroadCastMsg(param);
+					commonService.getWaitMapper(dbName).deleteBroadCastMsg(param);
 				}
 			}
 			
@@ -99,10 +98,6 @@ public class WaitServiceImpl implements WaitService {
 			
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
-	}
-	
-	public WaitMapper getMapper(String dbName) {
-		return dynamicDataSourceService.getMapper(dbName, WaitMapper.class);
 	}
 	
 }

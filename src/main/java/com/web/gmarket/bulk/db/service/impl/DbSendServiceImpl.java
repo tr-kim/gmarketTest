@@ -9,12 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.web.gmarket.bulk.broad.dto.BroadcastMsgDto;
-import com.web.gmarket.bulk.broad.mapper.BroadcastMsgMapper;
 import com.web.gmarket.bulk.db.dto.DbSendDto;
-import com.web.gmarket.bulk.db.mapper.DbSendMapper;
 import com.web.gmarket.bulk.db.service.DbSendService;
-import com.web.gmarket.common.config.DynamicDataSourceService;
-import com.web.gmarket.common.mapper.CommonSendMapper;
+import com.web.gmarket.common.service.CommonService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.DBUtils;
 import com.web.gmarket.common.utils.FtpUtils;
@@ -22,11 +19,12 @@ import com.web.gmarket.common.vo.FtpDto;
 
 @Service
 public class DbSendServiceImpl implements DbSendService {
-	private final DynamicDataSourceService dynamicDataSourceService;
 	
-	public DbSendServiceImpl(DynamicDataSourceService dynamicDataSourceService) {
-		this.dynamicDataSourceService = dynamicDataSourceService;
-	}
+	private final CommonService commonService;
+
+    public DbSendServiceImpl(CommonService commonService) {
+        this.commonService = commonService;
+    }
 	
 	// 메시지 타입별 테이블명 치환
 	private String resolveTableName(String messageType) {
@@ -45,7 +43,7 @@ public class DbSendServiceImpl implements DbSendService {
 		dbSendDto.setTableName(resolveTableName(dbSendDto.getMessageType()));
 		
 		String dbName = DBUtils.getDBName(dbSendDto.getCompanyCode());
-		return getMapper(dbName).selectDbSendList(dbSendDto);
+		return commonService.getDbSendMapper(dbName).selectDbSendList(dbSendDto);
 	}
 	
 	// 요청번호 카운트 조회
@@ -55,7 +53,7 @@ public class DbSendServiceImpl implements DbSendService {
 		dbSendDto.setTableName(resolveTableName(dbSendDto.getMessageType()));
 		
 		String dbName = DBUtils.getDBName(dbSendDto.getCompanyCode());
-		return getMapper(dbName).selectDbSendCount(dbSendDto);
+		return commonService.getDbSendMapper(dbName).selectDbSendCount(dbSendDto);
 	}
 	
 	// 요청번호 삭제
@@ -65,7 +63,7 @@ public class DbSendServiceImpl implements DbSendService {
         dbSendDto.setTableName(dbSendDto.getResultTable());
         
         String dbName = DBUtils.getDBName(dbSendDto.getResultCompany());
-        return getMapper(dbName).deleteDbSend(dbSendDto);
+        return commonService.getDbSendMapper(dbName).deleteDbSend(dbSendDto);
     }
 	
 	// DB 발송
@@ -74,11 +72,11 @@ public class DbSendServiceImpl implements DbSendService {
 	public int insertDbSend(DbSendDto dbSendDto) throws Exception {
 		int result = 0;
 		
-		String dbName = DBUtils.getDBName(dbSendDto.getResultCompany());
-		dbSendDto.setTableName(resolveTableName(dbSendDto.getMessageType()));
+		String dbName = DBUtils.getDBName(dbSendDto.getLargeCategory());
+		dbSendDto.setTableName(resolveTableName(dbSendDto.getMsgType()));
 		
 		// DB 발송 전 요청번호 삭제
-		getMapper(dbName).deleteDbSend(dbSendDto);
+		commonService.getDbSendMapper(dbName).deleteDbSend(dbSendDto);
 		
 		// MMS일 경우 이미지 파일 업로드
 		if(ConstantsUtils.MMS.equals(dbSendDto.getMsgType())) {
@@ -128,7 +126,7 @@ public class DbSendServiceImpl implements DbSendService {
 				.build();
 		
 		// 대량 발송 등록
-		int cnt = getBroadcastMsgMapper(dbName).insertBroadcastMsg(broadcastMsgDto);
+		int cnt = commonService.getBroadcastMsgMapper(dbName).insertBroadcastMsg(broadcastMsgDto);
 		
 		if(cnt > 0) {
 			
@@ -136,27 +134,15 @@ public class DbSendServiceImpl implements DbSendService {
 			int totalCnt = dbSendDto.getTotalCount();
 			
 			// 성공 건수
-			int updateCnt = getMapper(dbName).updateDbSend(dbSendDto);
+			int updateCnt = commonService.getDbSendMapper(dbName).updateDbSend(dbSendDto);
 			
 			// 성공 실패 건수 업데이트
-			getBroadcastMsgMapper(dbName).updateBroadcastMsgCount(bMsgKey, updateCnt, (totalCnt - updateCnt), msgType);
+			commonService.getBroadcastMsgMapper(dbName).updateBroadcastMsgCount(bMsgKey, updateCnt, (totalCnt - updateCnt), msgType);
 			
 			result = updateCnt;
 		}
 	
 		return result;
-	}
-	
-	private DbSendMapper getMapper(String dbName) {
-		return dynamicDataSourceService.getMapper(dbName, DbSendMapper.class);
-	}
-	
-	public BroadcastMsgMapper getBroadcastMsgMapper(String dbName) {
-		return dynamicDataSourceService.getMapper(dbName, BroadcastMsgMapper.class);
-	}
-	
-	public CommonSendMapper getCommonSendMapper(String dbName) {
-		return dynamicDataSourceService.getMapper(dbName, CommonSendMapper.class);
 	}
 }
 

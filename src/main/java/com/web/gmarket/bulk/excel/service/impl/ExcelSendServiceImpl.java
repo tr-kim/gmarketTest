@@ -24,13 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.web.gmarket.bulk.broad.dto.BroadcastMsgDto;
-import com.web.gmarket.bulk.broad.mapper.BroadcastMsgMapper;
 import com.web.gmarket.bulk.excel.dto.ExcelSendDto;
-import com.web.gmarket.bulk.excel.mapper.ExcelSendMapper;
 import com.web.gmarket.bulk.excel.service.ExcelSendService;
-import com.web.gmarket.common.config.DynamicDataSourceService;
 import com.web.gmarket.common.dto.CommonSendDto;
-import com.web.gmarket.common.mapper.CommonSendMapper;
+import com.web.gmarket.common.service.CommonService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.DBUtils;
 import com.web.gmarket.common.utils.FtpUtils;
@@ -44,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ExcelSendServiceImpl implements ExcelSendService {
 
 	@Autowired
-	private DynamicDataSourceService dynamicDataSourceService;
+	private CommonService commonService;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -110,7 +107,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 					.build();
 			
 			// 대량 발송 등록
-			getBroadcastMsgMapper(dbName).insertBroadcastMsg(broadcastMsgDto);
+			commonService.getBroadcastMsgMapper(dbName).insertBroadcastMsg(broadcastMsgDto);
 
 			uploadStatus.put(jobId, new UploadProgress(0, 0, bulkCnt, "엑셀 데이터 DB 등록 시작"));
 			
@@ -153,19 +150,19 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 					int flagCnt = 0;
 					switch (msgType) {
 						case ConstantsUtils.SMS:
-							flagCnt = getCommonSendMapper(dbName).insertSmsEvent(commonSendDto);
+							flagCnt = commonService.getCommonSendMapper(dbName).insertSmsEvent(commonSendDto);
 							break;
 						case ConstantsUtils.LMS:
-							flagCnt = getCommonSendMapper(dbName).insertLmsEvent(commonSendDto);
+							flagCnt = commonService.getCommonSendMapper(dbName).insertLmsEvent(commonSendDto);
 							break;
 						case ConstantsUtils.MMS:
-							flagCnt = getCommonSendMapper(dbName).insertMmsEvent(commonSendDto);
+							flagCnt = commonService.getCommonSendMapper(dbName).insertMmsEvent(commonSendDto);
 							break;
 						default:
 							throw new IllegalArgumentException(String.format("%s%s", "혀용되지 않은 메시지 타입입니다 : ", msgType));
 					}
 
-					getBroadcastMsgMapper(dbName).updateBroadcastMsgCountByType(bMsgKey, flagCnt > 0 ? ++succCnt : ++failCnt, flagCnt > 0 ? ConstantsUtils.FALG_T : ConstantsUtils.FALG_F);
+					commonService.getBroadcastMsgMapper(dbName).updateBroadcastMsgCountByType(bMsgKey, flagCnt > 0 ? ++succCnt : ++failCnt, flagCnt > 0 ? ConstantsUtils.FALG_T : ConstantsUtils.FALG_F);
 					
 					int progress = (int) (((float) sendCnt / bulkCnt) * 100);
 					uploadStatus.put(jobId, new UploadProgress(progress, sendCnt, bulkCnt, String.format("%d/%d 행 처리 완료", sendCnt, bulkCnt)));
@@ -633,17 +630,5 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 		}
 		
 		return 28;
-	}
-
-	public ExcelSendMapper getMapper(String dbName) {
-		return dynamicDataSourceService.getMapper(dbName, ExcelSendMapper.class);
-	}
-
-	public BroadcastMsgMapper getBroadcastMsgMapper(String dbName) {
-		return dynamicDataSourceService.getMapper(dbName, BroadcastMsgMapper.class);
-	}
-
-	public CommonSendMapper getCommonSendMapper(String dbName) {
-		return dynamicDataSourceService.getMapper(dbName, CommonSendMapper.class);
 	}
 }

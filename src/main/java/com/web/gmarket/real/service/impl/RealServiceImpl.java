@@ -9,11 +9,10 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.web.gmarket.common.config.DynamicDataSourceService;
+import com.web.gmarket.common.service.CommonService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.DBUtils;
 import com.web.gmarket.real.dto.RealDto;
-import com.web.gmarket.real.mapper.RealMapper;
 import com.web.gmarket.real.service.RealService;
 import com.web.gmarket.stat.dto.StatCodeDto;
 import com.web.gmarket.stat.service.StatCodeService;
@@ -22,7 +21,7 @@ import com.web.gmarket.stat.service.StatCodeService;
 public class RealServiceImpl implements RealService {
 
 	@Autowired
-	private DynamicDataSourceService dynamicDataSourceService;
+	private CommonService commonService;
 	
 	@Autowired
 	private StatCodeService statCodeService;
@@ -34,8 +33,8 @@ public class RealServiceImpl implements RealService {
 		List<StatCodeDto> auctionCodeList = statCodeService.selectStatCodeList(ConstantsUtils.AUCTION_CODE, 0);
 		List<StatCodeDto> gmarketCodeList = statCodeService.selectStatCodeList(ConstantsUtils.GMARKET_CODE, 0);
 		
-		result.put(ConstantsUtils.AUCTION, getMapper(ConstantsUtils.DB_AUCTION).selectRealHistTotalList(totalMonTime, alarmFlag, getCodeList(auctionCodeList)));
-		result.put(ConstantsUtils.GMAREKT, getMapper(ConstantsUtils.DB_GMARKET).selectRealHistTotalList(totalMonTime, alarmFlag, getCodeList(gmarketCodeList)));
+		result.put(ConstantsUtils.AUCTION, commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistTotalList(totalMonTime, alarmFlag, getCodeList(auctionCodeList)));
+		result.put(ConstantsUtils.GMAREKT, commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistTotalList(totalMonTime, alarmFlag, getCodeList(gmarketCodeList)));
 		
 		return result;
 	}
@@ -56,19 +55,15 @@ public class RealServiceImpl implements RealService {
 				break;
 		}
 		
-		return getMapper(DBUtils.getDBName(companyCode)).selectRealHistList(codeList);
+		return commonService.getRealMapper(DBUtils.getDBName(companyCode)).selectRealHistList(codeList);
 	}
 
 	@Override
 	public RealDto selectRealHistTableList(int companyCode, int tableCode) {
-		return  getMapper(DBUtils.getDBName(companyCode)).selectRealHistTableList(tableCode);
+		return  commonService.getRealMapper(DBUtils.getDBName(companyCode)).selectRealHistTableList(tableCode);
 	}
 	
 	public List<Integer> getCodeList(List<StatCodeDto> list) {
 		return list.stream().map(StatCodeDto::getTableCode).collect(Collectors.toList());
-	}
-	
-	public RealMapper getMapper(String dbName) {
-		return dynamicDataSourceService.getMapper(dbName, RealMapper.class);
 	}
 }

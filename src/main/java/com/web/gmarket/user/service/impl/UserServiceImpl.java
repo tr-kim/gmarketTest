@@ -14,10 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.web.gmarket.common.config.DynamicDataSourceService;
+import com.web.gmarket.common.service.CommonService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.user.dto.UserDto;
-import com.web.gmarket.user.mapper.UserMapper;
 import com.web.gmarket.user.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserServiceImpl implements UserService {
 
 	@Autowired
-	private DynamicDataSourceService dynamicDataSourceService;
+	private CommonService commonService;
 
 	@Override
 	public UserDto selectUserInfo(String userId, String delFlag) {
@@ -36,17 +35,17 @@ public class UserServiceImpl implements UserService {
 		userDto.setUserId(userId);
 		userDto.setDelFlag(delFlag);
 		
-		return getMapper().selectUserInfo(userDto);
+		return commonService.getUserMapper().selectUserInfo(userDto);
 	}
 	
 	@Override
 	public int selectUserInfoListCount(UserDto userDto) {
-		return getMapper().selectUserInfoListCount(userDto);
+		return commonService.getUserMapper().selectUserInfoListCount(userDto);
 	}
 
 	@Override
 	public List<UserDto> selectUserInfoList(UserDto userDto) {
-		return getMapper().selectUserInfoList(userDto);
+		return commonService.getUserMapper().selectUserInfoList(userDto);
 	}
 
 	@Override
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
 		// 비밀번호 암호화 및 hash 값 넣기
 		passwordEncode(userDto);
 		
-		return getMapper().insertUserInfo(userDto);
+		return commonService.getUserMapper().insertUserInfo(userDto);
 	}
 
 	@Override
@@ -62,7 +61,7 @@ public class UserServiceImpl implements UserService {
 		// 비밀번호 암호화 및 hash 값 넣기
 		passwordEncode(userDto);
 		
-		return getMapper().updateUserInfo(userDto);
+		return commonService.getUserMapper().updateUserInfo(userDto);
 	}
 
 	@Transactional
@@ -83,7 +82,7 @@ public class UserServiceImpl implements UserService {
 				Map<String, Object> param = new HashMap<>();
 				param.put("userId", userId);
 
-				getMapper().deleteUserInfo(param);
+				commonService.getUserMapper().deleteUserInfo(param);
 			}
 
 			result.put(ConstantsUtils.CODE, ConstantsUtils.SUCCESS_CODE);
@@ -103,7 +102,7 @@ public class UserServiceImpl implements UserService {
 		// 비밀번호 암호화 및 hash 값 넣기
 		passwordEncode(userDto);
 		
-		return getMapper().updateUserPassword(userDto);
+		return commonService.getUserMapper().updateUserPassword(userDto);
 	}
 	
 	public static String createHash(String data) throws Exception {
@@ -137,9 +136,5 @@ public class UserServiceImpl implements UserService {
 		}
 
 		return userDto;
-	}
-	
-	public UserMapper getMapper() {
-		return dynamicDataSourceService.getMapper(ConstantsUtils.DB_GMARKET, UserMapper.class);
 	}
 }
