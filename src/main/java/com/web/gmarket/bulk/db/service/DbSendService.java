@@ -11,4 +11,6 @@ public interface DbSendService {
 	int getDbSendCount(DbSendDto dbSendDto);
 	
 	int deleteDbSend(DbSendDto dbSendDto);
+	
+	int insertDbSend(DbSendDto dbSendDto) throws Exception;
 }

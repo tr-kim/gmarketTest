@@ -1,15 +1,24 @@
 package com.web.gmarket.bulk.db.service.impl;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.web.gmarket.common.config.DynamicDataSourceService;
-import com.web.gmarket.common.utils.ConstantsUtils;
-import com.web.gmarket.common.utils.DBUtils;
+import com.web.gmarket.bulk.broad.dto.BroadcastMsgDto;
+import com.web.gmarket.bulk.broad.mapper.BroadcastMsgMapper;
 import com.web.gmarket.bulk.db.dto.DbSendDto;
 import com.web.gmarket.bulk.db.mapper.DbSendMapper;
 import com.web.gmarket.bulk.db.service.DbSendService;
+import com.web.gmarket.common.config.DynamicDataSourceService;
+import com.web.gmarket.common.mapper.CommonSendMapper;
+import com.web.gmarket.common.utils.ConstantsUtils;
+import com.web.gmarket.common.utils.DBUtils;
+import com.web.gmarket.common.utils.FtpUtils;
+import com.web.gmarket.common.vo.FtpDto;
 
 @Service
 public class DbSendServiceImpl implements DbSendService {
@@ -59,9 +68,95 @@ public class DbSendServiceImpl implements DbSendService {
         return getMapper(dbName).deleteDbSend(dbSendDto);
     }
 	
+	// DB 발송
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int insertDbSend(DbSendDto dbSendDto) throws Exception {
+		int result = 0;
+		
+		String dbName = DBUtils.getDBName(dbSendDto.getResultCompany());
+		dbSendDto.setTableName(resolveTableName(dbSendDto.getMessageType()));
+		
+		// DB 발송 전 요청번호 삭제
+		getMapper(dbName).deleteDbSend(dbSendDto);
+		
+		// MMS일 경우 이미지 파일 업로드
+		if(ConstantsUtils.MMS.equals(dbSendDto.getMsgType())) {
+			FTPClient ftpClient = FtpUtils.createConnection(dbSendDto.getLargeCategory(), ConstantsUtils.ACTIVE);
+			
+			FtpDto ftpDto = FtpDto.builder()
+					.largeCategory(dbSendDto.getLargeCategory())
+					.msgType(dbSendDto.getMsgType())
+					.imageName01(dbSendDto.getImageName01())
+					.imageName02(dbSendDto.getImageName02())
+					.build();
+			
+			FtpUtils.uploadFile(ftpClient, ftpDto);
+			
+			dbSendDto.setImagePath01(ftpDto.getImagePath01());
+			dbSendDto.setImagePath02(ftpDto.getImagePath02());
+		}
+		
+		// String yyyyMMddHHmmssSSS => Date yyyyMMddHHmmssSSS 변환
+		DateTimeFormatter orgFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+		// yyyyMMddHHmmssSSS => yyyy-MM-dd HH:mm:ss:SSS 변환
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+		
+		String bMsgKey = String.format("%s%s", Long.toString(System.currentTimeMillis()).substring(0, 10), dbSendDto.getUserId()); // 대량 발송 키 생성
+		String subject = dbSendDto.getMsgTitle();
+		String content = dbSendDto.isRejectCheckDefault() ? String.format("%s%s", dbSendDto.getMsgWrite(), dbSendDto.getRejectNum()) : dbSendDto.getMsgWrite();
+		String reqTime = dbSendDto.getTimeType() == 0 ? "CONVERT(char(20), GETDATE(), 120)" : LocalDateTime.parse(dbSendDto.getSendTime(), orgFormatter).format(formatter);
+		String userId = dbSendDto.getUserId();
+		String msgType = dbSendDto.getMsgType();
+		
+		// 데이터 설정
+		BroadcastMsgDto broadcastMsgDto = BroadcastMsgDto.builder()
+				.bMsgKey(bMsgKey)
+				.loginId(userId)
+				.userId(userId)
+				.title(subject)
+				.msg(content)
+				.callbackNo(dbSendDto.getTranCallback())
+				.cnt(dbSendDto.getTotalCount())
+				.succCnt(0)
+				.failCnt(0)
+				.status(1)
+				.svcType(String.format("%s_%s", "DB", msgType.toUpperCase()))
+				.sendInfo(dbSendDto.getSendInfo())
+				.reqTime(reqTime)
+				.timeType(dbSendDto.getTimeType())
+				.build();
+		
+		// 대량 발송 등록
+		int cnt = getBroadcastMsgMapper(dbName).insertBroadcastMsg(broadcastMsgDto);
+		
+		if(cnt > 0) {
+			
+			// 총 건수
+			int totalCnt = dbSendDto.getTotalCount();
+			
+			// 성공 건수
+			int updateCnt = getMapper(dbName).updateDbSend(dbSendDto);
+			
+			// 성공 실패 건수 업데이트
+			getBroadcastMsgMapper(dbName).updateBroadcastMsgCount(bMsgKey, updateCnt, (totalCnt - updateCnt), msgType);
+			
+			result = updateCnt;
+		}
+	
+		return result;
+	}
+	
 	private DbSendMapper getMapper(String dbName) {
 		return dynamicDataSourceService.getMapper(dbName, DbSendMapper.class);
 	}
 	
+	public BroadcastMsgMapper getBroadcastMsgMapper(String dbName) {
+		return dynamicDataSourceService.getMapper(dbName, BroadcastMsgMapper.class);
+	}
+	
+	public CommonSendMapper getCommonSendMapper(String dbName) {
+		return dynamicDataSourceService.getMapper(dbName, CommonSendMapper.class);
+	}
 }
 

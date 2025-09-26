@@ -8,9 +8,6 @@ public class ConstantsUtils {
 	public static final String FALG_Y = "Y";
 	public static final String FALG_N = "N";
 	
-	public static final String SUCCESS = "success";
-	public static final String FAILD = "faild";
-	
 	// SUCCESS CODE
 	public static final int SUCCESS_CODE = 1000;
 	
@@ -24,11 +21,17 @@ public class ConstantsUtils {
 	public static final int USER_NON_EXISTENCE = 9101;			// 사용자 미존재
 	public static final int USESR_NOT_EXCEL_SEND = 9102; 		// 엑셀 발송
 	public static final int USESR_NOT_FILE_SEND = 9103; 		// 파일 발송
+	public static final int USESR_NOT_DB_SEND = 9104; 		// DB 발송
 	
 	// FILE ERROR CODE
 	public static final int NOT_FILE = 9200;		// 파일 에러
 	public static final int NOT_EXTENSION = 9201;	// 파일 형식 오류
 	
+	public static final String SUCCESS = "success";
+	public static final String FAILD = "faild";
+	public static final String FAIL = "fail";
+	public static final String ERROR = "error";
+	public static final String DATA = "data";
 	public static final String CODE = "code";
 	public static final String LIST = "list";
 	public static final String JSON = "json";
