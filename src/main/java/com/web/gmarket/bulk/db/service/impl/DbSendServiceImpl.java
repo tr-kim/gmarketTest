@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,18 +21,15 @@ import com.web.gmarket.common.vo.FtpDto;
 @Service
 public class DbSendServiceImpl implements DbSendService {
 	
-	private final CommonService commonService;
-
-    public DbSendServiceImpl(CommonService commonService) {
-        this.commonService = commonService;
-    }
+	@Autowired
+	private CommonService commonService;
 	
 	// 메시지 타입별 테이블명 치환
 	private String resolveTableName(String messageType) {
 		switch (messageType) {
-			case "sms": return ConstantsUtils.SMSCLI_TBL_LARGE;
-			case "lms": return ConstantsUtils.LMSCLI_TBL_LARGE;
-			case "mms": return ConstantsUtils.MMSCLI_TBL_LARGE;
+			case ConstantsUtils.SMS: return ConstantsUtils.SMSCLI_TBL_LARGE;
+			case ConstantsUtils.LMS: return ConstantsUtils.LMSCLI_TBL_LARGE;
+			case ConstantsUtils.MMS: return ConstantsUtils.MMSCLI_TBL_LARGE;
 			default: return ConstantsUtils.SMSCLI_TBL_LARGE;
 		}
 	}
