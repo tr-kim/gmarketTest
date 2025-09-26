@@ -165,7 +165,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 							throw new IllegalArgumentException(String.format("%s%s", "혀용되지 않은 메시지 타입입니다 : ", msgType));
 					}
 
-					getBroadcastMsgMapper(dbName).updateBroadcastMsg(bMsgKey, flagCnt > 0 ? ++succCnt : ++failCnt, flagCnt > 0 ? ConstantsUtils.FALG_T : ConstantsUtils.FALG_F);
+					getBroadcastMsgMapper(dbName).updateBroadcastMsgCountByType(bMsgKey, flagCnt > 0 ? ++succCnt : ++failCnt, flagCnt > 0 ? ConstantsUtils.FALG_T : ConstantsUtils.FALG_F);
 					
 					int progress = (int) (((float) sendCnt / bulkCnt) * 100);
 					uploadStatus.put(jobId, new UploadProgress(progress, sendCnt, bulkCnt, String.format("%d/%d 행 처리 완료", sendCnt, bulkCnt)));
