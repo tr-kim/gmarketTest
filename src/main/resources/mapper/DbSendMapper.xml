@@ -72,7 +72,7 @@
 					TRAN_MSG = #{msgWrite},
 				</if>
 				<if test='reserved3 != null and reserved3 != ""'>
-					TRAN_MSG = #{reserved3},
+					RESERVED3 = #{reserved3},
 				</if>
 				<if test='msgTitle != null and msgTitle != ""'>
 					TRAN_TITLE = #{msgTitle},

@@ -671,7 +671,7 @@ function sendMessage(){
 			const result = data.result;
 			
 			if(code == 1000) {
-				const msg = msgTypeValue+" 총 " + result + "건을 수정하였습니다.";
+				const msg = msgType.toUpperCase() + " 총 " + result + "건을 수정하였습니다.";
 				
 				showDialogCustom(msg, function() {
 					location.reload(true);	// 페이지 새로고침
@@ -711,7 +711,7 @@ function sendMessage(){
 			
 			confirmSend.querySelector('.send_btn').addEventListener('click', function() {
 				confirmSend.classList.remove('d-block');
-//				func_send(); // 메시지 보내기
+				func_send(); // 메시지 보내기
 			}, { once: true });
 			
 		} else {
@@ -726,7 +726,7 @@ function sendMessage(){
 				]
 			}).show().done(function(dialogResult) {
 				if (dialogResult === "ok") {
-//					func_send(); // 메시지 보내기
+					func_send(); // 메시지 보내기
 				} else {
 					console.log("취소");
 				}
