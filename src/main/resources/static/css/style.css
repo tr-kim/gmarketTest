@@ -426,9 +426,6 @@ aside .psw_chg_btn:hover{
 .row-real table td:last-child{
     border-right: 1px solid #333;
 }
-.col-real .gmarket .serviceName{
-    /* background-color: #d5f6d6; */
-}
 .col-real .processFileStat{
     background-color: #ffffff;
     border-radius: 0px;
