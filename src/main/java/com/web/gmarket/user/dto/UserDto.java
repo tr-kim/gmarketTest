@@ -67,26 +67,32 @@ public class UserDto implements Serializable {
 	private String email;
 
 	// 회사코드(default : 0) - 0 : 옥션 - 1 : Gmarket
+	@Builder.Default
 	@NotBlank(message = "회사코드는 필수입니다.")
 	private Integer companyCode = 0;
 
 	// 사용자 등급(Default : 2) - 0 : 관리자 등급 - 1 : 사용자 등급 - 2 : 운영자 등급
+	@Builder.Default
 	@NotBlank(message = "사용자 등급은 필수입니다.")
 	private Integer userGrade = 2;
 
 	// SMS 사용 여부(Default : Y) - Y / N
+	@Builder.Default
 	@NotBlank(message = "SMS 사용 여부는 필수 입력 값입니다.")
 	private String smsYn = ConstantsUtils.FALG_Y;
 
 	// EXCEL 발송 사용 여부(Default : N)- Y / N
+	@Builder.Default
 	@NotBlank(message = "EXCEL 발송 사용 여부는 필수 입력 값입니다.")
 	private String excelYn = ConstantsUtils.FALG_N;
 
 	// FILE 발송 사용 여부(Default : N) - Y / N
+	@Builder.Default
 	@NotBlank(message = "FILE 발송 사용 여부는 필수 입력 값입니다.")
 	private String fileYn = ConstantsUtils.FALG_N;
 
 	// DB 발송 사용 여부(Default : N) - Y / N
+	@Builder.Default
 	@NotBlank(message = "DB 발송 사용 여부는 필수 입력 값입니다.")
 	private String dbYn = ConstantsUtils.FALG_N;
 
@@ -97,10 +103,12 @@ public class UserDto implements Serializable {
 	private String chgDate;
 
 	// 계정 사용 여부(Default : Y) - Y / N
+	@Builder.Default
 	@NotBlank(message = "DB 발송 사용 여부는 필수 입력 값입니다.")
 	private String useYn = ConstantsUtils.FALG_N;
 
 	// 계정 삭제 여부(Default : N) - Y / N
+	@Builder.Default
 	@NotBlank(message = "계정 삭제 여부는 필수 입력 값입니다.")
 	private String delFlag = ConstantsUtils.FALG_N;
 
@@ -111,10 +119,12 @@ public class UserDto implements Serializable {
 	private String userText1;
 
 	// LMS 사용 여부(Default : N) - Y / N
+	@Builder.Default
 	@NotBlank(message = "LMS 사용 여부는 필수 입력 값입니다.")
 	private String lmsYn = ConstantsUtils.FALG_N;
 
 	// MMS 사용 여부(Default : N) - Y / N
+	@Builder.Default
 	@NotBlank(message = "MMS 사용 여부는 필수 입력 값입니다.")
 	private String mmsYn = ConstantsUtils.FALG_N;
 

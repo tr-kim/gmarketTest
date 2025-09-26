@@ -50,4 +50,40 @@
 		AND TRAN_STATUS IS NULL
 	</delete>
 	
+	<update id="updateDbSend" parameterType="com.web.gmarket.bulk.db.dto.DbSendDto">
+		/*
+			DbSendMapper.updateDbSend
+		*/
+		UPDATE ${tableName}
+			<set>
+				<if test='bMsgKey != null and bMsgKey != ""'>
+					B_MSG_KEY = #{bMsgKey},
+				</if>
+				<if test='tranCallback != null and tranCallback != ""'>
+					TRAN_CALLBACK = #{tranCallback},
+				</if>
+				<if test='tranDate != null and tranDate != ""'>
+					TRAN_DATE = #{tranDate},
+				</if>
+				<if test='tranStatus != null and tranStatus != ""'>
+					TRAN_STATUS = #{tranStatus},
+				</if>
+				<if test='msgWrite != null and msgWrite != ""'>
+					TRAN_MSG = #{msgWrite},
+				</if>
+				<if test='reserved3 != null and reserved3 != ""'>
+					TRAN_MSG = #{reserved3},
+				</if>
+				<if test='msgTitle != null and msgTitle != ""'>
+					TRAN_TITLE = #{msgTitle},
+				</if>
+				<if test='msgType != null and msgType == "mms"'>
+					IMAGE_PATH_01 = #{imagePath01},
+					IMAGE_PATH_02 = #{imagePath02}
+				</if>
+			</set>
+		WHERE RESERVED4 = #{reserved4}
+		  AND TRAN_STATUS IS NULL
+	</update>
+	
 </mapper>

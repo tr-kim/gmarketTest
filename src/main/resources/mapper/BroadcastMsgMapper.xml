@@ -26,18 +26,25 @@
 		</choose>
 	</insert>
 	
-	<update id="updateBroadcastMsg">
+	<update id="updateBroadcastMsgCountByType">
 		/*
-			BroadcastMsgMapper.updateBroadcastMsg 대량 발송 성공 / 실패 카운트 업데이트
+			BroadcastMsgMapper.updateBroadcastMsgCountByType 대량 발송 타입별 성공 / 실패 카운트 업데이트
 		*/
 		<choose>
 			<when test='cntType != null and cntType == "T"'>
 				UPDATE T_BROADCAST_MSG SET SUCC_CNT = #{cnt} WHERE B_MSG_KEY = #{bMsgKey}
 			</when>
-			<otherwise>
+			<when test='cntType != null and cntType == "F"'>
 				UPDATE T_BROADCAST_MSG SET FAIL_CNT = #{cnt} WHERE B_MSG_KEY = #{bMsgKey}
-			</otherwise>
+			</when>
 		</choose>
+	</update>
+	
+	<update id="updateBroadcastMsgCount">
+		/*
+			BroadcastMsgMapper.updateBroadcastMsgCount 대량 발송 성공 / 실패 카운트 업데이트
+		*/
+			UPDATE T_BROADCAST_MSG SET SUCC_CNT = #{succCnt}, FAIL_CNT = #{failCnt} WHERE B_MSG_KEY = #{bMsgKey}
 	</update>
 	
 </mapper>

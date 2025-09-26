@@ -6,16 +6,26 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.gmarket.bulk.db.dto.DbSendDto;
 import com.web.gmarket.bulk.db.service.DbSendService;
+import com.web.gmarket.common.auth.dto.UserDetailsDto;
+import com.web.gmarket.common.utils.ConstantsUtils;
+import com.web.gmarket.common.utils.ValidateHandingUtils;
+import com.web.gmarket.common.validation.ValidationSequence;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/dbSend")
 public class RestDbSendController {
@@ -23,14 +33,6 @@ public class RestDbSendController {
 	
 	public RestDbSendController(DbSendService dbSendService) {
 		this.dbSendService = dbSendService;
-	}
-	
-	@PostMapping("/list")
-	public void list() {
-	}
-	
-	@PutMapping("/update")
-	public void update() {
 	}
 	
 	//요청번호 조회
@@ -41,17 +43,18 @@ public class RestDbSendController {
 			int totalCount = dbSendService.getDbSendCount(dbSendDto);
 			
 			Map<String, Object> response = new HashMap<>();
-			response.put("data", result);
-			response.put("totalCount", totalCount);
+			response.put(ConstantsUtils.DATA, result);
+			response.put(ConstantsUtils.TOTAL_COUNT, totalCount);
 			
 			return ResponseEntity.ok(response);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.error(e.getMessage());
 			
 			Map<String, Object> error = new HashMap<>();
-			error.put("message", "요청번호 조회 실패");
-			error.put("error", e.getMessage());
+			error.put(ConstantsUtils.MESSAGE, "요청번호 조회 실패");
+			error.put(ConstantsUtils.ERROR, e.getMessage());
 			
 			return ResponseEntity
 				.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -68,31 +71,74 @@ public class RestDbSendController {
 			int deletedCount = dbSendService.deleteDbSend(dbSendDto);
 			
 			if (deletedCount > 0) {
-				response.put("status", "success");
-				response.put("message", "삭제 성공");
+				response.put(ConstantsUtils.STATUS, ConstantsUtils.SUCCESS);
+				response.put(ConstantsUtils.MESSAGE, "삭제 성공");
 				return ResponseEntity.ok(response);
 				
 			} else {
-				response.put("status", "fail");
+				response.put(ConstantsUtils.STATUS, ConstantsUtils.FAIL);
 				
 				if (dbSendDto.getReserved4() == null) {
-					response.put("message", "잘못된 요청 (필수 값 없음)");
+					response.put(ConstantsUtils.MESSAGE, "잘못된 요청 (필수 값 없음)");
 					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response); // 400
 				} else {
-					response.put("message", "삭제 대상 없음");
+					response.put(ConstantsUtils.MESSAGE, "삭제 대상 없음");
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response); // 404
 				}
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.error(e.getMessage());
 			
 			Map<String, Object> error = new HashMap<>();
-			error.put("status", "error");
-			error.put("message", "요청번호 삭제 실패");
+			error.put(ConstantsUtils.STATUS, ConstantsUtils.ERROR);
+			error.put(ConstantsUtils.MESSAGE, "요청번호 삭제 실패");
+			error.put(ConstantsUtils.ERROR, e.getMessage());
 			
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
 		}
 	}
+	
+	// DB 발송
+	@ResponseBody
+	@PostMapping("/insert")
+	public ResponseEntity<?> insert(Authentication authentication, @Validated(ValidationSequence.class) DbSendDto dbSendDto, Errors errors) {
+		Map<String, Object> result = new HashMap<>();
+		
+		try {
+			
+			UserDetailsDto userDto = (UserDetailsDto) authentication.getPrincipal();
+			
+			// DB 발송 여부 체크
+			if(ConstantsUtils.FALG_N.equals(userDto.getDbYn())) {
+				result.put(ConstantsUtils.CODE, ConstantsUtils.USESR_NOT_DB_SEND);
+				result.put(ConstantsUtils.RESULT, "DB 발송을 할 수 없습니다.");
+				
+				return ResponseEntity.status(HttpStatus.OK).body(result);
+			}
+			
+			// 유효성 체크
+			if(ValidateHandingUtils.validateHandling(errors) != null) {
+				return ValidateHandingUtils.validateHandling(errors);
+			}
+			
+			int cnt = dbSendService.insertDbSend(dbSendDto);
+			
+			result.put(ConstantsUtils.CODE, ConstantsUtils.SUCCESS_CODE);
+			result.put(ConstantsUtils.RESULT, cnt);
+			
+			return ResponseEntity.ok(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage());
+			
+			result.put(ConstantsUtils.CODE, ConstantsUtils.ERROR);
+			result.put(ConstantsUtils.MESSAGE, "DB 발송 실패");
+			result.put(ConstantsUtils.ERROR, e.getMessage());
+			
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+		}
+	} 
 	
 }
