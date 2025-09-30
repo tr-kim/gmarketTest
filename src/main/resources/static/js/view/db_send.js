@@ -579,7 +579,7 @@ function sendMessage(){
 	}
 
 	if (		
-		!inputValidateRequired("tranCallback", "회신번호를 입력하세요.") ||
+		!inputValidateRequired("tranCallback", "발신번호를 입력하세요.") ||
 		!inputValidateRequired("userId", "사용자ID를 입력하세요.") ||
 		!inputValidateRequired("msgWrite", "내용을 입력하세요.") ||
 		!inputValidateRequired("sendInfo", "전송대상을 입력하세요.")
@@ -735,7 +735,6 @@ function sendMessage(){
 		}
 	});
 }
-
 
 // 가상 스크롤 렌더링 함수
 function renderVisibleRows(container, tbody, spacer, dataRow, rowHeight, visibleRows) {

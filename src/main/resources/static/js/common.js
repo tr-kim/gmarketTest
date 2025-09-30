@@ -211,6 +211,15 @@ window.addEventListener('load', function() {
 			passwordChg.classList.remove('d-block');
 		});
 	}
+
+	//발송 미리보기 모달 닫기
+	const confirmSend = document.querySelector('.confirmSend');
+	if(confirmSend){
+		confirmSend.querySelector('.close_btn').addEventListener('click', function(){
+			document.querySelector('.confirmSend').classList.remove("d-block");
+			console.log(confirmSend);
+		});
+	}
 	
 	// 0.5초마다 데이터 처리
 //	const interval = setInterval(() => {

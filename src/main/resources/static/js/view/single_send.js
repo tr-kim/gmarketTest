@@ -591,7 +591,7 @@ function sendMessage(){
 	
 	// 유효성 검사
 	if (		
-		!inputValidateRequired("tranCallback", "회신번호를 입력하세요.") ||
+		!inputValidateRequired("tranCallback", "발신번호를 입력하세요.") ||
 		!inputValidateRequired("tranPhone", "수신번호를 입력하세요.") ||
 		!inputValidateRequired("userId", "사용자ID를 입력하세요.") ||
 		!inputValidateRequired("msgWrite", "내용을 입력하세요.") ||
@@ -626,7 +626,7 @@ function sendMessage(){
 		// 대분류
 		const largeCategory = document.getElementById("large-category").value;
 		
-		// 회신 번호
+		// 발신번호
 		const tranCallback = document.getElementById("tranCallback").value;
 		
 		// 수신번호
@@ -658,7 +658,7 @@ function sendMessage(){
 		const formData = new FormData();
 		formData.append("msgType", msgType);									// 메시지 유형 SMS, LMS, MMS
 		formData.append("largeCategory", largeCategory);						// 대분류 0: 옥션, 1: 지마켓
-		formData.append("tranCallback", tranCallback);							// 회신 번호
+		formData.append("tranCallback", tranCallback);							// 발신번호
 		formData.append("tranPhone", tranPhone);								// 수신번호
 		formData.append("userId", userId);										// 사용자 아이디
 		formData.append("msgTitle", msgTitle);									// 메시지 제목 LMS, MMS만 적용
