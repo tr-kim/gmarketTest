@@ -45,7 +45,7 @@ public class DbSendDto {
 	private Integer largeCategory = ConstantsUtils.AUCTION_CODE;
 	
 	// 발신번호
-	@NotBlank(message = "회신번호를 입력하세요.", groups = NotBlankGroup2.class)
+	@NotBlank(message = "발신번호를 입력하세요.", groups = NotBlankGroup2.class)
 	private String tranCallback;
 	
 	// 사용자 아이디

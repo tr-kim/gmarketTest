@@ -41,7 +41,7 @@ public class ExcelSendDto {
 	private Integer callbackSelect = 0;
 	
 	// 발신번호
-	@NotBlank(message = "회신번호를 입력하세요.", groups = NotBlankGroup3.class)
+	@NotBlank(message = "발신번호를 입력하세요.", groups = NotBlankGroup3.class)
 	private String callback;
 	
 	// 수신번호 유형

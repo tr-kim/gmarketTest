@@ -14,10 +14,10 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class CommonSendDto {
 
-	// 수신자 전화번호
+	// 수신번호
 	private String tranPhone;
 	
-	// 회신번호
+	// 발신번호
 	private String tranCallback;
 	
 	// 전송 상태 

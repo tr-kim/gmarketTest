@@ -402,7 +402,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 //						cellData[j].add((calleeFlag == 1 ? calleeValue : callee));
 						cellData.get(j).add(calleeFlag == 1 ? calleeValue : callee);
 
-						// 회신번호 저장 [1]
+						// 발신번호 저장 [1]
 //						cellData[j].add((callbackFlag == 1 ? callbackValue : callback));
 						cellData.get(j).add(callbackFlag == 1 ? callbackValue : callback);
 
@@ -494,7 +494,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 //						cellData[j].add((calleeFlag == 1 ? calleeValue : callee));
 						cellData.get(j).add(calleeFlag == 1 ? calleeValue : callee);
 
-						// 회신번호 저장 [1]
+						// 발신번호 저장 [1]
 //						cellData[j].add((callbackFlag == 1 ? callbackValue : callback));
 						cellData.get(j).add(callbackFlag == 1 ? callbackValue : callback);
 

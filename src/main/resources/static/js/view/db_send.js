@@ -599,10 +599,10 @@ function sendMessage(){
 		// 대분류
 		const largeCategory = document.getElementById("large-category").value;
 		
-		// 요청 번호
+		// 요청번호
 		const reserved4 = document.getElementById("reserved4").value;
 		
-		// 회신 번호
+		// 발신번호
 		const tranCallback = document.getElementById("tranCallback").value;
 		
 		// 사용자 아이디
@@ -634,8 +634,8 @@ function sendMessage(){
 		const formData = new FormData();
 		formData.append("msgType", msgType);									// 메시지 유형 SMS, LMS, MMS
 		formData.append("largeCategory", largeCategory);						// 대분류 0: 옥션, 1: 지마켓
-		formData.append("reserved4", reserved4);								// 요청 번호
-		formData.append("tranCallback", tranCallback);							// 회신 번호
+		formData.append("reserved4", reserved4);								// 요청번호
+		formData.append("tranCallback", tranCallback);							// 발신번호
 		formData.append("userId", userId);										// 사용자 아이디
 		formData.append("msgTitle", msgTitle);									// 메시지 제목 LMS, MMS만 적용
 		formData.append("msgWrite", msgWrite);									// 메시지 내용

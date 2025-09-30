@@ -41,7 +41,7 @@ public class BroadcastMsgDto {
 	// 전송 예약 시간
 	private String reqTime;
 	
-	// 회신 번호
+	// 발신번호
 	private String callbackNo;
 	
 	// 대량 메시지 갯수

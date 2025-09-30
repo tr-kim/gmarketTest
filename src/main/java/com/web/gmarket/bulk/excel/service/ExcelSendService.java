@@ -339,13 +339,13 @@ public interface ExcelSendService {
 		
 		// 매치되지 않을 경우
 		if (!m.matches()) result = "수신번호 이상";
-		else if (!m2.matches()) result = "회신번호 이상";
+		else if (!m2.matches()) result = "발신번호 이상";
 		else if (messageLen == 0) result = "메시지 비어있음";
 		else if (messageLen > MAX_LEN) result = "메시지길이 초과";
 		else result = "발송가능";
 		
 		if (callee.equals("")) result = "수신번호 이상";
-		if (callback.equals("")) result = "회신번호 이상";
+		if (callback.equals("")) result = "발신번호 이상";
 		
 		if (!messageType.equals("sms")) {
 			if (titleLen > 200) result = "제목길이 초과";
