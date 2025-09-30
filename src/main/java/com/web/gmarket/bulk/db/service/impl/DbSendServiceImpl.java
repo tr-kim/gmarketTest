@@ -70,7 +70,7 @@ public class DbSendServiceImpl implements DbSendService {
 	public int insertDbSend(DbSendDto dbSendDto) throws Exception {
 		int result = 0;
 		
-		String dbName = DBUtils.getDBName(dbSendDto.getLargeCategory());
+		String dbName = DBUtils.getDBName(dbSendDto.getCompanyCode());
 		dbSendDto.setTableName(resolveTableName(dbSendDto.getMsgType()));
 		
 		// DB 발송 전 요청번호 삭제
@@ -78,10 +78,10 @@ public class DbSendServiceImpl implements DbSendService {
 		
 		// MMS일 경우 이미지 파일 업로드
 		if(ConstantsUtils.MMS.equals(dbSendDto.getMsgType())) {
-			FTPClient ftpClient = FtpUtils.createConnection(dbSendDto.getLargeCategory(), ConstantsUtils.ACTIVE);
+			FTPClient ftpClient = FtpUtils.createConnection(dbSendDto.getCompanyCode(), ConstantsUtils.ACTIVE);
 			
 			FtpDto ftpDto = FtpDto.builder()
-					.largeCategory(dbSendDto.getLargeCategory())
+					.companyCode(dbSendDto.getCompanyCode())
 					.msgType(dbSendDto.getMsgType())
 					.imageName01(dbSendDto.getImageName01())
 					.imageName02(dbSendDto.getImageName02())

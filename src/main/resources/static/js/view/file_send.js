@@ -474,10 +474,10 @@ function sendMessage(){
 		const callbackNo = document.getElementById("callbackNo").value;
 		
 		// 대분류
-		const largeCategory = document.getElementById("large-category").value;
+		const companyCode = document.getElementById("companyCode").value;
 		
 		// XXX
-		if(largeCategory == 0) {
+		if(companyCode == 0) {
 			showDialogCustom("Auction 개발 진행 중입니다.");
 			return;
 		}
@@ -511,7 +511,7 @@ function sendMessage(){
 		const formData = new FormData();
 		formData.append("textFileName", TEXT_FILE_NAME);												// 텍스트 파일 이름
 		formData.append("callbackNo", callbackNo);														// 발신 번호
-		formData.append("largeCategory", largeCategory);												// 대분류 0: 옥션, 1: 지마켓
+		formData.append("companyCode", companyCode);													// 대분류 0: 옥션, 1: 지마켓
 		formData.append("userId", userId);																// 사용자 아이디
 		formData.append("msgTitle", msgTitle);															// 메시지 제목 LMS, MMS만 적용
 		formData.append("msgType", msgType);															// 메시지 유형 SMS, LMS, MMS

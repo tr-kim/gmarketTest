@@ -96,7 +96,7 @@ public class FtpUtils {
     	FileInputStream fileInput2 = null;
     	
     	// Auction, Gmarket 유형 확인 후 정보 설정
-        ftpProperties.getProperties(dto.getLargeCategory(), dto.getMsgType());
+        ftpProperties.getProperties(dto.getCompanyCode(), dto.getMsgType());
         
         try {
         	

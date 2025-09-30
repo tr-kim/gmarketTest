@@ -33,7 +33,7 @@ public class FileSendDto {
 	
 	// 대분류 - 0 : 옥션, 1 : G마켓
 	@Min(value = 0, message = "대분류를 선택하세요.", groups = MinGroup1.class)
-	private Integer largeCategory;
+	private Integer companyCode;
 	
 	// 사용자 아이디
 	@NotBlank(message = "사용자 아이디를 입력하세요.", groups = NotBlankGroup3.class)

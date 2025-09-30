@@ -47,7 +47,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 	@Transactional(rollbackFor = Exception.class)
 	public void insertExcelSend(ExcelSendDto dto, Map<String, UploadProgress> uploadStatus, String jobId) throws Exception {
 
-		String dbName = DBUtils.getDBName(dto.getLargeCategory());
+		String dbName = DBUtils.getDBName(dto.getCompanyCode());
 
 		// 초기값 설정
 		List<String> cloneMessage = new ArrayList<>(); // 메시지 내용
@@ -73,10 +73,10 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 			// MMS일 경우 이미지 파일 업로드
 			if(ConstantsUtils.MMS.equals(dto.getMsgType())) {
-				FTPClient ftpClient = FtpUtils.createConnection(dto.getLargeCategory(), ConstantsUtils.ACTIVE);
+				FTPClient ftpClient = FtpUtils.createConnection(dto.getCompanyCode(), ConstantsUtils.ACTIVE);
 				
 				FtpDto ftpDto = FtpDto.builder()
-						.largeCategory(dto.getLargeCategory())
+						.companyCode(dto.getCompanyCode())
 						.msgType(dto.getMsgType())
 						.imageName01(dto.getImageName01())
 						.imageName02(dto.getImageName02())

@@ -481,7 +481,7 @@ function setRejectNum() {
 		return;
 	}
 	
-	document.getElementById("rejectNum").value = document.getElementById("large-category").value == 0 ? AUCTION_REJECT_NUM : GMARKET_REJECT_NUM;
+	document.getElementById("rejectNum").value = document.getElementById("companyCode").value == 0 ? AUCTION_REJECT_NUM : GMARKET_REJECT_NUM;
 }
 
 // 숫자만 입력

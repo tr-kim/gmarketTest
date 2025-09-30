@@ -1,8 +1,8 @@
 let startDateInstance;
 let endDateInstance;
 let phoneNumInstance;
-let largeCategoryInstance;
-let middleCategoryInstance;
+let companyInstance;
+let tableInstance;
 let histDataGrid;
 
 $(function () {
@@ -32,7 +32,7 @@ $(function () {
 	}).dxDateBox("instance");
 	
 	//대분류
-	largeCategoryInstance = $('#large-category').dxSelectBox({
+	companyInstance = $('#companyCode').dxSelectBox({
 		dataSource: [
 			{ code: 0, name: '옥션' },
 			{ code: 1, name: '지마켓' },
@@ -44,12 +44,12 @@ $(function () {
 		onValueChanged: function (e) {
 			//중분류 업데이트
 			const selectedCode = e.value;
-			middleCategoryInstance.option('dataSource', middleCategoryData[selectedCode] || []);
-			middleCategoryInstance.option('value', 0); // 기본값 다시 설정
+			tableInstance.option('dataSource', tableArray[selectedCode] || []);
+			tableInstance.option('value', 0); // 기본값 다시 설정
 		}
 	}).dxSelectBox("instance");
 	
-	const middleCategoryData = {
+	const tableArray = {
 		0: [
 			{ code: 0, name: '전체' },
 			{ code: 1, name: 'SMSCLI_TBL_CHARGED' },
@@ -89,8 +89,8 @@ $(function () {
 	};
 
 	//중분류
-	middleCategoryInstance = $('#middle-category').dxSelectBox({
-		dataSource: middleCategoryData[0],
+	tableInstance = $('#tableCode').dxSelectBox({
+		dataSource: tableArray[0],
 		displayExpr: 'name',
 		valueExpr: 'code',
 		value: 0
@@ -144,9 +144,9 @@ $(function () {
 			}
 			
 			// 조회기간 구하기
-			//const largeCategoryValue = largeCategoryInstance.option("value");
+			//const companyValue = companyInstance.option("value");
 			
-			//if(largeCategoryValue){
+			//if(companyValue){
 				let start = new Date(
 					parseInt(startTimeFormatted.slice(0, 4)),
 					parseInt(startTimeFormatted.slice(4, 6)) - 1,
@@ -210,8 +210,8 @@ $(function () {
 			}
 			
 			const phoneNumValue = phoneNumInstance.option("value");
-			const middleItem = middleCategoryInstance.option("selectedItem");
-			const companyCode = largeCategoryInstance.option("value");
+			const companyValue = companyInstance.option("value");
+			const tableItem = tableInstance.option("selectedItem");
 			
 			const params = {
 				startDate: startDateFormatted,
@@ -219,9 +219,9 @@ $(function () {
 				startTime: startTimeFormatted + "000000",
 				endTime: endTimeFormatted + "235959",
 				phoneNum: phoneNumValue,
-				companyCode: companyCode,
+				companyCode: companyValue,
 				//테스트 중. 전체 시 테이블명 수정 필요
-				tableName: (middleItem.name == "전체") ? "SMSCLI_TBL_EVENT" : middleItem.name,
+				tableName: (tableItem.name == "전체") ? "SMSCLI_TBL_EVENT" : tableItem.name,
 				//페이징 서버사이드 처리
 				skip: loadOptions.skip ?? 0, //offset: 앞에서 건너뛸 레코드 수
 				take: loadOptions.take ?? 50, //limit: 가져올 레코드 수

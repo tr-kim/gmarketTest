@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class FtpDto {
 
-	private Integer largeCategory;
+	private Integer companyCode;
 	private String msgType;
 	private String imageName01;
 	private String imageName02;

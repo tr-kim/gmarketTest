@@ -1,6 +1,6 @@
 let startDateInstance;
 let endDateInstance;
-let largeCategoryInstance;
+let companyInstance;
 let titleInstance;
 let bulkHistDataGrid;
 
@@ -31,7 +31,7 @@ $(function () {
 	}).dxDateBox("instance");
 	
 	//대분류
-	largeCategoryInstance = $('#large-category').dxSelectBox({
+	companyInstance = $('#companyCode').dxSelectBox({
 		dataSource: [
 			{ code: 0, name: '옥션' },
 			{ code: 1, name: '지마켓' },
@@ -87,7 +87,7 @@ $(function () {
 			}
 			
 			const titleValue = titleInstance.option("value");
-			const companyCode = largeCategoryInstance.option("value");
+			const companyValue = companyInstance.option("value");
 			
 			const params = {
 				startDate: startDateFormatted,
@@ -95,7 +95,7 @@ $(function () {
 				startTime: startTimeFormatted + "000000",
 				endTime: endTimeFormatted + "235959",
 				bulkTitle: titleValue,
-				companyCode: companyCode,
+				companyCode: companyValue,
 				//페이징 서버사이드 처리
 				skip: loadOptions.skip ?? 0, //offset: 앞에서 건너뛸 레코드 수
 				take: loadOptions.take ?? 50, //limit: 가져올 레코드 수
@@ -261,9 +261,9 @@ $('#search-btn').dxButton({
 		}
 		
 		// 조회기간 구하기
-		const largeCategoryValue = largeCategoryInstance;
+		const companyValue = companyInstance.option("value");
 		
-		if(largeCategoryValue != 0){
+		if(companyValue != 0){
 			let start = new Date(
 				parseInt(startTimeFormatted.slice(0, 4)),
 				parseInt(startTimeFormatted.slice(4, 6)) - 1,

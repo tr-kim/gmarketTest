@@ -113,7 +113,7 @@ public class RestDbSendController {
 			// DB 발송 여부 체크
 			if(ConstantsUtils.FALG_N.equals(userDto.getDbYn())) {
 				result.put(ConstantsUtils.CODE, ConstantsUtils.USER_NOT_DB_SEND);
-				result.put(ConstantsUtils.RESULT, "DB 발송을 할 수 없습니다.");
+				result.put(ConstantsUtils.RESULT, "DB 발송 권한이 없습니다.");
 				
 				return ResponseEntity.status(HttpStatus.OK).body(result);
 			}

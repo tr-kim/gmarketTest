@@ -37,7 +37,7 @@ public class FileSendServiceImpl implements FileSendService {
 	public Map<String, Integer> insertFileSend(FileSendDto fileSendDto) throws Exception {
 		
 		// 0: 옥션, 1: 지마켓
-		int companyCode = fileSendDto.getLargeCategory();
+		int companyCode = fileSendDto.getCompanyCode();
 		String dbName = DBUtils.getDBName(companyCode);
 		Map<String, Integer> result = new HashMap<>();
 		
@@ -58,7 +58,7 @@ public class FileSendServiceImpl implements FileSendService {
 			FTPClient ftpClient = FtpUtils.createConnection(companyCode, ConstantsUtils.ACTIVE);
 			
 			FtpDto ftpDto = FtpDto.builder()
-					.largeCategory(companyCode)
+					.companyCode(companyCode)
 					.msgType(msgType)
 					.imageName01(fileSendDto.getImageName01())
 					.imageName02(fileSendDto.getImageName02())

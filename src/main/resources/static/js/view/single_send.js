@@ -624,7 +624,7 @@ function sendMessage(){
 		const msgType = msgTypeValue === "SMS" ? 'sms' : msgTypeValue === "LMS" ? 'lms' : 'mms';
 		
 		// 대분류
-		const largeCategory = document.getElementById("large-category").value;
+		const companyCode = document.getElementById("companyCode").value;
 		
 		// 발신번호
 		const tranCallback = document.getElementById("tranCallback").value;
@@ -657,7 +657,7 @@ function sendMessage(){
 		
 		const formData = new FormData();
 		formData.append("msgType", msgType);									// 메시지 유형 SMS, LMS, MMS
-		formData.append("largeCategory", largeCategory);						// 대분류 0: 옥션, 1: 지마켓
+		formData.append("companyCode", companyCode);							// 대분류 0: 옥션, 1: 지마켓
 		formData.append("tranCallback", tranCallback);							// 발신번호
 		formData.append("tranPhone", tranPhone);								// 수신번호
 		formData.append("userId", userId);										// 사용자 아이디

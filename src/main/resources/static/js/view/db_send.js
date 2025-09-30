@@ -394,7 +394,7 @@ function reservedSearch(){
 	showLoading(LOAD_PANEL, "#dbGrid");
 	
 	const messageType = document.getElementById('messageType').value.trim();
-	const companyCode = document.getElementById('large-category').value.trim();
+	const companyCode = document.getElementById('companyCode').value.trim();
 	
     fetch("/api/v1/dbSend/search", {
         method: "POST",
@@ -597,7 +597,7 @@ function sendMessage(){
 		}
 		
 		// 대분류
-		const largeCategory = document.getElementById("large-category").value;
+		const companyCode = document.getElementById("companyCode").value;
 		
 		// 요청번호
 		const reserved4 = document.getElementById("reserved4").value;
@@ -618,7 +618,7 @@ function sendMessage(){
 		const sendInfo = document.getElementById('sendInfo').value.trim();
 		
 		// 상태
-		const stat = document.getElementById('stat').value.trim();
+		//const stat = document.getElementById('stat').value.trim();
 		
 		// SMS 수신여부 확인
 		const reserved3 = document.getElementById('reserved3').value.trim();
@@ -633,14 +633,14 @@ function sendMessage(){
 		
 		const formData = new FormData();
 		formData.append("msgType", msgType);									// 메시지 유형 SMS, LMS, MMS
-		formData.append("largeCategory", largeCategory);						// 대분류 0: 옥션, 1: 지마켓
+		formData.append("companyCode", companyCode);							// 대분류 0: 옥션, 1: 지마켓
 		formData.append("reserved4", reserved4);								// 요청번호
 		formData.append("tranCallback", tranCallback);							// 발신번호
 		formData.append("userId", userId);										// 사용자 아이디
 		formData.append("msgTitle", msgTitle);									// 메시지 제목 LMS, MMS만 적용
 		formData.append("msgWrite", msgWrite);									// 메시지 내용
 		formData.append("sendInfo", sendInfo);									// 전송 대상
-		formData.append("stat", stat);											// 상태
+		//formData.append("stat", stat);										// 상태
 		formData.append("reserved3", reserved3);								// SMS 수신 여부 확인 0: 확인, 1: 미확인
 		formData.append("rejectCheckDefault", rejectCheckDefault);				// 080 수신거부 번호 확인 true, false
 		formData.append("timeType", sendTimeChkValue);							// 발송 시간 확인 0: 즉시, 1: 예약
@@ -866,7 +866,7 @@ function initSend(){
 	document.getElementById('msgTitle').value = "";
 	document.getElementById('tranCallback').value = "";
 	document.getElementById('sendInfo').value = "";
-	document.getElementById('stat').value = "";
+	//document.getElementById('stat').value = ""; // 상태
 
 	const uploader = $('#file-uploader').dxFileUploader('instance');
 	uploader.reset(); // 파일 목록 초기화

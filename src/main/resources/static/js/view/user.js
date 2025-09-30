@@ -1,5 +1,5 @@
 let dataGrid;
-let largeCategoryInstance;
+let companyInstance;
 let userGradeInstance;
 let userIdInstance;
 
@@ -10,26 +10,26 @@ let pageSize;
 
 $(function() {
 
-	let categoryData;
-	let categoryValue;
+	let companyArray;
+	let companyValue;
 
 	if (userGrade == 0) {
-		categoryData = [{ Code: 0, Name: '옥션', }, { Code: 1, Name: '지마켓' }];
-		categoryValue = 1;
+		companyArray = [{ Code: 0, Name: '옥션', }, { Code: 1, Name: '지마켓' }];
+		companyValue = 1;
 	} else if (userGrade == 1 && companyCode == 0) {
-		categoryData = [{ Code: 0, Name: '옥션' }];
-		categoryValue = 0;
+		companyArray = [{ Code: 0, Name: '옥션' }];
+		companyValue = 0;
 	} else if (userGrade == 1 && companyCode == 1) {
-		categoryData = [{ Code: 1, Name: '지마켓' }];
-		categoryValue = 1;
+		companyArray = [{ Code: 1, Name: '지마켓' }];
+		companyValue = 1;
 	}
 
 	//구분
-	largeCategoryInstance = $('#large-category').dxSelectBox({
-		dataSource: categoryData,
+	companyInstance = $('#companyCode').dxSelectBox({
+		dataSource: companyArray,
 		displayExpr: 'Name',
 		valueExpr: 'Code',
-		value: categoryValue
+		value: companyValue
 		, inputAttr: { name: "companyCode" }
 		// , onValueChanged: function(e) {
 		// 	dataGrid.option('editing.refreshMode', e.value);

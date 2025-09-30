@@ -1,6 +1,6 @@
 let startDateInstance;
 let endDateInstance;
-let largeCategoryInstance;
+let companyInstance;
 let titleInstance;
 let waitDataGrid;
 
@@ -43,7 +43,7 @@ $(function () {
 	}).dxDateBox("instance");
 
 	//대분류
-	largeCategoryInstance = $('#large-category').dxSelectBox({
+	companyInstance = $('#companyCode').dxSelectBox({
 		dataSource: [
 			{ code: 0, name: '옥션' },
 			{ code: 1, name: '지마켓' },
@@ -152,8 +152,7 @@ $(function () {
 			}
 			
 			const titleValue = titleInstance.option("value");
-			
-			const categoryValue = largeCategoryInstance.option("value");
+			const companyValue = companyInstance.option("value");
 			
 			const params = {
 				startDate: startDateFormatted,
@@ -161,7 +160,7 @@ $(function () {
 				startTime: startTimeFormatted + "000000",
 				endTime: endTimeFormatted + "235959",
 				waitTitle: titleValue,
-				companyCode: categoryValue,
+				companyCode: companyValue,
 				//페이징 서버사이드 처리
 				skip: loadOptions.skip ?? 0, //offset: 앞에서 건너뛸 레코드 수
 				take: loadOptions.take ?? 50, //limit: 가져올 레코드 수
@@ -341,12 +340,12 @@ $(function () {
 									onClick: function() {
 										const grid = e.component;
 										const selectedRowsData = grid.getSelectedRowsData();
-										const categoryValue = largeCategoryInstance.option("value");
+										const companyValue = companyInstance.option("value");
 										
 										const param = selectedRowsData.map(row => ({
 											bulkMsgKey: row.bulkMsgKey,
 											svcType: row.svcType,
-											companyCode: categoryValue
+											companyCode: companyValue
 										}));
 										
 										deleteAjax('/api/v1/wait/delete', param, function callback(data) {

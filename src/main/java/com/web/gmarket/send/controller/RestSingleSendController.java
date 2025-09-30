@@ -44,7 +44,7 @@ public class RestSingleSendController {
 			// SMS 사용 여부 체크
 			if(ConstantsUtils.FALG_N.equals(userDto.getSmsYn())) {
 				result.put(ConstantsUtils.CODE, ConstantsUtils.USER_NOT_SMS_SEND);
-				result.put(ConstantsUtils.RESULT, "SMS 발송을 할 수 없습니다.");
+				result.put(ConstantsUtils.RESULT, "SMS 발송 권한이 없습니다.");
 				
 				return ResponseEntity.status(HttpStatus.OK).body(result);
 			}

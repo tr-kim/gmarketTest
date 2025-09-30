@@ -1,13 +1,13 @@
 let dataGrid;
-let largeCategory;
-let largeCategorySelectCode;
-let middleCategory;
-let middleCategorySelectName;
+let companyInstance;
+let companyValue;
+let tableInstance;
+let tableValue;
 const period = 3000;	// 최대 검색 기간 
 
 $(function() {
 
-	const middleCategoryData = {
+	const tableArray = {
 		0: [
 			{ code: -1, name: '선택하세요' },
 			{ code: 0, name: '전체' },
@@ -202,8 +202,8 @@ $(function() {
 	}
 
 	//중분류
-	middleCategory = $('#middle-category').dxSelectBox({
-		dataSource: middleCategoryData[1],
+	tableInstance = $('#tableCategory').dxSelectBox({
+		dataSource: tableArray[1],
 		displayExpr: 'name',
 		valueExpr: 'code',
 		value: -1,
@@ -211,33 +211,33 @@ $(function() {
 		onValueChanged: function(e) {
 			
 			// select text 가져오기
-			middleCategorySelectName = e.component.option("displayValue");
+			tableValue = e.component.option("displayValue");
 		}
 	}).dxSelectBox("instance");
 	
 	// 사용자 등급 및 회사 업체에 따라 select box option 설정
-	let largeCategoryData = [ { code: -1, name: '선택하세요' } ];
+	let companyArray = [ { code: -1, name: '선택하세요' } ];
 	
 	if((userGrade == 0 || (userGrade == 1 && companyCode == 0))) {
-		largeCategoryData.push({ code: 0, name: '옥션' });
+		companyArray.push({ code: 0, name: '옥션' });
 	} 
 	
 	if((userGrade == 0 || (userGrade == 1 && companyCode == 1))) {
-		largeCategoryData.push({ code: 1, name: '지마켓' });
+		companyArray.push({ code: 1, name: '지마켓' });
 	}
 	
 	//대분류
-	largeCategory = $('#large-category').dxSelectBox({
-		dataSource: largeCategoryData,
+	companyInstance = $('#companyCategory').dxSelectBox({
+		dataSource: companyArray,
 		displayExpr: 'name',
 		valueExpr: 'code',
 		value: companyCode,
 		name: "companyCode",
 		onValueChanged: function(e) {
 			//중분류 업데이트
-			largeCategorySelectCode = e.value;
-			middleCategory.option('dataSource', middleCategoryData[largeCategorySelectCode] || []);
-			middleCategory.option('value', -1); // 기본값 다시 설정
+			companyValue = e.value;
+			tableInstance.option('dataSource', tableArray[companyValue] || []);
+			tableInstance.option('value', -1); // 기본값 다시 설정
 			
 		}
 	}).dxSelectBox("instance");
@@ -311,9 +311,9 @@ $(function() {
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
 			
-			middleCategorySelectName = (middleCategorySelectName == "선택하세요" || middleCategorySelectName === undefined) ? "" : middleCategorySelectName;
+			tableValue = (tableValue == "선택하세요" || tableValue === undefined) ? "" : tableValue;
 			
-			const companyName = largeCategorySelectCode == 0 ? "(옥션 " + middleCategorySelectName + " 테이블)" : "(G마켓 " + middleCategorySelectName + " 테이블)"; 
+			const companyName = companyValue == 0 ? "(옥션 " + tableValue + " 테이블)" : "(G마켓 " + tableValue + " 테이블)"; 
 			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다. ${companyName}`);
 			
 		}

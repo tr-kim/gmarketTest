@@ -655,10 +655,10 @@ function sendMessage() {
 		const tranCallee = document.getElementById("tranCallee").value.trim();
 		
 		// 대분류
-		const largeCategory = document.getElementById("large-category").value;
+		const companyCode = document.getElementById("companyCode").value;
 		
 		// XXX
-		if(largeCategory == 0) {
+		if(companyCode == 0) {
 			showDialogCustom("Auction 개발 진행 중입니다.");
 			return;
 		}
@@ -706,7 +706,7 @@ function sendMessage() {
 		formData.append("callback", callbackSelect === "직접입력" ? tranCallback : callbackSelect);		// 발신 번호
 		formData.append("calleeSelect", calleeSelect === "직접입력" ? 0 : 1);								// 수신 번호 유형 0: 직접입력, 1: 시트 선택
 		formData.append("callee", calleeSelect === "직접입력" ? tranCallee : calleeSelect);				// 수신 번호
-		formData.append("largeCategory", largeCategory);												// 대분류 0: 옥션, 1: 지마켓
+		formData.append("companyCode", companyCode);													// 대분류 0: 옥션, 1: 지마켓
 		formData.append("userId", userId);																// 사용자 아이디
 		formData.append("msgTitle", msgTitle);															// 메시지 제목 LMS, MMS만 적용
 		formData.append("msgType", msgType);															// 메시지 유형 SMS, LMS, MMS

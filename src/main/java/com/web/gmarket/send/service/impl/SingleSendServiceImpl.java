@@ -34,7 +34,7 @@ public class SingleSendServiceImpl implements SingleSendService {
 	public Map<String, Integer> insertSingleSend(SingleSendDto singleSendDto) throws Exception {
 		
 		// 0: 옥션, 1: 지마켓
-		int companyCode = singleSendDto.getLargeCategory();
+		int companyCode = singleSendDto.getCompanyCode();
 		String dbName = DBUtils.getDBName(companyCode);
 		Map<String, Integer> result = new HashMap<>();
 		
@@ -55,7 +55,7 @@ public class SingleSendServiceImpl implements SingleSendService {
 			FTPClient ftpClient = FtpUtils.createConnection(companyCode, ConstantsUtils.ACTIVE);
 			
 			FtpDto ftpDto = FtpDto.builder()
-					.largeCategory(companyCode)
+					.companyCode(companyCode)
 					.msgType(msgType)
 					.imageName01(singleSendDto.getImageName01())
 					.imageName02(singleSendDto.getImageName02())
