@@ -584,33 +584,177 @@ function updateDirectNumberStats() {
 
 //문자 발송
 function sendMessage(){
-	const confirmDialog = DevExpress.ui.dialog.custom({
+	const msgType = document.querySelector('.msg_type').textContent.trim();
+	const uploader = $('#file-uploader').dxFileUploader('instance');
+	const files = uploader.option('value');
+	const imgCheck = document.querySelector('.img-check');
+	
+	// 유효성 검사
+	if (		
+		!inputValidateRequired("tranCallback", "회신번호를 입력하세요.") ||
+		!inputValidateRequired("tranPhone", "수신번호를 입력하세요.") ||
+		!inputValidateRequired("userId", "사용자ID를 입력하세요.") ||
+		!inputValidateRequired("msgWrite", "내용을 입력하세요.") ||
+		!inputValidateRequired("sendInfo", "전송대상을 입력하세요.")
+	) {
+		return;
+	}
+	
+	 // MMS인데 이미지 없으면 경고
+	if (msgType === "MMS" && (!files || files.length === 0)) {
+	    showDialogCustom("이미지를 등록해주세요.");
+	    return; 
+	}
+	
+	if (msgType === "MMS" && ((!imgCheck) || imgCheck.textContent.trim() === "이미지 체크 필요")){
+		showDialogCustom("이미지를 체크해주세요.");
+	    return; 
+	}
+	
+	const func_send = function() {
+		
+		// 메시지 유형 XXX
+		const msgTypeValue = document.querySelector('.msg_type').textContent.trim();
+		if(msgTypeValue == "MMS") {
+			showDialogCustom("MMS 개발 진행 중입니다.");
+			return;
+		}
+		
+		// 메시지 유형
+		const msgType = msgTypeValue === "SMS" ? 'sms' : msgTypeValue === "LMS" ? 'lms' : 'mms';
+		
+		// 대분류
+		const largeCategory = document.getElementById("large-category").value;
+		
+		// 회신 번호
+		const tranCallback = document.getElementById("tranCallback").value;
+		
+		// 수신번호
+		const tranPhone = document.getElementById("tranPhone").value;
+		
+		// 사용자 아이디
+		const userId = document.getElementById("userId").value;
+		
+		// 제목
+		const msgTitle = document.getElementById("msgTitle").value;
+		
+		// 메시지 내용
+		const msgWrite = document.getElementById('msgWrite').value.trim();
+		
+		// 전송 대상
+		const sendInfo = document.getElementById('sendInfo').value.trim();
+		
+		// SMS 수신여부 확인
+		const reserved3 = document.getElementById('reserved3').value.trim();
+		
+		// 수신거부
+		const rejectCheckDefault = document.getElementById('rejectCheckDefault').checked;
+		const rejectNum = document.getElementById('rejectNum').value.trim();
+		
+		// 발송시간
+		const sendTimeChkValue = $("input[name='send_time']:checked").val();
+		const sendTime = parseReservationTime(document.getElementById('reserveDate').textContent);
+		
+		const formData = new FormData();
+		formData.append("msgType", msgType);									// 메시지 유형 SMS, LMS, MMS
+		formData.append("largeCategory", largeCategory);						// 대분류 0: 옥션, 1: 지마켓
+		formData.append("tranCallback", tranCallback);							// 회신 번호
+		formData.append("tranPhone", tranPhone);								// 수신번호
+		formData.append("userId", userId);										// 사용자 아이디
+		formData.append("msgTitle", msgTitle);									// 메시지 제목 LMS, MMS만 적용
+		formData.append("msgWrite", msgWrite);									// 메시지 내용
+		formData.append("sendInfo", sendInfo);									// 전송 대상
+		formData.append("reserved3", reserved3);								// SMS 수신 여부 확인 0: 확인, 1: 미확인
+		formData.append("rejectCheckDefault", rejectCheckDefault);				// 080 수신거부 번호 확인 true, false
+		formData.append("timeType", sendTimeChkValue);							// 발송 시간 확인 0: 즉시, 1: 예약
+		formData.append("totalCount", 1);										// 총 건수
+		
+		// 수신번호 체크한 경우
+		if(rejectCheckDefault) formData.append("rejectNum", rejectNum);			// 수신거부 번호
+		
+		// 발송 시간 - 예약인 경우
+		if(sendTimeChkValue === '1') formData.append("sendTime", sendTime);		// 예약 시간
+		
+		// 이미지 파일명
+		if(msgType === "mms" && IMAGE_FILE_NAME.length > 0){
+			IMAGE_FILE_NAME.forEach((name, idx) => {
+				const key = `imageName${String(idx + 1).padStart(2, '0')}`; // imageName01, imageName02 ...
+				formData.append(key, name);
+			});
+		}
+		
+		fetch("/api/v1/singleSend/insert", {
+			method: "POST",
+			body: formData
+		})
+		.then(res => res.json())
+		.then(data => {
+			console.log(data);
+			
+			const code = data.code;
+			const result = data.result;
+			
+			if(code == 1000) {
+				const msg = "발송되었습니다.";
+				
+				showDialogCustom(msg, function() {
+					location.reload(true);	// 페이지 새로고침
+				});
+				
+			} else showDialogCustom(result);
+			
+		})
+		.catch(err => {
+			console.error("개별 발송 실패:", err);
+			showDialogCustom('error');
+		})
+		.finally(() => {
+		});
+	};
+	
+	// 메시지확인 다이얼로그
+	DevExpress.ui.dialog.custom({
 		showTitle: false,
-		messageHtml: "<div style='text-align: center;'>발송하시겠습니까?</div>",
-		buttons: [{
-			text: "발송",
-			type: "default",
-			onClick: function(e) {
-				//발송 로직 실행
-				
-				
-				
-				
-				return { result: "ok" };
-			}
-		}, {
-			text: "취소",
-			onClick: function(e) {
-				return { result: "cancel" };
-			}
-		}]
-	});
-
-	confirmDialog.show().done(function(dialogResult) {
-		if (dialogResult.result === "ok") {
-			console.log("발송 완료");
+		messageHtml: "<div style='text-align: center;'>미리보기 화면을 보시겠습니까?</div>",
+		buttons: [
+			{ text: "확인", onClick: () => "ok" },
+			{ text: "취소", onClick: () => "cancel"}
+		]
+	}).show().done(function(dialogResult) {
+		if (dialogResult === "ok") {
+			
+			//메시지 확인팝업창
+			const confirmSend = document.querySelector('.confirmSend');
+			const confirmMessage = document.getElementById('confirmMessage');	
+			confirmSend.classList.add('d-block');
+			
+			const rejectCheckDefault = document.getElementById('rejectCheckDefault').checked;
+			const rejectNum = document.getElementById('rejectNum').value.trim();
+			const msgWrite = document.getElementById('msgWrite').value.trim();
+			confirmMessage.textContent = rejectCheckDefault ? msgWrite + rejectNum : msgWrite;
+			
+			confirmSend.querySelector('.send_btn').addEventListener('click', function() {
+				confirmSend.classList.remove('d-block');
+				func_send(); // 메시지 보내기
+			}, { once: true });
+			
 		} else {
-			console.log("취소");
+			console.log("메시지 확인취소");
+			
+			DevExpress.ui.dialog.custom({
+				showTitle: false,
+				messageHtml: "<div style='text-align: center;'>발송하시겠습니까?</div>",
+				buttons: [
+					{ text: "발송", onClick: () => "ok" },
+					{ text: "취소", onClick: () => "cancel"}
+				]
+			}).show().done(function(dialogResult) {
+				if (dialogResult === "ok") {
+					func_send(); // 메시지 보내기
+				} else {
+					console.log("취소");
+				}
+			});
 		}
 	});
 }

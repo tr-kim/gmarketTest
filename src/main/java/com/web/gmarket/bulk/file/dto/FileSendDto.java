@@ -36,7 +36,7 @@ public class FileSendDto {
 	private Integer largeCategory;
 	
 	// 사용자 아이디
-	@NotBlank(message = "사용자아이디를 입력 하세요.", groups = NotBlankGroup3.class)
+	@NotBlank(message = "사용자 아이디를 입력하세요.", groups = NotBlankGroup3.class)
 	private String userId;
 	
 	// 메시지 제목
@@ -52,7 +52,7 @@ public class FileSendDto {
 	private String msgWrite;
 	
 	// 전송대상
-	@NotBlank(message = "전송대상을 입력 하세요.", groups = NotBlankGroup6.class)
+	@NotBlank(message = "전송대상을 입력하세요.", groups = NotBlankGroup6.class)
 	private String sendInfo;
 	
 	// SMS 수신여부

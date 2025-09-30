@@ -9,13 +9,13 @@
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">발신번호</div>
 				<div class="col">
-					<input type="text" name="callbackNo" id="callbackNo" class="form-control" placeholder="발신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
+					<input type="text" name="tranCallback" id="tranCallback" class="form-control" placeholder="발신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
 				</div>
 			</li>
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">수신번호</div>
 				<div class="col">
-					<input type="text" name="calleeNo" id="calleeNo" class="form-control" placeholder="수신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
+					<input type="text" name="tranPhone" id="tranPhone" class="form-control" placeholder="수신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
 				</div>
 			</li>
 			<li class="align-items-center">
@@ -104,10 +104,10 @@
 				<div class="col-2 font-weight-500">발송시간</div>
 				<div class="col d-flex align-items-center">
 					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-						<input type="radio" class="btn-check" name="send_time" id="send_time1" autocomplete="off" checked>
+						<input type="radio" class="btn-check" name="send_time" id="send_time1" value="0" autocomplete="off" checked>
 						<label class="btn send_btn px-4" for="send_time1">즉시</label>
 
-						<input type="radio" class="btn-check" name="send_time" id="send_time2" autocomplete="off">
+						<input type="radio" class="btn-check" name="send_time" id="send_time2" value="1" autocomplete="off">
 						<label class="btn send_btn px-4" for="send_time2">예약</label>
 					</div>
 					<div id="reserveDate" class="text-primary ms-3"></div>

@@ -57,7 +57,7 @@ public class ExcelSendDto {
 	private Integer largeCategory = ConstantsUtils.AUCTION_CODE;
 	
 	// 사용자 아이디
-	@NotBlank(message = "사용자아이디를 입력 하세요.", groups = NotBlankGroup4.class)
+	@NotBlank(message = "사용자 아이디를 입력하세요.", groups = NotBlankGroup4.class)
 	private String userId;
 	
 	// 메시지 제목
@@ -73,7 +73,7 @@ public class ExcelSendDto {
 	private String msgWrite;
 	
 	// 전송대상
-	@NotBlank(message = "전송대상을 입력 하세요.", groups = NotBlankGroup7.class)
+	@NotBlank(message = "전송대상을 입력하세요.", groups = NotBlankGroup7.class)
 	private String sendInfo;
 	
 	// SMS 수신여부

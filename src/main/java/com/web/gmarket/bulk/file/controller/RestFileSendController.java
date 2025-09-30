@@ -65,8 +65,8 @@ public class RestFileSendController {
 			UserDetailsDto userDto = (UserDetailsDto) authentication.getPrincipal();
 			
 			// 파일 발송 여부 체크
-			if(ConstantsUtils.FALG_N.equals(userDto.getExcelYn())) {
-				result.put(ConstantsUtils.CODE, ConstantsUtils.USESR_NOT_FILE_SEND);
+			if(ConstantsUtils.FALG_N.equals(userDto.getFileYn())) {
+				result.put(ConstantsUtils.CODE, ConstantsUtils.USER_NOT_FILE_SEND);
 				result.put(ConstantsUtils.RESULT, "파일 발송을 할 수 없습니다.");
 				
 				return ResponseEntity.status(HttpStatus.OK).body(result);

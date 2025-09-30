@@ -219,7 +219,7 @@ public class RestExcelSendController {
 			
 			// 엑셀 발송 여부 체크
 			if(ConstantsUtils.FALG_N.equals(userDto.getExcelYn())) {
-				result.put(ConstantsUtils.CODE, ConstantsUtils.USESR_NOT_EXCEL_SEND);
+				result.put(ConstantsUtils.CODE, ConstantsUtils.USER_NOT_EXCEL_SEND);
 				result.put(ConstantsUtils.RESULT, "엑셀 발송을 할 수 없습니다.");
 				
 				return ResponseEntity.status(HttpStatus.OK).body(result);

@@ -19,9 +19,10 @@ public class ConstantsUtils {
 	// USER ERROR CODE
 	public static final int USER_DUPLICATION = 9100;			// 사용자 중복
 	public static final int USER_NON_EXISTENCE = 9101;			// 사용자 미존재
-	public static final int USESR_NOT_EXCEL_SEND = 9102; 		// 엑셀 발송
-	public static final int USESR_NOT_FILE_SEND = 9103; 		// 파일 발송
-	public static final int USESR_NOT_DB_SEND = 9104; 		// DB 발송
+	public static final int USER_NOT_EXCEL_SEND = 9102; 		// 엑셀 발송
+	public static final int USER_NOT_FILE_SEND = 9103; 			// 파일 발송
+	public static final int USER_NOT_DB_SEND = 9104; 			// DB 발송
+	public static final int USER_NOT_SMS_SEND = 9105; 			// SMS 사용
 	
 	// FILE ERROR CODE
 	public static final int NOT_FILE = 9200;		// 파일 에러
