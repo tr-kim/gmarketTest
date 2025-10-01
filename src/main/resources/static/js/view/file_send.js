@@ -547,17 +547,8 @@ function sendMessage(){
 			const code = data.code;
 			const result = data.result;
 			
-			if(code == 1000) {
-				const totalCnt = result.totalCount;
-				const succCnt = result.successCount;
-				const failCnt = result.faildCount;
-				
-				const msg = msgTypeValue+" 총 "+ totalCnt +" 건 완료되었습니다. (성공 : "+ succCnt +" 건, 실패 : "+ failCnt +" 건)";
-				showDialogCustom(msg, function() {
-					location.reload(true);	// 페이지 새로고침
-				});
-				
-			} else showDialogCustom(result);
+			if(code == 1000) uploadStatusCheck(result);
+			else showDialogCustom(result);
 		})
 		.catch(err => {
 			console.error("파일 발송 실패:", err);
@@ -634,15 +625,18 @@ function uploadStatusCheck(jobId) {
 				PROCESSED = data.current; 
 				
 				processData();
-                
+				
 				// 상태 체크 중지
                 if (data.complete || PROCESSED >= PROCESS_TOTAL) {
 					clearInterval(interval);
-					showDialogCustom("발송이 완료되었습니다.", function() {
-						uploadStatuRemove(jobId);
+					
+					const failCnt = PROCESS_TOTAL - PROCESSED;
+					const msgTypeValue = document.querySelector('.msg_type').textContent.trim();
+					const msg = msgTypeValue+" 총 "+ PROCESS_TOTAL +" 건 완료되었습니다. (성공 : "+ PROCESSED +" 건, 실패 : "+ failCnt +" 건)";
+					
+					showDialogCustom(msg, function() {
 						location.reload(true);	// 페이지 새로고침
 					});
-					
                 }
 			}).catch(err => {
 				console.error("발송 상태 체크:", err);

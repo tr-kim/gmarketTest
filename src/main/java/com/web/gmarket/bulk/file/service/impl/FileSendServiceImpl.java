@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.net.ftp.FTPClient;
@@ -22,6 +21,7 @@ import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.DBUtils;
 import com.web.gmarket.common.utils.FtpUtils;
 import com.web.gmarket.common.vo.FtpDto;
+import com.web.gmarket.common.vo.UploadProgress;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,12 +34,11 @@ public class FileSendServiceImpl implements FileSendService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Map<String, Integer> insertFileSend(FileSendDto fileSendDto) throws Exception {
+	public void insertFileSend(FileSendDto fileSendDto, Map<String, UploadProgress> uploadStatus, String jobId) throws Exception {
 		
 		// 0: 옥션, 1: 지마켓
 		int companyCode = fileSendDto.getCompanyCode();
 		String dbName = DBUtils.getDBName(companyCode);
-		Map<String, Integer> result = new HashMap<>();
 		
 		// String yyyyMMddHHmmssSSS => Date yyyyMMddHHmmssSSS 변환
 		DateTimeFormatter orgFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
@@ -55,6 +54,7 @@ public class FileSendServiceImpl implements FileSendService {
 		
 		// MMS일 경우 이미지 파일 업로드
 		if(ConstantsUtils.MMS.equals(msgType)) {
+			uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "MMS 이미지 파일 업로드"));
 			FTPClient ftpClient = FtpUtils.createConnection(companyCode, ConstantsUtils.ACTIVE);
 			
 			FtpDto ftpDto = FtpDto.builder()
@@ -89,13 +89,17 @@ public class FileSendServiceImpl implements FileSendService {
 				.build();
 		
 		// 대량 발송 등록
+		uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "대량 발송 등록"));
 		commonService.getBroadcastMsgMapper(dbName).insertBroadcastMsg(broadcastMsgDto);
 		
+		// 파일 읽기
+		uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "파일 읽기"));
 		File savedFile = new File(TXT_PATH, fileSendDto.getTextFileName());
 		
 		int succCnt = 0;
 		int failCnt = 0;
-		int totalCnt = 0;
+		int totalCnt = fileSendDto.getTotalCount();
+		int sendCnt = 0;
 		try (BufferedReader br = new BufferedReader(new FileReader(savedFile))) {
 			StringBuilder sb = new StringBuilder();
 			String line;
@@ -141,15 +145,12 @@ public class FileSendServiceImpl implements FileSendService {
 					default:
 						throw new IllegalArgumentException(String.format("%s%s", "혀용되지 않은 메시지 타입입니다 : ", msgType));
 				}
-				++totalCnt;
 				commonService.getBroadcastMsgMapper(dbName).updateBroadcastMsgCountByType(bMsgKey, flagCnt > 0 ? ++succCnt : ++failCnt, flagCnt > 0 ? ConstantsUtils.FALG_T : ConstantsUtils.FALG_F);
+				++sendCnt;
+				
+				int progress = (int) (((float) sendCnt / totalCnt) * 100);
+				uploadStatus.put(jobId, new UploadProgress(progress, sendCnt, totalCnt, String.format("%d/%d 건 처리 완료", sendCnt, totalCnt)));
 			}
 		}
-		
-		result.put(ConstantsUtils.TOTAL_COUNT, totalCnt);
-		result.put(ConstantsUtils.SUCCESS_COUNT, succCnt);
-		result.put(ConstantsUtils.FAILD_COUNT, failCnt);
-		
-		return result;
 	}
 }

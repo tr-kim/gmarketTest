@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.gmarket.bulk.file.dto.FileSendDto;
 import com.web.gmarket.common.utils.ConstantsUtils;
+import com.web.gmarket.common.vo.UploadProgress;
 
 public interface FileSendService {
 	
@@ -32,7 +33,7 @@ public interface FileSendService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public Map<String, Integer> insertFileSend(FileSendDto dto) throws Exception;
+	public void insertFileSend(FileSendDto dto, Map<String, UploadProgress> uploadStatus, String jobId) throws Exception;
 	
     /**
      * 텍스트 파일 업로드 및 데이터 파싱
