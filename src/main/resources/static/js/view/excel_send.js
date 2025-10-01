@@ -2,6 +2,7 @@ let LOAD_PANEL;
 let EXCEL_FILE_NAME = "";
 let IMAGE_FILE_NAME = new Array();
 let MAX_ROWS = 0;
+let EXCEL_FILE_DOWNLOAD;
 
 $(function () {
 	// 로딩바 최초 생성 (화면 전체 기준)
@@ -69,6 +70,7 @@ $(function () {
 			uploadButton.hide();
 		},
 		onValueChanged(e) {
+			handleInput();
 			// 기존 파일 초기화 후 선택한 파일로 재설정(썸네일, 파일명 리턴 등 문제)
 			if (updatingFiles) return; // 재진입 방지
 			updatingFiles = true;
@@ -201,6 +203,7 @@ $(function () {
 					onClick: function(e) {
 						IMAGE_FILE_NAME = [];
 						fileUploader.reset();
+						handleInput();
 						return { result: "ok" };
 					}
 				}, {
@@ -813,6 +816,104 @@ function sendMessage() {
 	});
 }
 
+// 엑셀 저장
+function saveExcel() {
+	// 파일 검사
+	if (!excelValidateRequired()) return;
+	
+	// 유효성 검사
+	if (!inputValidateRequired("sheet", "시트를 선택하세요.")) return; 
+	
+	// 엑셀 그리드
+	const firstTh = document.querySelector('#excelGrid thead th:first-child');
+	if (firstTh && firstTh.textContent.trim() !== "발신번호") {
+		const message = '발신번호, 수신번호 설정 후<br>[지정] 버튼을 누르세요.';
+		showDialogCustom(message, function (){
+			document.getElementById("tranCallback").focus();
+		});
+		return;
+	}
+	
+	// 메시지 그리드
+	if(document.querySelector('#msgGrid tr.no-data')){
+		const message = '내용 입력 후<br>[메시지 작성] 버튼을 누르세요.';
+		showDialogCustom(message, function (){
+			document.getElementById("msgWrite").focus();
+		});
+		return;
+	};
+
+	// 수신거부
+	if(document.getElementById('rejectCheckDefault').checked 
+	&& document.getElementById('rejectNum').value == ""){
+		const message = '수신거부 번호를 입력하세요.';
+		showDialogCustom(message, function (){
+			document.getElementById("rejectNum").focus();
+		});
+		return;
+	};
+
+	// 메시지 유형
+	const msgTypeValue = document.querySelector('.msg_type').textContent.trim();
+	const msgType = msgTypeValue === "SMS" ? 'sms' : msgTypeValue === "LMS" ? 'lms' : 'mms';
+
+	const postData = {
+        retData: EXCEL_FILE_DOWNLOAD,
+        msgType: msgType
+    };
+
+    fetch("/api/v1/excelSend/downloadExcel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(postData)
+    })
+    .then(res => res.blob())
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `sendData.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+    })
+    .catch(err => console.error(err));
+/*
+	// 시트
+	const sheet = document.getElementById("sheet").value;
+	
+	// 발신번호
+	const callbackSelect = document.getElementById("callbackSelect").value;
+	const tranCallback = document.getElementById("tranCallback").value.trim();
+	
+	// 수신번호
+	const calleeSelect = document.getElementById("calleeSelect").value;
+	const tranCallee = document.getElementById("tranCallee").value.trim();
+
+	// 메시지 제목
+	const msgTitle = document.getElementById("msgTitle").value.trim();
+	
+	
+	
+	// 메시지 내용
+	const msgWrite = document.getElementById('msgWrite').value.trim();
+
+	const gridData = {
+        excelFileName: EXCEL_FILE_NAME,
+        sheet: sheet,
+        callbackSelect: callbackSelect === "직접입력" ? 0 : 1,
+        callback: callbackSelect === "직접입력" ? tranCallback : callbackSelect,
+        calleeSelect: calleeSelect === "직접입력" ? 0 : 1,
+        callee: calleeSelect === "직접입력" ? tranCallee : calleeSelect,
+        msgTitle: msgTitle,
+        msgType: msgType,
+        msgWrite: msgWrite,
+        images: IMAGE_FILE_NAME
+    };
+*/
+}
+
 // 엑셀 발송 상태 체크(프로그레스 바)
 function uploadStatusCheck(jobId) {
 	const interval = setInterval(() => {
@@ -1105,6 +1206,14 @@ function createSendData() {
 	params.append("calleeFlag", document.getElementById("calleeSelect").value === "직접입력" ? 1 : 2);
 	params.append("calleeRow", document.getElementById("calleeSelect").value);
 	params.append("tranCallee", document.getElementById("tranCallee").value.trim());
+
+	// 이미지 파일명
+	if(MSG_TYPES === "mms" && IMAGE_FILE_NAME.length > 0){
+		IMAGE_FILE_NAME.forEach((name, idx) => {
+			const key = `imageName${String(idx + 1).padStart(2, '0')}`; // imageName01, imageName02 ...
+			params.append(key, name);
+		});
+	}
 	
 	// 수신거부 체크 안됐을 때만 다이얼로그 띄우고,
 	// 확인 시 fetch 실행, 취소 시 중단
@@ -1159,6 +1268,7 @@ function sendRequest(params) {
 			// 테이블 그리기
 			const retData = data.retData;
 			drawTable("msgGrid", retData, "N");
+			EXCEL_FILE_DOWNLOAD = retData;
 		} else {
 			const message = data.message;
 			showDialogCustom(message);
