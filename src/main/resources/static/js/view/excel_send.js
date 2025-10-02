@@ -2,7 +2,6 @@ let LOAD_PANEL;
 let EXCEL_FILE_NAME = "";
 let IMAGE_FILE_NAME = new Array();
 let MAX_ROWS = 0;
-let EXCEL_FILE_DOWNLOAD;
 
 $(function () {
 	// 로딩바 최초 생성 (화면 전체 기준)
@@ -818,8 +817,11 @@ function sendMessage() {
 
 // 엑셀 저장
 function saveExcel() {
+
 	// 파일 검사
-	if (!excelValidateRequired()) return;
+	if (!excelValidateRequired()) {
+		return;
+	}
 	
 	// 유효성 검사
 	if (!inputValidateRequired("sheet", "시트를 선택하세요.")) return; 
@@ -853,65 +855,67 @@ function saveExcel() {
 		return;
 	};
 
-	// 메시지 유형
-	const msgTypeValue = document.querySelector('.msg_type').textContent.trim();
-	const msgType = msgTypeValue === "SMS" ? 'sms' : msgTypeValue === "LMS" ? 'lms' : 'mms';
+	const sheetName = document.getElementById("sheet").value;
+	
+	const MSG_TITLE = document.getElementById('msgTitle').value.trim();
+	const MSG_WRITE = document.getElementById('msgWrite').value.trim();
+	const msg_type_value = document.querySelector('.msg_type').textContent.trim();
+	const MSG_TYPES = msg_type_value === "SMS" ? 'sms' : msg_type_value === "LMS" ? 'lms' : 'mms';
+	const rejectCheckDefault = document.getElementById('rejectCheckDefault');
+	const rejectNum = document.getElementById('rejectNum');
 
-	const postData = {
-        retData: EXCEL_FILE_DOWNLOAD,
-        msgType: msgType
-    };
+	//수신번호 체크 시
+	let message = MSG_WRITE;
+	if(rejectCheckDefault.checked && !rejectNum.disabled && rejectNum.value){
+		message += rejectNum.value;
+	}
+	
+	const params = new URLSearchParams();
+	params.append("excelFile", EXCEL_FILE_NAME);
+	params.append("sheetName", sheetName);
+	params.append("title", MSG_TITLE);
+	params.append("message", message);
+	params.append("messageType", MSG_TYPES);
+	params.append("callbackFlag", document.getElementById("callbackSelect").value === "직접입력" ? 1 : 2);
+	params.append("callbackRow", document.getElementById("callbackSelect").value);
+	params.append("tranCallback", document.getElementById("tranCallback").value.trim());
+	params.append("calleeFlag", document.getElementById("calleeSelect").value === "직접입력" ? 1 : 2);
+	params.append("calleeRow", document.getElementById("calleeSelect").value);
+	params.append("tranCallee", document.getElementById("tranCallee").value.trim());
+
+	// 이미지 파일명
+	if(MSG_TYPES === "mms" && IMAGE_FILE_NAME.length > 0){
+		IMAGE_FILE_NAME.forEach((name, idx) => {
+			const key = `imageName${String(idx + 1).padStart(2, '0')}`; // imageName01, imageName02 ...
+			params.append(key, name);
+		});
+	}
 
     fetch("/api/v1/excelSend/downloadExcel", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(postData)
-    })
-    .then(res => res.blob())
-    .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `sendData.xlsx`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-    })
-    .catch(err => console.error(err));
-/*
-	// 시트
-	const sheet = document.getElementById("sheet").value;
-	
-	// 발신번호
-	const callbackSelect = document.getElementById("callbackSelect").value;
-	const tranCallback = document.getElementById("tranCallback").value.trim();
-	
-	// 수신번호
-	const calleeSelect = document.getElementById("calleeSelect").value;
-	const tranCallee = document.getElementById("tranCallee").value.trim();
+		method: "POST",
+		body: params
+	})
+	.then(res => {
+		if (!res.ok) throw new Error("엑셀 다운로드 실패");
+		return res.blob(); // ★ JSON이 아니라 Blob으로 받기
+	})
+	.then(blob => {
+		// Blob을 파일로 변환해서 다운로드
+		const url = window.URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = "엑셀발송.xlsx"; // 서버에서 설정한 파일명과 동일
+		document.body.appendChild(a);
+		a.click();
+		a.remove();
+		window.URL.revokeObjectURL(url);
+	})
+	.catch(err => {
+		console.error("엑셀 저장 실패:", err);
+		showDialogCustom('엑셀 저장 중 오류가 발생했습니다.');
+	});
 
-	// 메시지 제목
-	const msgTitle = document.getElementById("msgTitle").value.trim();
-	
-	
-	
-	// 메시지 내용
-	const msgWrite = document.getElementById('msgWrite').value.trim();
 
-	const gridData = {
-        excelFileName: EXCEL_FILE_NAME,
-        sheet: sheet,
-        callbackSelect: callbackSelect === "직접입력" ? 0 : 1,
-        callback: callbackSelect === "직접입력" ? tranCallback : callbackSelect,
-        calleeSelect: calleeSelect === "직접입력" ? 0 : 1,
-        callee: calleeSelect === "직접입력" ? tranCallee : calleeSelect,
-        msgTitle: msgTitle,
-        msgType: msgType,
-        msgWrite: msgWrite,
-        images: IMAGE_FILE_NAME
-    };
-*/
 }
 
 // 엑셀 발송 상태 체크(프로그레스 바)
@@ -1268,7 +1272,6 @@ function sendRequest(params) {
 			// 테이블 그리기
 			const retData = data.retData;
 			drawTable("msgGrid", retData, "N");
-			EXCEL_FILE_DOWNLOAD = retData;
 		} else {
 			const message = data.message;
 			showDialogCustom(message);
