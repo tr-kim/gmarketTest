@@ -860,7 +860,7 @@ function saveExcel() {
 	const MSG_TITLE = document.getElementById('msgTitle').value.trim();
 	const MSG_WRITE = document.getElementById('msgWrite').value.trim();
 	const msg_type_value = document.querySelector('.msg_type').textContent.trim();
-	const MSG_TYPES = msg_type_value === "SMS" ? 'sms' : msg_type_value === "LMS" ? 'lms' : 'mms';
+	const MSG_TYPES = msg_type_value.toLowerCase();
 	const rejectCheckDefault = document.getElementById('rejectCheckDefault');
 	const rejectNum = document.getElementById('rejectNum');
 
@@ -1188,7 +1188,7 @@ function createSendData() {
 	const MSG_TITLE = document.getElementById('msgTitle').value.trim();
 	const MSG_WRITE = document.getElementById('msgWrite').value.trim();
 	const msg_type_value = document.querySelector('.msg_type').textContent.trim();
-	const MSG_TYPES = msg_type_value === "SMS" ? 'sms' : msg_type_value === "LMS" ? 'lms' : 'mms';
+	const MSG_TYPES = msg_type_value.toLowerCase();
 	const rejectCheckDefault = document.getElementById('rejectCheckDefault');
 	const rejectNum = document.getElementById('rejectNum');
 
