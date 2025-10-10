@@ -666,7 +666,6 @@ function sendMessage(){
 		.then(res => res.json())
 		.then(data => {
 			console.log(data);
-			hideLoading(LOAD_PANEL);
 			
 			const code = data.code;
 			const result = data.result;
@@ -685,6 +684,7 @@ function sendMessage(){
 			showDialogCustom('error');
 		})
 		.finally(() => {
+			hideLoading(LOAD_PANEL);
 		});
 	}
 	
