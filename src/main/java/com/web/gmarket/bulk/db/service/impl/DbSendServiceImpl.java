@@ -74,9 +74,6 @@ public class DbSendServiceImpl implements DbSendService {
 		String dbName = DBUtils.getDBName(dbSendDto.getCompanyCode());
 		dbSendDto.setTableName(resolveTableName(msgType));
 		
-		// DB 발송 전 요청번호 삭제
-		commonService.getDbSendMapper(dbName).deleteDbSend(dbSendDto);
-		
 		// MMS일 경우 이미지 파일 업로드
 		if(ConstantsUtils.MMS.equals(msgType)) {
 			FTPClient ftpClient = FtpUtils.createConnection(dbSendDto.getCompanyCode(), ConstantsUtils.ACTIVE);
