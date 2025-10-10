@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -318,10 +319,15 @@ public interface ExcelSendService {
 		int iLength = 0;
 		
 		if (str != null && str.length() > 0) {
-			byte[] by = str.getBytes();
-			iLength = by.length;
+			try {
+				// byte[] by = str.getBytes(); // UTF-8
+				byte[] by = str.getBytes("EUC-KR");
+				iLength = by.length;
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 		}
-		
+	    
 		return iLength;
 	}
 	
