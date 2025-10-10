@@ -301,10 +301,6 @@ $(function () {
 	})
 
 	/*
-	
-
-	
-	
 	//이미지 확인
 	function hasImage() {
 		const uploader = $("#file-uploader").dxFileUploader("instance");
@@ -313,7 +309,8 @@ $(function () {
 		
 		return files.length > 0;
 	}
-*/
+	*/
+	
 	//080 수신거부
 	const rejectCheck = document.getElementById('rejectCheckDefault');
 	const input = document.getElementById('rejectNum');
@@ -660,6 +657,8 @@ function sendMessage(){
 			});
 		}
 		
+		showLoading(LOAD_PANEL, window);
+		
 		fetch("/api/v1/dbSend/insert", {
 			method: "POST",
 			body: formData
@@ -667,13 +666,13 @@ function sendMessage(){
 		.then(res => res.json())
 		.then(data => {
 			console.log(data);
+			hideLoading(LOAD_PANEL);
 			
 			const code = data.code;
 			const result = data.result;
 			
 			if(code == 1000) {
 				const msg = msgType.toUpperCase() + " 총 " + result + "건을 수정하였습니다.";
-				
 				showDialogCustom(msg, function() {
 					location.reload(true);	// 페이지 새로고침
 				});
