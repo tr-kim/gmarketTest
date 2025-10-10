@@ -69,6 +69,7 @@ $(function () {
 			uploadButton.hide();
 		},
 		onValueChanged(e) {
+			handleInput();
 			// 기존 파일 초기화 후 선택한 파일로 재설정(썸네일, 파일명 리턴 등 문제)
 			if (updatingFiles) return; // 재진입 방지
 			updatingFiles = true;
@@ -201,6 +202,7 @@ $(function () {
 					onClick: function(e) {
 						IMAGE_FILE_NAME = [];
 						fileUploader.reset();
+						handleInput();
 						return { result: "ok" };
 					}
 				}, {
@@ -813,6 +815,109 @@ function sendMessage() {
 	});
 }
 
+// 엑셀 저장
+function saveExcel() {
+
+	// 파일 검사
+	if (!excelValidateRequired()) {
+		return;
+	}
+	
+	// 유효성 검사
+	if (!inputValidateRequired("sheet", "시트를 선택하세요.")) return; 
+	
+	// 엑셀 그리드
+	const firstTh = document.querySelector('#excelGrid thead th:first-child');
+	if (firstTh && firstTh.textContent.trim() !== "발신번호") {
+		const message = '발신번호, 수신번호 설정 후<br>[지정] 버튼을 누르세요.';
+		showDialogCustom(message, function (){
+			document.getElementById("tranCallback").focus();
+		});
+		return;
+	}
+	
+	// 메시지 그리드
+	if(document.querySelector('#msgGrid tr.no-data')){
+		const message = '내용 입력 후<br>[메시지 작성] 버튼을 누르세요.';
+		showDialogCustom(message, function (){
+			document.getElementById("msgWrite").focus();
+		});
+		return;
+	};
+
+	// 수신거부
+	if(document.getElementById('rejectCheckDefault').checked 
+	&& document.getElementById('rejectNum').value == ""){
+		const message = '수신거부 번호를 입력하세요.';
+		showDialogCustom(message, function (){
+			document.getElementById("rejectNum").focus();
+		});
+		return;
+	};
+
+	const sheetName = document.getElementById("sheet").value;
+	
+	const MSG_TITLE = document.getElementById('msgTitle').value.trim();
+	const MSG_WRITE = document.getElementById('msgWrite').value.trim();
+	const msg_type_value = document.querySelector('.msg_type').textContent.trim();
+	const MSG_TYPES = msg_type_value === "SMS" ? 'sms' : msg_type_value === "LMS" ? 'lms' : 'mms';
+	const rejectCheckDefault = document.getElementById('rejectCheckDefault');
+	const rejectNum = document.getElementById('rejectNum');
+
+	//수신번호 체크 시
+	let message = MSG_WRITE;
+	if(rejectCheckDefault.checked && !rejectNum.disabled && rejectNum.value){
+		message += rejectNum.value;
+	}
+	
+	const params = new URLSearchParams();
+	params.append("excelFile", EXCEL_FILE_NAME);
+	params.append("sheetName", sheetName);
+	params.append("title", MSG_TITLE);
+	params.append("message", message);
+	params.append("messageType", MSG_TYPES);
+	params.append("callbackFlag", document.getElementById("callbackSelect").value === "직접입력" ? 1 : 2);
+	params.append("callbackRow", document.getElementById("callbackSelect").value);
+	params.append("tranCallback", document.getElementById("tranCallback").value.trim());
+	params.append("calleeFlag", document.getElementById("calleeSelect").value === "직접입력" ? 1 : 2);
+	params.append("calleeRow", document.getElementById("calleeSelect").value);
+	params.append("tranCallee", document.getElementById("tranCallee").value.trim());
+
+	// 이미지 파일명
+	if(MSG_TYPES === "mms" && IMAGE_FILE_NAME.length > 0){
+		IMAGE_FILE_NAME.forEach((name, idx) => {
+			const key = `imageName${String(idx + 1).padStart(2, '0')}`; // imageName01, imageName02 ...
+			params.append(key, name);
+		});
+	}
+
+    fetch("/api/v1/excelSend/downloadExcel", {
+		method: "POST",
+		body: params
+	})
+	.then(res => {
+		if (!res.ok) throw new Error("엑셀 다운로드 실패");
+		return res.blob(); // ★ JSON이 아니라 Blob으로 받기
+	})
+	.then(blob => {
+		// Blob을 파일로 변환해서 다운로드
+		const url = window.URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = "엑셀발송.xlsx"; // 서버에서 설정한 파일명과 동일
+		document.body.appendChild(a);
+		a.click();
+		a.remove();
+		window.URL.revokeObjectURL(url);
+	})
+	.catch(err => {
+		console.error("엑셀 저장 실패:", err);
+		showDialogCustom('엑셀 저장 중 오류가 발생했습니다.');
+	});
+
+
+}
+
 // 엑셀 발송 상태 체크(프로그레스 바)
 function uploadStatusCheck(jobId) {
 	const interval = setInterval(() => {
@@ -1105,6 +1210,14 @@ function createSendData() {
 	params.append("calleeFlag", document.getElementById("calleeSelect").value === "직접입력" ? 1 : 2);
 	params.append("calleeRow", document.getElementById("calleeSelect").value);
 	params.append("tranCallee", document.getElementById("tranCallee").value.trim());
+
+	// 이미지 파일명
+	if(MSG_TYPES === "mms" && IMAGE_FILE_NAME.length > 0){
+		IMAGE_FILE_NAME.forEach((name, idx) => {
+			const key = `imageName${String(idx + 1).padStart(2, '0')}`; // imageName01, imageName02 ...
+			params.append(key, name);
+		});
+	}
 	
 	// 수신거부 체크 안됐을 때만 다이얼로그 띄우고,
 	// 확인 시 fetch 실행, 취소 시 중단
