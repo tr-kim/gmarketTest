@@ -1,6 +1,7 @@
 package com.web.gmarket.bulk.excel.controller;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,11 +11,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.text.StringEscapeUtils;
-
-
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -92,6 +91,8 @@ public class RestExcelSendController {
 		@RequestParam("calleeRow") String calleeRow, 			// 수신번호 열선택 값
 		@RequestParam("tranCallee") String tranCallee 			// 수신번호 직접입력 값
 	) throws IOException {
+		List<List<String>> newData = new ArrayList<>();
+		Map<String, Object> result = new HashMap<>();
 		
 		// 시트 데이터 읽기
 		Map<String, Object> validation = ExcelSendService.readExcelData(excelFile, sheetName);
@@ -102,10 +103,7 @@ public class RestExcelSendController {
 		@SuppressWarnings("unchecked")
 		List<List<String>> retData = (List<List<String>>) validation.get("retData");
 		
-		// 발신번호, 수신번호, 전송시간 추가 시작
-		List<List<String>> newData = new ArrayList<>();
-		Map<String, Object> result = new HashMap<>();
-		
+		// 헤더
 		List<String> header = new ArrayList<>();
 		header.add("발신번호");
 		header.add("수신번호");
@@ -127,7 +125,6 @@ public class RestExcelSendController {
 			newRow.addAll(row); 	// 원본
 			newData.add(newRow);
 		}
-		// 발신번호, 수신번호, 전송시간 추가 종료
 		
 		result.put("status", "success");
 		result.put("retData", newData);
@@ -138,79 +135,6 @@ public class RestExcelSendController {
 	
 	/**
 	 * 길이, 메시지, 에러내용 추가
-	 * @throws IOException  
-	 
-	@PostMapping("/createSendData")
-	public Map<String, Object> createSendData(
-		@RequestParam("excelFile") String excelFile,
-		@RequestParam("sheetName") String sheetName,
-		@RequestParam("title") String title,
-		@RequestParam("message") String messageTemplate,
-		@RequestParam("messageType") String messageType,
-		@RequestParam("callbackFlag") String callbackFlag, 		// 발신번호 직접입력(1), 열선택(2)
-		@RequestParam("callbackRow") String callbackRow, 		// 발신번호 열선택 값
-		@RequestParam("tranCallback") String tranCallback, 		// 발신번호 직접입력 값
-		@RequestParam("calleeFlag") String calleeFlag, 			// 수신번호 직접입력(1), 열선택(2)
-		@RequestParam("calleeRow") String calleeRow, 			// 수신번호 열선택 값
-		@RequestParam("tranCallee") String tranCallee 			// 수신번호 직접입력 값
-	) throws IOException {
-		
-		// 시트 데이터 읽기
-	    Map<String, Object> validation = ExcelSendService.readExcelData(excelFile, sheetName);
-		if ("error".equals(validation.get("status"))) {
-			return validation; // 실패 시 그대로 리턴
-		}
-		
-	    @SuppressWarnings("unchecked")
-	    List<List<String>> retData = (List<List<String>>) validation.get("retData");
-	    
-	    // 길이, 메시지, 에러내용 추가 시작
-	    List<List<String>> newData = new ArrayList<>();
-	    Map<String, Object> result = new HashMap<>();
-	    
-		List<String> header = new ArrayList<>();
-		header.add("발신번호");
-		header.add("수신번호");
-		header.add("전송시간");
-		header.add("길이");
-		header.add("메시지");
-		header.add("에러내용");
-		// header.addAll(retData.get(0)); // 기존 열번호(ABC) 그대로 유지
-		newData.add(header);
-		
-		// 데이터
-		for (int i = 1; i < retData.size(); i++) {
-			List<String> row = retData.get(i);
-			
-			String callback = ExcelSendService.applyTranNum(callbackFlag, callbackRow, tranCallback, row);
-			String callee   = ExcelSendService.applyTranNum(calleeFlag,   calleeRow,   tranCallee,   row);
-			
-			String message  = ExcelSendService.applyMessage(messageTemplate, row);
-			int messageLen  = ExcelSendService.getSMSLen(message);
-			int titleLen    = (title == null) ? 0 : title.length();
-			String errorMsg = ExcelSendService.checkStrLen(messageLen, titleLen, callee, callback, messageType);
-			String decodedMessage = StringEscapeUtils.unescapeHtml4(message);
-			
-			List<String> newRow = new ArrayList<>();
-			newRow.add(callback); 						// 발신번호
-			newRow.add(callee); 						// 수신번호
-			newRow.add("즉시전송"); 						// 전송시간
-			newRow.add(String.valueOf(messageLen)); 	// 길이
-			newRow.add(decodedMessage); 				// 메시지
-			newRow.add(errorMsg); 						// 에러내용
-			// newRow.addAll(row); 						// 원본
-			newData.add(newRow);
-		}
-		// 길이, 메시지, 에러내용 추가 종료
-		
-		result.put("status", "success");
-		result.put("retData", newData);
-		
-		return result;
-	}
-	*/
-	/**
-	 * 메시지 전송 데이터 생성
 	 * @throws IOException
 	 */
 	@PostMapping("/createSendData")
@@ -229,58 +153,56 @@ public class RestExcelSendController {
 		@RequestParam(value = "imageName01", required = false) String imageName01, // 이미지1
     	@RequestParam(value = "imageName02", required = false) String imageName02  // 이미지2
 	) throws IOException {
+		List<List<String>> newData = new ArrayList<>();
+		Map<String, Object> result = new HashMap<>();
 		
 		// 시트 데이터 읽기
 		Map<String, Object> validation = ExcelSendService.readExcelData(excelFile, sheetName);
 		if ("error".equals(validation.get("status"))) {
 			return validation; // 실패 시 그대로 리턴
 		}
-
+		
 		@SuppressWarnings("unchecked")
 		List<List<String>> retData = (List<List<String>>) validation.get("retData");
-
-		// 결과 데이터
-		List<List<String>> newData = new ArrayList<>();
-		Map<String, Object> result = new HashMap<>();
-
-		// ========== header 세팅 ==========
+		
+		// 헤더
 		List<String> header = new ArrayList<>();
 		header.add("발신번호");
 		header.add("수신번호");
 		header.add("전송시간");
-
+		
 		if ("lms".equalsIgnoreCase(messageType) || "mms".equalsIgnoreCase(messageType)) {
 			header.add("제목");
 		}
-
+		
 		header.add("길이");
 		header.add("메시지");
 		header.add("에러내용");
-
+		
 		if ("mms".equalsIgnoreCase(messageType)) {
 			header.add("이미지1");
 			header.add("이미지2");
 		}
-
+		
+		// header.addAll(retData.get(0)); // 기존 열번호(ABC) 그대로 유지
 		newData.add(header);
-
-		// ========== 데이터 세팅 ==========
+		
+		// 데이터
 		for (int i = 1; i < retData.size(); i++) {
 			List<String> row = retData.get(i);
 
 			String callback = ExcelSendService.applyTranNum(callbackFlag, callbackRow, tranCallback, row);
 			String callee   = ExcelSendService.applyTranNum(calleeFlag,   calleeRow,   tranCallee,   row);
-
 			String message  = ExcelSendService.applyMessage(messageTemplate, row);
 			int messageLen  = ExcelSendService.getSMSLen(message);
 			int titleLen    = (title == null) ? 0 : title.length();
 			String errorMsg = ExcelSendService.checkStrLen(messageLen, titleLen, callee, callback, messageType);
 			String decodedMessage = StringEscapeUtils.unescapeHtml4(message);
-
+			
 			List<String> newRow = new ArrayList<>();
 			newRow.add(callback);                       // 발신번호
 			newRow.add(callee);                         // 수신번호
-			newRow.add("즉시전송");                      // 전송시간
+			newRow.add("즉시전송");                       // 전송시간
 
 			if ("lms".equalsIgnoreCase(messageType) || "mms".equalsIgnoreCase(messageType)) {
 				newRow.add(title);                      // 제목
@@ -294,16 +216,17 @@ public class RestExcelSendController {
 				newRow.add(imageName01 != null ? imageName01 : ""); // 이미지1
 				newRow.add(imageName02 != null ? imageName02 : ""); // 이미지2
 			}
-
+			
+			// newRow.addAll(row); // 원본
 			newData.add(newRow);
 		}
-
+		
 		result.put("status", "success");
 		result.put("retData", newData);
 		return result;
 	}
-
-
+	
+	
 	/**
 	 * 엑셀 저장
 	 * @throws IOException  
@@ -322,110 +245,121 @@ public class RestExcelSendController {
 			@RequestParam("calleeFlag") String calleeFlag,       // 수신번호 직접입력(1), 열선택(2)
 			@RequestParam("calleeRow") String calleeRow,         // 수신번호 열선택 값
 			@RequestParam("tranCallee") String tranCallee,       // 수신번호 직접입력 값
-			@RequestParam(value = "imageName01", required = false) String imageName01,
-			@RequestParam(value = "imageName02", required = false) String imageName02,
+			@RequestParam(value = "imageName01", required = false) String imageName01, // 이미지1
+			@RequestParam(value = "imageName02", required = false) String imageName02, // 이미지2
 			HttpServletResponse response
 	) throws IOException {
-
-		// ========== 데이터 생성 (createSendData 로직 재사용) ==========
+		List<List<String>> newData = new ArrayList<>();
+		
+		// 시트 데이터 읽기
 		Map<String, Object> validation = ExcelSendService.readExcelData(excelFile, sheetName);
 		if ("error".equals(validation.get("status"))) {
 			response.setContentType("text/plain;charset=UTF-8");
 			response.getWriter().write("엑셀 데이터 읽기 실패");
 			return;
 		}
-
+		
 		@SuppressWarnings("unchecked")
 		List<List<String>> retData = (List<List<String>>) validation.get("retData");
-
-		List<List<String>> newData = new ArrayList<>();
-
-		// header
+		
+		// 헤더
 		List<String> header = new ArrayList<>();
 		header.add("발신번호");
 		header.add("수신번호");
 		header.add("전송시간");
-
+		
 		if ("lms".equalsIgnoreCase(messageType) || "mms".equalsIgnoreCase(messageType)) {
 			header.add("제목");
 		}
+		
 		header.add("길이");
 		header.add("메시지");
-		header.add("에러내용");
-
+		// header.add("에러내용");
+		
 		if ("mms".equalsIgnoreCase(messageType)) {
 			header.add("이미지1");
 			header.add("이미지2");
 		}
+		
+		// header.addAll(retData.get(0)); // 기존 열번호(ABC) 그대로 유지
 		newData.add(header);
-
-		// row data
+		
+		// 데이터
 		for (int i = 1; i < retData.size(); i++) {
 			List<String> row = retData.get(i);
-
+			
 			String callback = ExcelSendService.applyTranNum(callbackFlag, callbackRow, tranCallback, row);
 			String callee   = ExcelSendService.applyTranNum(calleeFlag,   calleeRow,   tranCallee,   row);
-
 			String message  = ExcelSendService.applyMessage(messageTemplate, row);
 			int messageLen  = ExcelSendService.getSMSLen(message);
 			int titleLen    = (title == null) ? 0 : title.length();
 			String errorMsg = ExcelSendService.checkStrLen(messageLen, titleLen, callee, callback, messageType);
 			String decodedMessage = StringEscapeUtils.unescapeHtml4(message);
-
+			
 			List<String> newRow = new ArrayList<>();
-			newRow.add(callback);
-			newRow.add(callee);
-			newRow.add("즉시전송");
+			newRow.add(callback);                       // 발신번호
+			newRow.add(callee);                         // 수신번호
+			newRow.add("즉시전송");                       // 전송시간
 
 			if ("lms".equalsIgnoreCase(messageType) || "mms".equalsIgnoreCase(messageType)) {
-				newRow.add(title);
+				newRow.add(title);                      // 제목
 			}
-
-			newRow.add(String.valueOf(messageLen));
-			newRow.add(decodedMessage);
-			newRow.add(errorMsg);
-
+			
+			newRow.add(String.valueOf(messageLen));     // 길이
+			newRow.add(decodedMessage);                 // 메시지
+			// newRow.add(errorMsg);                    // 에러내용
+			
 			if ("mms".equalsIgnoreCase(messageType)) {
-				newRow.add(imageName01 != null ? imageName01 : "");
-				newRow.add(imageName02 != null ? imageName02 : "");
+				newRow.add(imageName01 != null ? imageName01 : ""); // 이미지1
+				newRow.add(imageName02 != null ? imageName02 : ""); // 이미지2
 			}
-
+			
+			// newRow.addAll(row); // 원본
 			newData.add(newRow);
 		}
-
-		// ========== Excel 작성 ==========
-		XSSFWorkbook workbook = new XSSFWorkbook();
-		Sheet sheet = workbook.createSheet("SendData");
-
+		
+		// 메모리 기반
+		// XSSFWorkbook workbook = new XSSFWorkbook();
+		// XSSFSheet sheet = workbook.createSheet("SendData");
+		
+		// 스트리밍 기반 (대용량 처리용)
+		SXSSFWorkbook workbook = new SXSSFWorkbook();
+		SXSSFSheet sheet = workbook.createSheet("SendData");
+		sheet.trackAllColumnsForAutoSizing(); // 열 너비 자동 계산용 트래킹
+		
+		// 데이터 채우기
 		for (int i = 0; i < newData.size(); i++) {
-			Row excelRow = sheet.createRow(i);
+			Row row = sheet.createRow(i);
 			List<String> rowData = newData.get(i);
+			
 			for (int j = 0; j < rowData.size(); j++) {
-				Cell cell = excelRow.createCell(j);
-				cell.setCellValue(rowData.get(j) == null ? "" : rowData.get(j));
+				String cellValue = rowData.get(j) == null ? "" : rowData.get(j);
+				Cell cell = row.createCell(j);
+				cell.setCellValue(cellValue);
+				
+				// getBytes 기반으로 열 너비 계산 (한글 2바이트, 영어/숫자 1바이트)
+				int byteLength = cellValue.getBytes("MS949").length; // MS949: 한글 기준
+				int maxWidth = 255 * 256; // POI 최대 열 너비
+				int currentWidth = sheet.getColumnWidth(j);
+				int newWidth = Math.min(Math.max(currentWidth, byteLength * 256), maxWidth); // 256: 1 글자 폭
+				sheet.setColumnWidth(j, newWidth);
 			}
 		}
-
-		// 자동 열 너비 조정
-		for (int i = 0; i < newData.get(0).size(); i++) {
-			sheet.autoSizeColumn(i); 
-			int width = sheet.getColumnWidth(i);
-			sheet.setColumnWidth(i, width + 1024); 
-		}
-
-
-		// ========== 응답 헤더 세팅 ==========
+		
+		// 응답 헤더 설정
+		String fileName = "엑셀발송.xlsx";
+		String encodedFileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+		
 		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-		response.setHeader("Content-Disposition", "attachment; filename=엑셀발송.xlsx");
-
-
+		response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodedFileName);
+		
 		// 엑셀 파일 출력
 		workbook.write(response.getOutputStream());
 		workbook.close();
+		workbook.dispose(); // SXSSF 임시파일 제거
 	}
-
 	
-
+	
 	/**
 	 * 엑셀 파일 업로드
 	 * @throws IOException 
