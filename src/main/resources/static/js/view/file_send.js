@@ -632,7 +632,7 @@ function uploadStatusCheck(jobId) {
 					
 					const failCnt = PROCESS_TOTAL - PROCESSED;
 					const msgTypeValue = document.querySelector('.msg_type').textContent.trim();
-					const msg = msgTypeValue+" 총 "+ PROCESS_TOTAL +" 건 완료되었습니다. (성공 : "+ PROCESSED +" 건, 실패 : "+ failCnt +" 건)";
+					const msg = `${msgTypeValue} 총 ${PROCESS_TOTA} 건 완료되었습니다. (성공 : ${PROCESSED} 건, 실패 : ${failCnt} 건)`;
 					
 					showDialogCustom(msg, function() {
 						location.reload(true);	// 페이지 새로고침

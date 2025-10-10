@@ -173,44 +173,44 @@ let gmarketTotalTimer;
 let gmarketTotalFlag = 0;
 
 // SMSCLI_TBL_EMG (지마켓) 현황 차트
-const gmarketChart01 = makeChartTwo(gmarketTableName[0] + ' (G마켓)', document.getElementById('gmarket_chart_01').getContext('2d'));
+const gmarketChart01 = makeChartTwo(`${gmarketTableName[0]} (G마켓)`, document.getElementById('gmarket_chart_01').getContext('2d'));
 let gmarketTimer01;
 let gmarketFlag01 = 0;
 
 // SMSCLI_TBL_BATCH (옥션) 현황 차트
-const auctionChart01 = makeChartTwo(auctionTableName[4] + ' (옥션)', document.getElementById('auction_chart_01').getContext('2d'));
+const auctionChart01 = makeChartTwo(`${auctionTableName[4]}  (옥션)`, document.getElementById('auction_chart_01').getContext('2d'));
 let auctionTimer01;
 let auctionFlag01 = 0;
 
 // SMSCLI_TBL_ETC (지마켓) 현황 차트
-const gmarketChart02 = makeChartTwo(gmarketTableName[1] + ' (G마켓)', document.getElementById('gmarket_chart_02').getContext('2d'));
+const gmarketChart02 = makeChartTwo(`${gmarketTableName[1]} (G마켓)`, document.getElementById('gmarket_chart_02').getContext('2d'));
 let gmarketTimer02;
 let gmarketFlag02 = 0;
 
 // SMSCLI_TBL_ESCROW (옥션) 현황 차트
-const auctionChart02 = makeChartTwo(auctionTableName[1] + ' (옥션)', document.getElementById('auction_chart_02').getContext('2d'));
+const auctionChart02 = makeChartTwo(`${auctionTableName[1]} (옥션)`, document.getElementById('auction_chart_02').getContext('2d'));
 let auctionTimer02;
 let auctionFlag02 = 0;
 
 
 // SMSCLI_TBL_ORDER (지마켓) 현황 차트
-const gmarketChart03 = makeChartTwo(gmarketTableName[2] + ' (G마켓)', document.getElementById('gmarket_chart_03').getContext('2d'));
+const gmarketChart03 = makeChartTwo(`${gmarketTableName[2]} (G마켓)`, document.getElementById('gmarket_chart_03').getContext('2d'));
 let gmarketTimer03;
 let gmarketFlag03 = 0;
 
 
 // SMSCLI_TBL_MOTORS (옥션) 현황 차트
-const auctionChart03 = makeChartTwo(auctionTableName[5] + ' (옥션)', document.getElementById('auction_chart_03').getContext('2d'));
+const auctionChart03 = makeChartTwo(`${auctionTableName[5]} (옥션)`, document.getElementById('auction_chart_03').getContext('2d'));
 let auctionTimer03;
 let auctionFlag03 = 0;
 
 // SMSCLI_TBL_TRAN (지마켓) 현황 차트
-const gmarketChart04 = makeChartTwo(gmarketTableName[3] + ' (G마켓)', document.getElementById('gmarket_chart_04').getContext('2d'));
+const gmarketChart04 = makeChartTwo(`${gmarketTableName[3]} (G마켓)`, document.getElementById('gmarket_chart_04').getContext('2d'));
 let gmarketTimer04;
 let gmarketFlag04 = 0;
 
 // SMSCLI_TBL_API (옥션) 현황 차트
-const auctionChart04 = makeChartTwo(auctionTableName[3] + ' (옥션)', document.getElementById('auction_chart_04').getContext('2d'));
+const auctionChart04 = makeChartTwo(`${auctionTableName[3]} (옥션)`, document.getElementById('auction_chart_04').getContext('2d'));
 let auctionTimer04;
 let auctionFlag04 = 0;
 

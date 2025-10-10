@@ -313,7 +313,7 @@ $(function() {
 			
 			tableValue = (tableValue == "선택하세요" || tableValue === undefined) ? "" : tableValue;
 			
-			const companyName = companyValue == 0 ? "(옥션 " + tableValue + " 테이블)" : "(G마켓 " + tableValue + " 테이블)"; 
+			const companyName = companyValue == 0 ? `(옥션 ${tableValue} 테이블)` : `(G마켓 ${tableValue} 테이블)`; 
 			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다. ${companyName}`);
 			
 		}

@@ -671,7 +671,7 @@ function sendMessage(){
 			const result = data.result;
 			
 			if(code == 1000) {
-				const msg = msgType.toUpperCase() + " 총 " + result + "건을 수정하였습니다.";
+				const msg = `${msgType.toUpperCase()} 총 ${result} 건을 수정하였습니다.`;
 				showDialogCustom(msg, function() {
 					location.reload(true);	// 페이지 새로고침
 				});
