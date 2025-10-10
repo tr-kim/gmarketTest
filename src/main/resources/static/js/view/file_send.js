@@ -489,7 +489,7 @@ function sendMessage(){
 		const msgTitle = document.getElementById("msgTitle").value.trim();
 		
 		// 메시지 유형
-		const msgType = msgTypeValue === "SMS" ? 'sms' : msgTypeValue === "LMS" ? 'lms' : 'mms';
+		const msgType = msgTypeValue.toLowerCase();
 		
 		// 메시지 내용
 		const msgWrite = document.getElementById('msgWrite').value.trim();

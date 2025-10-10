@@ -70,14 +70,15 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 			int bulkCnt = dto.isTranCheckDefault() ? dto.getTranRangeEnd() : maxRows; // 대량 발송 갯수
 			String bMsgKey = String.format("%s%s", Long.toString(System.currentTimeMillis()).substring(0, 10), dto.getUserId()); // 대량 발송 키 생성
+			String msgType = dto.getMsgType().toLowerCase();
 
 			// MMS일 경우 이미지 파일 업로드
-			if(ConstantsUtils.MMS.equals(dto.getMsgType())) {
+			if(ConstantsUtils.MMS.equals(msgType)) {
 				FTPClient ftpClient = FtpUtils.createConnection(dto.getCompanyCode(), ConstantsUtils.ACTIVE);
 				
 				FtpDto ftpDto = FtpDto.builder()
 						.companyCode(dto.getCompanyCode())
-						.msgType(dto.getMsgType())
+						.msgType(msgType)
 						.imageName01(dto.getImageName01())
 						.imageName02(dto.getImageName02())
 						.build();
@@ -100,7 +101,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 					.succCnt(0)
 					.failCnt(0)
 					.status(1)
-					.svcType(String.format("%s_%s", "EXCEL", dto.getMsgType().toUpperCase()))
+					.svcType(String.format("%s_%s", "EXCEL", msgType.toUpperCase()))
 					.sendInfo(dto.getSendInfo())
 					.reqTime(reqTime)
 					.timeType(dto.getTimeType())
@@ -116,7 +117,6 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 				int succCnt = 0;
 				int failCnt = 0;
 				int sendCnt = 1;
-				String msgType = dto.getMsgType();
 				
 				int k = dto.isTranCheckDefault() ? dto.getTranRangeStart() - 1 : 0;
 
@@ -145,7 +145,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 						commonSendDto.setImagePath02(dto.getImagePath02());
 						commonSendDto.setTranTitle(cloneSubject.get(k).toString());
 						
-					} else if(ConstantsUtils.MMS.equals(msgType)) commonSendDto.setTranTitle(cloneSubject.get(k).toString());	// LMS인 경우 제목 저장
+					} else if(ConstantsUtils.LMS.equals(msgType)) commonSendDto.setTranTitle(cloneSubject.get(k).toString());	// LMS인 경우 제목 저장
 
 					int flagCnt = 0;
 					switch (msgType) {

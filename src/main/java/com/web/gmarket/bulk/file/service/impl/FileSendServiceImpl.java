@@ -50,7 +50,7 @@ public class FileSendServiceImpl implements FileSendService {
 		String content = fileSendDto.isRejectCheckDefault() ? String.format("%s%s", fileSendDto.getMsgWrite(), fileSendDto.getRejectNum()) : fileSendDto.getMsgWrite();
 		String reqTime = fileSendDto.getTimeType() == 0 ? "CONVERT(char(20), GETDATE(), 120)" : LocalDateTime.parse(fileSendDto.getSendTime(), orgFormatter).format(formatter);
 		String userId = fileSendDto.getUserId();
-		String msgType = fileSendDto.getMsgType();
+		String msgType = fileSendDto.getMsgType().toLowerCase();
 		
 		// MMS일 경우 이미지 파일 업로드
 		if(ConstantsUtils.MMS.equals(msgType)) {
@@ -123,7 +123,7 @@ public class FileSendServiceImpl implements FileSendService {
 				commonSendDto.setImagePath02(fileSendDto.getImagePath02());
 				commonSendDto.setTranTitle(subject);
 				
-			} else if(ConstantsUtils.MMS.equals(msgType)) commonSendDto.setTranTitle(subject);	// LMS인 경우 제목 저장
+			} else if(ConstantsUtils.LMS.equals(msgType)) commonSendDto.setTranTitle(subject);	// LMS인 경우 제목 저장
 			
 			// 콤마 기준 split
 			String[] numbers = sb.toString().split(",");
@@ -149,7 +149,7 @@ public class FileSendServiceImpl implements FileSendService {
 				++sendCnt;
 				
 				int progress = (int) (((float) sendCnt / totalCnt) * 100);
-				uploadStatus.put(jobId, new UploadProgress(progress, sendCnt, totalCnt, String.format("%d/%d 건 처리 완료", sendCnt, totalCnt)));
+				uploadStatus.put(jobId, new UploadProgress(progress, succCnt, totalCnt, String.format("%d/%d 건 처리 완료", succCnt, totalCnt)));
 			}
 		}
 	}

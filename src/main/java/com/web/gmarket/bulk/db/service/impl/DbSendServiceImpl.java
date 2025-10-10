@@ -26,7 +26,7 @@ public class DbSendServiceImpl implements DbSendService {
 	
 	// 메시지 타입별 테이블명 치환
 	private String resolveTableName(String messageType) {
-		switch (messageType) {
+		switch (messageType.toLowerCase()) {
 			case ConstantsUtils.SMS: return ConstantsUtils.SMSCLI_TBL_LARGE;
 			case ConstantsUtils.LMS: return ConstantsUtils.LMSCLI_TBL_LARGE;
 			case ConstantsUtils.MMS: return ConstantsUtils.MMSCLI_TBL_LARGE;
@@ -70,19 +70,20 @@ public class DbSendServiceImpl implements DbSendService {
 	public int insertDbSend(DbSendDto dbSendDto) throws Exception {
 		int result = 0;
 		
+		String msgType = dbSendDto.getMsgType().toLowerCase();
 		String dbName = DBUtils.getDBName(dbSendDto.getCompanyCode());
-		dbSendDto.setTableName(resolveTableName(dbSendDto.getMsgType()));
+		dbSendDto.setTableName(resolveTableName(msgType));
 		
 		// DB 발송 전 요청번호 삭제
 		commonService.getDbSendMapper(dbName).deleteDbSend(dbSendDto);
 		
 		// MMS일 경우 이미지 파일 업로드
-		if(ConstantsUtils.MMS.equals(dbSendDto.getMsgType())) {
+		if(ConstantsUtils.MMS.equals(msgType)) {
 			FTPClient ftpClient = FtpUtils.createConnection(dbSendDto.getCompanyCode(), ConstantsUtils.ACTIVE);
 			
 			FtpDto ftpDto = FtpDto.builder()
 					.companyCode(dbSendDto.getCompanyCode())
-					.msgType(dbSendDto.getMsgType())
+					.msgType(msgType)
 					.imageName01(dbSendDto.getImageName01())
 					.imageName02(dbSendDto.getImageName02())
 					.build();
@@ -103,7 +104,6 @@ public class DbSendServiceImpl implements DbSendService {
 		String content = dbSendDto.isRejectCheckDefault() ? String.format("%s%s", dbSendDto.getMsgWrite(), dbSendDto.getRejectNum()) : dbSendDto.getMsgWrite();
 		String reqTime = dbSendDto.getTimeType() == 0 ? "CONVERT(char(20), GETDATE(), 120)" : LocalDateTime.parse(dbSendDto.getSendTime(), orgFormatter).format(formatter);
 		String userId = dbSendDto.getUserId();
-		String msgType = dbSendDto.getMsgType();
 		
 		// 데이터 설정
 		BroadcastMsgDto broadcastMsgDto = BroadcastMsgDto.builder()

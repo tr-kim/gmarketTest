@@ -48,7 +48,7 @@ public class SingleSendServiceImpl implements SingleSendService {
 		String content = singleSendDto.isRejectCheckDefault() ? String.format("%s%s", singleSendDto.getMsgWrite(), singleSendDto.getRejectNum()) : singleSendDto.getMsgWrite();
 		String reqTime = singleSendDto.getTimeType() == 0 ? "CONVERT(char(20), GETDATE(), 120)" : LocalDateTime.parse(singleSendDto.getSendTime(), orgFormatter).format(formatter);
 		String userId = singleSendDto.getUserId();
-		String msgType = singleSendDto.getMsgType();
+		String msgType = singleSendDto.getMsgType().toLowerCase();
 		
 		// MMS일 경우 이미지 파일 업로드
 		if(ConstantsUtils.MMS.equals(msgType)) {
@@ -110,7 +110,7 @@ public class SingleSendServiceImpl implements SingleSendService {
 			commonSendDto.setImagePath02(singleSendDto.getImagePath02());
 			commonSendDto.setTranTitle(subject);
 			
-		} else if(ConstantsUtils.MMS.equals(msgType)) commonSendDto.setTranTitle(subject);	// LMS인 경우 제목 저장		
+		} else if(ConstantsUtils.LMS.equals(msgType)) commonSendDto.setTranTitle(subject);	// LMS인 경우 제목 저장		
 		
 		int flagCnt = 0;
 		switch (msgType) {
