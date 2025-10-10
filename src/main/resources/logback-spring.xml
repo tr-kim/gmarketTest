@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+	
+	<!-- application.yml의 값 불러오기 -->
+    <springProperty scope="context" name="LOG_PATH" source="logging.file.path"/>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%boldMagenta(%d{MM-dd HH:mm:ss}) [%boldYellow(%-5level)] %cyan(%logger{5}.%M) - %msg %n</pattern>
@@ -7,13 +11,13 @@
     </appender>
     
     <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>C:/gmarket/gmarket.log</file>
+        <file>${LOG_PATH}/gmarket.log</file>
         <ImmediateFlush>true</ImmediateFlush>
 		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-			<fileNamePattern>C:/gmarket/backup/gmarket_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<fileNamePattern>${LOG_PATH}/backup/gmarket_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<maxHistory>90</maxHistory>
-			<maxFileSize>50MB</maxFileSize>
-        	<totalSizeCap>5GB</totalSizeCap>
+			<maxFileSize>10MB</maxFileSize>
+        	<totalSizeCap>1GB</totalSizeCap>
 		</rollingPolicy>
 		<encoder>
 	       <pattern>%boldMagenta(%d{MM-dd HH:mm:ss}) [%boldYellow(%-5level)] %cyan(%logger{5}.%M) - %msg %n</pattern>
@@ -21,13 +25,13 @@
 	</appender>
 	
 	<appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>C:/gmarket/error/error.log</file>
+        <file>${LOG_PATH}/error/error.log</file>
         <ImmediateFlush>true</ImmediateFlush>
 		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-			<fileNamePattern>C:/gmarket/backup/error/error_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<fileNamePattern>${LOG_PATH}/backup/error/error_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<maxHistory>90</maxHistory>
-			<maxFileSize>50MB</maxFileSize>
-        	<totalSizeCap>5GB</totalSizeCap>
+			<maxFileSize>10MB</maxFileSize>
+        	<totalSizeCap>1GB</totalSizeCap>
 		</rollingPolicy>
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 	        <level>ERROR</level>

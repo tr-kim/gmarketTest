@@ -43,9 +43,11 @@ spring:
 logging:
   level:
     root: info
+  file:
+    path: C:/gmarket
 
-jwt:
-  secret: HfjyZ8xMqo4tIiF6+gA0s37DEmG0ZxAhWdZUhqKsSg4=
+#jwt:
+  #secret: HfjyZ8xMqo4tIiF6+gA0s37DEmG0ZxAhWdZUhqKsSg4=
 
 active:
   file:-path: C:\\ExcelWebSetup.exe
