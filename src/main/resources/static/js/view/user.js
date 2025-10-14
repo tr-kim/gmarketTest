@@ -14,14 +14,17 @@ $(function() {
 	let companyValue;
 
 	if (userGrade == 0) {
-		companyArray = [{ Code: 0, Name: '옥션', }, { Code: 1, Name: '지마켓' }];
+		companyArray = [{ Code: 0, Name: '옥션', }, { Code: 1, Name: 'G마켓' }, { Code: 2, Name: '스마일캐시' }];
 		companyValue = 1;
 	} else if (userGrade == 1 && companyCode == 0) {
 		companyArray = [{ Code: 0, Name: '옥션' }];
 		companyValue = 0;
 	} else if (userGrade == 1 && companyCode == 1) {
-		companyArray = [{ Code: 1, Name: '지마켓' }];
+		companyArray = [{ Code: 1, Name: 'G마켓' }];
 		companyValue = 1;
+	} else if (userGrade == 1 && companyCode == 2) {
+		companyArray = [{ Code: 2, Name: '스마일캐시' }];
+		companyValue = 2;
 	}
 
 	//구분
@@ -188,7 +191,7 @@ $(function() {
 				customizeText: function(cellInfo) {
 					switch (cellInfo.value) {
 						case 0: return "옥션";
-						case 1: return "지마켓";
+						case 1: return "G마켓";
 						case 2: return "스마일캐시";
 						default: return "-";
 					}
@@ -447,7 +450,8 @@ $(function() {
 		},
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
-			$("#totalCount").text(`총 ${totalCount}건`);
+			const today = new Date().toISOString().replace(/\D/g, '').slice(0, 14);
+			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다. (검색시간 : ${today})`);
 		},
 		onOptionChanged: function(e) {
 	   		if (e.fullName === "paging.pageSize") {

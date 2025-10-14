@@ -96,7 +96,7 @@ public class RestExcelSendController {
 		
 		// 시트 데이터 읽기
 		Map<String, Object> validation = ExcelSendService.readExcelData(excelFile, sheetName);
-		if ("error".equals(validation.get("status"))) {
+		if (ConstantsUtils.ERROR.equals(validation.get(ConstantsUtils.STATUS))) {
 			return validation; // 실패 시 그대로 리턴
 		}
 		
@@ -126,7 +126,7 @@ public class RestExcelSendController {
 			newData.add(newRow);
 		}
 		
-		result.put("status", "success");
+		result.put(ConstantsUtils.STATUS, ConstantsUtils.SUCCESS);
 		result.put("retData", newData);
 		
 		return result;
@@ -158,7 +158,7 @@ public class RestExcelSendController {
 		
 		// 시트 데이터 읽기
 		Map<String, Object> validation = ExcelSendService.readExcelData(excelFile, sheetName);
-		if ("error".equals(validation.get("status"))) {
+		if (ConstantsUtils.ERROR.equals(validation.get(ConstantsUtils.STATUS))) {
 			return validation; // 실패 시 그대로 리턴
 		}
 		
@@ -171,7 +171,7 @@ public class RestExcelSendController {
 		header.add("수신번호");
 		header.add("전송시간");
 		
-		if ("lms".equalsIgnoreCase(messageType) || "mms".equalsIgnoreCase(messageType)) {
+		if (ConstantsUtils.LMS.equalsIgnoreCase(messageType) || ConstantsUtils.MMS.equalsIgnoreCase(messageType)) {
 			header.add("제목");
 		}
 		
@@ -179,7 +179,7 @@ public class RestExcelSendController {
 		header.add("메시지");
 		header.add("에러내용");
 		
-		if ("mms".equalsIgnoreCase(messageType)) {
+		if (ConstantsUtils.MMS.equalsIgnoreCase(messageType)) {
 			header.add("이미지1");
 			header.add("이미지2");
 		}
@@ -204,7 +204,7 @@ public class RestExcelSendController {
 			newRow.add(callee);                         // 수신번호
 			newRow.add("즉시전송");                       // 전송시간
 
-			if ("lms".equalsIgnoreCase(messageType) || "mms".equalsIgnoreCase(messageType)) {
+			if (ConstantsUtils.LMS.equalsIgnoreCase(messageType) || ConstantsUtils.MMS.equalsIgnoreCase(messageType)) {
 				newRow.add(title);                      // 제목
 			}
 
@@ -212,7 +212,7 @@ public class RestExcelSendController {
 			newRow.add(decodedMessage);                 // 메시지
 			newRow.add(errorMsg);                       // 에러내용
 
-			if ("mms".equalsIgnoreCase(messageType)) {
+			if (ConstantsUtils.MMS.equalsIgnoreCase(messageType)) {
 				newRow.add(imageName01 != null ? imageName01 : ""); // 이미지1
 				newRow.add(imageName02 != null ? imageName02 : ""); // 이미지2
 			}
@@ -221,7 +221,7 @@ public class RestExcelSendController {
 			newData.add(newRow);
 		}
 		
-		result.put("status", "success");
+		result.put(ConstantsUtils.STATUS, ConstantsUtils.SUCCESS);
 		result.put("retData", newData);
 		return result;
 	}
@@ -253,7 +253,7 @@ public class RestExcelSendController {
 		
 		// 시트 데이터 읽기
 		Map<String, Object> validation = ExcelSendService.readExcelData(excelFile, sheetName);
-		if ("error".equals(validation.get("status"))) {
+		if (ConstantsUtils.ERROR.equals(validation.get(ConstantsUtils.STATUS))) {
 			response.setContentType("text/plain;charset=UTF-8");
 			response.getWriter().write("엑셀 데이터 읽기 실패");
 			return;
@@ -268,7 +268,7 @@ public class RestExcelSendController {
 		header.add("수신번호");
 		header.add("전송시간");
 		
-		if ("lms".equalsIgnoreCase(messageType) || "mms".equalsIgnoreCase(messageType)) {
+		if (ConstantsUtils.LMS.equalsIgnoreCase(messageType) || ConstantsUtils.MMS.equalsIgnoreCase(messageType)) {
 			header.add("제목");
 		}
 		
@@ -276,7 +276,7 @@ public class RestExcelSendController {
 		header.add("메시지");
 		// header.add("에러내용");
 		
-		if ("mms".equalsIgnoreCase(messageType)) {
+		if (ConstantsUtils.MMS.equalsIgnoreCase(messageType)) {
 			header.add("이미지1");
 			header.add("이미지2");
 		}
@@ -301,7 +301,7 @@ public class RestExcelSendController {
 			newRow.add(callee);                         // 수신번호
 			newRow.add("즉시전송");                       // 전송시간
 
-			if ("lms".equalsIgnoreCase(messageType) || "mms".equalsIgnoreCase(messageType)) {
+			if (ConstantsUtils.LMS.equalsIgnoreCase(messageType) || ConstantsUtils.MMS.equalsIgnoreCase(messageType)) {
 				newRow.add(title);                      // 제목
 			}
 			
@@ -309,7 +309,7 @@ public class RestExcelSendController {
 			newRow.add(decodedMessage);                 // 메시지
 			// newRow.add(errorMsg);                    // 에러내용
 			
-			if ("mms".equalsIgnoreCase(messageType)) {
+			if (ConstantsUtils.MMS.equalsIgnoreCase(messageType)) {
 				newRow.add(imageName01 != null ? imageName01 : ""); // 이미지1
 				newRow.add(imageName02 != null ? imageName02 : ""); // 이미지2
 			}

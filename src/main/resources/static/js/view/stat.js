@@ -45,6 +45,10 @@ $(function() {
 			{ code: 62, name: 'GMKT_LMSCLI_TBL_LARGE' },
 			{ code: 63, name: 'GMKT_MMSCLI_TBL_LARGE' },
 			{ code: 110, name: 'SFC_SMSCLI_TBL' }
+		],
+		2: [
+			{ code: -1, name: '선택하세요' },
+			{ code: 0, name: '전체' },
 		]
 	};
 	
@@ -223,7 +227,11 @@ $(function() {
 	} 
 	
 	if((userGrade == 0 || (userGrade == 1 && companyCode == 1))) {
-		companyArray.push({ code: 1, name: '지마켓' });
+		companyArray.push({ code: 1, name: 'G마켓' });
+	}
+	
+	if((userGrade == 0 || (userGrade == 1 && companyCode == 2))) {
+		companyArray.push({ code: 2, name: '스마일캐시' });
 	}
 	
 	//대분류

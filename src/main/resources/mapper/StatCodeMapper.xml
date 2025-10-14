@@ -11,9 +11,7 @@
 	    SELECT COUNT(*) 
 	    FROM T_TCODE_LIST 
 	    WHERE DEL_FLAG='N'
-	  	<if test="companyCode == 0 or companyCode == 1">
 	  	  AND COMPANY_CODE = #{companyCode}
-	  	</if>
 	  	<if test="tableCode > 0">
 	  	  AND TABLE_CODE = #{tableCode}
 	  	</if>
@@ -26,9 +24,7 @@
 	    SELECT TABLE_CODE, TABLE_NAME, COMPANY_CODE, USE_YN, DEL_FLAG 
 	    FROM T_TCODE_LIST
 	    WHERE DEL_FLAG = 'N'
-	    <if test="companyCode == 0 or companyCode == 1">
 	  	  AND COMPANY_CODE = #{companyCode}
-	  	</if>
 	  	<if test="tableCode > 0">
 	  	  AND TABLE_CODE = #{tableCode}
 	  	</if>

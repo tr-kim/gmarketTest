@@ -117,6 +117,7 @@ public class UserServiceImpl implements UserService {
 		for (int i = 0; i < raw.length; i++) {
 			result.append(Integer.toHexString(raw[i] & 0xff));
 		}
+		
 		return result.toString();
 	}
 

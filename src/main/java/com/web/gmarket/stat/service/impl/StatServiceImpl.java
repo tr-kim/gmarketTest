@@ -46,6 +46,11 @@ public class StatServiceImpl implements StatService {
 
 	@Override
 	public List<StatDto> selectStatList(StatDto statDto) {
+		
+		// Controller 단에서 목록 조회랑 갯수 구하는 부분이 바뀌면 이 부분도 바뀌어야 한다.
+		// 날짜 포맷 변환
+		statDto.setStartDate(dateFormatConvert(statDto.getTimeType(), statDto.getStartDate()));
+		statDto.setEndDate(dateFormatConvert(statDto.getTimeType(), statDto.getEndDate()));
 
 		switch (statDto.getCompanyCode()) {
 			case ConstantsUtils.AUCTION_CODE:
@@ -65,26 +70,21 @@ public class StatServiceImpl implements StatService {
 	// 옥션 목록 조회
 	public List<StatDto> selectAuctionStatList(StatDto statDto) {
 
-		// 날짜 포맷 변환
-		statDto.setStartDate(dateFormatConvert(statDto.getTimeType(), statDto.getStartDate()));
-		statDto.setEndDate(dateFormatConvert(statDto.getTimeType(), statDto.getEndDate()));
-
 		// 코드 목록 조회
 		List<StatCodeDto> codeList = statCodeService.selectStatCodeList(statDto.getCompanyCode(), statDto.getTableCode());
 		
 		// 코드 목록 저장
-		List<Integer> list = codeList.stream().map(StatCodeDto::getTableCode).collect(Collectors.toList());
-		statDto.setTableCodeList(list);
+		statDto.setTableCodeList(codeList.stream().map(StatCodeDto::getTableCode).collect(Collectors.toList()));
 		
 		// 테이블 이름 저장
-		List<StatDto> selectAuctionStatList = commonService.getStatMapper(ConstantsUtils.DB_AUCTION).selectAuctionStatList(statDto);
-		Map<Integer, String> codeMap = codeList.stream().collect(Collectors.toMap(StatCodeDto::getTableCode, StatCodeDto::getTableName));
+		List<StatDto> list = commonService.getStatMapper(ConstantsUtils.DB_AUCTION).selectAuctionStatList(statDto);
+		Map<Integer, String> codeMap = codeList.stream().collect(Collectors.toMap(StatCodeDto::getTableCode, StatCodeDto::getTableName, (v1, v2) -> v1));
 		
-		for(StatDto dto : selectAuctionStatList) {
+		for(StatDto dto : list) {
 			dto.setTableName(StringUtils.defaultIfBlank(codeMap.get(dto.getTableCode()), "-"));
 		}
 
-		return selectAuctionStatList;
+		return list;
 	}
 
 	// 지마켓 목록 갯수
@@ -94,10 +94,6 @@ public class StatServiceImpl implements StatService {
 
 	// 지마켓 목록 조회
 	public List<StatDto> selectGmarketStatList(StatDto statDto) {
-		// 날짜 포맷 변환
-		statDto.setStartDate(dateFormatConvert(statDto.getTimeType(), statDto.getStartDate()));
-		statDto.setEndDate(dateFormatConvert(statDto.getTimeType(), statDto.getEndDate()));
-
 		return commonService.getStatMapper(ConstantsUtils.DB_GMARKET).selectGmarketStatList(statDto);
 	}
 
@@ -111,19 +107,15 @@ public class StatServiceImpl implements StatService {
 				
 				return dateTime.format(DateTimeFormatter.ofPattern("yyyyMMddHH"));
 			case 2: // 일
-				LocalDate localDate = LocalDate.parse(date);
-				
-				return localDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+				return LocalDate.parse(date).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			case 3: // 월
 				LocalDate obj = LocalDate.parse(date);
-				YearMonth ym = YearMonth.from(obj);
 				
-				return ym.format(DateTimeFormatter.ofPattern("yyyyMM"));
+				return YearMonth.from(obj).format(DateTimeFormatter.ofPattern("yyyyMM"));
 			case 4: // 연도
 				LocalDate dateObj = LocalDate.parse(date);
-				Year year = Year.from(dateObj);
 				
-				return year.format(DateTimeFormatter.ofPattern("yyyy"));
+				return Year.from(dateObj).format(DateTimeFormatter.ofPattern("yyyy"));
 			default:
 				// 현재 시간
 				Date today = new Date();

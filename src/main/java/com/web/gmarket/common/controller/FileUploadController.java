@@ -36,11 +36,10 @@ public class FileUploadController {
 		
 		try {
 			if (files == null || files.isEmpty()) {
-				response.put("status", "fail");
-				response.put("message", "업로드할 파일이 없습니다.");
-				return ResponseEntity
-						.status(HttpStatus.BAD_REQUEST)
-						.body(response);
+				response.put(ConstantsUtils.STATUS, ConstantsUtils.FAIL);
+				response.put(ConstantsUtils.MESSAGE, "업로드할 파일이 없습니다.");
+				
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 			}
 			
 			// 오늘 날짜
@@ -87,20 +86,18 @@ public class FileUploadController {
 				}
 			}
 			
-			response.put("status", "success");
-			response.put("message", "업로드 성공");
-			return ResponseEntity
-					.status(HttpStatus.OK)
-					.body(response);
+			response.put(ConstantsUtils.STATUS, ConstantsUtils.SUCCESS);
+			response.put(ConstantsUtils.MESSAGE, "업로드 성공");
+			
+			return ResponseEntity .status(HttpStatus.OK).body(response);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			
-			response.put("status", "error");
-			response.put("message", "업로드 실패: " + e.getMessage());
-			return ResponseEntity
-					.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(response);
+			response.put(ConstantsUtils.STATUS, ConstantsUtils.ERROR);
+			response.put(ConstantsUtils.MESSAGE, "업로드 실패: " + e.getMessage());
+			
+			return ResponseEntity .status(HttpStatus.INTERNAL_SERVER_ERROR) .body(response);
 		}
 	}
 	
