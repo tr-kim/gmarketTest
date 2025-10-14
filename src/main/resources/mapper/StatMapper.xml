@@ -34,10 +34,12 @@
 				WHERE TABLE_CODE = #{tableCode}
 					</when>
 					<otherwise>
+					<if test="tableCodeList != null and tableCodeList.size() > 0">
 				WHERE TABLE_CODE IN
-					<foreach collection="tableCodeList" item="code" separator="," open="(" close=")">
-			 		#{code}
-					</foreach>
+						<foreach collection="tableCodeList" item="code" separator="," open="(" close=")">
+					#{code}
+						</foreach>
+					</if>
 				</otherwise>
 				</choose>
 			) STAT_A WHERE <![CDATA[ RESULT_DATE >= #{startDate} AND RESULT_DATE <= #{endDate} ]]>
@@ -77,10 +79,12 @@
 			WHERE TABLE_CODE = #{tableCode}
 				</when>
 				<otherwise>
+					<if test="tableCodeList != null and tableCodeList.size() > 0">
 			WHERE TABLE_CODE IN
-					<foreach collection="tableCodeList" item="code" separator="," open="(" close=")">
-			 		#{code}
-					</foreach>
+						<foreach collection="tableCodeList" item="code" separator="," open="(" close=")">
+				 #{code}
+						</foreach>
+					</if>
 				</otherwise>
 			</choose>
 	  	) T

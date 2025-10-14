@@ -55,5 +55,8 @@
 		<div id="histGrid"></div>
 	</div>
 	
+	<script th:inline="javascript">
+		const codeList = /*[[${list}]]*/ [];
+	</script>
 	<script th:src="@{/js/view/hist.js}"></script>
 </html>

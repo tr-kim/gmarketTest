@@ -70,8 +70,9 @@
 	</div>
 	
 	<script th:inline="javascript">
-		let userGrade = /*[[${#authentication.principal.userGrade}]]*/ -1;
-		let companyCode = /*[[${#authentication.principal.companyCode}]]*/ -1;
+		const userGrade = /*[[${#authentication.principal.userGrade}]]*/ -1;
+		const companyCode = /*[[${#authentication.principal.companyCode}]]*/ -1;
+		const codeList = /*[[${list}]]*/ [];
 	</script>
 	<script th:src="@{/js/view/stat.js}"></script>
 </html>

@@ -3,54 +3,40 @@ let companyInstance;
 let companyValue;
 let tableInstance;
 let tableValue;
-const period = 3000;	// 최대 검색 기간 
+const period = 3000;	// 최대 검색 기간
 
 $(function() {
-
+	
 	const tableArray = {
 		0: [
 			{ code: -1, name: '선택하세요' },
-			{ code: 0, name: '전체' },
-			{ code: 1, name: 'SMSCLI_TBL_CHARGED' },
-			{ code: 2, name: 'SMSCLI_TBL_ESCROW' },
-			{ code: 3, name: 'SMSCLI_TBL_OUTBID' },
-			{ code: 4, name: 'SMSCLI_TBL_API' },
-			{ code: 5, name: 'SMSCLI_TBL_BATCH' },
-			{ code: 6, name: 'SMSCLI_TBL_MOTORS' },
-			{ code: 7, name: 'SMSCLI_TBL_PUMBL' },
-			{ code: 8, name: 'SMSCLI_TBL_EVENT' },
-			{ code: 9, name: 'SMSCLI_TBL_LARGE' },
-			{ code: 21, name: 'LMSCLI_TBL_EVENT' },
-			{ code: 22, name: 'LMSCLI_TBL_LARGE' },
-			{ code: 41, name: 'MMSCLI_TBL_EVENT' },
-			{ code: 42, name: 'MMSCLI_TBL_LARGE' },
-			{ code: 71, name: 'IAC_SMSCLI_TBL_LARGE' },
-			{ code: 72, name: 'IAC_LMSCLI_TBL_LARGE' },
-			{ code: 73, name: 'IAC_MMSCLI_TBL_LARGE' }
+			{ code: 0, name: '전체' }
 		],
 		1: [
 			{ code: -1, name: '선택하세요' },
-			{ code: 0, name: '전체' },
-			{ code: 11, name: 'SMSCLI_TBL_EMG' },
-			{ code: 12, name: 'SMSCLI_TBL_ETC' },
-			{ code: 13, name: 'SMSCLI_TBL_ORDER' },
-			{ code: 14, name: 'SMSCLI_TBL_TRAN' },
-			{ code: 15, name: 'SMSCLI_TBL_EVENT' },
-			{ code: 16, name: 'SMSCLI_TBL_LARGE' },
-			{ code: 31, name: 'LMSCLI_TBL_EVENT' },
-			{ code: 32, name: 'LMSCLI_TBL_LARGE' },
-			{ code: 51, name: 'MMSCLI_TBL_EVENT' },
-			{ code: 52, name: 'MMSCLI_TBL_LARGE' },
-			{ code: 61, name: 'GMKT_SMSCLI_TBL_LARGE' },
-			{ code: 62, name: 'GMKT_LMSCLI_TBL_LARGE' },
-			{ code: 63, name: 'GMKT_MMSCLI_TBL_LARGE' },
-			{ code: 110, name: 'SFC_SMSCLI_TBL' }
+			{ code: 0, name: '전체' }
 		],
 		2: [
 			{ code: -1, name: '선택하세요' },
-			{ code: 0, name: '전체' },
+			{ code: 0, name: '전체' }
 		]
 	};
+	
+	for(var i = 0; i < codeList.length; i++) {
+		const { companyCode, code, name } = codeList[i];
+		
+		switch (companyCode) {
+			case 0:
+				tableArray[0].push({ code: code, name: name });
+				break;
+			case 1:
+				tableArray[1].push({ code: code, name: name });
+				break;
+			case 2:
+				tableArray[2].push({ code: code, name: name });
+				break;
+		}
+	}
 	
 	// 일주일 기본값 설정
 	const startDate = new Date();
@@ -321,7 +307,14 @@ $(function() {
 			
 			tableValue = (tableValue == "선택하세요" || tableValue === undefined) ? "" : tableValue;
 			
-			const companyName = companyValue == 0 ? `(옥션 ${tableValue} 테이블)` : `(G마켓 ${tableValue} 테이블)`; 
+			var companyName;
+			switch(companyValue) {
+				case 0 : companyName = `(옥션 ${tableValue} 테이블)`; break;
+				case 1 :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
+				case 2 :  companyName = `(스마일캐시 ${tableValue} 테이블)`; break;
+				default :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
+			}
+			
 			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다. ${companyName}`);
 			
 		}

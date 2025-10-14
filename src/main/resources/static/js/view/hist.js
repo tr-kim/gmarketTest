@@ -4,6 +4,8 @@ let phoneNumInstance;
 let companyInstance;
 let tableInstance;
 let histDataGrid;
+let companyValue;
+let tableValue;
 
 $(function () {
 	const startDate = new Date();
@@ -44,6 +46,8 @@ $(function () {
 		onValueChanged: function (e) {
 			//중분류 업데이트
 			const selectedCode = e.value;
+			tableValue = e.component.option("displayValue");
+			companyValue = e.value;
 			tableInstance.option('dataSource', tableArray[selectedCode] || []);
 			tableInstance.option('value', 0); // 기본값 다시 설정
 		}
@@ -51,42 +55,34 @@ $(function () {
 	
 	const tableArray = {
 		0: [
-			{ code: 0, name: '전체' },
-			{ code: 1, name: 'SMSCLI_TBL_CHARGED' },
-			{ code: 2, name: 'SMSCLI_TBL_ESCROW' },
-			{ code: 3, name: 'SMSCLI_TBL_OUTBID' },
-			{ code: 4, name: 'SMSCLI_TBL_API' },
-			{ code: 5, name: 'SMSCLI_TBL_BATCH' },
-			{ code: 6, name: 'SMSCLI_TBL_MOTORS' },
-			{ code: 7, name: 'SMSCLI_TBL_PUMBL' },
-			{ code: 8, name: 'SMSCLI_TBL_EVENT' },
-			{ code: 9, name: 'SMSCLI_TBL_LARGE' },
-			{ code: 21, name: 'LMSCLI_TBL_EVENT' },
-			{ code: 22, name: 'LMSCLI_TBL_LARGE' },
-			{ code: 41, name: 'MMSCLI_TBL_EVENT' },
-			{ code: 42, name: 'MMSCLI_TBL_LARGE' },
-			{ code: 71, name: 'IAC_SMSCLI_TBL_LARGE' },
-			{ code: 72, name: 'IAC_LMSCLI_TBL_LARGE'},
-			{ code: 73, name: 'IAC_MMSCLI_TBL_LARGE'}
+			{ code: -1, name: '선택하세요' },
+			{ code: 0, name: '전체' }
 		],
 		1: [
-			{ code: 0, name: '전체' },
-			{ code: 11, name: 'SMSCLI_TBL_EMG' },
-			{ code: 12, name: 'SMSCLI_TBL_ETC' },
-			{ code: 13, name: 'SMSCLI_TBL_ORDER' },
-			{ code: 14, name: 'SMSCLI_TBL_TRAN' },
-			{ code: 15, name: 'SMSCLI_TBL_EVENT' },
-			{ code: 16, name: 'SMSCLI_TBL_LARGE' },
-			{ code: 31, name: 'LMSCLI_TBL_EVENT' },
-			{ code: 32, name: 'LMSCLI_TBL_LARGE' },
-			{ code: 51, name: 'MMSCLI_TBL_EVENT' },
-			{ code: 52, name: 'MMSCLI_TBL_LARGE' },
-			{ code: 61, name: 'GMKT_SMSCLI_TBL_LARGE' },
-			{ code: 62, name: 'GMKT_LMSCLI_TBL_LARGE' },
-			{ code: 63, name: 'GMKT_MMSCLI_TBL_LARGE' },
-			{ code: 110, name: 'SFC_SMSCLI_TBL'}
+			{ code: -1, name: '선택하세요' },
+			{ code: 0, name: '전체' }
+		],
+		2: [
+			{ code: -1, name: '선택하세요' },
+			{ code: 0, name: '전체' }
 		]
 	};
+	
+	for(var i = 0; i < codeList.length; i++) {
+		const { companyCode, code, name } = codeList[i];
+		
+		switch (companyCode) {
+			case 0:
+				tableArray[0].push({ code: code, name: name });
+				break;
+			case 1:
+				tableArray[1].push({ code: code, name: name });
+				break;
+			case 2:
+				tableArray[2].push({ code: code, name: name });
+				break;
+		}
+	}
 
 	//중분류
 	tableInstance = $('#tableCode').dxSelectBox({
@@ -120,6 +116,9 @@ $(function () {
 		type: 'default',
 		width: 60,
 		onClick() {
+			const searchTableCode = tableInstance.option("selectedItem").code;
+			if(searchTableCode == -1 || searchTableCode < 0) { showDialogCustom("중분류를 선택하세요."); return false; }
+			
 			const startValue = startDateInstance.option("value");
 			const endValue = endDateInstance.option("value");
 			
@@ -213,6 +212,8 @@ $(function () {
 			const companyValue = companyInstance.option("value");
 			const tableItem = tableInstance.option("selectedItem");
 			
+			if(tableItem.code === -1) return;
+			
 			const params = {
 				startDate: startDateFormatted,
 				endDate: endDateFormatted,
@@ -241,7 +242,7 @@ $(function () {
 			.then(data => {
 				return {
 					data: data.data,
-					totalCount: data.totalCount
+					totalCount: data.totalCount || 0
 				};
 			})
 			.catch(error => {
@@ -366,7 +367,17 @@ $(function () {
 		},
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
-			$("#totalCount").text(`총 ${totalCount}건`);
+			var companyName;
+			tableValue = (tableValue == "선택하세요" || tableValue === undefined) ? "" : tableValue;
+			
+			switch(companyValue) {
+				case 0 : companyName = `(옥션 ${tableValue} 테이블)`; break;
+				case 1 :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
+				case 2 :  companyName = `(스마일캐시 ${tableValue} 테이블)`; break;
+				default :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
+			}
+			
+			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다. ${companyName}`);
 		}
 	}).dxDataGrid("instance");
 });
