@@ -18,7 +18,7 @@ public class AlarmDto implements Serializable {
 	private Integer almSeq;
 	
 	// 회사코드 - 0: 옥션, 1: G마켓, 2: 스마일캐시
-	private Integer companyCode;
+	private Integer companyCode = 0;
 	
 	// 서비스명
 	private String svcName;
@@ -44,5 +44,9 @@ public class AlarmDto implements Serializable {
 	// 조회 기간
 	private String startDate;
 	private String endDate;
+	
+	// page
+	private int skip = 0;
+	private int take = 50;
 	
 }
