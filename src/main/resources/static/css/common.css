@@ -268,3 +268,6 @@ input, textarea{
 #close_btn{
     cursor: pointer;
 }
+body .row {
+    --bs-gutter-x: 1rem;
+}

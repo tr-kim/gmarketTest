@@ -457,6 +457,37 @@ aside .psw_chg_btn:hover{
     background-color: #fff;
     border: 1px solid #dee2e6;
 }
+.real_counts .content {
+    cursor: pointer;
+}
+#real_toggle{
+        margin: 0;
+}
+#real_toggle .dx-switch-on{
+    color: #fff;
+    height: 36px;
+    line-height:2;
+}
+#real_toggle .dx-switch-off{
+    display: block;
+    padding-bottom: 4px;   
+    color:#333; 
+    height: 36px;
+    line-height: 2;
+    padding-left: .5rem;
+    text-align: left;
+}
+#real_toggle .dx-switch-container{
+    height: 36px;
+}
+#real_toggle .dx-switch-container::before{
+    height: 36px;
+}
+#real_toggle .dx-switch-handle{
+        flex-basis: 30px;
+            width: 30px;
+    height: 30px;
+}
 /* send.html */
 /* excel_send.html */
 .send > ul{
