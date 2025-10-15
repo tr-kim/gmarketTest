@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{${layout}}" layout:fragment="content">
+
+<body>
+	<p class="font-sz-20 font-weight-600 pt-3 text-666">알림 이력 조회</p>
+	<form class="content row mx-0 mb-2" id="alarmForm">
+		<div class="col-6">
+			<div class="row d-flex align-items-center mb-2">
+				<div class="col-3">
+					<label class="font-weight-500">조회기간</label>
+				</div>
+				<div class="col d-flex align-items-center">
+					<div id="startDate" class="me-2"></div>
+					<span class="mx-1">~</span>
+					<div id="endDate" class="ms-2"></div>
+				</div>
+			</div>
+			<div class="row d-flex align-items-center mb-2">
+				<div class="col-3">
+					<label class="font-weight-500">서비스</label>
+				</div>
+				<div class="col">
+					<div id="serviceCategory"></div>	
+				</div>
+			</div>
+		</div>
+		<div class="col-6">
+			<div class="row d-flex align-items-center mb-2">
+				<div class="col-3">
+					<label class="font-weight-500">대분류</label>
+				</div>
+				<div class="col">
+					<div id="companyCategory"></div>
+				</div>
+			</div>
+			<div class="row d-flex align-items-center">
+				<div class="col d-flex justify-content-end">
+					<div id="excel-btn" class="me-2"></div>
+					<div id="search-btn"></div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="content">
+		<div id="alarmGrid"></div>
+	</div>
+	
+	<script th:src="@{/js/view/alarm.js}"></script>
+</body>
+
+</html>
