@@ -3,6 +3,7 @@ package com.web.gmarket.common.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.web.gmarket.alarm.mapper.AlarmMapper;
 import com.web.gmarket.bulk.broad.mapper.BroadcastMsgMapper;
 import com.web.gmarket.bulk.db.mapper.DbSendMapper;
 import com.web.gmarket.bulk.excel.mapper.ExcelSendMapper;
@@ -60,5 +61,9 @@ public class CommonService {
     
     public ExcelSendMapper getExcelSendMapper(String dbName) {
         return dynamicDataSourceService.getMapper(dbName, ExcelSendMapper.class);
+    }
+    
+    public AlarmMapper getAlarmMapper() {
+        return dynamicDataSourceService.getMapper(ConstantsUtils.DB_GMARKET, AlarmMapper.class);
     }
 }

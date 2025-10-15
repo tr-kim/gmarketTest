@@ -3,7 +3,7 @@ let companyInstance;
 let companyValue;
 let tableInstance;
 let tableValue;
-const period = 3000;	// 최대 검색 기간
+const period = 30;	// 최대 검색 기간
 
 $(function() {
 	
@@ -334,17 +334,17 @@ $('#search-btn').dxButton({
 		const searchTableCode = formData.get("tableCode");
 		const searchStartDate = new Date(formData.get("startDate"));
 		const searchEndDate = new Date(formData.get("endDate"));
-		const diffMs = endDate - startDate;
+		const diffMs = searchEndDate - searchStartDate;
+		const diffDays = diffMs / (1000 * 60 * 60 * 24);
 		
 		if(searchStartDate > searchEndDate) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
-		if(diffMs > period) { showDialogCustom("조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : " + diffMs + "일"); return false }
+		if(diffDays > period) { showDialogCustom("조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : " + diffMs + "일"); return false }
 		
 		if(searchCompanyCode == -1 || searchCompanyCode < 0) { showDialogCustom("대분류를 선택하세요."); return false; }
 		if(searchTableCode == -1 || searchTableCode < 0) { showDialogCustom("중분류를 선택하세요."); return false; }
 		
 		const dataSource = new DevExpress.data.DataSource({
 			load: function(loadOptions) {
-				const formData = new FormData(document.getElementById("statHistForm"));
 				
 				const skip = loadOptions.skip || 0;
 				const take = loadOptions.take || 50;

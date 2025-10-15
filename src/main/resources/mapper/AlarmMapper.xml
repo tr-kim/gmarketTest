@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.web.gmarket.alarm.mapper.AlarmMapper">
+	
+	<select id="selectAlarmListCount" resultType="int" parameterType="com.web.gmarket.alarm.dto.AlarmDto">
+	
+	</select>
+	
+	<select id="selectAlarmList" resultType="com.web.gmarket.alarm.dto.AlarmDto" parameterType="com.web.gmarket.alarm.dto.AlarmDto">
+	
+	</select>
+	
+</mapper>

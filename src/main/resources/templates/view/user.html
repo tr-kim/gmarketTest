@@ -48,10 +48,6 @@
 	</div>
 	<th:block th:replace="~{/view/popup/addUser :: addUser}"></th:block>
 	<th:block th:replace="~{/view/popup/userDetail :: userDetail}"></th:block>
-	<script th:inline="javascript">
-		let userGrade = /*[[${#authentication.principal.userGrade}]]*/ -1;
-		let companyCode = /*[[${#authentication.principal.companyCode}]]*/ -1;
-	</script>
 	<script th:src="@{/js/view/user.js}"></script>
 </body>
 
