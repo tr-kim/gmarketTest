@@ -110,6 +110,11 @@
 						<i class="bi bi-sliders2 me-2"></i>사용자 관리
 					</a>
 				</li>
+				<li th:classappend="${active == 'alarm' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_OPERATOR')">
+					<a th:href="@{/view/alarm}">
+						<i class="bi bi-sliders2 me-2"></i>알림 이력 조회
+					</a>
+				</li>
             </ul>
             <a th:href="@{/logout}" class="logout"><i class="bi bi-box-arrow-right me-2"></i>로그아웃</a>
         </div>
@@ -125,6 +130,10 @@
 		// 수신거부 번호
 		const GMARKET_REJECT_NUM = /*[[${GMARKET_REJECT_NUM}]]*/ "";
 		const AUCTION_REJECT_NUM = /*[[${AUCTION_REJECT_NUM}]]*/ "";
+		
+		// 사용자 등급 및 회사 코드
+		const userGrade = /*[[${#authentication.principal.userGrade}]]*/ -1;
+		const companyCode = /*[[${#authentication.principal.companyCode}]]*/ -1;
 	</script>
 	<script>
 		<!-- 한국어 적용(ko-KR) -->
