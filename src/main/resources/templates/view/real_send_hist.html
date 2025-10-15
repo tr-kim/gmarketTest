@@ -4,7 +4,62 @@
 
 <body>
 	<div class="real_wrap">
-		<p class="font-sz-20 font-weight-600 pt-2 text-666">실시간 발송현황</p>
+		<div class="d-flex justify-content-between align-item-center mb-3">
+			<div>
+				<p class="font-sz-20 font-weight-600 text-666 mb-0">실시간 발송현황</p>
+				<div>최종 업데이트: <span id="lastUpdate">2000-01-01 00:00:00</span></div>	
+			</div>			
+			<div class="dx-field-value">
+				<div id="real_toggle"></div>
+			</div>			
+		</div>	
+		<div class="align-item-center justify-content-between mb-3 row row-deck row-cards real_counts">
+			<div class="col-2 d-flex">
+				<div class="content flex-fill d-flex flex-column justify-content-between">
+					<div>전체</div>
+					<div id="total" class="font-sz-24">126</div>
+				</div>
+			</div>
+			<div class="col-2 d-flex">
+				<div class="content flex-fill d-flex flex-column justify-content-between">
+					<div>정상</div>
+					<div id="normal" class="font-sz-24">123</div>
+				</div>
+			</div>
+			<div class="col-2 d-flex">
+				<div class="content flex-fill d-flex flex-column justify-content-between">
+					<div class="d-flex align-item-center justify-content-between">
+						<div>다운</div>
+						<i class="bi bi-caret-right-fill"></i>
+					</div>					
+					<div id="down" class="font-sz-24">1</div>
+				</div>
+			</div>
+			<div class="col-2 d-flex">
+				<div class="content flex-fill d-flex flex-column justify-content-between">
+					<div class="d-flex align-item-center justify-content-between">
+						<div>이슈</div>
+						<i class="bi bi-caret-right-fill"></i>
+					</div>	
+					<div id="issue" class="font-sz-24">1</div>
+				</div>
+			</div>
+			<div class="col-2 d-flex">
+				<div class="content flex-fill d-flex flex-column justify-content-between">
+					<div class="d-flex align-item-center justify-content-between">
+						<div>지연</div>
+						<i class="bi bi-caret-right-fill"></i>
+					</div>	
+					<div id="delray" class="font-sz-24">1</div>
+				</div>
+			</div>
+			<div class="col-2 d-flex">
+				<div class="content flex-fill d-flex flex-column justify-content-between">
+					<div class="font-sz-18 mb-3">총 발송량: <span id="totalSend" class="font-weight-700">156,742</span></div>
+					<div class="font-sz-18">완료율: <span id="completion" class="font-weight-700">98.2</span>%</div>
+				</div>
+			</div>
+		</div>
 		<div class="mb-5 row-real" id="real_send_hist">
 			<table class="table">
 				<thead>
@@ -672,7 +727,7 @@
 				<p class="text-center mb-1 font-weight-600">지마켓</p>				
 				<canvas id="gmarket_chart" class="content w-100" height="350"></canvas>
 				<div class="d-flex justify-content-end mt-1">
-					<button type="button" id="gmarketManage" class="btn btn-primary font-sz-12" style="margin-right: 10px;">관리</button>
+					<button type="button" id="gmarketManage" class="btn btn-primary font-sz-12" style="margin-right: 5px;">관리</button>
 					<button type="button" id="gmarketDetail" class="btn btn-primary font-sz-12">상세</button>
 					<!-- <a href="/view/real/open" target="_blank" id="btn2" class="btn btn-primary font-sz-12">상세</a> -->
 				</div>	
@@ -681,7 +736,7 @@
 				<p class="text-center mb-1 font-weight-600">옥션</p>			
 				<canvas id="action_chart" class="content w-100" height="350"></canvas>
 				<div class="d-flex justify-content-end mt-1">
-					<button type="button" id="auctionManage" class="btn btn-primary font-sz-12" style="margin-right: 10px;">관리</button>
+					<button type="button" id="auctionManage" class="btn btn-primary font-sz-12" style="margin-right: 5px;">관리</button>
 					<button type="button" id="auctionDetail" class="btn btn-primary font-sz-12">상세</button>
 					<!-- <a href="/view/real/open" target="_blank" id="btn1" class="btn btn-primary font-sz-12">상세</a> -->
 				</div>
@@ -690,7 +745,7 @@
 				<p class="text-center mb-1 font-weight-600">스마일캐시</p>				
 				<canvas id="smile_cash_chart" class="content w-100" height="350"></canvas>
 				<div class="d-flex justify-content-end mt-1">
-					<button type="button" id="smilecashManage" class="btn btn-primary font-sz-12" style="margin-right: 10px;">관리</button>
+					<button type="button" id="smilecashManage" class="btn btn-primary font-sz-12" style="margin-right: 5px;">관리</button>
 					<button type="button" id="smilecashDetail" class="btn btn-primary font-sz-12">상세</button>
 					<!-- <a href="/view/real/open" target="_blank" id="btn3" class="btn btn-primary font-sz-12">상세</a> -->
 				</div>
@@ -1024,4 +1079,12 @@
 		openDetailPage('/view/real/detail/smilecash', 'detailSmilecash');
 	});
 	
+	$('#real_toggle').dxSwitch({
+		value: true,
+		width: 100,
+		height:42,
+		switchedOnText: '요약',
+		switchedOffText: '상세'
+	});
+
 </script>
