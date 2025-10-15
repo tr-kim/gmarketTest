@@ -419,21 +419,52 @@ aside .psw_chg_btn:hover{
     padding: .3rem;
     background-color: #fff;
 }
+.row-real .summery table td{
+    padding: 1.5rem .3rem;
+    font-size: 1.2rem;
+    /* font-weight: bold; */
+}
+.row-real .summery table td.text-success,
+.row-real .summery table td.text-danger,
+.row-real .summery table td.text-secondary{
+    font-weight: bold;
+}
+.row-real .summery .card-body .col-3{
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+.row-real .summery .card{
+    overflow: hidden;
+}
+.row-real .summery .card table td{
+    border-bottom: 1px solid #dee2e6;
+}
+.row-real .summery .card table tr:last-child td{
+    border-bottom: none;
+}
+.row-real .summery .card table td:last-child{
+    border-right: none;
+}
+.row-real .summery .smilecash .card-body .col-3{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .row-real .hist_grid_right{
-    border-right: 1px solid #333;
+    border-right: 1px solid #666;
 }
 .row-real .hist_grid_bottom{
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #666;
 }
 .row-real .hist_grid_top{
-    border-top: 1px solid #333;
+    border-top: 1px solid #666;
 }
 .row-real .hist_grid_left{
-    border-left: 1px solid #333;
+    border-left: 1px solid #666;
 }
 .row-real table th:last-child,
 .row-real table td:last-child{
-    border-right: 1px solid #333;
+    border-right: 1px solid #666;
 }
 .col-real .processFileStat{
     background-color: #ffffff;
