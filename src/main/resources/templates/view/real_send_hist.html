@@ -12,7 +12,7 @@
 			<div class="dx-field-value">
 				<div id="real_toggle"></div>
 			</div>			
-		</div>	
+		</div>			
 		<div class="align-item-center justify-content-between mb-3 row row-deck row-cards real_counts">
 			<div class="col-2 d-flex">
 				<div class="content flex-fill d-flex flex-column justify-content-between">
@@ -64,857 +64,1587 @@
 			</div>
 		</div>
 		<div class="row-real" id="real_send_hist">
+			<!-- 요약 -->
 			<div class="summery mb-3">
-				<!-- 요약1 -->
-				<div class="d-flex row">
-					<div class="col-4 d-flex">
-						<div class="card text-center flex-fill">
-							<div class="card-header font-sz-16">지마켓</div>							
-							<table>
-								<colgroup>
-									<col width="25%">
-									<col width="25%">
-									<col width="25%">
-									<col width="25%">
-								</colgroup>
-								<tbody>
-									<tr>
-										<td>DBP</td>
-										<td class="text-success">23</td>
-										<td class="text-danger">1</td>
-										<td class="text-secondary">0</td>
-									</tr>
-									<tr>
-										<td>IFP</td>
-										<td class="text-success">33</td>
-										<td class="text-danger">1</td>
-										<td class="text-secondary">0</td>
-									</tr>
-									<tr>
-										<td>STATP</td>
-										<td class="text-success">2</td>
-										<td class="text-danger">0</td>
-										<td class="text-secondary">0</td>
-									</tr>
-									<tr>
-										<td>MEMMON</td>
-										<td class="text-success">1</td>
-										<td class="text-danger">0</td>
-										<td class="text-secondary">0</td>
-									</tr>
-								</tbody>
-							</table>							
-						</div>
+				<div class="card text-center">
+					<div class="card-header">
+						<ul class="nav nav-tabs card-header-tabs">
+							<li class="nav-item col-6">
+								<button class="nav-link w-100 active font-sz-16">운영</button>
+							</li>
+							<li class="nav-item col-6">
+								<button class="nav-link w-100 font-sz-16">DR</button>
+							</li>
+						</ul>
 					</div>
-					<div class="col-4 d-flex">
-						<div class="card text-center flex-fill">
-							<div class="card-header font-sz-16">옥션</div>							
-							<table>
-								<colgroup>
-									<col width="25%">
-									<col width="25%">
-									<col width="25%">
-									<col width="25%">
-								</colgroup>
-								<tbody>
-									<tr>
-										<td>DBP</td>
-										<td class="text-success">18</td>
-										<td class="text-danger">1</td>
-										<td class="text-secondary">1</td>
-									</tr>
-									<tr>
-										<td>IFP</td>
-										<td class="text-success">31</td>
-										<td class="text-danger">2</td>
-										<td class="text-secondary">0</td>
-									</tr>
-									<tr>
-										<td>STATP</td>
-										<td class="text-success">1</td>
-										<td class="text-danger">0</td>
-										<td class="text-secondary">0</td>
-									</tr>
-									<tr>
-										<td>MEMMON</td>
-										<td class="text-success">1</td>
-										<td class="text-danger">0</td>
-										<td class="text-secondary">0</td>
-									</tr>
-								</tbody>
-							</table>							
+					<div class="card-body px-3 py-4">
+						<!-- 운영 -->						 
+						<div id="s-operate" class="d-flex row">
+							<div class="col-4 d-flex">
+								<div class="card text-center flex-fill overflow-hidden">
+									<div class="card-header font-sz-16">지마켓(운영)</div>							
+									<table>
+										<colgroup>
+											<col width="25%">
+											<col width="25%">
+											<col width="25%">
+											<col width="25%">
+										</colgroup>
+										<tbody>
+											<tr>
+												<td>DBP</td>
+												<td class="text-success">23</td>
+												<td class="text-danger">1</td>
+												<td class="text-secondary">0</td>
+											</tr>
+											<tr>
+												<td>IFP</td>
+												<td class="text-success">33</td>
+												<td class="text-danger">1</td>
+												<td class="text-secondary">0</td>
+											</tr>
+											<tr>
+												<td>STATP</td>
+												<td class="text-success">2</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>
+											<tr>
+												<td>MEMMON</td>
+												<td class="text-success">1</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>
+										</tbody>
+									</table>							
+								</div>
+							</div>
+							<div class="col-4 d-flex">
+								<div class="card text-center flex-fill overflow-hidden">
+									<div class="card-header font-sz-16">옥션</div>							
+									<table>
+										<colgroup>
+											<col width="25%">
+											<col width="25%">
+											<col width="25%">
+											<col width="25%">
+										</colgroup>
+										<tbody>
+											<tr>
+												<td>DBP</td>
+												<td class="text-success">18</td>
+												<td class="text-danger">1</td>
+												<td class="text-secondary">1</td>
+											</tr>
+											<tr>
+												<td>IFP</td>
+												<td class="text-success">31</td>
+												<td class="text-danger">2</td>
+												<td class="text-secondary">0</td>
+											</tr>
+											<tr>
+												<td>STATP</td>
+												<td class="text-success">1</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>
+											<tr>
+												<td>MEMMON</td>
+												<td class="text-success">1</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>
+										</tbody>
+									</table>							
+								</div>
+							</div>
+							<div class="col-4 d-flex smilecash">
+								<div class="card text-center flex-fill overflow-hidden">
+									<div class="card-header font-sz-16">스마일캐시</div>							
+									<table class="h-100">
+										<colgroup>
+											<col width="25%">
+											<col width="25%">
+											<col width="25%">
+											<col width="25%">
+										</colgroup>
+										<tbody>
+											<tr>
+												<td>DBP</td>
+												<td class="text-success">2</td>
+												<td class="text-danger">1</td>
+												<td class="text-secondary">1</td>
+											</tr>
+											<tr>
+												<td>IFP</td>
+												<td class="text-success">4</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>									
+										</tbody>
+									</table>							
+								</div>
+							</div>
 						</div>
-					</div>
-					<div class="col-4 d-flex smilecash">
-						<div class="card text-center flex-fill">
-							<div class="card-header font-sz-16">스마일캐시</div>							
-							<table class="h-100">
-								<colgroup>
-									<col width="25%">
-									<col width="25%">
-									<col width="25%">
-									<col width="25%">
-								</colgroup>
-								<tbody>
-									<tr>
-										<td>DBP</td>
-										<td class="text-success">2</td>
-										<td class="text-danger">1</td>
-										<td class="text-secondary">1</td>
-									</tr>
-									<tr>
-										<td>IFP</td>
-										<td class="text-success">4</td>
-										<td class="text-danger">0</td>
-										<td class="text-secondary">0</td>
-									</tr>									
-								</tbody>
-							</table>							
+						<!-- DR -->						 
+						<div id="s-dr" class="d-flex row d-none">
+							<div class="col-4 d-flex">
+								<div class="card text-center flex-fill">
+									<div class="card-header font-sz-16">지마켓(DR)</div>							
+									<table>
+										<colgroup>
+											<col width="25%">
+											<col width="25%">
+											<col width="25%">
+											<col width="25%">
+										</colgroup>
+										<tbody>
+											<tr>
+												<td>DBP</td>
+												<td class="text-success">23</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>
+											<tr>
+												<td>IFP</td>
+												<td class="text-success">33</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>
+											<tr>
+												<td>STATP</td>
+												<td class="text-success">2</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>
+											<tr>
+												<td>MEMMON</td>
+												<td class="text-success">1</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>
+										</tbody>
+									</table>							
+								</div>
+							</div>
+							<div class="col-4 d-flex">
+								<div class="card text-center flex-fill">
+									<div class="card-header font-sz-16">옥션</div>							
+									<table>
+										<colgroup>
+											<col width="25%">
+											<col width="25%">
+											<col width="25%">
+											<col width="25%">
+										</colgroup>
+										<tbody>
+											<tr>
+												<td>DBP</td>
+												<td class="text-success">18</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>
+											<tr>
+												<td>IFP</td>
+												<td class="text-success">31</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>
+											<tr>
+												<td>STATP</td>
+												<td class="text-success">1</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>
+											<tr>
+												<td>MEMMON</td>
+												<td class="text-success">1</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>
+										</tbody>
+									</table>							
+								</div>
+							</div>
+							<div class="col-4 d-flex smilecash">
+								<div class="card text-center flex-fill">
+									<div class="card-header font-sz-16">스마일캐시</div>							
+									<table class="h-100">
+										<colgroup>
+											<col width="25%">
+											<col width="25%">
+											<col width="25%">
+											<col width="25%">
+										</colgroup>
+										<tbody>
+											<tr>
+												<td>DBP</td>
+												<td class="text-success">2</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>
+											<tr>
+												<td>IFP</td>
+												<td class="text-success">4</td>
+												<td class="text-danger">0</td>
+												<td class="text-secondary">0</td>
+											</tr>									
+										</tbody>
+									</table>							
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
-				<!-- 요약2 -->
-				<!--
-				<table class="table">
-					<colgroup>
-						<col width="8.333%">
-						<col width="8.333%">
-						<col width="8.333%">
-						<col width="8.333%">
-						<col width="8.333%">
-						<col width="8.333%">
-						<col width="8.333%">
-						<col width="8.333%">
-						<col width="8.333%">
-						<col width="8.333%">
-						<col width="8.333%">
-						<col width="8.333%">
-					</colgroup>
-					<thead>
-						<tr class="hist_grid_bottom hist_grid_top">
-							<th colspan="4" class="hist_grid_right hist_grid_left">지마켓</th>
-							<th colspan="4" class="hist_grid_right">옥션</th>
-							<th colspan="4" class="hist_grid_right">스마일캐시</th>
-						</tr>
-					</thead>
-					<tbody>		
-						<tr>
-							<td class="hist_grid_left hist_grid_right">DBP</td>
-							<td class="text-success">23</td>
-							<td class="text-danger">1</td>
-							<td class="hist_grid_right text-secondary">0</td>
-							<td class="hist_grid_right">DBP</td>
-							<td class="text-success">18</td>
-							<td class="text-danger">1</td>
-							<td class="text-secondary hist_grid_right">1</td>
-							<td rowspan="2" class="align-middle hist_grid_right">DBP</td>
-							<td rowspan="2" class="text-success align-middle">2</td>
-							<td rowspan="2" class="text-danger align-middle">1</td>
-							<td rowspan="2" class="text-secondary align-middle">1</td>
-						</tr>						
-						<tr>
-							<td class="hist_grid_left hist_grid_right">IFP</td>
-							<td class="text-success">33</td>
-							<td class="text-danger">1</td>
-							<td class="text-secondary hist_grid_right">2</td>
-							<td class="hist_grid_right">IFP</td>
-							<td class="text-success">31</td>
-							<td class="text-danger">2</td>
-							<td class="text-secondary hist_grid_right">0</td>							
-						</tr>						
-						<tr>
-							<td class="hist_grid_left hist_grid_right">STATP</td>
-							<td class="text-success">2</td>
-							<td class="text-danger">0</td>
-							<td class="text-secondary hist_grid_right">0</td>
-							<td class="hist_grid_right">STATP</td>
-							<td class="text-success">1</td>
-							<td class="text-danger">0</td>
-							<td class="text-secondary hist_grid_right">0</td>
-							<td rowspan="2" class="hist_grid_bottom align-middle hist_grid_right">IFP</td>
-							<td rowspan="2" class="text-success hist_grid_bottom align-middle">4</td>
-							<td rowspan="2" class="text-danger hist_grid_bottom align-middle">0</td>
-							<td rowspan="2" class="text-secondary hist_grid_bottom align-middle">0</td>
-						</tr>
-						<tr class="hist_grid_bottom ">
-							<td class="hist_grid_left hist_grid_right">MEMMON</td>
-							<td class="text-success">1</td>
-							<td class="text-danger">0</td>
-							<td class="text-secondary hist_grid_right">0</td>
-							<td class="hist_grid_right">MEMMON</td>
-							<td class="text-success">1</td>
-							<td class="text-danger">0</td>
-							<td class="text-secondary hist_grid_right">0</td>
-						</tr>
-					</tbody>
-				</table>
-				-->
 			</div>
-			<div class="detail d-none">
-				<table class="table">
-					<thead>
-						<tr class="hist_grid_bottom hist_grid_top">
-							<th class="hist_grid_right hist_grid_left"></th>
-							<th>DBP</th>
-							<th class="hist_grid_right">IFP</th>
-							<th>DBP</th>
-							<th class="hist_grid_right">IFP</th>
-							<th>DBP</th>
-							<th class="hist_grid_right">IFP</th>
-							<th>DBP</th>
-							<th class="hist_grid_right">IFP</th>
-							<th>DBP</th>
-							<th class="hist_grid_right">IFP</th>
-							<th>DBP</th>
-							<th class="hist_grid_right">IFP</th>
-							<th>DBP</th>
-							<th class="hist_grid_right">IFP</th>
-							<th>DBP</th>
-							<th class="hist_grid_right">IFP</th>
-							<th class="hist_grid_right">STATP</th>
-							<th>MEMMON</th>
-						</tr>
-					</thead>
-					<tbody>
-						<!-- 지마켓 -->
-						<tr>
-							<td rowspan="6" class="align-middle hist_grid_right hist_grid_bottom hist_grid_left">지마켓</td>
-							<td colspan="2">KT-SME-ENG</td>
-							<td colspan="2">KT-SMS-ETC</td>
-							<td colspan="2">KT-SMS-EVENT-GMA</td>
-							<td colspan="2">KT-GMKT-LMS-LARGE</td>
-							<td colspan="2">KT-GMKT-MMS-LARGE</td>
-							<td colspan="2">KT-GMKT-SMS-LARGE</td>
-							<td colspan="2">KT-SMS-LARGE-GMA</td>
-							<td colspan="2">KT-LMS-EVENT-GMA</td>
-							<td >KT-SMS-STATP-GMA</td>
-							<td >KT-MEMMON</td>
-						</tr>
-						<tr>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>						
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>						
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">KT-LMS-LARGE-GMA</td>
-							<td colspan="2">KT-MMS-EVENT-GMA</td>
-							<td colspan="2">KT-MMS-LARGE-GMA</td>
-							<td colspan="2">KT-SMS-ORDER</td>
-							<td colspan="2">KT-SMS-EPLE</td>
-							<td colspan="2">KT-SMS-TRAN</td>
-							<td colspan="2">KT-SMS-TSP</td>
-							<td colspan="2">KT-SMS-MO4MMS</td>
-							<td >KT-SMS-STATP-GMA-2CON</td>
-							<td ></td>
-						</tr>
-						<tr>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>						
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>						
-							<td>
-								
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">KT-SFC-SMS</td>
-							<td colspan="2">KT-SFC-MMS</td>
-							<td colspan="2">KT-SFC-LMS</td>
-							<td colspan="2">KT-MMS-NON-GMA</td>
-							<td colspan="2">KT-LMS-NON-GMA</td>
-							<td colspan="2">KT-G9-SMS-LARGE</td>
-							<td colspan="2">KT-G9-MMS-LARGE</td>
-							<td colspan="2">KT-G9-LMS-LARGE</td>
-							<td ></td>
-							<td ></td>
-						</tr>
-						<tr class="hist_grid_bottom">
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>						
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								
-							</td>						
-							<td>
-								
-							</td>
-						</tr>
-						<!-- 옥션 -->
-						<tr>
-							<td rowspan="6" class="align-middle hist_grid_right hist_grid_bottom hist_grid_left">옥션</td>
-							<td colspan="2">KT-SMS-API</td>
-							<td colspan="2">KT-SMS-BATCH</td>
-							<td colspan="2">KT_SMS_CHARGED</td>
-							<td colspan="2">KT_SMS_ESCROW</td>
-							<td colspan="2">KT-SMS-EVENT-AUC</td>
-							<td colspan="2">KT-SMS-LARGE-AUC</td>
-							<td colspan="2">KT-LMS-EVENT-AUC</td>
-							<td colspan="2">KT-LMS-LARGE-AUC</td>
-							<td >KT-SMS-STATP-AUC</td>
-							<td >KT-AUC-MEMMON</td>
-						</tr>
-						<tr>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>						
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>						
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">KT-MMS-EVENT-AUC</td>
-							<td colspan="2">KT-MMS-LARGE-AUC</td>
-							<td colspan="2">KT-SMS-MOTORS</td>
-							<td colspan="2">KT-SMS-OUTBID</td>
-							<td colspan="2">KT-SMS-PUMBL</td>
-							<td colspan="2">KT-IAC-LMS-LARGE</td>
-							<td colspan="2">KT-IAC-MMS-LARGE</td>
-							<td colspan="2">KT-IAC-SMS-LARGE</td>
-							<td ></td>
-							<td ></td>
-						</tr>
-						<tr>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>						
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								
-							</td>						
-							<td>
-								
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">KT-LMS-TIMECHECK-AUC</td>
-							<td colspan="2">KT-LMS-NEVENT-AUC</td>
-							<td colspan="2">KT-MMS-TIMECHECK-AUC</td>
-							<td colspan="2">KT-SMS-MO4MMS</td>
-							<td colspan="2"></td>
-							<td colspan="2"></td>
-							<td colspan="2"></td>
-							<td colspan="2"></td>
-							<td ></td>
-							<td ></td>
-						</tr>
-						<tr class="hist_grid_bottom">
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P1</span>
-								<span class="statColor real3 green">D1</span>
-								<span class="statColor real3 green">P2</span>
-								<span class="statColor real3 green">D2</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								
-							</td>
-							<td>
-								
-							</td>
-							<td>
-								
-							</td>
-							<td>
-								
-							</td>						
-							<td>
-								
-							</td>
-							<td>
-								
-							</td>
-							<td>
-								
-							</td>
-							<td>
-								
-							</td>
-							<td>
-								
-							</td>						
-							<td>
-								
-							</td>
-						</tr>
-						<!-- 스마일캐시 -->
-						<tr>
-							<td rowspan="2" class="align-middle hist_grid_right hist_grid_left hist_grid_bottom">스마일캐시</td>
-							<td colspan="2">KT-SMS-ADMIN</td>
-							<td colspan="2">KT-SMS-ALERT</td>
-							<td colspan="2">KT-SMS-CERT</td>
-							<td colspan="2">KT_SMS_INFO</td>
-							<td colspan="2"></td>
-							<td colspan="2"></td>
-							<td colspan="2"></td>
-							<td colspan="2"></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr class="hist_grid_bottom">
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								<span class="statColor real3 green">P</span>
-								<span class="statColor real3 green">D</span>
-							</td>
-							<td>
-								
-							</td>
-							<td>
-								
-							</td>
-							<td>
-								
-							</td>
-							<td>
-								
-							</td>						
-							<td>
-								
-							</td>
-							<td>
-								
-							</td>
-							<td>
-								
-							</td>
-							<td>
-								
-							</td>
-							<td>
-								
-							</td>						
-							<td>
-								
-							</td>
-						</tr>
-					</tbody>
-				</table>
+			<!-- 상세 -->
+			<div class="detail mb-3 d-none">
+				<div class="card text-center">
+					<div class="card-header">
+						<ul class="nav nav-tabs card-header-tabs">
+							<li class="nav-item col-6">
+								<button class="nav-link w-100 active font-sz-16">운영</button>
+							</li>
+							<li class="nav-item col-6">
+								<button class="nav-link w-100 font-sz-16">DR</button>
+							</li>
+						</ul>
+					</div>
+					<div class="card-body p-3">
+						<!-- 운영 -->						 
+						<div id="d-operate" class="d-flex row">
+							<table class="table">
+								<thead>
+									<tr class="hist_grid_bottom hist_grid_top">
+										<th class="hist_grid_right hist_grid_left"></th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th class="hist_grid_right">STATP</th>
+										<th>MEMMON</th>
+									</tr>
+								</thead>
+								<tbody>
+									<!-- 지마켓 -->
+									<tr>
+										<td rowspan="6" class="align-middle hist_grid_right hist_grid_bottom hist_grid_left">지마켓<br>(운영)</td>
+										<td colspan="2">KT-SME-ENG</td>
+										<td colspan="2">KT-SMS-ETC</td>
+										<td colspan="2">KT-SMS-EVENT-GMA</td>
+										<td colspan="2">KT-GMKT-LMS-LARGE</td>
+										<td colspan="2">KT-GMKT-MMS-LARGE</td>
+										<td colspan="2">KT-GMKT-SMS-LARGE</td>
+										<td colspan="2">KT-SMS-LARGE-GMA</td>
+										<td colspan="2">KT-LMS-EVENT-GMA</td>
+										<td >KT-SMS-STATP-GMA</td>
+										<td >KT-MEMMON</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>						
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>						
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">KT-LMS-LARGE-GMA</td>
+										<td colspan="2">KT-MMS-EVENT-GMA</td>
+										<td colspan="2">KT-MMS-LARGE-GMA</td>
+										<td colspan="2">KT-SMS-ORDER</td>
+										<td colspan="2">KT-SMS-EPLE</td>
+										<td colspan="2">KT-SMS-TRAN</td>
+										<td colspan="2">KT-SMS-TSP</td>
+										<td colspan="2">KT-SMS-MO4MMS</td>
+										<td >KT-SMS-STATP-GMA-2CON</td>
+										<td ></td>
+									</tr>
+									<tr>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>						
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>						
+										<td>
+											
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">KT-SFC-SMS</td>
+										<td colspan="2">KT-SFC-MMS</td>
+										<td colspan="2">KT-SFC-LMS</td>
+										<td colspan="2">KT-MMS-NON-GMA</td>
+										<td colspan="2">KT-LMS-NON-GMA</td>
+										<td colspan="2">KT-G9-SMS-LARGE</td>
+										<td colspan="2">KT-G9-MMS-LARGE</td>
+										<td colspan="2">KT-G9-LMS-LARGE</td>
+										<td ></td>
+										<td ></td>
+									</tr>
+									<tr class="hist_grid_bottom">
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>						
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											
+										</td>						
+										<td>
+											
+										</td>
+									</tr>
+									<!-- 옥션 -->
+									<tr>
+										<td rowspan="6" class="align-middle hist_grid_right hist_grid_bottom hist_grid_left">옥션</td>
+										<td colspan="2">KT-SMS-API</td>
+										<td colspan="2">KT-SMS-BATCH</td>
+										<td colspan="2">KT_SMS_CHARGED</td>
+										<td colspan="2">KT_SMS_ESCROW</td>
+										<td colspan="2">KT-SMS-EVENT-AUC</td>
+										<td colspan="2">KT-SMS-LARGE-AUC</td>
+										<td colspan="2">KT-LMS-EVENT-AUC</td>
+										<td colspan="2">KT-LMS-LARGE-AUC</td>
+										<td >KT-SMS-STATP-AUC</td>
+										<td >KT-AUC-MEMMON</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>						
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>						
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">KT-MMS-EVENT-AUC</td>
+										<td colspan="2">KT-MMS-LARGE-AUC</td>
+										<td colspan="2">KT-SMS-MOTORS</td>
+										<td colspan="2">KT-SMS-OUTBID</td>
+										<td colspan="2">KT-SMS-PUMBL</td>
+										<td colspan="2">KT-IAC-LMS-LARGE</td>
+										<td colspan="2">KT-IAC-MMS-LARGE</td>
+										<td colspan="2">KT-IAC-SMS-LARGE</td>
+										<td ></td>
+										<td ></td>
+									</tr>
+									<tr>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>						
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											
+										</td>						
+										<td>
+											
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">KT-LMS-TIMECHECK-AUC</td>
+										<td colspan="2">KT-LMS-NEVENT-AUC</td>
+										<td colspan="2">KT-MMS-TIMECHECK-AUC</td>
+										<td colspan="2">KT-SMS-MO4MMS</td>
+										<td colspan="2"></td>
+										<td colspan="2"></td>
+										<td colspan="2"></td>
+										<td colspan="2"></td>
+										<td ></td>
+										<td ></td>
+									</tr>
+									<tr class="hist_grid_bottom">
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>						
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>						
+										<td>
+											
+										</td>
+									</tr>
+									<!-- 스마일캐시 -->
+									<tr>
+										<td rowspan="2" class="align-middle hist_grid_right hist_grid_left hist_grid_bottom">스마일캐시</td>
+										<td colspan="2">KT-SMS-ADMIN</td>
+										<td colspan="2">KT-SMS-ALERT</td>
+										<td colspan="2">KT-SMS-CERT</td>
+										<td colspan="2">KT_SMS_INFO</td>
+										<td colspan="2"></td>
+										<td colspan="2"></td>
+										<td colspan="2"></td>
+										<td colspan="2"></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr class="hist_grid_bottom">
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>						
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>						
+										<td>
+											
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- DR -->						 
+						<div id="d-dr" class="d-flex row d-none">
+							<table class="table">
+								<thead>
+									<tr class="hist_grid_bottom hist_grid_top">
+										<th class="hist_grid_right hist_grid_left"></th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th>DBP</th>
+										<th class="hist_grid_right">IFP</th>
+										<th class="hist_grid_right">STATP</th>
+										<th>MEMMON</th>
+									</tr>
+								</thead>
+								<tbody>
+									<!-- 지마켓 -->
+									<tr>
+										<td rowspan="6" class="align-middle hist_grid_right hist_grid_bottom hist_grid_left">지마켓<br>(DR)</td>
+										<td colspan="2">KT-SME-ENG</td>
+										<td colspan="2">KT-SMS-ETC</td>
+										<td colspan="2">KT-SMS-EVENT-GMA</td>
+										<td colspan="2">KT-GMKT-LMS-LARGE</td>
+										<td colspan="2">KT-GMKT-MMS-LARGE</td>
+										<td colspan="2">KT-GMKT-SMS-LARGE</td>
+										<td colspan="2">KT-SMS-LARGE-GMA</td>
+										<td colspan="2">KT-LMS-EVENT-GMA</td>
+										<td >KT-SMS-STATP-GMA</td>
+										<td >KT-MEMMON</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>						
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>						
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">KT-LMS-LARGE-GMA</td>
+										<td colspan="2">KT-MMS-EVENT-GMA</td>
+										<td colspan="2">KT-MMS-LARGE-GMA</td>
+										<td colspan="2">KT-SMS-ORDER</td>
+										<td colspan="2">KT-SMS-EPLE</td>
+										<td colspan="2">KT-SMS-TRAN</td>
+										<td colspan="2">KT-SMS-TSP</td>
+										<td colspan="2">KT-SMS-MO4MMS</td>
+										<td >KT-SMS-STATP-GMA-2CON</td>
+										<td ></td>
+									</tr>
+									<tr>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>						
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>						
+										<td>
+											
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">KT-SFC-SMS</td>
+										<td colspan="2">KT-SFC-MMS</td>
+										<td colspan="2">KT-SFC-LMS</td>
+										<td colspan="2">KT-MMS-NON-GMA</td>
+										<td colspan="2">KT-LMS-NON-GMA</td>
+										<td colspan="2">KT-G9-SMS-LARGE</td>
+										<td colspan="2">KT-G9-MMS-LARGE</td>
+										<td colspan="2">KT-G9-LMS-LARGE</td>
+										<td ></td>
+										<td ></td>
+									</tr>
+									<tr class="hist_grid_bottom">
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>						
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											
+										</td>						
+										<td>
+											
+										</td>
+									</tr>
+									<!-- 옥션 -->
+									<tr>
+										<td rowspan="6" class="align-middle hist_grid_right hist_grid_bottom hist_grid_left">옥션</td>
+										<td colspan="2">KT-SMS-API</td>
+										<td colspan="2">KT-SMS-BATCH</td>
+										<td colspan="2">KT_SMS_CHARGED</td>
+										<td colspan="2">KT_SMS_ESCROW</td>
+										<td colspan="2">KT-SMS-EVENT-AUC</td>
+										<td colspan="2">KT-SMS-LARGE-AUC</td>
+										<td colspan="2">KT-LMS-EVENT-AUC</td>
+										<td colspan="2">KT-LMS-LARGE-AUC</td>
+										<td >KT-SMS-STATP-AUC</td>
+										<td >KT-AUC-MEMMON</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>						
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>						
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">KT-MMS-EVENT-AUC</td>
+										<td colspan="2">KT-MMS-LARGE-AUC</td>
+										<td colspan="2">KT-SMS-MOTORS</td>
+										<td colspan="2">KT-SMS-OUTBID</td>
+										<td colspan="2">KT-SMS-PUMBL</td>
+										<td colspan="2">KT-IAC-LMS-LARGE</td>
+										<td colspan="2">KT-IAC-MMS-LARGE</td>
+										<td colspan="2">KT-IAC-SMS-LARGE</td>
+										<td ></td>
+										<td ></td>
+									</tr>
+									<tr>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>						
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											
+										</td>						
+										<td>
+											
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">KT-LMS-TIMECHECK-AUC</td>
+										<td colspan="2">KT-LMS-NEVENT-AUC</td>
+										<td colspan="2">KT-MMS-TIMECHECK-AUC</td>
+										<td colspan="2">KT-SMS-MO4MMS</td>
+										<td colspan="2"></td>
+										<td colspan="2"></td>
+										<td colspan="2"></td>
+										<td colspan="2"></td>
+										<td ></td>
+										<td ></td>
+									</tr>
+									<tr class="hist_grid_bottom">
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P1</span>
+											<span class="statColor real3 green">D1</span>
+											<span class="statColor real3 green">P2</span>
+											<span class="statColor real3 green">D2</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>						
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>						
+										<td>
+											
+										</td>
+									</tr>
+									<!-- 스마일캐시 -->
+									<tr>
+										<td rowspan="2" class="align-middle hist_grid_right hist_grid_left hist_grid_bottom">스마일캐시</td>
+										<td colspan="2">KT-SMS-ADMIN</td>
+										<td colspan="2">KT-SMS-ALERT</td>
+										<td colspan="2">KT-SMS-CERT</td>
+										<td colspan="2">KT_SMS_INFO</td>
+										<td colspan="2"></td>
+										<td colspan="2"></td>
+										<td colspan="2"></td>
+										<td colspan="2"></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr class="hist_grid_bottom">
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											<span class="statColor real3 green">P</span>
+											<span class="statColor real3 green">D</span>
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>						
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											
+										</td>						
+										<td>
+											
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				
 			</div>			
 		</div>		
 		<div class="content py-4 d-flex" style="background-color: #f9f9f9;">	
 			<div>
+				<div class="font-sz-16 font-weight-600">발송량 통계</div>
 				<div id="chartRadio"></div>
 			</div>			
 			<div class="d-flex row w-100">
@@ -1300,9 +2030,50 @@
 		},
 	});
 
-	const priorities = ['10초', '20초', '30초'];
+	// 요약 탭 버튼
+	const summeryBtns = document.querySelectorAll('.summery ul li');
+	const sOperate = document.getElementById('s-operate');
+	const sDr = document.getElementById('s-dr');
+
+	summeryBtns.forEach((btn, idx) => {
+		btn.querySelector("button").addEventListener('click', () => {
+			
+			if(idx == 1){				
+				sOperate.classList.add('d-none');
+				sDr.classList.remove('d-none');
+
+			}else{
+				sDr.classList.add('d-none');
+				sOperate.classList.remove('d-none');
+			}
+			summeryBtns.forEach(b => b.querySelector("button").classList.remove('active'));
+			btn.querySelector("button").classList.add('active');
+		});
+	});
+
+	//상세 탭 버튼
+	const detailBtns = document.querySelectorAll('.detail ul li');
+	const dOperate = document.getElementById('d-operate');
+	const dDr = document.getElementById('d-dr');
+
+	detailBtns.forEach((btn, idx) => {
+		btn.querySelector("button").addEventListener('click', () => {
+			
+			if(idx == 1){				
+				dOperate.classList.add('d-none');
+				dDr.classList.remove('d-none');
+
+			}else{
+				dDr.classList.add('d-none');
+				dOperate.classList.remove('d-none');
+			}
+			detailBtns.forEach(b => b.querySelector("button").classList.remove('active'));
+			btn.querySelector("button").classList.add('active');
+		});
+	});
 
 	// 모니터링 라디오 버튼
+	const priorities = ['10초', '20초', '30초'];
 	$('#chartRadio').dxRadioGroup({
 		width: 100,
 		items: priorities,

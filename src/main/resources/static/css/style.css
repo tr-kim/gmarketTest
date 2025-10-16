@@ -433,9 +433,6 @@ aside .psw_chg_btn:hover{
     padding-top: 1rem;
     padding-bottom: 1rem;
 }
-.row-real .summery .card{
-    overflow: hidden;
-}
 .row-real .summery .card table td{
     border-bottom: 1px solid #dee2e6;
 }
@@ -449,6 +446,12 @@ aside .psw_chg_btn:hover{
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.row-real .nav-link {
+    color: #666;
+}
+.row-real .nav-tabs .nav-link.active {
+    color: #0d6efd;
 }
 .row-real .hist_grid_right{
     border-right: 1px solid #666;
