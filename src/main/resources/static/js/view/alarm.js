@@ -147,12 +147,14 @@ $(function() {
 			{
 				dataField: "almInfo",
 				caption: "상세",
-				alignment: "center"
+				alignment: "center",
+				allowHeaderFiltering: false,  // 헤더 필터 비활성화
 			},
 			{
 				dataField: "almDate",
 				caption: "알림 발생 시간",
-				alignment: "center"
+				alignment: "center",
+				allowHeaderFiltering: false,  // 헤더 필터 비활성화
 			}
 		],
 		toolbar: {
@@ -180,9 +182,8 @@ $(function() {
 		},
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
-			const today = new Date().toISOString().replace(/\D/g, '').slice(0, 14);
 			
-			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다. (검색시간 : ${today})`);
+			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다.`);
 		},
 		onOptionChanged: function(e) {
 	   		if (e.fullName === "paging.pageSize") {
