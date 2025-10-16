@@ -109,10 +109,12 @@ public class ConstantsUtils {
 	// DB CONNECTION TYPE
 	public static final String DB_GMARKET = "gmarket";
 	public static final String DB_AUCTION = "auction";
+	public static final String DB_SMILE_CASH = "smileCash";
 	
 	// COMPANY CODE
 	public static final int AUCTION_CODE = 0;
 	public static final int GMARKET_CODE = 1;
+	public static final int SMILE_CASH_CODE = 2;
 	
 	// SVC_TYPE_TABLE
 	public static final String EXCEL_SMS = "EXCEL_SMS";
@@ -158,5 +160,4 @@ public class ConstantsUtils {
 	// REJECT NUM
 	public static final String GMARKET_REJECT_NUM = "(거부)0800002004";
 	public static final String AUCTION_REJECT_NUM = "(거부)0803990000";
-	
 }

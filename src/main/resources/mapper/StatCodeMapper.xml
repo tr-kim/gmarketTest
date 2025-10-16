@@ -6,7 +6,7 @@
 
 	<select id="selectStatCodeListCount" resultType="int" parameterType="com.web.gmarket.stat.dto.StatCodeDto">
 	  	/*
-	  		StatMapper.selectStatCodeListCount 통계 코드 목록 갯수
+	  		StatCodeMapper.selectStatCodeListCount 통계 코드 목록 갯수
 	  	*/
 	    SELECT COUNT(*) 
 	    FROM T_TCODE_LIST 
@@ -21,7 +21,7 @@
 	
 	<select id="selectStatCodeList" resultType="com.web.gmarket.stat.dto.StatCodeDto" parameterType="com.web.gmarket.stat.dto.StatCodeDto">
 	  	/*
-	  		StatMapper.selectStatCodeList 통계 코드 목록 조회
+	  		StatCodeMapper.selectStatCodeList 통계 코드 목록 조회
 	  	*/
 	    SELECT TABLE_CODE, TABLE_NAME, COMPANY_CODE, USE_YN, DEL_FLAG 
 	    FROM T_TCODE_LIST
@@ -32,7 +32,7 @@
 	  	<if test="tableCode > 0">
 	  	  AND TABLE_CODE = #{tableCode}
 	  	</if>
-	  	ORDER BY TABLE_NAME
+	  	ORDER BY COMPANY_CODE, TABLE_CODE, TABLE_NAME
 	</select>
 	
 </mapper>
