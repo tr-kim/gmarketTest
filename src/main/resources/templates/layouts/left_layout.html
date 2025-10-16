@@ -45,52 +45,57 @@
 			<ul class="gnb w-100">
 				<li th:classappend="${active == 'hist' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
 					<a th:href="@{/view/hist/left}">
-						<i class="bi bi-list-task me-2"></i>이력조회
+						<i class="bi bi-list-ul me-2"></i>이력 조회
 					</a>
 				</li>
 				<li th:classappend="${active == 'send' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
 					<a th:href="@{/view/singleSend/left}">
-						<i class="bi bi-envelope-arrow-up me-2"></i>개별발송
+						<i class="bi bi-send me-2"></i>개별 발송
 					</a>
 				</li>
 				<li th:classappend="${active == 'excelSend' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
 					<a th:href="@{/view/excelSend/left}">
-						<i class="bi bi-file-earmark-spreadsheet me-2"></i>엑셀발송
+						<i class="bi bi-file-earmark-spreadsheet me-2"></i>엑셀 발송
 					</a>
 				</li>
 				<li th:classappend="${active == 'fileSend' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
 					<a th:href="@{/view/fileSend/left}">
-						<i class="bi bi-file-earmark-arrow-down me-2"></i>파일발송
+						<i class="bi bi-file-earmark-text me-2"></i>파일 발송
 					</a>
 				</li>
 				<li th:classappend="${active == 'dbSend' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
 					<a th:href="@{/view/dbSend/left}">
-						<i class="bi bi-database me-2"></i>DB발송
+						<i class="bi bi-file-earmark-check me-2"></i>DB 발송
 					</a>
 				</li>
 				<li th:classappend="${active == 'bulkHist' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
 					<a th:href="@{/view/bulkHist/left}">
-						<i class="bi bi-menu-up me-2"></i>대량발송 이력
+						<i class="bi bi-archive me-2"></i>대량 발송 이력
 					</a>
 				</li>
 				<li th:classappend="${active == 'wait' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_USER')">
 					<a th:href="@{/view/wait/left}">
-						<i class="bi bi-envelope-paper me-2"></i>대기 메시지 조회
+						<i class="bi bi-hourglass me-2"></i>대기 메시지 조회
 					</a>
 				</li>
 				<li th:classappend="${active == 'real' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_OPERATOR')">
 					<a th:href="@{/view/real/left}">
-						<i class="bi bi-bar-chart-line me-2"></i>실시간 발송현황
+						<i class="bi bi-graph-up me-2"></i>실시간 발송 현황
 					</a>
 				</li>
 				<li th:classappend="${active == 'stat' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN')">
 					<a th:href="@{/view/stat/left}">
-						<i class="bi bi-archive me-2"></i>정산/통계 조회
+						<i class="bi bi-search me-2"></i>정산/통계 조회
+					</a>
+				</li>
+				<li th:classappend="${active == 'alarm' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN', 'ROLE_OPERATOR')">
+					<a th:href="@{/view/alarm/left}">
+						<i class="bi bi-exclamation-circle me-2"></i>알림 이력 조회
 					</a>
 				</li>
 				<li th:classappend="${active == 'user' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN')">
 					<a th:href="@{/view/user/left}">
-						<i class="bi bi-sliders2 me-2"></i>사용자 관리
+						<i class="bi bi-people me-2"></i>사용자 관리
 					</a>
 				</li>
 			</ul>
