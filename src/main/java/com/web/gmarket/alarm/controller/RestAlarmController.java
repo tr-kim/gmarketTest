@@ -31,15 +31,15 @@ public class RestAlarmController {
 
 		try {
 			
-			// TODO 기능 개발
-	        result.put(ConstantsUtils.LIST, alarmService.selectAlarmList());
-	        result.put(ConstantsUtils.TOTAL_COUNT, alarmService.selectAlarmListCount());
+	        result.put(ConstantsUtils.LIST, alarmService.selectAlarmList(alarmDto));
+	        result.put(ConstantsUtils.TOTAL_COUNT, alarmService.selectAlarmListCount(alarmDto));
 	        
 			return ResponseEntity.ok(result);
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			
-	        result.put(ConstantsUtils.MESSAGE, "이력 조회 실패");
+	        result.put(ConstantsUtils.MESSAGE, "알림 이력 조회 실패");
 	        result.put(ConstantsUtils.ERROR, e.getMessage());
 	        
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);

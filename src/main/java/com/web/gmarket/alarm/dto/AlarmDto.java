@@ -32,8 +32,14 @@ public class AlarmDto implements Serializable {
 	// 모듈 유형 - 1: DB 세션 단전, 2: KT 세션 단절, 3: S/W Down, 4: 미발송 적체, 5: 결과대기 적체
 	private Integer monType;
 	
+	// 모듈 설명
+	private String monComment;
+	
 	// 알림 유형 - 1: 발생, 2: 복구
 	private Integer almType;
+	
+	// 알림 설명
+	private String almComment;
 	
 	// 알림 상세
 	private String almInfo;

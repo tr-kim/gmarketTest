@@ -5,11 +5,58 @@
 <mapper namespace="com.web.gmarket.alarm.mapper.AlarmMapper">
 	
 	<select id="selectAlarmListCount" resultType="int" parameterType="com.web.gmarket.alarm.dto.AlarmDto">
-	
+		/*
+			AlarmMapper.selectAlarmListCount
+		*/
+		SELECT COUNT(ALM_SEQ)
+		FROM T_ALARM_STATUS
+		WHERE 1 = 1
+		<if test="companyCode > -1">
+		  AND COMPANY_CODE = #{companyCode}
+		</if>
+		<if test="startDate != null and endDate != null">
+		  AND ALM_DATE >= CONVERT(DATETIME, REPLACE(#{startDate}, '-', ''), 112)
+          AND ALM_DATE<![CDATA[ < ]]>DATEADD(DAY, 1, CONVERT(DATETIME, REPLACE(#{endDate}, '-', ''), 112))
+		</if>
+		<if test='svcName != null and svcName != ""'>
+		  AND SVC_NAME = #{svcName}
+		</if>
 	</select>
 	
 	<select id="selectAlarmList" resultType="com.web.gmarket.alarm.dto.AlarmDto" parameterType="com.web.gmarket.alarm.dto.AlarmDto">
-	
+		/*
+			AlarmMapper.selectAlarmList
+		*/
+		SELECT
+			ALM_SEQ, COMPANY_CODE, SVC_NAME, PROC_NAME, TABLE_NAME, MON_TYPE,
+			CASE 
+				WHEN MON_TYPE = 1 THEN 'DB 세션 단절'
+				WHEN MON_TYPE = 2 THEN 'KT 세션 단절'
+				WHEN MON_TYPE = 3 THEN 'S/W down'
+				WHEN MON_TYPE = 4 THEN '미발송 적체'
+				WHEN MON_TYPE = 5 THEN '결과대기 적체'
+				ELSE '기타'
+			END AS MON_COMMENT, ALM_TYPE,
+			CASE
+				WHEN ALM_TYPE = 1 THEN '발생'
+				WHEN ALM_TYPE = 2 THEN '복구'
+				ELSE '기타'
+			END AS ALM_COMMENT
+			, ISNULL(ALM_INFO, '-') AS ALM_INFO, CONVERT(char(19), ALM_DATE, 120) AS ALM_DATE
+		FROM T_ALARM_STATUS
+		WHERE 1 = 1
+		<if test="companyCode > -1">
+		  AND COMPANY_CODE = #{companyCode}
+		</if>
+		<if test="startDate != null and endDate != null">
+		  AND ALM_DATE >= CONVERT(DATETIME, REPLACE(#{startDate}, '-', ''), 112)
+          AND ALM_DATE<![CDATA[ < ]]>DATEADD(DAY, 1, CONVERT(DATETIME, REPLACE(#{endDate}, '-', ''), 112))
+		</if>
+		<if test='svcName != null and svcName != ""'>
+		  AND SVC_NAME = #{svcName}
+		</if>
+		ORDER BY ALM_DATE DESC
+		OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 	</select>
 	
 </mapper>

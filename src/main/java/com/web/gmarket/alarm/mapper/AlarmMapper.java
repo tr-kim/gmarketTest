@@ -9,7 +9,7 @@ import com.web.gmarket.alarm.dto.AlarmDto;
 @Mapper
 public interface AlarmMapper {
 
-	public int selectAlarmListCount();
+	public int selectAlarmListCount(AlarmDto dto);
 	
-	public List<AlarmDto> selectAlarmList();
+	public List<AlarmDto> selectAlarmList(AlarmDto dto);
 }

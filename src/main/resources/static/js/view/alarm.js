@@ -51,7 +51,7 @@ $(function() {
 		companyArray.push({ code: 2, name: '스마일캐시' });
 	}
 	
-	//대분류
+	// 대분류
 	companyInstance = $('#companyCategory').dxSelectBox({
 		dataSource: companyArray,
 		displayExpr: 'name',
@@ -63,13 +63,13 @@ $(function() {
 		}
 	}).dxSelectBox("instance");
 	
-	//대분류
+	// 서비스
 	serviceInstance = $('#serviceCategory').dxSelectBox({
 		dataSource: [],
 		displayExpr: 'name',
-		valueExpr: 'code',
-		value: companyCode,
+		valueExpr: 'name',
 		name: "svcName",
+		value: '',
 		onValueChanged: function(e) {
 			
 		}
@@ -135,12 +135,12 @@ $(function() {
 				alignment: "center"
 			},
 			{
-				dataField: "monType",
+				dataField: "monComment",
 				caption: "오류",
 				alignment: "center"
 			},
 			{
-				dataField: "almType",
+				dataField: "almComment",
 				caption: "알림",
 				alignment: "center"
 			},
@@ -243,8 +243,8 @@ $('#search-btn').dxButton({
 		});
 	
 		//재조회
-//		dataGrid.option("dataSource", dataSource);
-//		dataGrid.refresh(); 
+		dataGrid.option("dataSource", dataSource);
+		dataGrid.refresh();
     },
 }).dxButton('instance');
 
@@ -255,16 +255,23 @@ $('#excel-btn').dxButton({
     type: 'success',
     width: 120,
     onClick() {
+		const grid = $("#alarmGrid").dxDataGrid("instance");
+		exportGridToExcel(grid);
     },
 }).dxButton('instance');
 
-function formatTimestamp(str) {
-	str = str.trim();
-	const yyyy = str.slice(0, 4);
-	const mm = str.slice(4, 6);
-	const dd = str.slice(6, 8);
-	const hh = str.slice(8, 10);
-	const mi = str.slice(10, 12);
-	const ss = str.slice(12, 14);
-	return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+//엑셀 다운로드
+function exportGridToExcel(gridInstance) {
+	const workbook = new ExcelJS.Workbook();
+	const worksheet = workbook.addWorksheet('알림 이력 조회');
+
+	DevExpress.excelExporter.exportDataGrid({
+		component: gridInstance,
+		worksheet: worksheet,
+		autoFilterEnabled: true,
+	}).then(() => {
+		workbook.xlsx.writeBuffer().then((buffer) => {
+			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '알림 이력 조회.xlsx');
+		});
+	});
 }

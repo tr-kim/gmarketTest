@@ -6,7 +6,7 @@ import com.web.gmarket.alarm.dto.AlarmDto;
 
 public interface AlarmService {
 	
-	public int selectAlarmListCount();
+	public int selectAlarmListCount(AlarmDto dto);
 	
-	public List<AlarmDto> selectAlarmList();
+	public List<AlarmDto> selectAlarmList(AlarmDto dto);
 }

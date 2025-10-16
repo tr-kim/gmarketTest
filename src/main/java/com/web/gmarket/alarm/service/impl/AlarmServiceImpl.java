@@ -16,13 +16,13 @@ public class AlarmServiceImpl implements AlarmService {
 	private CommonService commonService;
 
 	@Override
-	public int selectAlarmListCount() {
-		return commonService.getAlarmMapper().selectAlarmListCount();
+	public int selectAlarmListCount(AlarmDto dto) {
+		return commonService.getAlarmMapper().selectAlarmListCount(dto);
 	}
 
 	@Override
-	public List<AlarmDto> selectAlarmList() {
-		return commonService.getAlarmMapper().selectAlarmList();
+	public List<AlarmDto> selectAlarmList(AlarmDto dto) {
+		return commonService.getAlarmMapper().selectAlarmList(dto);
 	}
 
 }
