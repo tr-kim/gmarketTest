@@ -426,6 +426,12 @@ aside .psw_chg_btn:hover{
     padding: .3rem;
     background-color: #fff;
 }
+.row-real table tr.pro td{
+    text-align: start;
+}
+.row-real table tr.pro td span{
+    text-align: center;
+}
 .row-real .summery table td{
     padding: 1.5rem .3rem;
     font-size: 1.2rem;
