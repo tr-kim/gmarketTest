@@ -183,6 +183,10 @@ a.logout:hover{
     background: #fdfdfd;
 }
 section .real_wrap{
+    width: 1650px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
     padding-top: .5rem;
 }
 .aside-m .real_wrap{
@@ -475,17 +479,11 @@ aside .psw_chg_btn:hover{
 .row-real .nav-tabs .nav-link.active span::before{
     background-color: #0f6cbd;
 }
-/* .row-real .nav-tabs .nav-link:not(.active):hover {
+.row-real .nav-tabs .nav-link:not(.active):hover {
 	font-weight: 600;
 	border-color: #0f6cbd;
 	background-color: #0f6cbd;
 	color: #fff;
-} */
-.row-real .nav-tabs .nav-link:not(.active):hover {
-	font-weight: 600;
-}
-.row-real .nav-tabs .nav-link:not(.active):hover span::before {
-	background-color: #666;
 }
 .row-real .hist_grid_right{
     border-right: 1px solid #666;
