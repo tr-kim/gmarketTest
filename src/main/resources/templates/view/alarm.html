@@ -46,6 +46,9 @@
 		<div id="alarmGrid"></div>
 	</div>
 	
+	<script th:inline="javascript">
+		const nameList = /*[[${list}]]*/ [];
+	</script>
 	<script th:src="@{/js/view/alarm.js}"></script>
 </body>
 

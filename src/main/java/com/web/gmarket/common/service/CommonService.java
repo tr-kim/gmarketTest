@@ -9,6 +9,7 @@ import com.web.gmarket.bulk.db.mapper.DbSendMapper;
 import com.web.gmarket.bulk.excel.mapper.ExcelSendMapper;
 import com.web.gmarket.common.config.DynamicDataSourceService;
 import com.web.gmarket.common.mapper.CommonSendMapper;
+import com.web.gmarket.common.mapper.ServiceInfoMapper;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.hist.mapper.HistMapper;
 import com.web.gmarket.real.mapper.RealMapper;
@@ -65,5 +66,9 @@ public class CommonService {
     
     public AlarmMapper getAlarmMapper() {
         return dynamicDataSourceService.getMapper(ConstantsUtils.DB_GMARKET, AlarmMapper.class);
+    }
+    
+    public ServiceInfoMapper getServiceInfoMapper() {
+        return dynamicDataSourceService.getMapper(ConstantsUtils.DB_GMARKET, ServiceInfoMapper.class);
     }
 }

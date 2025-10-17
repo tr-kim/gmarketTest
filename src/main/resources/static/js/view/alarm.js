@@ -51,6 +51,37 @@ $(function() {
 		companyArray.push({ code: 2, name: '스마일캐시' });
 	}
 	
+	const svcArray = {
+		0: [
+			{ name: '선택하세요' },
+			{ name: '전체' }
+		],
+		1: [
+			{ name: '선택하세요' },
+			{ name: '전체' }
+		],
+		2: [
+			{ name: '선택하세요' },
+			{ name: '전체' }
+		]
+	};
+	
+	for(var i = 0; i < nameList.length; i++) {
+		const { companyCode, name } = nameList[i];
+		
+		switch (companyCode) {
+			case 0:
+				svcArray[0].push({ name: name });
+				break;
+			case 1:
+				svcArray[1].push({ name: name });
+				break;
+			case 2:
+				svcArray[2].push({ name: name });
+				break;
+		}
+	}
+	
 	// 대분류
 	companyInstance = $('#companyCategory').dxSelectBox({
 		dataSource: companyArray,
@@ -59,17 +90,19 @@ $(function() {
 		value: companyCode,
 		name: "companyCode",
 		onValueChanged: function(e) {
-			
+			//중분류 업데이트
+			serviceInstance.option('dataSource', svcArray[e.value] || []);
+			serviceInstance.option('value', '선택하세요'); // 기본값 다시 설정
 		}
 	}).dxSelectBox("instance");
-	
+		
 	// 서비스
 	serviceInstance = $('#serviceCategory').dxSelectBox({
-		dataSource: [],
+		dataSource: svcArray[1],
 		displayExpr: 'name',
 		valueExpr: 'name',
 		name: "svcName",
-		value: '',
+		value: '선택하세요',
 		onValueChanged: function(e) {
 			
 		}
@@ -204,6 +237,7 @@ $('#search-btn').dxButton({
 		const formData = new FormData(document.getElementById("alarmForm"));
 		
 		const searchCompanyCode = formData.get("companyCode");
+		const svcName = formData.get("svcName");
 		const searchStartDate = new Date(formData.get("startDate"));
 		const searchEndDate = new Date(formData.get("endDate"));
 		const diffMs = searchEndDate - searchStartDate;
@@ -212,6 +246,8 @@ $('#search-btn').dxButton({
 		if(searchStartDate > searchEndDate) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
 		if(diffDays > period) { showDialogCustom("조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : " + diffMs + "일"); return false }
 		if(searchCompanyCode == -1 || searchCompanyCode < 0) { showDialogCustom("대분류를 선택하세요."); return false; }
+		if(svcName === '선택하세요') { showDialogCustom("서비스명을 선택하세요."); return false; }
+		if(svcName === '전체') { formData.set("svcName", ''); }
 		
 		const dataSource = new DevExpress.data.DataSource({
 			load: function(loadOptions) {
