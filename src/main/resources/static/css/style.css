@@ -182,12 +182,19 @@ a.logout:hover{
     position: relative;
     background: #fdfdfd;
 }
+section .real_wrap{
+    width: 1650px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    padding-top: .5rem;
+}
 .aside-m .real_wrap{
     width: 100%;
     position: absolute;
     top: 0;
     right: 0;
-    padding: 1rem;
+    padding: .5rem 1rem;
     overflow: auto;
     height: 100vh;
 }
@@ -433,9 +440,6 @@ aside .psw_chg_btn:hover{
     padding-top: 1rem;
     padding-bottom: 1rem;
 }
-.row-real .summery .card{
-    overflow: hidden;
-}
 .row-real .summery .card table td{
     border-bottom: 1px solid #dee2e6;
 }
@@ -449,6 +453,37 @@ aside .psw_chg_btn:hover{
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.row-real .nav-link {
+    color: #666;
+}
+.row-real .nav-tabs .nav-link.active {
+    color: #0f6cbd;
+    font-weight: 600;
+}
+.row-real .nav-tabs .nav-link span{
+    position: relative;
+}
+.row-real .nav-tabs .nav-link span::before{
+    content: "";
+    position: absolute;
+    top: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120%;
+    height: 2px;
+    border-radius: 50px;
+    background-color: transparent;
+    transition: .3s;
+}
+.row-real .nav-tabs .nav-link.active span::before{
+    background-color: #0f6cbd;
+}
+.row-real .nav-tabs .nav-link:not(.active):hover {
+	font-weight: 600;
+	border-color: #0f6cbd;
+	background-color: #0f6cbd;
+	color: #fff;
 }
 .row-real .hist_grid_right{
     border-right: 1px solid #666;
@@ -494,7 +529,17 @@ aside .psw_chg_btn:hover{
 #real_toggle{
         margin: 0;
 }
-#real_toggle .dx-switch-on{
+#real_toggle .dx-button-mode-outlined.dx-state-selected {
+    background-color: #0f6cbd;
+    border-color: #0f6cbd;
+    color: #fff;
+}
+#real_toggle .dx-button-mode-outlined {
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #666;
+}
+/* #real_toggle .dx-switch-on{
     color: #fff;
     height: 36px;
     line-height:2;
@@ -518,7 +563,7 @@ aside .psw_chg_btn:hover{
         flex-basis: 30px;
             width: 30px;
     height: 30px;
-}
+} */
 /* send.html */
 /* excel_send.html */
 .send > ul{

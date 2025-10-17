@@ -21,21 +21,21 @@
 }(0, (function(localization) {
     localization.loadMessages({
         en: {
-            Yes: "확인",
-            No: "취소",
+            Yes: "확인", // Yes
+            No: "취소", // No
             Cancel: "Cancel",
             CheckState: "Check state",
             Close: "Close",
             Clear: "Clear",
             Done: "Done",
-            Loading: "조회 중입니다.",
-            Select: "Select...",
+            Loading: "조회 중입니다.", // Loading...
+            Select: "선택하세요.", // Select...
             Search: "Search",
             Back: "Back",
-            OK: "확인",
+            OK: "확인", // OK
             Today: "Today",
             Yesterday: "Yesterday",
-            "dxCollectionWidget-noDataText": "No data to display",
+            "dxCollectionWidget-noDataText": "표시할 데이터가 없습니다.", // No data to display
             "dxDropDownEditor-selectLabel": "Select",
             "validation-required": "Required",
             "validation-required-formatted": "{0} is required",
@@ -62,7 +62,7 @@
             "dxList-refreshingText": "Refreshing...",
             "dxList-pageLoadingText": "Loading...",
             "dxList-nextButtonText": "More",
-            "dxList-selectAll": "전체 선택",
+            "dxList-selectAll": "전체 선택", // Select All
             "dxList-listAriaLabel": "Items",
             "dxList-listAriaLabel-deletable": "Deletable items",
             "dxListEditDecorator-delete": "Delete",
@@ -88,7 +88,7 @@
             "dxDateRangeBox-endDateLabel": "End Date",
             "dxFileUploader-selectFile": "이미지를 드래그&드롭하거나 클릭해 주세요.", // Select a file
             "dxFileUploader-dropFile": "", // or Drop a file here
-            "dxFileUploader-bytes": "바이트", // bytes
+            "dxFileUploader-bytes": "bytes",
             "dxFileUploader-kb": "KB",
             "dxFileUploader-Mb": "MB",
             "dxFileUploader-Gb": "GB",
@@ -128,7 +128,7 @@
             "dxDataGrid-validationCancelChanges": "Cancel changes",
             "dxDataGrid-groupPanelEmptyText": "Drag a column header here to group by that column",
             "dxDataGrid-noDataText": "No data",
-            "dxDataGrid-searchPanelPlaceholder": "찾을 내용을 입력하세요.",
+            "dxDataGrid-searchPanelPlaceholder": "찾을 내용을 입력하세요.", // Search...
             "dxDataGrid-filterRowShowAllText": "(All)",
             "dxDataGrid-filterRowResetOperationText": "Reset",
             "dxDataGrid-filterRowOperationEquals": "Equals",
@@ -182,8 +182,8 @@
             "dxDataGrid-headerFilterLabel": "Filter options",
             "dxDataGrid-headerFilterIndicatorLabel": "Show filter options for column '{0}'",
             "dxDataGrid-headerFilterEmptyValue": "(Blanks)",
-            "dxDataGrid-headerFilterOK": "확인",
-            "dxDataGrid-headerFilterCancel": "취소",
+            "dxDataGrid-headerFilterOK": "확인", // OK
+            "dxDataGrid-headerFilterCancel": "취소", // Cancel
             "dxDataGrid-ariaAdaptiveCollapse": "Hide additional data",
             "dxDataGrid-ariaAdaptiveExpand": "Display additional data",
             "dxDataGrid-ariaColumn": "Column",
