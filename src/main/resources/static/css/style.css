@@ -457,10 +457,10 @@ aside .psw_chg_btn:hover{
     color: #0f6cbd;
     font-weight: 600;
 }
-.row-real .nav-tabs .nav-link.active span{
+.row-real .nav-tabs .nav-link span{
     position: relative;
 }
-.row-real .nav-tabs .nav-link.active span::before{
+.row-real .nav-tabs .nav-link span::before{
     content: "";
     position: absolute;
     top: 115%;
@@ -469,13 +469,23 @@ aside .psw_chg_btn:hover{
     width: 120%;
     height: 2px;
     border-radius: 50px;
+    background-color: transparent;
+    transition: .3s;
+}
+.row-real .nav-tabs .nav-link.active span::before{
     background-color: #0f6cbd;
 }
-.row-real .nav-tabs .nav-link:not(.active):hover {
+/* .row-real .nav-tabs .nav-link:not(.active):hover {
 	font-weight: 600;
 	border-color: #0f6cbd;
 	background-color: #0f6cbd;
 	color: #fff;
+} */
+.row-real .nav-tabs .nav-link:not(.active):hover {
+	font-weight: 600;
+}
+.row-real .nav-tabs .nav-link:not(.active):hover span::before {
+	background-color: #666;
 }
 .row-real .hist_grid_right{
     border-right: 1px solid #666;
