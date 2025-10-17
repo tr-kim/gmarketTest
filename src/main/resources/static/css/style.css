@@ -182,6 +182,9 @@ a.logout:hover{
     position: relative;
     background: #fdfdfd;
 }
+section .real_wrap{
+    padding-top: .5rem;
+}
 .aside-m .real_wrap{
     width: 100%;
     position: absolute;
@@ -467,6 +470,9 @@ aside .psw_chg_btn:hover{
     height: 2px;
     border-radius: 50px;
     background-color: #0d6efd;
+}
+.row-real .nav-tabs .nav-link:not(.active):hover {
+    border-color: #0d6efd;
 }
 .row-real .hist_grid_right{
     border-right: 1px solid #666;
