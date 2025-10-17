@@ -228,8 +228,10 @@ $(function () {
 			const params = {
 				startDate: startDateFormatted,
 				endDate: endDateFormatted,
-				startTime: startTimeFormatted + "000000",
-				endTime: endTimeFormatted + "235959",
+//				startTime: startTimeFormatted + "000000",
+//				endTime: endTimeFormatted + "235959",
+				startTime: startTimeFormatted,
+				endTime: endTimeFormatted,
 				phoneNum: phoneNumValue,
 				companyCode: companyValue,
 				//테스트 중. 전체 시 테이블명 수정 필요

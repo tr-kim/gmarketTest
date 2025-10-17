@@ -50,6 +50,7 @@
                 <div class="ms-2 text-center">
                     <div class="user_nm font-weight-500">
 						<span sec:authentication="principal.username"></span>
+						(<span sec:authentication="principal.userId"></span>)
                     </div>
                     <div class="user_grade">
 						<span sec:authentication="principal.userGradeName"></span>
