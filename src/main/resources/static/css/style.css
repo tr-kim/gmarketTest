@@ -486,20 +486,20 @@ aside .psw_chg_btn:hover{
 	color: #fff;
 }
 .row-real .hist_grid_right{
-    border-right: 1px solid #666;
+    border-right: 1px solid rgba(0, 0, 0, 0.175);
 }
 .row-real .hist_grid_bottom{
-    border-bottom: 1px solid #666;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.175);
 }
 .row-real .hist_grid_top{
-    border-top: 1px solid #666;
+    border-top: 1px solid rgba(0, 0, 0, 0.175);
 }
 .row-real .hist_grid_left{
-    border-left: 1px solid #666;
+    border-left: 1px solid rgba(0, 0, 0, 0.175);
 }
 .row-real table th:last-child,
 .row-real table td:last-child{
-    border-right: 1px solid #666;
+    border-right: 1px solid rgba(0, 0, 0, 0.175);
 }
 .col-real .processFileStat{
     background-color: #ffffff;
