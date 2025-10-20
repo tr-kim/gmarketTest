@@ -244,7 +244,7 @@ $('#search-btn').dxButton({
 		const diffDays = diffMs / (1000 * 60 * 60 * 24);
 		
 		if(searchStartDate > searchEndDate) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
-		if(diffDays > period) { showDialogCustom("조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : " + diffMs + "일"); return false }
+		if(diffDays > period) { showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : ${diffDays} 일`); return false }
 		if(searchCompanyCode == -1 || searchCompanyCode < 0) { showDialogCustom("대분류를 선택하세요."); return false; }
 		if(svcName === '선택하세요') { showDialogCustom("서비스명을 선택하세요."); return false; }
 		if(svcName === '전체') { formData.set("svcName", ''); }
