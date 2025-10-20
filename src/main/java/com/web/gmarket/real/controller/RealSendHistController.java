@@ -29,22 +29,23 @@ public class RealSendHistController {
 		return "view/real_send_hist";
 	}
 	
-	@GetMapping("/real/left2")
-	public String left2(Model model) {
+	// 기존 화면(요구사항 전)
+	@GetMapping("/real/old")
+	public String realOld(Model model) {
 		
-		model.addAttribute(ConstantsUtils.LAYOUT, "/layouts/left_layout");
+		model.addAttribute(ConstantsUtils.LAYOUT, "/layouts/top_layout");
 		model.addAttribute(ConstantsUtils.ACTIVE, ConstantsUtils.REAL);
 		
-		return "view/real_send_hist_old2";
+		return "view/real_send_hist_old";
 	}
 	
-	@GetMapping("/real/left3")
-	public String left3(Model model) {
+	@GetMapping("/real/old/left")
+	public String leftOld(Model model) {
 		
 		model.addAttribute(ConstantsUtils.LAYOUT, "/layouts/left_layout");
 		model.addAttribute(ConstantsUtils.ACTIVE, ConstantsUtils.REAL);
 		
-		return "view/real_send_hist_old3";
+		return "view/real_send_hist_old";
 	}
 	
 	// 지마켓 상세
