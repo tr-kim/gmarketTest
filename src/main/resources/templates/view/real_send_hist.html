@@ -27,7 +27,7 @@
 				</div>
 			</div>
 			<div class="col-2 d-flex">
-				<div class="content flex-fill d-flex flex-column justify-content-between">
+				<div class="content flex-fill d-flex flex-column justify-content-between pointer">
 					<div class="d-flex align-items-center justify-content-between">
 						<div class="font-sz-16">다운</div>
 						<i class="bi bi-caret-right-fill"></i>
@@ -36,7 +36,7 @@
 				</div>
 			</div>
 			<div class="col-2 d-flex">
-				<div class="content flex-fill d-flex flex-column justify-content-between">
+				<div class="content flex-fill d-flex flex-column justify-content-between pointer">
 					<div class="d-flex align-items-center justify-content-between">
 						<div class="font-sz-16">이슈</div>
 						<i class="bi bi-caret-right-fill"></i>
@@ -45,7 +45,7 @@
 				</div>
 			</div>
 			<div class="col-2 d-flex">
-				<div class="content flex-fill d-flex flex-column justify-content-between">
+				<div class="content flex-fill d-flex flex-column justify-content-between pointer">
 					<div class="d-flex align-items-center justify-content-between">
 						<div class="font-sz-16">지연</div>
 						<i class="bi bi-caret-right-fill"></i>
@@ -54,7 +54,7 @@
 				</div>
 			</div>
 			<div class="col-2 d-flex">
-				<div class="content flex-fill d-flex justify-content-between">
+				<div class="content flex-fill d-flex justify-content-between pointer">
 					<div class="d-flex flex-column justify-content-between">
 						<div class="font-sz-18 mb-3">총 발송량 <span id="totalSend" class="font-weight-700 text-danger">156,742</span></div>
 						<div class="font-sz-18">완료율 <span class="font-weight-700 text-danger"><span id="completion">98.2</span>%</span></div>
@@ -189,7 +189,7 @@
 						<!-- DR -->						 
 						<div id="s-dr" class="d-flex row d-none">
 							<div class="col-4 d-flex">
-								<div class="card text-center flex-fill">
+								<div class="card text-center flex-fill overflow-hidden">
 									<div class="card-header font-sz-16">지마켓</div>							
 									<table>
 										<colgroup>
@@ -228,7 +228,7 @@
 								</div>
 							</div>
 							<div class="col-4 d-flex">
-								<div class="card text-center flex-fill">
+								<div class="card text-center flex-fill overflow-hidden">
 									<div class="card-header font-sz-16">옥션</div>							
 									<table>
 										<colgroup>
@@ -267,7 +267,7 @@
 								</div>
 							</div>
 							<div class="col-4 d-flex smilecash">
-								<div class="card text-center flex-fill">
+								<div class="card text-center flex-fill overflow-hidden">
 									<div class="card-header font-sz-16">스마일캐시</div>							
 									<table class="h-100">
 										<colgroup>
@@ -313,7 +313,7 @@
 					<div class="card-body p-3">
 						<!-- 운영 -->						 
 						<div id="d-operate" class="d-flex row">
-							<table class="table">
+							<table class="table mb-0">
 								<thead>
 									<tr class="hist_grid_bottom hist_grid_top">
 										<th class="hist_grid_right hist_grid_left"></th>
@@ -340,7 +340,7 @@
 								<tbody>
 									<!-- 지마켓 -->
 									<tr>
-										<td rowspan="6" class="align-middle hist_grid_right hist_grid_bottom hist_grid_left">지마켓</td>
+										<td rowspan="6" class="align-middle hist_grid_right hist_grid_bottom hist_grid_left font-weight-600">지마켓</td>
 										<td colspan="2">KT-SME-ENG</td>
 										<td colspan="2">KT-SMS-ETC</td>
 										<td colspan="2">KT-SMS-EVENT-GMA</td>
@@ -619,7 +619,7 @@
 									</tr>
 									<!-- 옥션 -->
 									<tr>
-										<td rowspan="6" class="align-middle hist_grid_right hist_grid_bottom hist_grid_left">옥션</td>
+										<td rowspan="6" class="align-middle hist_grid_right hist_grid_bottom hist_grid_left font-weight-600">옥션</td>
 										<td colspan="2">KT-SMS-API</td>
 										<td colspan="2">KT-SMS-BATCH</td>
 										<td colspan="2">KT_SMS_CHARGED</td>
@@ -896,7 +896,7 @@
 									</tr>
 									<!-- 스마일캐시 -->
 									<tr>
-										<td rowspan="2" class="align-middle hist_grid_right hist_grid_left hist_grid_bottom">스마일캐시</td>
+										<td rowspan="2" class="align-middle hist_grid_right hist_grid_left hist_grid_bottom font-weight-600">스마일캐시</td>
 										<td colspan="2">KT-SMS-ADMIN</td>
 										<td colspan="2">KT-SMS-ALERT</td>
 										<td colspan="2">KT-SMS-CERT</td>
@@ -977,7 +977,7 @@
 						</div>
 						<!-- DR -->						 
 						<div id="d-dr" class="d-flex row d-none">
-							<table class="table">
+							<table class="table mb-0">
 								<thead>
 									<tr class="hist_grid_bottom hist_grid_top">
 										<th class="hist_grid_right hist_grid_left"></th>
@@ -1004,7 +1004,7 @@
 								<tbody>
 									<!-- 지마켓 -->
 									<tr>
-										<td rowspan="6" class="align-middle hist_grid_right hist_grid_bottom hist_grid_left">지마켓</td>
+										<td rowspan="6" class="align-middle hist_grid_right hist_grid_bottom hist_grid_left font-weight-600">지마켓</td>
 										<td colspan="2">KT-SME-ENG</td>
 										<td colspan="2">KT-SMS-ETC</td>
 										<td colspan="2">KT-SMS-EVENT-GMA</td>
@@ -1283,7 +1283,7 @@
 									</tr>
 									<!-- 옥션 -->
 									<tr>
-										<td rowspan="6" class="align-middle hist_grid_right hist_grid_bottom hist_grid_left">옥션</td>
+										<td rowspan="6" class="align-middle hist_grid_right hist_grid_bottom hist_grid_left font-weight-600">옥션</td>
 										<td colspan="2">KT-SMS-API</td>
 										<td colspan="2">KT-SMS-BATCH</td>
 										<td colspan="2">KT_SMS_CHARGED</td>
@@ -1560,7 +1560,7 @@
 									</tr>
 									<!-- 스마일캐시 -->
 									<tr>
-										<td rowspan="2" class="align-middle hist_grid_right hist_grid_left hist_grid_bottom">스마일캐시</td>
+										<td rowspan="2" class="align-middle hist_grid_right hist_grid_left hist_grid_bottom font-weight-600">스마일캐시</td>
 										<td colspan="2">KT-SMS-ADMIN</td>
 										<td colspan="2">KT-SMS-ALERT</td>
 										<td colspan="2">KT-SMS-CERT</td>

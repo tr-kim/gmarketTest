@@ -183,7 +183,7 @@ a.logout:hover{
     background: #fdfdfd;
 }
 section .real_wrap{
-    width: 1650px;
+    width: 1700px;
     position: relative;
     left: 50%;
     transform: translateX(-50%);
@@ -423,7 +423,7 @@ aside .psw_chg_btn:hover{
     border-right: 1px solid #dee2e6;
     text-overflow: ellipsis;
     overflow: hidden;
-    padding: .3rem;
+    padding: .4rem;
     background-color: #fff;
 }
 .row-real .summery table td{
@@ -485,6 +485,12 @@ aside .psw_chg_btn:hover{
 	background-color: #0f6cbd;
 	color: #fff;
 }
+#d-dr,
+#d-operate{
+    border: 1px solid rgba(0, 0, 0, 0.175);
+    border-radius: 6px;
+    overflow: hidden;
+}
 .row-real .hist_grid_right{
     border-right: 1px solid rgba(0, 0, 0, 0.175);
 }
@@ -497,9 +503,21 @@ aside .psw_chg_btn:hover{
 .row-real .hist_grid_left{
     border-left: 1px solid rgba(0, 0, 0, 0.175);
 }
+.row-real table th{
+    border-top: 1px solid #fff;
+}
+.row-real table th:first-child,
+.row-real table td[rowspan="6"],
+.row-real table td[rowspan="2"]{
+    border-left: 1px solid #fff;
+}
+.row-real table td[rowspan="2"],
+.row-real table tr:last-child td{
+    border-bottom: 1px solid #fff;
+}
 .row-real table th:last-child,
 .row-real table td:last-child{
-    border-right: 1px solid rgba(0, 0, 0, 0.175);
+    border-right: 1px solid #fff;
 }
 .col-real .processFileStat{
     background-color: #ffffff;
@@ -523,7 +541,7 @@ aside .psw_chg_btn:hover{
     background-color: #fff;
     border: 1px solid #dee2e6;
 }
-.real_counts .content {
+.real_counts .content.pointer {
     cursor: pointer;
 }
 #real_toggle{

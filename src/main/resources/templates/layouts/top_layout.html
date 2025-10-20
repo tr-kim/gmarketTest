@@ -47,7 +47,7 @@
                 <div class="user_img">
                     <img th:src="@{/images/user.png}" alt="사용자 이미지">
                 </div>
-                <div class="ms-2 text-center">
+                <div class="ms-2">
                     <div class="user_nm font-weight-500">
 						<span sec:authentication="principal.username"></span>
 						(<span sec:authentication="principal.userId"></span>)
