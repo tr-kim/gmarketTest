@@ -1,450 +1,417 @@
-const labels = ["전송메시지", "성공메시지", "실패메시지"];
-const borderColor = ['rgb(153, 102, 255)', 'rgb(54, 162, 235)', 'rgb(255, 99, 132)'];
-const backgroundColor = ['rgba(153, 102, 255, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'];
-const totalTimeCnt = 60000;
-const timeCnt = 10000;
-const maxPoints = 10;
+const ctx1 = document.getElementById('action_chart').getContext('2d');
+const myChart1 = new Chart(ctx1, {
+	type: 'line',
+	data: {
+		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+		datasets: [
+			{
+				label: 'KT-SME-ENG'
+				, data: [65, 59, 80, 81, 56, 55, 40]
+				, borderColor: 'rgba(255, 0, 0, 1)'
+				, backgroundColor: 'rgba(255, 0, 0, 0.2)'
+				, fill: false
+				, tension: 0.1
+			},
+			{
+				label: 'KT-SMS-EVENT-GMA'
+				, data: [37, 56, 78, 34, 23, 86, 34]
+				, borderColor: 'rgba(0, 0, 255, 1)'
+				, backgroundColor: 'rgba(0, 0, 255, 0.2)'
+				, fill: false
+				, tension: 0.1
+			},
+			{
+				label: 'KT-SMS-STATP-GMA'
+				, data: [12, 32, 55, 22, 55, 64, 21]
+				, borderColor: 'rgba(255, 255, 0, 1)'
+				, backgroundColor: 'rgba(255, 255, 0, 0.2)'
+				, fill: false
+				, tension: 0.1
+			},
+			{
+				label: 'KT-MMS-LARGE-GMA'
+				, data: [53, 21, 56, 77, 42, 23, 41]
+				, borderColor: 'rgba(0, 255, 255, 1)'
+				, backgroundColor: 'rgba(0, 255, 255, 0.2)'
+				, fill: false
+				, tension: 0.1
+			},
+			{
+				label: 'KT-MMS-EVENT-GMA'
+				, data: [75, 87, 34, 65, 78, 44, 12]
+				, borderColor: 'rgba(255, 0, 255, 1)'
+				, backgroundColor: 'rgba(255, 0, 255, 0.2)'
+				, fill: false
+				, tension: 0.1
+			},
+			{
+				label: 'KT-SMS-MO4MMS'
+				, data: []
+				, borderColor: 'rgba(255, 165, 0, 1)'
+				, backgroundColor: 'rgba(255, 165, 0, 0.2)'
+				, fill: false
+				, tension: 0.1
+			},
+			{
+				label: 'KT-MMS-NON-GMA'
+				, data: [53, 23, 56, 32, 32, 23, 56]
+				, borderColor: 'rgba(255, 255, 255, 1)'
+				, backgroundColor: 'rgba(255, 255, 255, 0.2)'
+				, fill: false
+				, tension: 0.1
+			},
+			{
+				label: 'KT-SMS-STATP-GMA-2CON'
+				, data: [43, 54, 23, 12, 54, 76, 97]
+				, borderColor: 'rgba(0, 255, 0, 1)'
+				, backgroundColor: 'rgba(0, 255, 0, 0.2)'
+				, fill: false
+				, tension: 0.1
+			},
+			{
+				label: 'KT-MMS-NON-GMA'
+				, data: [53, 23, 56, 32, 32, 23, 56]
+				, borderColor: 'rgba(255, 255, 255, 1)'
+				, backgroundColor: 'rgba(255, 255, 255, 0.2)'
+				, fill: false
+				, tension: 0.1
+			},
+			{
+				label: 'KT-SMS-STATP-GMA-2CON'
+				, data: [43, 54, 23, 12, 54, 76, 97]
+				, borderColor: 'rgba(0, 255, 0, 1)'
+				, backgroundColor: 'rgba(0, 255, 0, 0.2)'
+				, fill: false
+				, tension: 0.1
+			}
+		],
+		fill: false
+	},
+  options: {
+    responsive: true,
+    scales: {
+      x: {
+        beginAtZero: true
+      },
+      y: {
+        beginAtZero: true
+      }
+    },
+	plugins: {
+        legend: {
+            position: 'top',
+        },
+		// title: {
+		// 	display: true,
+		// 	text: 'ACTION'
+		// },
+    }
+  }
+});
 
-const auctionTableName = [
-	'SMSCLI_TBL_CHARGED', 'SMSCLI_TBL_ESCROW', 'SMSCLI_TBL_OUTBID', 'SMSCLI_TBL_API', 'SMSCLI_TBL_BATCH'
-	, 'SMSCLI_TBL_MOTORS', 'SMSCLI_TBL_PUMBL', 'SMSCLI_TBL_EVENT', 'SMSCLI_TBL_LARGE', 'LMSCLI_TBL_EVENT'
-	, 'LMSCLI_TBL_LARGE', 'MMSCLI_TBL_EVENT', 'MMSCLI_TBL_LARGE', 'IAC_SMSCLI_TBL_LARGE', 'IAC_LMSCLI_TBL_LARGE'
-	, 'IAC_MMSCLI_TBL_LARGE'
+const ctx2 = document.getElementById('gmarket_chart').getContext('2d');
+const myChart2 = new Chart(ctx2, {
+  type: 'line',
+  data: {
+    		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+  			datasets: [
+  				{
+  					label: 'KT-SME-ENG'
+  					, data: [65, 59, 80, 81, 56, 55, 40]
+  					, borderColor: 'rgba(255, 0, 0, 1)'
+  					, backgroundColor: 'rgba(255, 0, 0, 0.2)'
+  					, fill: false
+  					, tension: 0.1
+  				},
+  				{
+  					label: 'KT-SMS-EVENT-GMA'
+  					, data: [37, 56, 78, 34, 23, 86, 34]
+  					, borderColor: 'rgba(0, 0, 255, 1)'
+  					, backgroundColor: 'rgba(0, 0, 255, 0.2)'
+  					, fill: false
+  					, tension: 0.1
+  				},
+  				{
+  					label: 'KT-SMS-STATP-GMA'
+  					, data: [12, 32, 55, 22, 55, 64, 21]
+  					, borderColor: 'rgba(255, 255, 0, 1)'
+  					, backgroundColor: 'rgba(255, 255, 0, 0.2)'
+  					, fill: false
+  					, tension: 0.1
+  				},
+  				{
+  					label: 'KT-MMS-LARGE-GMA'
+  					, data: [53, 21, 56, 77, 42, 23, 41]
+  					, borderColor: 'rgba(0, 255, 255, 1)'
+  					, backgroundColor: 'rgba(0, 255, 255, 0.2)'
+  					, fill: false
+  					, tension: 0.1
+  				},
+  				{
+  					label: 'KT-MMS-EVENT-GMA'
+  					, data: [75, 87, 34, 65, 78, 44, 12]
+  					, borderColor: 'rgba(255, 0, 255, 1)'
+  					, backgroundColor: 'rgba(255, 0, 255, 0.2)'
+  					, fill: false
+  					, tension: 0.1
+  				},
+  				{
+  					label: 'KT-SMS-MO4MMS'
+  					, data: []
+  					, borderColor: 'rgba(255, 165, 0, 1)'
+  					, backgroundColor: 'rgba(255, 165, 0, 0.2)'
+  					, fill: false
+  					, tension: 0.1
+  				},
+  				{
+  					label: 'KT-MMS-NON-GMA'
+  					, data: [53, 23, 56, 32, 32, 23, 56]
+  					, borderColor: 'rgba(255, 255, 255, 1)'
+  					, backgroundColor: 'rgba(255, 255, 255, 0.2)'
+  					, fill: false
+  					, tension: 0.1
+  				},
+				{
+					label: 'KT-MMS-NON-GMA'
+					, data: [53, 23, 56, 32, 32, 23, 56]
+					, borderColor: 'rgba(255, 255, 255, 1)'
+					, backgroundColor: 'rgba(255, 255, 255, 0.2)'
+					, fill: false
+					, tension: 0.1
+				},
+				{
+					label: 'KT-SMS-STATP-GMA-2CON'
+					, data: [43, 54, 23, 12, 54, 76, 97]
+					, borderColor: 'rgba(0, 255, 0, 1)'
+					, backgroundColor: 'rgba(0, 255, 0, 0.2)'
+					, fill: false
+					, tension: 0.1
+				},
+				{
+					label: 'KT-MMS-NON-GMA'
+					, data: [53, 23, 56, 32, 32, 23, 56]
+					, borderColor: 'rgba(255, 255, 255, 1)'
+					, backgroundColor: 'rgba(255, 255, 255, 0.2)'
+					, fill: false
+					, tension: 0.1
+				},
+				{
+					label: 'KT-SMS-STATP-GMA-2CON'
+					, data: [43, 54, 23, 12, 54, 76, 97]
+					, borderColor: 'rgba(0, 255, 0, 1)'
+					, backgroundColor: 'rgba(0, 255, 0, 0.2)'
+					, fill: false
+					, tension: 0.1
+				}
+  			],
+  			fill: false
+  		},
+  options: {
+    responsive: true,
+    scales: {
+      x: {
+        beginAtZero: true
+      },
+      y: {
+        beginAtZero: true
+      }
+    },
+	plugins: {
+        legend: {
+            position: 'right',
+        },
+		// title: {
+		// 	display: true,
+		// 	text: 'GMARKET'
+		// },
+    }
+  }
+});
+
+const ctx3 = document.getElementById('smile_cash_chart').getContext('2d');
+const myChart3 = new Chart(ctx3, {
+  type: 'line',
+  data: {
+    		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+  			datasets: [
+  				{
+  					label: 'KT-SME-ENG'
+  					, data: [65, 59, 80, 81, 56, 55, 40]
+  					, borderColor: 'rgba(255, 0, 0, 1)'
+  					, backgroundColor: 'rgba(255, 0, 0, 0.2)'
+  					, fill: false
+  					, tension: 0.1
+  				},
+  				{
+  					label: 'KT-SMS-EVENT-GMA'
+  					, data: [37, 56, 78, 34, 23, 86, 34]
+  					, borderColor: 'rgba(0, 0, 255, 1)'
+  					, backgroundColor: 'rgba(0, 0, 255, 0.2)'
+  					, fill: false
+  					, tension: 0.1
+  				},
+  				{
+  					label: 'KT-SMS-STATP-GMA'
+  					, data: [12, 32, 55, 22, 55, 64, 21]
+  					, borderColor: 'rgba(255, 255, 0, 1)'
+  					, backgroundColor: 'rgba(255, 255, 0, 0.2)'
+  					, fill: false
+  					, tension: 0.1
+  				},
+  				{
+  					label: 'KT-MMS-LARGE-GMA'
+  					, data: [53, 21, 56, 77, 42, 23, 41]
+  					, borderColor: 'rgba(0, 255, 255, 1)'
+  					, backgroundColor: 'rgba(0, 255, 255, 0.2)'
+  					, fill: false
+  					, tension: 0.1
+  				}
+  			],
+  			fill: false
+  		},
+  options: {
+    responsive: true,
+    scales: {
+      x: {
+        beginAtZero: true
+      },
+      y: {
+        beginAtZero: true
+      }
+    },
+	plugins: {
+        legend: {
+            position: 'right',
+        },
+		// title: {
+		// 	display: true,
+		// 	text: 'SMILE_CASH'
+		// },
+    }
+  }
+});
+
+// 상세 버튼 클릭
+function openDetailPage(url, winName) {
+	const width = 1200;
+	const height = 800;
+	
+	// 화면 중앙 좌표 계산 (브라우저 창 기준)
+	const left = window.screenX + Math.max(0, Math.floor((window.outerWidth - width) / 2));
+	const top  = window.screenY + Math.max(0, Math.floor((window.outerHeight - height) / 2));
+	
+	const features = `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`;
+	
+	const win = window.open(url, winName, features);
+	if (win) win.focus();
+	else alert('팝업이 차단되었습니다. 브라우저 설정을 확인하세요.');
+}
+
+// 버튼에 이벤트 바인딩
+document.getElementById('gmarketDetail').addEventListener('click', () => {
+	openDetailPage('/view/real/detail/gmarket', 'detailGmarket');
+});
+document.getElementById('auctionDetail').addEventListener('click', () => {
+	openDetailPage('/view/real/detail/auction', 'detailAuction');
+});
+document.getElementById('smilecashDetail').addEventListener('click', () => {
+	openDetailPage('/view/real/detail/smilecash', 'detailSmilecash');
+});
+
+// 상세, 요약 토글 버튼
+const alignments = [
+	{
+		text:'요약',
+		alignment: '요약',
+	},
+	{
+		text:'상세',
+		alignment: '상세',
+	},
+
 ];
+ $('#real_toggle').dxButtonGroup({
+	items: alignments,
+	keyExpr: 'alignment',
+	stylingMode: 'outlined',
+	selectedItemKeys: ['요약'],
+	onItemClick(e) {
+		const selected = e.component.option('selectedItemKeys')[0]; 
+		const real_send_hist = document.getElementById('real_send_hist');
 
-const gmarketTableName = [
-	'SMSCLI_TBL_EMG', 'SMSCLI_TBL_ETC', 'SMSCLI_TBL_ORDER', 'SMSCLI_TBL_TRAN', 'SMSCLI_TBL_EVENT'
-	, 'SMSCLI_TBL_LARGE', 'LMSCLI_TBL_EVENT', 'LMSCLI_TBL_LARGE', 'MMSCLI_TBL_EVENT', 'MMSCLI_TBL_LARGE'
-	, 'GMKT_SMSCLI_TBL_LARGE', 'GMKT_LMSCLI_TBL_LARGE', 'GMKT_MMSCLI_TBL_LARGE', 'SFC_SMSCLI_TBL'
-];
-
-// 전체 현황 차트 만들기
-function makeChartOne(title, ctx) {
-
-	return new Chart(ctx, {
-		type: 'line',
-		data: {
-			labels: [],
-			datasets: [
-				{
-					label: '옥션'
-					, data: []
-					, borderColor: borderColor[2]
-					, backgroundColor: backgroundColor[2]
-					, fill: false
-					, tension: 0.1
-				},
-				{
-					label: '지마켓'
-					, data: []
-					, borderColor: borderColor[1]
-					, backgroundColor: backgroundColor[1]
-					, fill: false
-					, tension: 0.1
-				}
-			],
-			fill: false
-		},
-		options: {
-			responsive: true,
-			plugins: {
-				legend: {
-					position: 'bottom',
-				},
-				title: {
-					display: true,
-					text: title
-				}
-			}
-			, scales: {
-				y: {
-					min: 0
-					, ticks: {
-						precision: 0
-					}
-				}
-			}
-			, responsive: false // 반응형 끄고,
-			, maintainAspectRatio: false // 비율 고정도 끔
-		}
-	});
-}
-
-// 전체 현황 차트
-const totalChart = makeChartOne("전체 현황", document.getElementById('total_chart').getContext('2d'));
-let totalTimer;
-let totalFlag = 0;
-
-// 전체 현황
-function total() {
-	const param = {};
-	postAjax('/api/v1/real/totalList', param, totalCallback);
-}
-
-// 전체 현황 성공 함수
-function totalCallback(data) {
-	
-	const inTime = data.auction[0].inTime == null ? "00:00" : data.auction[0].inTime;
-	const auctionSendCnt = data.auction[0].sendCnt == null ? 0 : data.auction[0].sendCnt;
-	const gmarketSendCnt = data.gmarket[0].sendCnt == null ? 0 : data.gmarket[0].sendCnt;
-	
-	totalChart.data.labels.push(inTime);						// 시간
-	totalChart.data.datasets[0].data.push(auctionSendCnt);		// 옥션
-	totalChart.data.datasets[1].data.push(gmarketSendCnt);		// 지마켓
-
-	// 10개 초과 시 기존 데이터 삭제
-	if (totalChart.data.labels.length > maxPoints) {
-		totalChart.data.labels.shift();
-		totalChart.data.datasets[0].data.shift();
-		totalChart.data.datasets[1].data.shift();
-	}
-
-	totalChart.update();
-}
-
-// 전체 현황 차트를 제외한 나머지 차트
-function makeChartTwo(title, ctx) {
-
-	return new Chart(ctx, {
-		type: 'line',
-		data: {
-			labels: [],
-			datasets: [
-				{
-					label: labels[0]
-					, data: []
-					, borderColor: borderColor[0]
-					, backgroundColor: backgroundColor[0]
-					, fill: false
-					, tension: 0.1
-				},
-				{
-					label: labels[1]
-					, data: []
-					, borderColor: borderColor[1]
-					, backgroundColor: backgroundColor[1]
-					, fill: false
-					, tension: 0.1
-				},
-				{
-					label: labels[2]
-					, data: []
-					, borderColor: borderColor[2]
-					, backgroundColor: backgroundColor[2]
-					, fill: false
-					, tension: 0.1
-				}
-			],
-			fill: false
-		},
-		options: {
-			responsive: true,
-			plugins: {
-				legend: {
-					position: 'bottom',
-				},
-				title: {
-					display: true,
-					text: title
-				}
-			}
-			, scales: {
-				y: {
-					min: 0
-					, ticks: {
-						precision: 0
-					}
-				}
-			}
-			, responsive: false // 반응형 끄고,
-			, maintainAspectRatio: false // 비율 고정도 끔
-		}
-	});
-}
-
-// 옥션 전체 현황 차트
-const auctionTotalChart = makeChartTwo("옥션 전체현황", document.getElementById('auction_total_chart').getContext('2d'));
-let auctionTotalTimer;
-let auctionTotalFlag = 0;
-
-// 지마켓 전체 현황 차트
-const gmarketTotalChart = makeChartTwo("지마켓 전체현황", document.getElementById('gmarket_total_chart').getContext('2d'));
-let gmarketTotalTimer;
-let gmarketTotalFlag = 0;
-
-// SMSCLI_TBL_EMG (지마켓) 현황 차트
-const gmarketChart01 = makeChartTwo(`${gmarketTableName[0]} (G마켓)`, document.getElementById('gmarket_chart_01').getContext('2d'));
-let gmarketTimer01;
-let gmarketFlag01 = 0;
-
-// SMSCLI_TBL_BATCH (옥션) 현황 차트
-const auctionChart01 = makeChartTwo(`${auctionTableName[4]}  (옥션)`, document.getElementById('auction_chart_01').getContext('2d'));
-let auctionTimer01;
-let auctionFlag01 = 0;
-
-// SMSCLI_TBL_ETC (지마켓) 현황 차트
-const gmarketChart02 = makeChartTwo(`${gmarketTableName[1]} (G마켓)`, document.getElementById('gmarket_chart_02').getContext('2d'));
-let gmarketTimer02;
-let gmarketFlag02 = 0;
-
-// SMSCLI_TBL_ESCROW (옥션) 현황 차트
-const auctionChart02 = makeChartTwo(`${auctionTableName[1]} (옥션)`, document.getElementById('auction_chart_02').getContext('2d'));
-let auctionTimer02;
-let auctionFlag02 = 0;
-
-
-// SMSCLI_TBL_ORDER (지마켓) 현황 차트
-const gmarketChart03 = makeChartTwo(`${gmarketTableName[2]} (G마켓)`, document.getElementById('gmarket_chart_03').getContext('2d'));
-let gmarketTimer03;
-let gmarketFlag03 = 0;
-
-
-// SMSCLI_TBL_MOTORS (옥션) 현황 차트
-const auctionChart03 = makeChartTwo(`${auctionTableName[5]} (옥션)`, document.getElementById('auction_chart_03').getContext('2d'));
-let auctionTimer03;
-let auctionFlag03 = 0;
-
-// SMSCLI_TBL_TRAN (지마켓) 현황 차트
-const gmarketChart04 = makeChartTwo(`${gmarketTableName[3]} (G마켓)`, document.getElementById('gmarket_chart_04').getContext('2d'));
-let gmarketTimer04;
-let gmarketFlag04 = 0;
-
-// SMSCLI_TBL_API (옥션) 현황 차트
-const auctionChart04 = makeChartTwo(`${auctionTableName[3]} (옥션)`, document.getElementById('auction_chart_04').getContext('2d'));
-let auctionTimer04;
-let auctionFlag04 = 0;
-
-// 옥션, 지마켓 데이터 조회
-function chartData(url, param, chart) {
-	
-	$.ajax({
-		type: "POST",
-		url: url,
-		data: param,
-		success: function(data) {
-			if (chartDataCallback) {
-				chartDataCallback(data, chart);
-			}
-		},
-		error: function(xhr, status, error) {
-			console.error("Ajax 요청 실패:", xhr, status, error); // 기본 에러 처리
-			showDialogCustom('error');
-		}
-	});
-};
-
-// // 옥션, 지마켓 데이터 조회 성공 함수
-function chartDataCallback(data, chart) {
-	
-	if(data != null && data != "") {
-		chart.data.labels.push(data.inTime);			// 시간
-		chart.data.datasets[0].data.push(data.sendCnt);	// 전송메시지
-		chart.data.datasets[1].data.push(data.succCnt);	// 성공메시지
-		chart.data.datasets[2].data.push(data.failCnt);	// 실패메시지
-
-	} else {
-		chart.data.labels.push("00:00");		// 시간
-		chart.data.datasets[0].data.push(0);	// 전송메시지
-		chart.data.datasets[1].data.push(0);	// 성공메시지
-		chart.data.datasets[2].data.push(0);	// 실패메시지
-
-	}
-	
-	// 10개 초과 시 기존 데이터 삭제
-	if (chart.data.labels.length > maxPoints) {
-		chart.data.labels.shift();
-		chart.data.datasets[0].data.shift();
-		chart.data.datasets[1].data.shift();
-		chart.data.datasets[2].data.shift();
-	}
-	
-	chart.update();
-};
-
-$(document).ready(function() {
-
-	// 전체 현황 시작/중지 이벤트
-	$("#total_btn").click(function(e) {
-		e.preventDefault();
-
-		if (totalFlag == 0) {
-			totalTimer = setInterval(() => total(), totalTimeCnt);
-			totalFlag = 1;
-			showDialogCustom("모니터링 Start");
+		if (selected === '요약') {
+		real_send_hist.querySelector('.summery').classList.remove('d-none');
+		real_send_hist.querySelector('.detail').classList.add('d-none');
 		} else {
-			clearInterval(totalTimer);
-			totalFlag = 0;
-			showDialogCustom("모니터링 Stop");
+		real_send_hist.querySelector('.summery').classList.add('d-none');
+		real_send_hist.querySelector('.detail').classList.remove('d-none');
 		}
-	});
+	},
+});
+// $('#real_toggle').dxSwitch({
+// 	value: true,
+// 	width: 100,
+// 	height:42,
+// 	switchedOnText: '요약',
+// 	switchedOffText: '상세',
+// 	onValueChanged(data) {
+// 		const real_send_hist = document.getElementById('real_send_hist');
+// 		if(data.value) {				
+// 			real_send_hist.querySelector(".summery").classList.remove('d-none');							
+// 			real_send_hist.querySelector(".detail").classList.add('d-none');
+// 		} else {
+// 			real_send_hist.querySelector(".summery").classList.add('d-none');
+// 			real_send_hist.querySelector(".detail").classList.remove('d-none');
+// 		}
+// 	},
+// });
 
-	// 지마켓 전체 현황 시작/중지 이벤트
-	$("#gmarket_total_btn").click(function(e) {
-		e.preventDefault();
+// 요약 탭 버튼
+const summeryBtns = document.querySelectorAll('.summery ul li');
+const sOperate = document.getElementById('s-operate');
+const sDr = document.getElementById('s-dr');
+
+summeryBtns.forEach((btn, idx) => {
+	btn.querySelector("button").addEventListener('click', () => {
 		
-		const param = { code: 1 };
+		if(idx == 1){				
+			sOperate.classList.add('d-none');
+			sDr.classList.remove('d-none');
 
-		if (gmarketTotalFlag == 0) {
-			gmarketTotalTimer = setInterval(() => chartData('/api/v1/real/list', param, gmarketTotalChart), timeCnt);
-			gmarketTotalFlag = 1;
-			showDialogCustom("모니터링 Start");
-		} else {
-			clearInterval(gmarketTotalTimer);
-			gmarketTotalFlag = 0;
-			showDialogCustom("모니터링 Stop");
+		}else{
+			sDr.classList.add('d-none');
+			sOperate.classList.remove('d-none');
 		}
+		summeryBtns.forEach(b => b.querySelector("button").classList.remove('active'));
+		btn.querySelector("button").classList.add('active');
 	});
+});
 
-	// 옥션 전체 현황 시작/중지 이벤트
-	$("#auction_total_btn").click(function(e) {
-		e.preventDefault();
+//상세 탭 버튼
+const detailBtns = document.querySelectorAll('.detail ul li');
+const dOperate = document.getElementById('d-operate');
+const dDr = document.getElementById('d-dr');
+
+detailBtns.forEach((btn, idx) => {
+	btn.querySelector("button").addEventListener('click', () => {
 		
-		const param = { code: 0 };
+		if(idx == 1){				
+			dOperate.classList.add('d-none');
+			dDr.classList.remove('d-none');
 
-		if (auctionTotalFlag == 0) {
-			auctionTotalTimer = setInterval(() => chartData('/api/v1/real/list', param, auctionTotalChart), timeCnt);
-			auctionTotalFlag = 1;
-			showDialogCustom("모니터링 Start");
-		} else {
-			clearInterval(auctionTotalTimer);
-			auctionTotalFlag = 0;
-			showDialogCustom("모니터링 Stop");
+		}else{
+			dDr.classList.add('d-none');
+			dOperate.classList.remove('d-none');
 		}
+		detailBtns.forEach(b => b.querySelector("button").classList.remove('active'));
+		btn.querySelector("button").classList.add('active');
 	});
+});
 
-	// SMSCLI_TBL_EMG (지마켓) 현황 시작/중지 이벤트
-	$("#gmarket_chart_01_btn").click(function(e) {
-		e.preventDefault();
-		
-		const param = { companyCode: 1, tableCode: 11 };
-
-		if (gmarketFlag01 == 0) {
-			gmarketTimer01 = setInterval(() => chartData('/api/v1/real/tableList', param, gmarketChart01), timeCnt);
-			gmarketFlag01 = 1;
-			showDialogCustom("모니터링 Start");
-		} else {
-			clearInterval(gmarketTimer01);
-			gmarketFlag01 = 0;
-			showDialogCustom("모니터링 Stop");
-		}
-	});
-
-	// SMSCLI_TBL_BATCH (옥션) 현황 시작/중지 이벤트
-	$("#auction_chart_01_btn").click(function(e) {
-		e.preventDefault();
-		
-		const param = { companyCode: 0, tableCode: 5 };
-
-		if (auctionFlag01 == 0) {
-			auctionTimer01 = setInterval(() => chartData('/api/v1/real/tableList', param, auctionChart01), timeCnt);
-			auctionFlag01 = 1;
-			showDialogCustom("모니터링 Start");
-		} else {
-			clearInterval(auctionTimer01);
-			auctionFlag01 = 0;
-			showDialogCustom("모니터링 Stop");
-		}
-	});
-
-	// SMSCLI_TBL_ETC (지마켓) 현황 시작/중지 이벤트
-	$("#gmarket_chart_02_btn").click(function(e) {
-		e.preventDefault();
-		
-		const param = { companyCode: 1, tableCode: 12 };
-
-		if (gmarketFlag02 == 0) {
-			gmarketTimer02 = setInterval(() => chartData('/api/v1/real/tableList', param, gmarketChart02), timeCnt);
-			gmarketFlag02 = 1;
-			showDialogCustom("모니터링 Start");
-		} else {
-			clearInterval(gmarketTimer02);
-			gmarketFlag02 = 0;
-			showDialogCustom("모니터링 Stop");
-		}
-	});
-
-	// SMSCLI_TBL_ESCROW (옥션) 현황 시작/중지 이벤트
-	$("#auction_chart_02_btn").click(function(e) {
-		e.preventDefault();
-		
-		const param = { companyCode: 0, tableCode: 2 };
-
-		if (auctionFlag02 == 0) {
-			auctionTimer02 = setInterval(() => chartData('/api/v1/real/tableList', param, auctionChart02), timeCnt);
-			auctionFlag02 = 1;
-			showDialogCustom("모니터링 Start");
-		} else {
-			clearInterval(auctionTimer02);
-			auctionFlag02 = 0;
-			showDialogCustom("모니터링 Stop");
-		}
-	});
-
-	// SMSCLI_TBL_ORDER (지마켓) 현황 시작/중지 이벤트
-	$("#gmarket_chart_03_btn").click(function(e) {
-		e.preventDefault();
-		
-		const param = { companyCode: 1, tableCode: 13 };
-
-		if (gmarketFlag03 == 0) {
-			gmarketTimer03 = setInterval(() => chartData('/api/v1/real/tableList', param, gmarketChart03), timeCnt);
-			gmarketFlag03 = 1;
-			showDialogCustom("모니터링 Start");
-		} else {
-			clearInterval(gmarketTimer03);
-			gmarketFlag03 = 0;
-			showDialogCustom("모니터링 Stop");
-		}
-	});
-
-	// SMSCLI_TBL_MOTORS (옥션) 현황 시작/중지 이벤트
-	$("#auction_chart_03_btn").click(function(e) {
-		e.preventDefault();
-		
-		const param = { companyCode: 0, tableCode: 6 };
-
-		if (auctionFlag03 == 0) {
-			auctionTimer03 = setInterval(() => chartData('/api/v1/real/tableList', param, auctionChart03), timeCnt);
-			auctionFlag03 = 1;
-			showDialogCustom("모니터링 Start");
-		} else {
-			clearInterval(auctionTimer03);
-			auctionFlag03 = 0;
-			showDialogCustom("모니터링 Stop");
-		}
-	});
-
-	// SMSCLI_TBL_TRAN (지마켓) 현황 시작/중지 이벤트
-	$("#gmarket_chart_04_btn").click(function(e) {
-		e.preventDefault();
-		
-		const param = { companyCode: 1, tableCode: 14 };
-
-		if (gmarketFlag04 == 0) {
-			gmarketTimer04 = setInterval(() => chartData('/api/v1/real/tableList', param, gmarketChart04), timeCnt);
-			gmarketFlag04 = 1;
-			showDialogCustom("모니터링 Start");
-		} else {
-			clearInterval(gmarketTimer04);
-			gmarketFlag04 = 0;
-			showDialogCustom("모니터링 Stop");
-		}
-	});
-
-	// SMSCLI_TBL_API (옥션) 현황 시작/중지 이벤트
-	$("#auction_chart_04_btn").click(function(e) {
-		e.preventDefault();
-		
-		const param = { companyCode: 0, tableCode: 4 };
-
-		if (auctionFlag04 == 0) {
-			auctionTimer04 = setInterval(() => chartData('/api/v1/real/tableList', param, auctionChart04), timeCnt);
-			auctionFlag04 = 1;
-			showDialogCustom("모니터링 Start");
-		} else {
-			clearInterval(auctionTimer04);
-			auctionFlag04 = 0;
-			showDialogCustom("모니터링 Stop");
-		}
-	});
+// 모니터링 라디오 버튼
+const priorities = ['10초', '20초', '30초'];
+$('#chartRadio').dxRadioGroup({
+	width: 100,
+	items: priorities,
+	value: priorities[0],
 });
