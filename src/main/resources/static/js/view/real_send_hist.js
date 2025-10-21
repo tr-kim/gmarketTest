@@ -360,7 +360,9 @@ $(function () {
             class: "font-sz-12"
         },
 		onClick() {
-			openManagePage(gmarketTasks);
+			openManageModal('manageListGmarket');
+			// document.querySelector('.manage').classList.add('d-block');
+			// openManagePage('Gmarket',gmarketTasks);
 		},
 	});
 	$('#auctionManage').dxButton({
@@ -372,7 +374,9 @@ $(function () {
             class: "font-sz-12"
         },
 		onClick() {
-			openManagePage(auctionTasks);
+			openManageModal('manageListAuction');
+			// document.querySelector('.manage').classList.add('d-block');
+			// openManagePage('Auction',auctionTasks);
 		},
 	});
 	$('#smilecashManage').dxButton({
@@ -384,9 +388,77 @@ $(function () {
             class: "font-sz-12"
         },
 		onClick() {
-			openManagePage(smilecashTasks);
+			openManageModal('manageListSmilecash');
+			// document.querySelector('.manage').classList.add('d-block');
+			// openManagePage('Smilecash',smilecashTasks);
 		},
 	});
+
+	//발송량 관리 리스트
+	// G마켓 리스트
+	const manageListGmarket = $('#manageListGmarket').dxList({
+		dataSource: new DevExpress.data.DataSource({
+			store: new DevExpress.data.ArrayStore({
+				key: 'id',
+				data: gmarketTasks,
+			}),
+		}),
+		displayExpr: 'name',
+		width: 500,
+		height: 600,
+		showSelectionControls: true,
+		selectByClick: true,
+		selectionMode: 'multiple',
+		pageLoadMode: 'scrollBottom',
+		onSelectionChanged(e) {
+			const selectedItems = manageListGmarket.option('selectedItems');
+			console.log('Gmarket 선택:', selectedItems);
+		},
+	}).dxList('instance');
+
+
+	// 옥션 리스트
+	const manageListAuction = $('#manageListAuction').dxList({
+		dataSource: new DevExpress.data.DataSource({
+			store: new DevExpress.data.ArrayStore({
+				key: 'id',
+				data: auctionTasks,
+			}),
+		}),
+		displayExpr: 'name',
+		width: 500,
+		height: 600,
+		showSelectionControls: true,
+		selectByClick: true,
+		selectionMode: 'multiple',
+		pageLoadMode: 'scrollBottom',
+		onSelectionChanged(e) {
+			const selectedItems = manageListAuction.option('selectedItems');
+			console.log('Auction 선택:', selectedItems);
+		},
+	}).dxList('instance');
+
+
+	// 스마일캐시 리스트
+	const manageListSmilecash = $('#manageListSmilecash').dxList({
+		dataSource: new DevExpress.data.DataSource({
+			store: new DevExpress.data.ArrayStore({
+				key: 'id',
+				data: smilecashTasks,
+			}),
+		}),
+		displayExpr: 'name',
+		width: 500,
+		height: 600,
+		showSelectionControls: true,
+		selectByClick: true,
+		selectionMode: 'multiple',
+		pageLoadMode: 'scrollBottom',
+		onSelectionChanged(e) {
+			const selectedItems = manageListSmilecash.option('selectedItems');
+			console.log('Smilecash 선택:', selectedItems);
+		},
+	}).dxList('instance');
 
 	//발송현황 팝오버
 	$('#downList').dxPopover({
@@ -419,31 +491,16 @@ $(function () {
 });
 
 // 발송량 관리 모달
-function openManagePage(tasks) {
+function openManageModal(targetId) {
 
-	$('.manage').addClass('d-block');
-	toggleBodyClass();
-	if($('#manageList')){
-		$('#manageList').dxList({
-			dataSource: new DevExpress.data.DataSource({
-			store: new DevExpress.data.ArrayStore({
-				key: 'id',
-				data: tasks,
-			}),
-			}),
-			width: 500,
-			height: 600,
-			showSelectionControls: true,
-			selectionMode: 'all',
-			displayExpr: 'name',
-			selectByClick: true,
-			pageLoadMode: 'scrollBottom',
-			onSelectionChanged() {
-				
-			},
-		})
-	}	
+    document.querySelector('.manage').classList.add('d-block');
+
+    document.querySelectorAll('.manage .modal-con > div')
+        .forEach(el => el.style.display = 'none');
+
+    document.querySelector(`#${targetId}`).style.display = 'block'
 }
+
 
 // 발송량 상세 팝업
 function openDetailPage(url, winName) {
