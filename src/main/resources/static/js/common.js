@@ -524,3 +524,17 @@ function parseReservationTime(timeString) {
         return null;
     }
 }
+
+// 모달 닫기
+function closeModal(madalClass){
+	$('.'+madalClass).removeClass('d-block');
+	toggleBodyClass();
+}
+
+function toggleBodyClass() {
+  if ($('.modal-bg').hasClass('d-block')) {
+    $('body').addClass('on');
+  } else {
+    $('body').removeClass('on');
+  }
+}

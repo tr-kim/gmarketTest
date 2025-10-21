@@ -543,6 +543,16 @@ aside .psw_chg_btn:hover{
 .real_counts .content.pointer {
     cursor: pointer;
 }
+.dxPopover .dx-popup-content{
+    padding: 0;
+}
+.dxPopover ul li{
+    padding: .5rem 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+.dxPopover ul li:last-child{
+    border: 0;
+}
 #real_toggle{
         margin: 0;
 }
@@ -558,19 +568,18 @@ aside .psw_chg_btn:hover{
 }
 /* deltail.html */
 .detail-container {
-    width: 1100px;
-    height: 776px;
+    /* width: 1100px;
+    height: 776px; */
+    height: 100%;
     margin: auto;
     box-sizing: border-box;
     padding: 12px;
     background: #ffffff;
-    border: 1px solid #e6e6e6;
-    border-radius: 6px;
     display: flex;
     gap: 12px;
 }
 .detail-left {
-    width: 280px;
+    /* width: 280px; */
     min-width: 220px;
     height: 100%;
     box-shadow: 0 0 0 1px rgba(0,0,0,0.05) inset;
@@ -584,13 +593,14 @@ aside .psw_chg_btn:hover{
 }
 .detail-right {
     flex: 1 1 auto;
-    height: 100%;
+    /* height: 100%; */
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 #chartPanel {
     flex: 1 1 auto;
+    height: 100%;
     min-height: 200px;
     background: #ffffff;
     border: 1px solid #f0f0f0;

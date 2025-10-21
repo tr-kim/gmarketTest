@@ -184,6 +184,7 @@ $(function () {
 				return;
 			}
 			document.querySelector('.imgPreview').classList.add("d-block");
+			toggleBodyClass();
 		}
 	}).dxButton('instance');
 
@@ -225,6 +226,7 @@ $(function () {
 
 	document.querySelector('.imgPreview .close_btn').addEventListener('click', function(){
 		document.querySelector('.imgPreview').classList.remove("d-block");
+		toggleBodyClass();
 	});
 	
 	//예약 발송 캘린더
@@ -281,6 +283,7 @@ $(function () {
 
             if(!reserveDateLi.classList.contains('d-none')) {
                 reserveDateLi.classList.add('d-none');
+				toggleBodyClass();
             }
 		}
 	});
@@ -289,15 +292,18 @@ $(function () {
 		if (this.checked) {
 			reserveModal.classList.add("d-block");			
 			FINAL_SEND_BTN.textContent = "예약발송";
+			toggleBodyClass();
 
              if(reserveDateLi.classList.contains('d-none')) {
                 reserveDateLi.classList.remove('d-none');
+				toggleBodyClass();
             }
 		}
 	});
 	
 	document.querySelector('.reserveSend .close_btn').addEventListener('click', function(){
 		reserveModal.classList.remove("d-block");
+		toggleBodyClass();
 		
 		document.getElementById('send_time1').checked = true;
 		document.getElementById('reserveDate').textContent = "";
@@ -305,6 +311,7 @@ $(function () {
 
         if(!reserveDateLi.classList.contains('d-none')) {
             reserveDateLi.classList.add('d-none');
+			toggleBodyClass();
         }
 		
 		//document.querySelector('.date').textContent = '날짜를 선택해 주세요.';
@@ -333,6 +340,7 @@ $(function () {
 			document.getElementById('reserveDate').textContent = 
 				`예약 발송 시간 : ${reserveDate} ${reserveHour.value.padStart(2, '0')}시 ${reserveMinute.value.padStart(2, '0')}분`;
 			reserveModal.classList.remove("d-block");
+			toggleBodyClass();
 		} else {
 			// 예약 불가 (지나간 시간)
 			document.getElementById('reserveDate').textContent = '';
@@ -546,9 +554,6 @@ $(function () {
 	// 		}
 	// 	})
 	// });
-	document.querySelector('.confirmSend .close_btn').addEventListener('click', function(){
-		document.querySelector('.confirmSend').classList.remove('d-block');
-	})
 });
 
 // 문자 발송
@@ -783,6 +788,7 @@ function sendMessage() {
 			const confirmSend = document.querySelector('.confirmSend');
 			const confirmMessage = document.getElementById('confirmMessage');	
 			confirmSend.classList.add('d-block');
+			toggleBodyClass();
 			
 			const rejectCheckDefault = document.getElementById('rejectCheckDefault').checked;
 			const rejectNum = document.getElementById('rejectNum').value.trim();
@@ -792,6 +798,7 @@ function sendMessage() {
 			confirmSend.querySelector('.send_btn').addEventListener('click', function() {
 				confirmSend.classList.remove('d-block');
 				func_send(); // 메시지 보내기
+				toggleBodyClass();
 			}, { once: true });
 			
 		} else {

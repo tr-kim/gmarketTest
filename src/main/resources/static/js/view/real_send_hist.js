@@ -305,17 +305,145 @@ $(function () {
 	// setInterval(updateCharts, 60 * 1000);
 	
 	// 발송량 상세 버튼
-	document.getElementById('gmarketDetail').addEventListener('click', () => {
-		openDetailPage('/view/real/detail/gmarket', 'detailGmarket');
+	$('#gmarketDetail').dxButton({
+		stylingMode: 'contained',
+		text: '상세',
+		type: 'default',
+		width: 50,
+		elementAttr: {
+            class: "font-sz-12"
+        },
+		onClick() {
+			openDetailPage('/view/real/detail/gmarket', 'detailGmarket');
+		},
 	});
-	document.getElementById('auctionDetail').addEventListener('click', () => {
-		openDetailPage('/view/real/detail/auction', 'detailAuction');
+	$('#auctionDetail').dxButton({
+		stylingMode: 'contained',
+		text: '상세',
+		type: 'default',
+		width: 50,
+		elementAttr: {
+            class: "font-sz-12"
+        },
+		onClick() {
+			openDetailPage('/view/real/detail/auction', 'detailAuction');
+		},
 	});
-	document.getElementById('smilecashDetail').addEventListener('click', () => {
-		openDetailPage('/view/real/detail/smilecash', 'detailSmilecash');
+	$('#smilecashDetail').dxButton({
+		stylingMode: 'contained',
+		text: '상세',
+		type: 'default',
+		width: 50,
+		elementAttr: {
+            class: "font-sz-12"
+        },
+		onClick() {
+			openDetailPage('/view/real/detail/smilecash', 'detailSmilecash');
+		},
+	});
+	// document.getElementById('gmarketDetail').addEventListener('click', () => {
+	// 	openDetailPage('/view/real/detail/gmarket', 'detailGmarket');
+	// });
+	// document.getElementById('auctionDetail').addEventListener('click', () => {
+	// 	openDetailPage('/view/real/detail/auction', 'detailAuction');
+	// });
+	// document.getElementById('smilecashDetail').addEventListener('click', () => {
+	// 	openDetailPage('/view/real/detail/smilecash', 'detailSmilecash');
+	// });
+	// 발송량 관리 버튼
+	$('#gmarketManage').dxButton({
+		stylingMode: 'outlined',
+		text: '관리',
+		type: 'default',
+		width: 50,
+		elementAttr: {
+            class: "font-sz-12"
+        },
+		onClick() {
+			openManagePage(gmarketTasks);
+		},
+	});
+	$('#auctionManage').dxButton({
+		stylingMode: 'outlined',
+		text: '관리',
+		type: 'default',
+		width: 50,
+		elementAttr: {
+            class: "font-sz-12"
+        },
+		onClick() {
+			openManagePage(auctionTasks);
+		},
+	});
+	$('#smilecashManage').dxButton({
+		stylingMode: 'outlined',
+		text: '관리',
+		type: 'default',
+		width: 50,
+		elementAttr: {
+            class: "font-sz-12"
+        },
+		onClick() {
+			openManagePage(smilecashTasks);
+		},
+	});
+
+	//발송현황 팝오버
+	$('#downList').dxPopover({
+		target: '#down',
+		showEvent: 'dxclick',
+		position: 'bottom',
+		wrapperAttr: {
+            class: "dxPopover"
+        },
+		width: () => $('#down').outerWidth(), 
+	});
+	$('#issueList').dxPopover({
+		target: '#issue',
+		showEvent: 'dxclick',
+		position: 'bottom',
+		wrapperAttr: {
+            class: "dxPopover"
+        },
+		width: () => $('#issue').outerWidth(), 
+	});
+	$('#delrayList').dxPopover({
+		target: '#delray',
+		showEvent: 'dxclick',
+		position: 'bottom',
+		wrapperAttr: {
+            class: "dxPopover"
+        },
+		width: () => $('#delray').outerWidth(), 
 	});
 });
 
+// 발송량 관리 모달
+function openManagePage(tasks) {
+
+	$('.manage').addClass('d-block');
+	toggleBodyClass();
+	if($('#manageList')){
+		$('#manageList').dxList({
+			dataSource: new DevExpress.data.DataSource({
+			store: new DevExpress.data.ArrayStore({
+				key: 'id',
+				data: tasks,
+			}),
+			}),
+			width: 500,
+			height: 600,
+			showSelectionControls: true,
+			selectionMode: 'all',
+			displayExpr: 'name',
+			selectByClick: true,
+			pageLoadMode: 'scrollBottom',
+			onSelectionChanged() {
+				
+			},
+		})
+	}	
+}
 
 // 발송량 상세 팝업
 function openDetailPage(url, winName) {

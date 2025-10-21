@@ -15,49 +15,67 @@
 		</div>
 		<div class="justify-content-between mb-3 row row-deck row-cards real_counts">
 			<div class="col-2 d-flex">
-				<div class="content flex-fill d-flex flex-column justify-content-between">
+				<div id="total" class="content flex-fill d-flex flex-column justify-content-between">
 					<div class="font-sz-16">전체</div>
-					<div id="total" class="font-sz-24">126</div>
+					<div class="count font-sz-24">126</div>
 				</div>
 			</div>
 			<div class="col-2 d-flex">
-				<div class="content flex-fill d-flex flex-column justify-content-between">
+				<div id="normal" class="content flex-fill d-flex flex-column justify-content-between">
 					<div class="font-sz-16">정상</div>
-					<div id="normal" class="font-sz-24">123</div>
+					<div class="count font-sz-24">123</div>
 				</div>
 			</div>
 			<div class="col-2 d-flex">
-				<div class="content flex-fill d-flex flex-column justify-content-between pointer">
+				<div id="down" class="content flex-fill d-flex flex-column justify-content-between pointer">
 					<div class="d-flex align-items-center justify-content-between">
 						<div class="font-sz-16">다운</div>
 						<i class="bi bi-caret-right-fill"></i>
 					</div>
-					<div id="down" class="font-sz-24 text-danger">1</div>
+					<div class="count font-sz-24 text-danger">1</div>
+				</div>
+				<div id="downList">
+					<ul>
+						<li>KT-SMS-ETC</li>
+						<li>KT-MMS-EVENT-GMA</li>
+						<li>KT_SMS_CHARGED</li>
+					</ul>
 				</div>
 			</div>
 			<div class="col-2 d-flex">
-				<div class="content flex-fill d-flex flex-column justify-content-between pointer">
+				<div id="issue" class="content flex-fill d-flex flex-column justify-content-between pointer">
 					<div class="d-flex align-items-center justify-content-between">
 						<div class="font-sz-16">이슈</div>
 						<i class="bi bi-caret-right-fill"></i>
 					</div>
-					<div id="issue" class="font-sz-24 text-danger">1</div>
+					<div class="count font-sz-24 text-danger">1</div>
+				</div>
+				<div id="issueList">
+					<ul>
+						<li>KT-IAC-SMS-LARGE</li>
+					</ul>
 				</div>
 			</div>
 			<div class="col-2 d-flex">
-				<div class="content flex-fill d-flex flex-column justify-content-between pointer">
+				<div id="delray" class="content flex-fill d-flex flex-column justify-content-between pointer">
 					<div class="d-flex align-items-center justify-content-between">
 						<div class="font-sz-16">지연</div>
 						<i class="bi bi-caret-right-fill"></i>
 					</div>
-					<div id="delray" class="font-sz-24 text-danger">1</div>
+					<div class="count font-sz-24 text-danger">1</div>
+				</div>
+				<div id="delrayList">
+					<ul>
+						<li>KT-MMS-TIMECHECK-AUC</li>
+						<li>KT_SMS_INFO</li>
+					</ul>
 				</div>
 			</div>
 			<div class="col-2 d-flex">
-				<div class="content flex-fill d-flex justify-content-between pointer">
+				<div id="completion" class="content flex-fill d-flex justify-content-between pointer">
 					<div class="d-flex flex-column justify-content-between">
 						<div class="font-sz-18 mb-3">총 발송량 <span id="totalSend" class="font-weight-700 text-danger">156,742</span></div>
-						<div class="font-sz-18">완료율 <span class="font-weight-700 text-danger"><span id="completion">98.2</span>%</span></div>
+						<div class="font-sz-18">완료율 <span class="font-weight-700 text-danger"><span class="count">98.2</span>%</span></div>
 					</div>
 					<i class="bi bi-caret-right-fill"></i>
 				</div>
@@ -79,7 +97,7 @@
 					</div>
 					<div class="card-body px-3 py-4">
 						<!-- 운영 -->	
-						<div id="s-operate" class="d-flex row">
+						<div id="s-operate" class="row">
 							<div class="col-4 d-flex">
 								<div class="card text-center flex-fill overflow-hidden">
 									<div class="card-header font-sz-16">지마켓</div>
@@ -187,7 +205,7 @@
 							</div>
 						</div>
 						<!-- DR -->
-						<div id="s-dr" class="d-flex row d-none">
+						<div id="s-dr" class="row d-none">
 							<div class="col-4 d-flex">
 								<div class="card text-center flex-fill overflow-hidden">
 									<div class="card-header font-sz-16">지마켓</div>
@@ -312,7 +330,7 @@
 					</div>
 					<div class="card-body p-3">
 						<!-- 운영 -->	
-						<div id="d-operate" class="d-flex row">
+						<div id="d-operate" class="row">
 							<table class="table mb-0">
 								<thead>
 									<tr class="hist_grid_bottom hist_grid_top">
@@ -975,7 +993,7 @@
 							</table>
 						</div>
 						<!-- DR -->
-						<div id="d-dr" class="d-flex row d-none">
+						<div id="d-dr" class="row d-none">
 							<table class="table mb-0">
 								<thead>
 									<tr class="hist_grid_bottom hist_grid_top">
@@ -1642,19 +1660,23 @@
 			</div>
 		</div>
 		<div class="content pt-1" style="background-color: #f9f9f9;">
-			<div class="d-flex align-items-center">
-				<div class="font-sz-16 font-weight-600 me-2">발송량 통계 업데이트</div>
-				<span id="lastTimeUpdate" class="me-5">10:25:50</span>
+			<div class="d-flex align-items-center justify-content-between">
+				<div class="d-flex align-items-center">
+					<div class="font-sz-16 font-weight-600 me-2">발송량 통계 업데이트</div>
+					<span id="lastTimeUpdate" class="me-5">10:25:50</span>
+				</div>				
 				<div id="chartRadio"></div>
 			</div>
-			<div class="d-flex row w-100">
+			<div class="row">
 				<div class="col-4">
 					<div class="content">
 						<p class="mb-3 font-weight-600 font-sz-16">지마켓</p>
 						<div id="gmarketChart"></div>
-						<div class="d-flex justify-content-end mt-3">
-							<button type="button" id="gmarketManage" class="btn btn-outline-primary font-sz-12" style="margin-right: 5px;">관리</button>
-							<button type="button" id="gmarketDetail" class="btn btn-primary font-sz-12">상세</button>
+						<div class="d-flex justify-content-end mt-3 gap-1">
+							<div id="gmarketManage"></div>
+							<div id="gmarketDetail"></div>
+							<!-- <button type="button" id="gmarketManage" class="btn btn-outline-primary font-sz-12" style="margin-right: 5px;">관리</button>
+							<button type="button" id="gmarketDetail" class="btn btn-primary font-sz-12">상세</button> -->
 						</div>
 					</div>
 				</div>
@@ -1662,9 +1684,11 @@
 					<div class="content">
 						<p class="mb-3 font-weight-600 font-sz-16">옥션</p>
 						<div id="actionChart"></div>
-						<div class="d-flex justify-content-end mt-3">
-							<button type="button" id="auctionManage" class="btn btn-outline-primary font-sz-12" style="margin-right: 5px;">관리</button>
-							<button type="button" id="auctionDetail" class="btn btn-primary font-sz-12">상세</button>
+						<div class="d-flex justify-content-end mt-3 gap-1">
+							<div id="auctionManage"></div>
+							<div id="auctionDetail"></div>
+							<!-- <button type="button" id="auctionManage" class="btn btn-outline-primary font-sz-12" style="margin-right: 5px;">관리</button>
+							<button type="button" id="auctionDetail" class="btn btn-primary font-sz-12">상세</button> -->
 						</div>
 					</div>
 				</div>
@@ -1672,16 +1696,18 @@
 					<div class="content">
 						<p class="mb-3 font-weight-600 font-sz-16">스마일캐시</p>
 						<div id="smilecashChart"></div>
-						<div class="d-flex justify-content-end mt-3">
-							<button type="button" id="smilecashManage" class="btn btn-outline-primary font-sz-12" style="margin-right: 5px;">관리</button>
-							<button type="button" id="smilecashDetail" class="btn btn-primary font-sz-12">상세</button>
+						<div class="d-flex justify-content-end mt-3 gap-1">
+							<div id="smilecashManage"></div>
+							<div id="smilecashDetail"></div>
+							<!-- <button type="button" id="smilecashManage" class="btn btn-outline-primary font-sz-12" style="margin-right: 5px;">관리</button>
+							<button type="button" id="smilecashDetail" class="btn btn-primary font-sz-12">상세</button> -->
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	
+	<th:block th:replace="~{/view/popup/manage :: manage}"></th:block>
 	<script th:src="@{/js/chart/chart.umd.js}"></script>
 	<script th:src="@{/js/view/real_send_hist.js}"></script>
 </body>

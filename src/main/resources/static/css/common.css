@@ -73,22 +73,22 @@ input, textarea{
     font-weight: 900;
 }
 .font-sz-12{
-    font-size: 0.75rem;
+    font-size: 0.75rem !important;
 }
 .font-sz-14{
-    font-size: 0.875rem;
+    font-size: 0.875rem !important;
 }
 .font-sz-16{
-    font-size: 1rem;
+    font-size: 1rem !important;
 }
 .font-sz-18{
-    font-size: 1.125rem;
+    font-size: 1.125rem !important;
 }
 .font-sz-20{
-    font-size: 1.25rem;
+    font-size: 1.25rem !important;
 }
 .font-sz-24{
-    font-size: 1.5rem;
+    font-size: 1.5rem !important;
 }
 :focus-visible{
     outline: none;    

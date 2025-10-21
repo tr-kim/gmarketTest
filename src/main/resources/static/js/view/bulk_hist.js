@@ -355,10 +355,7 @@ function openBulkDetailModal(data = {}) {
 	document.getElementById('msg').value = data.msg;
 	
 	document.getElementById('bulk_hist_modal').classList.add('d-block');
+	toggleBodyClass();
 }
 
-// 상세 보기 모달 - 닫기 버튼
-document.getElementById('close_btn').addEventListener('click', function() {
-	document.getElementById('bulk_hist_modal').classList.remove('d-block');
-})
 

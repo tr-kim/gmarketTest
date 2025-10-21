@@ -494,6 +494,7 @@ function openCustomModal(mode, data = {}) {
 	if (mode === 'edit') {
 		document.querySelector('#user_add_modal .modal-hd > span').textContent = '사용자 수정';
 		document.getElementById('reset_btn').classList.add('d-block');
+		toggleBodyClass();
 
 		currentKey = data.userSeq; // keyExpr 기준
 		document.getElementById('user_grade_data').value = data.userGrade;
@@ -535,6 +536,7 @@ function openCustomModal(mode, data = {}) {
 	}
 
 	document.getElementById('user_add_modal').classList.add('d-block');
+	toggleBodyClass();
 }
 
 // 비밀번호 암호화 성공 함수
@@ -579,6 +581,7 @@ $('#add_btn').dxButton({
 		if(document.getElementById('reset_btn').classList.contains('d-none')){
 			document.getElementById('reset_btn').classList.remove('d-none');
 		}		
+		toggleBodyClass();
     },
 }).dxButton('instance');
 
@@ -588,6 +591,7 @@ document.getElementById('close_btn').addEventListener('click', function(e) {
 	
 	document.getElementById('user_add_modal').classList.remove('d-block');
 	userModalReset();
+	toggleBodyClass();
 });
 
 // 사용자 등록 모달 - 초기화 버튼
@@ -644,6 +648,7 @@ $('#save_btn').dxButton({
 
 		const grid = $('#userGrid').dxDataGrid('instance');
 		grid.saveEditData();
+		toggleBodyClass();
     },
 }).dxButton('instance');
 
@@ -658,6 +663,7 @@ function successCallback(data) {
 			document.getElementById('user_add_modal').classList.remove('d-block');
 			userModalReset();
 			dataGrid.getDataSource().reload();
+			toggleBodyClass();
 		});
 		
 	} else if (code == 9001 || code == 9100 || code == 9101 || code == 9002) {

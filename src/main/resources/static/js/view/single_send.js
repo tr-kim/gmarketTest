@@ -154,6 +154,7 @@ $(function () {
 				return;
 			}
 			document.querySelector('.imgPreview').classList.add("d-block");
+			toggleBodyClass();
 		}
 	}).dxButton('instance');
 
@@ -191,10 +192,6 @@ $(function () {
 			});
 		}
 	}).dxButton('instance');
-
-	document.querySelector('.imgPreview .close_btn').addEventListener('click', function(){
-		document.querySelector('.imgPreview').classList.remove("d-block");
-	});
 	
 	//예약 발송 캘린더
 	let reserveDate = "";
@@ -251,14 +248,15 @@ $(function () {
 	
 	document.getElementById('send_time2').addEventListener('click', function () {
 		if (this.checked) {
-			reserveModal.classList.add("d-block");
-			
+			reserveModal.classList.add("d-block");			
 			FINAL_SEND_BTN.textContent = "예약발송";
+			toggleBodyClass();
 		}
 	});
 	
 	document.querySelector('.reserveSend .close_btn').addEventListener('click', function(){
 		reserveModal.classList.remove("d-block");
+		toggleBodyClass();
 		
 		document.getElementById('send_time1').checked = true;
 		document.getElementById('reserveDate').textContent = "";
@@ -290,6 +288,7 @@ $(function () {
 			document.getElementById('reserveDate').textContent = 
 				`예약 발송 시간 : ${reserveDate} ${reserveHour.value.padStart(2, '0')}시 ${reserveMinute.value.padStart(2, '0')}분`;
 			reserveModal.classList.remove("d-block");
+			toggleBodyClass();
 		} else {
 			// 예약 불가 (지나간 시간)
 			document.getElementById('reserveDate').textContent = '';
@@ -727,6 +726,7 @@ function sendMessage(){
 			const confirmSend = document.querySelector('.confirmSend');
 			const confirmMessage = document.getElementById('confirmMessage');	
 			confirmSend.classList.add('d-block');
+			toggleBodyClass();
 			
 			const rejectCheckDefault = document.getElementById('rejectCheckDefault').checked;
 			const rejectNum = document.getElementById('rejectNum').value.trim();
@@ -736,6 +736,7 @@ function sendMessage(){
 			confirmSend.querySelector('.send_btn').addEventListener('click', function() {
 				confirmSend.classList.remove('d-block');
 				func_send(); // 메시지 보내기
+				toggleBodyClass();
 			}, { once: true });
 			
 		} else {
