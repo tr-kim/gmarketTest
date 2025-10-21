@@ -392,28 +392,30 @@ $(function () {
 	function openManagePage(tasks) {
 		$('.manage').addClass('d-block');
 		toggleBodyClass();
+		
 		if($('#manageList')){
-			$('#manageList').dxList({
+			const manageList = $('#manageList').dxList({
 				dataSource: new DevExpress.data.DataSource({
 					store: new DevExpress.data.ArrayStore({
 						key: 'id',
 						data: tasks,
 					}),
 				}),
+				displayExpr: 'name',
 				width: 500,
 				height: 600,
 				showSelectionControls: true,
-				selectionMode: 'all',
-				displayExpr: 'name',
 				selectByClick: true,
+				selectionMode: 'multiple', // 전체선택 불가
 				pageLoadMode: 'scrollBottom',
-				onSelectionChanged() {
-					
-				},
-			})
+				onSelectionChanged(e) {
+					const selectedItems = manageList.option('selectedItems');
+					console.log(selectedItems);
+				}
+			}).dxList('instance');
 		}	
 	}
-
+	
 	// 발송량 상세 팝업
 	function openDetailPage(url, winName) {
 		const width = 1200;

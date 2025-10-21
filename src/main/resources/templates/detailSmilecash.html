@@ -68,8 +68,7 @@
 			showSelectionControls: true,
 			selectByClick: true,
 			selectionMode: 'all',
-		    pageLoadMode: 'scrolling', // more 버튼 비활성화
-		    scrollingEnabled: true,
+			pageLoadMode: 'scrollBottom',
 			onSelectionChanged(e) {
 				const selectedKeys = listWidget.option('selectedItemKeys').join(', ');
 				console.log(selectedKeys);
