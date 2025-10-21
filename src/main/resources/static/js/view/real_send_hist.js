@@ -274,7 +274,7 @@ $(function () {
 	
 	
 	
-	// 상단 팝오버
+	// 상단 팝오버============================================================================
 	$('#downList').dxPopover({
 		target: '#down',
 		showEvent: 'dxclick',
@@ -312,7 +312,7 @@ $(function () {
 		}
 	});
 	
-	// 발송량 상세 버튼
+	// 발송량 상세 버튼========================================================================
 	$('#gmarketDetail').dxButton({
 		stylingMode: 'contained',
 		text: '상세',
@@ -350,7 +350,7 @@ $(function () {
 		},
 	});
 	
-	// 발송량 관리 버튼
+	// 발송량 관리 버튼========================================================================
 	$('#gmarketManage').dxButton({
 		stylingMode: 'outlined',
 		text: '관리',
@@ -387,9 +387,8 @@ $(function () {
 			openManageModal('manageListSmilecash');
 		},
 	});
-
-	//발송량 관리 리스트
-	// G마켓 리스트
+	
+	// 발송량 관리 목록========================================================================
 	const manageListGmarket = $('#manageListGmarket').dxList({
 		dataSource: new DevExpress.data.DataSource({
 			store: new DevExpress.data.ArrayStore({
@@ -409,9 +408,7 @@ $(function () {
 			console.log('Gmarket 선택:', selectedItems);
 		},
 	}).dxList('instance');
-
-
-	// 옥션 리스트
+	
 	const manageListAuction = $('#manageListAuction').dxList({
 		dataSource: new DevExpress.data.DataSource({
 			store: new DevExpress.data.ArrayStore({
@@ -431,9 +428,7 @@ $(function () {
 			console.log('Auction 선택:', selectedItems);
 		},
 	}).dxList('instance');
-
-
-	// 스마일캐시 리스트
+	
 	const manageListSmilecash = $('#manageListSmilecash').dxList({
 		dataSource: new DevExpress.data.DataSource({
 			store: new DevExpress.data.ArrayStore({
@@ -453,35 +448,7 @@ $(function () {
 			console.log('Smilecash 선택:', selectedItems);
 		},
 	}).dxList('instance');
-
-	//발송현황 팝오버
-	$('#downList').dxPopover({
-		target: '#down',
-		showEvent: 'dxclick',
-		position: 'bottom',
-		wrapperAttr: {
-            class: "dxPopover"
-        },
-		width: () => $('#down').outerWidth(), 
-	});
-	$('#issueList').dxPopover({
-		target: '#issue',
-		showEvent: 'dxclick',
-		position: 'bottom',
-		wrapperAttr: {
-            class: "dxPopover"
-        },
-		width: () => $('#issue').outerWidth(), 
-	});
-	$('#delrayList').dxPopover({
-		target: '#delray',
-		showEvent: 'dxclick',
-		position: 'bottom',
-		wrapperAttr: {
-            class: "dxPopover"
-        },
-		width: () => $('#delray').outerWidth(), 
-	});
+	
 });
 
 // 발송량 관리 모달
