@@ -68,115 +68,20 @@ $(function () {
 		});
 	});
 	
-	// 발송량 라디오 버튼
-	const priorities = ['10초', '20초', '30초'];
-	$('#chartRadio').dxRadioGroup({
-		// width: 100,
-		items: priorities,
-		value: priorities[0],
-		layout: 'horizontal',
-	});
-	
-	// 지마켓 차트
+	// 발송량 차트
 	const gmarketChart = $("#gmarketChart").dxChart({
 		dataSource: [],
-		series: [],
-		commonSeriesSettings: {
-			argumentField: "date",
-			type: "line"
-		},
-		legend: {
-			visible: true,
-			orientation: "horizontal", 
-			horizontalAlignment: "center", // 좌우
-			verticalAlignment: "top", // 상하
-			itemTextPosition: "right",
-		},
-		argumentAxis: {
-			argumentType: "string", // datetime
-			label: {
-			    customizeText(arg) {
-			        // arg.value가 YYYYMMDDHH 형태라고 가정
-			        return arg.value.slice(-2); // 마지막 2자리(HH)만 반환
-			    }
-			}
-		},
-		tooltip: {
-			enabled: true,
-			customizeTooltip(arg) {
-				return {
-					text: `${arg.seriesName}\n${arg.argumentText.slice(-2)}시\n${arg.valueText}건`
-				};
-			}
-		}
+		series: []
 	}).dxChart("instance");
 	
-	// 옥션 차트
 	const actionChart = $("#actionChart").dxChart({
 		dataSource: [],
-		series: [],
-		commonSeriesSettings: {
-			argumentField: "date",
-			type: "line"
-		},
-		legend: {
-			visible: true,
-			orientation: "horizontal", 
-			horizontalAlignment: "center", // 좌우
-			verticalAlignment: "top", // 상하
-			itemTextPosition: "right",
-		},
-		argumentAxis: {
-			argumentType: "string", // datetime
-			label: {
-			    customizeText(arg) {
-			        // arg.value가 YYYYMMDDHH 형태라고 가정
-			        return arg.value.slice(-2); // 마지막 2자리(HH)만 반환
-			    }
-			}
-		},
-		tooltip: {
-			enabled: true,
-			customizeTooltip(arg) {
-				return {
-					text: `${arg.seriesName}\n${arg.argumentText.slice(-2)}시\n${arg.valueText}건`
-				};
-			}
-		}
+		series: []
 	}).dxChart("instance");
 	
-	// 스마일캐시 차트
 	const smilecashChart = $("#smilecashChart").dxChart({
 		dataSource: [],
-		series: [],
-		commonSeriesSettings: {
-			argumentField: "date",
-			type: "line"
-		},
-		legend: {
-			visible: true,
-			orientation: "horizontal", 
-			horizontalAlignment: "center", // 좌우
-			verticalAlignment: "top", // 상하
-			itemTextPosition: "right",
-		},
-		argumentAxis: {
-			argumentType: "string", // datetime
-			label: {
-			    customizeText(arg) {
-			        // arg.value가 YYYYMMDDHH 형태라고 가정
-			        return arg.value.slice(-2); // 마지막 2자리(HH)만 반환
-			    }
-			}
-		},
-		tooltip: {
-			enabled: true,
-			customizeTooltip(arg) {
-				return {
-					text: `${arg.seriesName}\n${arg.argumentText.slice(-2)}시\n${arg.valueText}건`
-				};
-			}
-		}
+		series: []
 	}).dxChart("instance");
 	
 	// 지마켓 서비스 목록
@@ -255,7 +160,7 @@ $(function () {
 			// datetime
 			// hours.push(new Date(startOfDay.getTime() + h * 60 * 60 * 1000));
 			
-			// string (YYYYMMDDHH)
+			// string(YYYYMMDDHH)
 			const d = new Date(startOfDay.getTime() + h * 60 * 60 * 1000);
 			const yyyy = d.getFullYear();
 			const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -264,10 +169,10 @@ $(function () {
 			hours.push(`${yyyy}${mm}${dd}${hh}`);
 		}
 		
-		// 서비스 랜덤 4개 (4개 이하인 경우 전체 사용)
+		// 랜덤 서비스 4개 (4개 이하인 경우 전체 사용)
 		const selectedTasks = taskList.length > 4 ? taskList.sort(() => 0.5 - Math.random()).slice(0, 4) : taskList;
 		
-		// 데이터 구성
+		// 랜덤 데이터 생성
 		const chartData = [];
 		hours.forEach(hour => {
 			const item = { date: hour };
@@ -284,10 +189,38 @@ $(function () {
 			type: "line"
 		}));
 		
-		// 데이터 갱신
+		// 차트 옵션 갱신
 		chartInstance.option({
 			dataSource: chartData,
-			series: series
+			series: series,
+			commonSeriesSettings: {
+				argumentField: "date",
+				type: "line"
+			},
+			legend: {
+				visible: true,
+				orientation: "horizontal", 
+				horizontalAlignment: "center", // 좌우
+				verticalAlignment: "top", // 상하
+				itemTextPosition: "right",
+			},
+			argumentAxis: {
+				argumentType: "string", // datetime
+				label: {
+				    customizeText(arg) {
+				        // arg.value가 YYYYMMDDHH 형태
+				        return arg.value.slice(-2); // 마지막 2자리(HH)만 반환
+				    }
+				}
+			},
+			tooltip: {
+				enabled: true,
+				customizeTooltip(arg) {
+					return {
+						text: `${arg.seriesName}\n${arg.argumentText.slice(-2)}시\n${arg.valueText}건`
+					};
+				}
+			}
 		});
 	}
 	
@@ -298,11 +231,86 @@ $(function () {
 		updateChartData(smilecashChart, smilecashTasks);
 	}
 	
-	// 페이지 로드 시 호출
-	updateCharts();
+	// 차트 갱신 시간 표시
+	function updateLastTime() {
+		const now = new Date();
+		const hh = String(now.getHours()).padStart(2, '0');
+		const mm = String(now.getMinutes()).padStart(2, '0');
+		const ss = String(now.getSeconds()).padStart(2, '0');
+		$('#chartUpdateTime').text(`최종 업데이트 ${hh}:${mm}:${ss}`);
+	}
 	
-	// 자동 갱신 (1분마다)
-	// setInterval(updateCharts, 60 * 1000);
+	let refreshInterval = 10; // 기본 10초
+	let refreshTimer = null;
+	
+	// 차트 갱신 및 시간 업데이트
+	function refreshCharts() {
+		updateCharts();
+		updateLastTime();
+	}
+	
+	// 인터벌 타이머 재시작
+	function restartChartTimer() {
+	    if (refreshTimer) clearInterval(refreshTimer);
+	    refreshCharts(); // 즉시 한 번 실행
+	    refreshTimer = setInterval(refreshCharts, refreshInterval * 1000);
+	}
+	
+	// 차트 갱신 주기
+	const chartTimes = ['10초', '20초', '30초'];
+	$('#chartInterval').dxRadioGroup({
+		items: chartTimes,
+		value: chartTimes[0],
+		layout: 'horizontal',
+		onValueChanged(e) {
+			// 선택한 값에서 숫자만 추출 (10, 20, 30)
+			refreshInterval = parseInt(e.value);
+			restartChartTimer();
+		}
+	});
+	
+	// 페이지 로드 시 인터벌 시작
+	restartChartTimer();
+	
+	
+	
+	// 상단 팝오버
+	$('#downList').dxPopover({
+		target: '#down',
+		showEvent: 'dxclick',
+		position: 'bottom',
+		wrapperAttr: {
+			class: "dxPopover"
+		},
+		onShowing(e) {
+			const w = $('#down').outerWidth();
+			e.component.option('width', w);
+		}
+	});
+	$('#issueList').dxPopover({
+		target: '#issue',
+		showEvent: 'dxclick',
+		position: 'bottom',
+		wrapperAttr: {
+			class: "dxPopover"
+		},
+		onShowing(e) {
+			const w = $('#issue').outerWidth();
+			e.component.option('width', w);
+		}
+	});
+	$('#delrayList').dxPopover({
+		target: '#delray',
+		showEvent: 'dxclick',
+		position: 'bottom',
+		wrapperAttr: {
+			class: "dxPopover"
+		},
+		onShowing(e) {
+			const w = $('#delray').outerWidth();
+			e.component.option('width', w);
+		}
+	});
 	
 	// 발송량 상세 버튼
 	$('#gmarketDetail').dxButton({
@@ -341,15 +349,7 @@ $(function () {
 			openDetailPage('/view/real/detail/smilecash', 'detailSmilecash');
 		},
 	});
-	// document.getElementById('gmarketDetail').addEventListener('click', () => {
-	// 	openDetailPage('/view/real/detail/gmarket', 'detailGmarket');
-	// });
-	// document.getElementById('auctionDetail').addEventListener('click', () => {
-	// 	openDetailPage('/view/real/detail/auction', 'detailAuction');
-	// });
-	// document.getElementById('smilecashDetail').addEventListener('click', () => {
-	// 	openDetailPage('/view/real/detail/smilecash', 'detailSmilecash');
-	// });
+	
 	// 발송량 관리 버튼
 	$('#gmarketManage').dxButton({
 		stylingMode: 'outlined',
@@ -387,77 +387,47 @@ $(function () {
 			openManagePage(smilecashTasks);
 		},
 	});
+	
+	// 발송량 관리 모달
+	function openManagePage(tasks) {
+		$('.manage').addClass('d-block');
+		toggleBodyClass();
+		if($('#manageList')){
+			$('#manageList').dxList({
+				dataSource: new DevExpress.data.DataSource({
+					store: new DevExpress.data.ArrayStore({
+						key: 'id',
+						data: tasks,
+					}),
+				}),
+				width: 500,
+				height: 600,
+				showSelectionControls: true,
+				selectionMode: 'all',
+				displayExpr: 'name',
+				selectByClick: true,
+				pageLoadMode: 'scrollBottom',
+				onSelectionChanged() {
+					
+				},
+			})
+		}	
+	}
 
-	//발송현황 팝오버
-	$('#downList').dxPopover({
-		target: '#down',
-		showEvent: 'dxclick',
-		position: 'bottom',
-		wrapperAttr: {
-            class: "dxPopover"
-        },
-		width: () => $('#down').outerWidth(), 
-	});
-	$('#issueList').dxPopover({
-		target: '#issue',
-		showEvent: 'dxclick',
-		position: 'bottom',
-		wrapperAttr: {
-            class: "dxPopover"
-        },
-		width: () => $('#issue').outerWidth(), 
-	});
-	$('#delrayList').dxPopover({
-		target: '#delray',
-		showEvent: 'dxclick',
-		position: 'bottom',
-		wrapperAttr: {
-            class: "dxPopover"
-        },
-		width: () => $('#delray').outerWidth(), 
-	});
+	// 발송량 상세 팝업
+	function openDetailPage(url, winName) {
+		const width = 1200;
+		const height = 800;
+		
+		// 화면 중앙 좌표 계산 (브라우저 창 기준)
+		const left = window.screenX + Math.max(0, Math.floor((window.outerWidth - width) / 2));
+		const top  = window.screenY + Math.max(0, Math.floor((window.outerHeight - height) / 2));
+		
+		const features = `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`;
+		
+		const win = window.open(url, winName, features);
+		if (win) win.focus();
+		else alert('팝업이 차단되었습니다. 브라우저 설정을 확인하세요.');
+	}
+	
 });
-
-// 발송량 관리 모달
-function openManagePage(tasks) {
-
-	$('.manage').addClass('d-block');
-	toggleBodyClass();
-	if($('#manageList')){
-		$('#manageList').dxList({
-			dataSource: new DevExpress.data.DataSource({
-			store: new DevExpress.data.ArrayStore({
-				key: 'id',
-				data: tasks,
-			}),
-			}),
-			width: 500,
-			height: 600,
-			showSelectionControls: true,
-			selectionMode: 'all',
-			displayExpr: 'name',
-			selectByClick: true,
-			pageLoadMode: 'scrollBottom',
-			onSelectionChanged() {
-				
-			},
-		})
-	}	
-}
-
-// 발송량 상세 팝업
-function openDetailPage(url, winName) {
-	const width = 1200;
-	const height = 800;
-	
-	// 화면 중앙 좌표 계산 (브라우저 창 기준)
-	const left = window.screenX + Math.max(0, Math.floor((window.outerWidth - width) / 2));
-	const top  = window.screenY + Math.max(0, Math.floor((window.outerHeight - height) / 2));
-	
-	const features = `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`;
-	
-	const win = window.open(url, winName, features);
-	if (win) win.focus();
-	else alert('팝업이 차단되었습니다. 브라우저 설정을 확인하세요.');
-}
-
