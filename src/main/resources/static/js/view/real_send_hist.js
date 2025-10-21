@@ -71,9 +71,10 @@ $(function () {
 	// 발송량 라디오 버튼
 	const priorities = ['10초', '20초', '30초'];
 	$('#chartRadio').dxRadioGroup({
-		width: 100,
+		// width: 100,
 		items: priorities,
 		value: priorities[0],
+		layout: 'horizontal',
 	});
 	
 	// 지마켓 차트
@@ -85,7 +86,11 @@ $(function () {
 			type: "line"
 		},
 		legend: {
-			visible: true
+			visible: true,
+			orientation: "horizontal", 
+			horizontalAlignment: "center", // 좌우
+			verticalAlignment: "top", // 상하
+			itemTextPosition: "right",
 		},
 		argumentAxis: {
 			argumentType: "string", // datetime
@@ -115,7 +120,11 @@ $(function () {
 			type: "line"
 		},
 		legend: {
-			visible: true
+			visible: true,
+			orientation: "horizontal", 
+			horizontalAlignment: "center", // 좌우
+			verticalAlignment: "top", // 상하
+			itemTextPosition: "right",
 		},
 		argumentAxis: {
 			argumentType: "string", // datetime
@@ -145,7 +154,11 @@ $(function () {
 			type: "line"
 		},
 		legend: {
-			visible: true
+			visible: true,
+			orientation: "horizontal", 
+			horizontalAlignment: "center", // 좌우
+			verticalAlignment: "top", // 상하
+			itemTextPosition: "right",
 		},
 		argumentAxis: {
 			argumentType: "string", // datetime
