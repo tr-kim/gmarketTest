@@ -27,4 +27,7 @@ public class ServiceInfoDto {
 	
 	// 테이블 이름
 	private String tableName;
+	
+	// 정렬 순서
+	private int sortNum;
 }
