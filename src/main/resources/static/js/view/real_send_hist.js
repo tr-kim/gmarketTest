@@ -26,19 +26,19 @@ $(function () {
 	
 	// 요약 탭 버튼
 	const summeryBtns = document.querySelectorAll('.summery ul li');
-	const sOperate = document.getElementById('s-operate');
-	const sDr = document.getElementById('s-dr');
+	const summeryActive = document.getElementById('summery-active');
+	const summeryStandby = document.getElementById('summery-standby');
 
 	summeryBtns.forEach((btn, idx) => {
 		btn.querySelector("button").addEventListener('click', () => {
 			
 			if(idx == 1){				
-				sOperate.classList.add('d-none');
-				sDr.classList.remove('d-none');
+				summeryActive.classList.add('d-none');
+				summeryStandby.classList.remove('d-none');
 				
 			}else{
-				sDr.classList.add('d-none');
-				sOperate.classList.remove('d-none');
+				summeryStandby.classList.add('d-none');
+				summeryActive.classList.remove('d-none');
 			}
 			
 			summeryBtns.forEach(b => b.querySelector("button").classList.remove('active'));
@@ -48,19 +48,19 @@ $(function () {
 	
 	// 상세 탭 버튼
 	const detailBtns = document.querySelectorAll('.detail ul li');
-	const dOperate = document.getElementById('d-operate');
-	const dDr = document.getElementById('d-dr');
+	const detailActive = document.getElementById('detail-active');
+	const detailStandby = document.getElementById('detail-standby');
 
 	detailBtns.forEach((btn, idx) => {
 		btn.querySelector("button").addEventListener('click', () => {
 			
 			if(idx == 1){				
-				dOperate.classList.add('d-none');
-				dDr.classList.remove('d-none');
+				detailActive.classList.add('d-none');
+				detailStandby.classList.remove('d-none');
 				
 			}else{
-				dDr.classList.add('d-none');
-				dOperate.classList.remove('d-none');
+				detailStandby.classList.add('d-none');
+				detailActive.classList.remove('d-none');
 			}
 			
 			detailBtns.forEach(b => b.querySelector("button").classList.remove('active'));

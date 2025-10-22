@@ -484,8 +484,8 @@ aside .psw_chg_btn:hover{
 	background-color: #0f6cbd;
 	color: #fff;
 }
-#d-dr,
-#d-operate{
+#detail-standby,
+#detail-active{
     border: 1px solid rgba(0, 0, 0, 0.175);
     border-radius: 6px;
     overflow: hidden;
