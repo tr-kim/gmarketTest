@@ -1,6 +1,5 @@
 package com.web.gmarket.alarm.controller;
 
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.web.gmarket.common.dto.ServiceInfoDto;
 import com.web.gmarket.common.service.CommonService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 
@@ -28,7 +26,6 @@ public class AlarmController {
 		
 		// 서비스 명 목록 전체 조회
 		List<Map<String, Object>> nameList = commonService.getServiceInfoMapper().selectServiceNameList().stream()
-				.sorted(Comparator.comparing(ServiceInfoDto::getCompanyCode).thenComparing(ServiceInfoDto::getSvcName))
 			    .map(dto -> {
 			    	LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			        map.put("companyCode", dto.getCompanyCode());
@@ -49,7 +46,6 @@ public class AlarmController {
 		
 		// 서비스 명 목록 전체 조회
 		List<Map<String, Object>> nameList = commonService.getServiceInfoMapper().selectServiceNameList().stream()
-				.sorted(Comparator.comparing(ServiceInfoDto::getCompanyCode).thenComparing(ServiceInfoDto::getSvcName))
 			    .map(dto -> {
 			    	LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			        map.put("companyCode", dto.getCompanyCode());
