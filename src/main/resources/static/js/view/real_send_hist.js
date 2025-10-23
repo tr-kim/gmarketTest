@@ -455,7 +455,7 @@ $(function () {
 function openManageModal(targetId) {
 
     document.querySelector('.manage').classList.add('d-block');
-
+	toggleBodyClass()
     document.querySelectorAll('.manage .modal-con > div')
         .forEach(el => el.style.display = 'none');
 

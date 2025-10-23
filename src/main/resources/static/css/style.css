@@ -593,7 +593,7 @@ aside .psw_chg_btn:hover{
 }
 .detail-right {
     flex: 1 1 auto;
-    /* height: 100%; */
+    width: calc(100% - 220px);
     display: flex;
     flex-direction: column;
     gap: 8px;
