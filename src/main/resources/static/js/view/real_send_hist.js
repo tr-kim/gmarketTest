@@ -1,4 +1,3 @@
-let fn_saveList;	// 발송량 관리 팡업 저장
 
 // 회사별 코드
 const gmarketCode = 1;
@@ -27,16 +26,15 @@ $(function () {
 	
 	// 요약 탭 버튼
 	const summeryBtns = document.querySelectorAll('.summery ul li');
-	const sOperate = document.getElementById('s-operate');
-	const sDr = document.getElementById('s-dr');
+	const summeryActive = document.getElementById('summery-active');
+	const summeryStandby = document.getElementById('summery-standby');
 
 	summeryBtns.forEach((btn, idx) => {
 		btn.querySelector("button").addEventListener('click', () => {
-			
 			const isDr = idx == 1;
 
-			sOperate.classList.toggle('d-none', isDr);
-			sDr.classList.toggle('d-none', !isDr);
+			summeryActive.classList.toggle('d-none', isDr);
+			summeryStandby.classList.toggle('d-none', !isDr);
 			
 			summeryBtns.forEach(b => b.querySelector("button").classList.remove('active'));
 			btn.querySelector("button").classList.add('active');
@@ -45,16 +43,16 @@ $(function () {
 	
 	// 상세 탭 버튼
 	const detailBtns = document.querySelectorAll('.detail ul li');
-	const dOperate = document.getElementById('d-operate');
-	const dDr = document.getElementById('d-dr');
+	const detailActive = document.getElementById('detail-active');
+	const detailStandby = document.getElementById('detail-standby');
 
 	detailBtns.forEach((btn, idx) => {
 		btn.querySelector("button").addEventListener('click', () => {
 			
 			const isDr = idx == 1;
 
-			dOperate.classList.toggle('d-none', isDr);
-			dDr.classList.toggle('d-none', !isDr);
+			detailActive.classList.toggle('d-none', isDr);
+			detailStandby.classList.toggle('d-none', !isDr);
 			
 			detailBtns.forEach(b => b.querySelector("button").classList.remove('active'));
 			btn.querySelector("button").classList.add('active');
@@ -319,7 +317,7 @@ function fn_manageButton(id, name) {
 function fn_openManageModal(targetId) {
 
     document.querySelector('.manage').classList.add('d-block');
-
+	toggleBodyClass()
     document.querySelectorAll('.manage .modal-con > div')
         .forEach(el => el.style.display = 'none');
 
