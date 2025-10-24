@@ -10,6 +10,9 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class RealDto {
 	
+	// 테이블 코드
+	private Integer tableCode;
+	
 	// 시간 00:00
 	private String inTime;
 	

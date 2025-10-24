@@ -43,58 +43,41 @@
 			<div id="chartPanel"></div>
 		</div>
 	</div>
+<script th:inline="javascript">
+	const tasks = /*[[${list}]]*/ [];
+</script>
 <script>
 	<!-- 한국어 적용(ko-KR) -->
 	DevExpress.localization.locale(navigator.language);
 	
 	$(function() {
-		// 서비스명
-		const tasks = [
-			{ id: 1, name: 'KT-SME-ENG' },
-			{ id: 2, name: 'KT-SMS-ETC' },
-			{ id: 3, name: 'KT-SMS-EVENT-GMA' },
-			{ id: 4, name: 'KT-GMKT-LMS-LARGE' },
-			{ id: 5, name: 'KT-GMKT-MMS-LARGE' },
-			{ id: 6, name: 'KT-GMKT-SMS-LARGE' },
-			{ id: 7, name: 'KT-SMS-LARGE-GMA' },
-			{ id: 8, name: 'KT-LMS-EVENT-GMA' },
-			{ id: 9, name: 'KT-LMS-LARGE-GMA' },
-			{ id: 10, name: 'KT-MEMMON' },
-			{ id: 11, name: 'KT-MMS-EVENT-GMA' },
-			{ id: 12, name: 'KT-MMS-LARGE-GMA' },
-			{ id: 13, name: 'KT-SMS-ORDER' },
-			{ id: 14, name: 'KT-SMS-EPLE' },
-			{ id: 15, name: 'KT-SMS-STATP-GMA' },
-			{ id: 16, name: 'KT-SMS-STATP-GMA-2CON' },
-			{ id: 17, name: 'KT-SMS-TRAN' },
-			{ id: 18, name: 'KT-SMS-TSP' },
-			{ id: 19, name: 'KT-SMS-MO4MMS' },
-			{ id: 20, name: 'KT-SFC-SMS' },
-			{ id: 21, name: 'KT-SFC-MMS' },
-			{ id: 22, name: 'KT-SFC-LMS' },
-			{ id: 23, name: 'KT-MMS-NON-GMA' },
-			{ id: 24, name: 'KT-LMS-NON-GMA' },
-			{ id: 25, name: 'KT-G9-SMS-LARGE' },
-			{ id: 26, name: 'KT-G9-MMS-LARGE' },
-			{ id: 27, name: 'KT-G9-LMS-LARGE' }
-		];
-	    
+		
+		// 쿠키에 있는 값 가져오기
+		const cookieValue = getCookie('manageListGmarket');
+		console.log(cookieValue)
+		let selectedIds = [];
+		
+		if (Array.isArray(cookieValue)) {
+		    selectedIds = cookieValue.map(item => item.tableCode);
+		}
+		
 		// dxList 초기화
 		const listWidget = $('#listPanel').dxList({
 			dataSource: new DevExpress.data.DataSource({
 				store: new DevExpress.data.ArrayStore({
-					key: 'id',
+					key: 'tableCode',
 					data: tasks,
 				}),
 			}),
-			displayExpr: "name",
+			displayExpr: "svcName",
 			showSelectionControls: true,
 			selectByClick: true,
 			selectionMode: 'all',
 			pageLoadMode: 'scrollBottom',
+			selectedItemKeys: selectedIds,
 			onSelectionChanged(e) {
-				const selectedKeys = listWidget.option('selectedItemKeys').join(', ');
-				console.log(selectedKeys);
+				// const selectedKeys = listWidget.option('selectedItemKeys').join(', ');
+				// console.log(selectedKeys);
 				
 				// 더미 데이터 생성 & 차트 갱신
 				const selectedItems = listWidget.option('selectedItems'); // 배열
@@ -124,12 +107,14 @@
 			}
 		}).dxChart("instance");
 		
+		updateChart(cookieValue);
+		
 		// 더미 데이터 생성 & 차트 갱신
 		function updateChart(items) {
 			 // 선택된 항목마다 차트 series 구성
 			const chartSeries = items.map(item => ({
-				valueField: item.name, // 이 필드를 라인으로 그림
-				name: item.name // 범례에 표시될 이름
+				valueField: item.svcName, // 이 필드를 라인으로 그림
+				name: item.svcName // 범례에 표시될 이름
 			}));
 			
 			// 차트용 데이터 생성
@@ -143,7 +128,7 @@
 				// 선택된 각 서비스에 대해 y값 생성
 				// 각 서비스의 값: 10~109 범위의 랜덤 수
 				items.forEach(item => {
-					point[item.name] = Math.floor(Math.random() * 100) + 10; // point 객체의 key 이름은 반드시 series.valueField와 일치해야 함
+					point[item.svcName] = Math.floor(Math.random() * 100) + 10; // point 객체의 key 이름은 반드시 series.valueField와 일치해야 함
 				});
 				data.push(point);
 			}
@@ -153,6 +138,17 @@
 				dataSource: data,
 				series: chartSeries
 			});
+		}
+		
+		// 쿠키 가져오기
+		function getCookie(name) {
+		    const nameEQ = name + "=";
+		    const cookies = document.cookie.split(';');
+		    for(let c of cookies) {
+		        c = c.trim();
+		        if (c.indexOf(nameEQ) === 0) return JSON.parse(decodeURIComponent(c.substring(nameEQ.length)));
+		    }
+		    return null;
 		}
 	});
 </script>

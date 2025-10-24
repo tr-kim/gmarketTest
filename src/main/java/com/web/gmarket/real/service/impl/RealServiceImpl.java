@@ -59,8 +59,8 @@ public class RealServiceImpl implements RealService {
 	}
 
 	@Override
-	public RealDto selectRealHistTableList(int companyCode, int tableCode) {
-		return  commonService.getRealMapper(DBUtils.getDBName(companyCode)).selectRealHistTableList(tableCode);
+	public List<RealDto> selectRealHistTableList(int companyCode, List<Integer> codeList) {
+		return commonService.getRealMapper(DBUtils.getDBName(companyCode)).selectRealHistTableList(codeList);
 	}
 	
 	public List<Integer> getCodeList(List<StatCodeDto> list) {

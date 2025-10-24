@@ -1,6 +1,7 @@
 package com.web.gmarket.real.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -82,11 +83,11 @@ public class RestRealSendHistController {
 	 */
 	@ResponseBody
 	@PostMapping("/tableList")
-	public ResponseEntity<?> tableList(Authentication authentication,  @RequestParam(name="companyCode", defaultValue = "0") int companyCode, @RequestParam(name="tableCode", defaultValue = "1") int tableCode) {
+	public ResponseEntity<?> tableList(Authentication authentication,  @RequestParam(name="companyCode", defaultValue = "0") int companyCode, @RequestParam(name="codeList") List<Integer> codeList) {
 		
 		try {
 			
-			return new ResponseEntity<>(realService.selectRealHistTableList(companyCode, tableCode), HttpStatus.OK);
+			return new ResponseEntity<>(realService.selectRealHistTableList(companyCode, codeList), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(e.getLocalizedMessage());

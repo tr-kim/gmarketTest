@@ -5,7 +5,8 @@
         <div class="modal-wrap">
             <div class="modal-hd">
                 <span class="font-sz-16 font-weight-600">서비스 목록 관리</span>
-                <button class="close_btn" onclick="closeModal('manage')"><i class="bi bi-x-lg"></i><span class="visually-hidden">닫기</span></button>
+				<input type="hidden" id="setManageId">
+                <button class="close_btn" onclick="fn_closeModal('manage')"><i class="bi bi-x-lg"></i><span class="visually-hidden">닫기</span></button>
             </div>
             <div class="modal-con p-3">
                 <div id="manageListGmarket"></div>
@@ -13,7 +14,7 @@
                 <div id="manageListSmilecash"></div>
             </div>
             <div class="modal-ft">
-				<button type="button" class="sub-bg" onclick="closeModal('manage')">저장</button>
+				<button type="button" class="sub-bg" onclick="fn_saveList()">확인</button>
 			</div>
         </div>
     </div>

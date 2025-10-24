@@ -64,12 +64,13 @@
 			</foreach>
 	</select>
 	
-	<select id="selectRealHistTableList" resultType="com.web.gmarket.real.dto.RealDto" parameterType="int">
+	<select id="selectRealHistTableList" resultType="com.web.gmarket.real.dto.RealDto" parameterType="java.util.List">
 		/*
 			RealMapper.selectRealHistTableList 테이블별 현황
 		*/
+		<!--
 		SELECT 
-			TOP 1 ISNULL(REPLACE(SUBSTRING(CONVERT(CHAR(8), IN_TIME ,8), 4, 8), ':', ''), '00:00') IN_TIME
+			TOP 1 ISNULL(REPLACE(SUBSTRING(CONVERT(CHAR(8), IN_TIME , 8), 4, 8), ':', ''), '00:00') IN_TIME
 			, ISNULL(SUM(SEND_CNT), 0) SEND_CNT
 			, ISNULL(SUM(SUCC_CNT), 0) SUCC_CNT
 			, ISNULL(SUM(FAIL_CNT), 0) FAIL_CNT 
@@ -83,6 +84,30 @@
 		  AND TABLE_CODE = #{tableCode} 
 		GROUP BY IN_TIME 
 		ORDER BY IN_TIME DESC
+		-->
+		
+		WITH LATEST_TIME AS (
+		    SELECT TABLE_CODE, MAX(IN_TIME) AS MAX_IN_TIME
+		    FROM T_MSG_TRAFFIC
+		    WHERE 1 = 1
+		    <if test="codeList.size > 0">
+		      AND TABLE_CODE IN
+			<foreach collection="codeList" item="code" open="(" separator="," close=")">
+				#{code}
+			</foreach>
+		    </if>
+		    GROUP BY TABLE_CODE
+		)
+		SELECT T.TABLE_CODE AS TABLE_CODE,
+		       ISNULL(REPLACE(SUBSTRING(CONVERT(CHAR(8), t.IN_TIME, 8), 4, 5), ':', ''), '0000') AS IN_TIME,
+		       ISNULL(SUM(T.SEND_CNT), 0) AS SEND_CNT,
+		       ISNULL(SUM(T.SUCC_CNT), 0) AS SUCC_CNT,
+		       ISNULL(SUM(T.FAIL_CNT), 0) AS FAIL_CNT
+		FROM T_MSG_TRAFFIC T
+		JOIN LATEST_TIME L
+		    ON T.TABLE_CODE = L.TABLE_CODE AND T.IN_TIME = L.MAX_IN_TIME
+		GROUP BY T.TABLE_CODE, T.IN_TIME
+		ORDER BY T.TABLE_CODE
 	</select>
 	
 </mapper>

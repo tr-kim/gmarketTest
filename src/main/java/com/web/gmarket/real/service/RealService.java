@@ -11,5 +11,5 @@ public interface RealService {
 	
 	public RealDto selectRealHistList(int companyCode);
 	
-	public RealDto selectRealHistTableList(int companyCode, int tableCode);
+	public List<RealDto> selectRealHistTableList(int companyCode, List<Integer> codeList);
 }

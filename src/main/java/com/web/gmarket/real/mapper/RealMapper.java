@@ -32,6 +32,6 @@ public interface RealMapper {
 	 * @param tableCode
 	 * @return
 	 */
-	public RealDto selectRealHistTableList(@Param(value = "tableCode") int tableCode);
+	public List<RealDto> selectRealHistTableList(@Param(value = "codeList") List<Integer> codeList);
 
 }
