@@ -50,15 +50,20 @@
 	<!-- 한국어 적용(ko-KR) -->
 	DevExpress.localization.locale(navigator.language);
 	
+	const gmarketCode = 1;
+	let refreshInterval = 10; // 기본 10초
+	let refreshTimer = null;
+	// 쿠키에 있는 값 가져오기
+	const cookieValue = getCookie('manageListGmarket');
+	
 	$(function() {
 		
-		// 쿠키에 있는 값 가져오기
-		const cookieValue = getCookie('manageListGmarket');
-		console.log(cookieValue)
 		let selectedIds = [];
 		
-		if (Array.isArray(cookieValue)) {
+		if (Array.isArray(cookieValue) && cookieValue.length > 0) {
 		    selectedIds = cookieValue.map(item => item.tableCode);
+		} else {
+			selectedIds = tasks.length > 6 ? tasks.sort(() => 0.5 - Math.random()).slice(0, 6) : tasks;
 		}
 		
 		// dxList 초기화
@@ -81,76 +86,144 @@
 				
 				// 더미 데이터 생성 & 차트 갱신
 				const selectedItems = listWidget.option('selectedItems'); // 배열
-				updateChart(selectedItems);
+				restartChartTimer(selectedItems);
 			},
 		}).dxList('instance');
 		
-		// dxChart 초기화
-		const chartWidget = $("#chartPanel").dxChart({
-			dataSource: [],
-			commonSeriesSettings: {
-				argumentField: "date",
-				type: "line"
-			},
-			series: [{
-				valueField: "value",
-				name: "건수"
-			}],
-			legend: {
-				visible: true
-			},
-			argumentAxis: {
-				argumentType: "datetime"
-			},
-			tooltip: {
-				enabled: true
+		// 차트 생성
+		makeChart();
+	   	restartChartTimer(cookieValue);
+	});
+	
+	// 인터벌 타이머 재시작
+	function restartChartTimer(data) {
+	    if (refreshTimer) clearInterval(refreshTimer);
+		updateChartData(data);
+	    refreshTimer = setInterval(() => updateChartData(data), refreshInterval * 1000);
+	}
+	
+	// 차트 데이터 갱신
+	function updateChartData(taskList, cookieValue) {
+
+		const tableCodeList = taskList.map(({ tableCode }) => tableCode);	// 테이블 코드 목록
+		
+		fn_getChartData(tableCodeList, function(result) {
+			
+			const day = new Date();
+		    const hh = String(day.getHours()).padStart(2, '0');
+			const mi = String(day.getMinutes()).padStart(2, '0');
+			const ss = String(day.getSeconds()).padStart(2, '0');
+			
+			const item = { date: `${hh}${mi}${ss}` };
+			
+			if(Array.isArray(result) && result.length > 0) {
+				
+				result.forEach(({ tableCode, sendCnt }) => {
+					const name = (taskList.find(item => item.tableCode == tableCode) || {}).svcName || '';
+					
+					item[name] = Number(sendCnt);
+				});
 			}
-		}).dxChart("instance");
-		
-		updateChart(cookieValue);
-		
-		// 더미 데이터 생성 & 차트 갱신
-		function updateChart(items) {
-			 // 선택된 항목마다 차트 series 구성
-			const chartSeries = items.map(item => ({
-				valueField: item.svcName, // 이 필드를 라인으로 그림
-				name: item.svcName // 범례에 표시될 이름
+			 
+			const chart = $('#chartPanel').dxChart("instance");
+			
+			// 시리즈 정의
+			const series = taskList.map(task => ({
+				valueField: task.svcName,
+				name: task.svcName,
+				type: "line"
 			}));
 			
-			// 차트용 데이터 생성
-			const now = new Date();
-			const data = [];
-			for (let i = 0; i < 10; i++) { // 최근 10일치
-				const point = {
-					date: new Date(now.getFullYear(), now.getMonth(), now.getDate() - (10 - i)) // x축 값: 날짜
-				};
-				
-				// 선택된 각 서비스에 대해 y값 생성
-				// 각 서비스의 값: 10~109 범위의 랜덤 수
-				items.forEach(item => {
-					point[item.svcName] = Math.floor(Math.random() * 100) + 10; // point 객체의 key 이름은 반드시 series.valueField와 일치해야 함
-				});
-				data.push(point);
-			}
-			
-			chartWidget.option({
-				//title: `트래픽`,
-				dataSource: data,
-				series: chartSeries
+			// 누락 필드 0으로 채움
+			const seriesFields = series.map(s => s.valueField);
+			seriesFields.forEach(field => {
+			  if (item[field] === undefined) item[field] = 0;
 			});
-		}
+			
+			// 기존 데이터 가져오기
+			let dataSource = chart.option("dataSource") || [];
+
+			// 데이터 개수 제한 (10개 초과 시 앞에서 제거)
+			if (dataSource.length >= 10) dataSource.shift();
+			
+			// 차트 갱신
+			chart.option("series", series);
+			chart.option("dataSource").push(item);
+			chart.refresh();
+		});
+	}
+	
+	// 차트 데이터 가져오기
+	function fn_getChartData(list, successCallbock) {
 		
-		// 쿠키 가져오기
-		function getCookie(name) {
-		    const nameEQ = name + "=";
-		    const cookies = document.cookie.split(';');
-		    for(let c of cookies) {
-		        c = c.trim();
-		        if (c.indexOf(nameEQ) === 0) return JSON.parse(decodeURIComponent(c.substring(nameEQ.length)));
-		    }
-		    return null;
-		}
-	});
+		const formData = new FormData();
+		formData.append("companyCode", gmarketCode);
+		formData.append("codeList", list);
+		
+		$.ajax({
+			type: "POST",
+			url: '/api/v1/real/tableList',
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function(data) {
+				if (typeof successCallbock === 'function') {
+					successCallbock(data);
+				}
+			},
+			error: function(xhr, status, error) {
+				console.error("차트 데이터 요청 실패:", xhr, status, error); // 기본 에러 처리
+				showDialogCustom('error');
+			}
+		});
+	}
+	
+	// 차트 기본 생성
+	function makeChart() {
+		$('#chartPanel').dxChart({
+			dataSource: [],
+			series: [],
+			commonSeriesSettings: {
+			    argumentField: "date",
+			    type: "line"
+			},
+			legend: {
+			    visible: true,
+			    orientation: "horizontal",
+			    horizontalAlignment: "center", // 좌우
+			    verticalAlignment: "top", // 상하
+			    itemTextPosition: "right",
+			},
+			argumentAxis: {
+			    type: 'discrete',       // 불규칙 x값 허용
+			    argumentType: 'string', // 날짜/숫자 그대로 표시
+			    label: {
+			        customizeText(arg) {
+			            return arg.value; // 마지막 2자리(HH)만
+			        }
+			    }
+			},
+			tooltip: {
+				enabled: true,
+				customizeTooltip(arg) {
+					return {
+						text: `${arg.seriesName}\n${arg.argumentText.slice(-2)}시\n${arg.valueText}건`
+					};
+				}
+			}
+		}).dxChart("instance");
+	}
+	
+	// 쿠키 가져오기
+	function getCookie(name) {
+	    const nameEQ = name + "=";
+	    const cookies = document.cookie.split(';');
+	    for(let c of cookies) {
+	        c = c.trim();
+	        if (c.indexOf(nameEQ) === 0) return JSON.parse(decodeURIComponent(c.substring(nameEQ.length)));
+	    }
+	    return null;
+	}
 </script>
 </body>
 </html>
