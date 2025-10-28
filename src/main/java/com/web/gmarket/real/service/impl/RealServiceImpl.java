@@ -66,4 +66,9 @@ public class RealServiceImpl implements RealService {
 	public List<Integer> getCodeList(List<StatCodeDto> list) {
 		return list.stream().map(StatCodeDto::getTableCode).collect(Collectors.toList());
 	}
+	
+	@Override
+	public RealDto selectProcStatusList(String view, String tab) {
+		return new RealDto(); // 임시로 빈 객체를 반환
+	}
 }

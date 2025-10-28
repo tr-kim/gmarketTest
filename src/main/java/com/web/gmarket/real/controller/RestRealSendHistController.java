@@ -96,4 +96,28 @@ public class RestRealSendHistController {
 		}
 		
 	}
+	
+	/**
+	 * 프로세스 상태
+	 * 
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping("/procStatusList")
+	public ResponseEntity<?> procStatusList(
+			Authentication authentication,
+			@RequestParam(name="view", defaultValue = "summary") String view,
+			@RequestParam(name="tab", defaultValue = "active") String tab) {
+		
+		try {
+			
+			return new ResponseEntity<>(realService.selectProcStatusList(view, tab), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getLocalizedMessage());
+			
+			return new ResponseEntity<>(new RealDto(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
 }
