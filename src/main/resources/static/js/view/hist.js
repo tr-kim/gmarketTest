@@ -8,14 +8,12 @@ let companyValue;
 let tableValue;
 
 $(function () {
-	const startDate = new Date();
-	const endDate = new Date();
-	endDate.setDate(endDate.getDate() + 7);
+	const today = new Date();
 	
 	//조회 기간
 	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
-		value: startDate,
+		value: today,
 		displayFormat: "yyyy-MM-dd",
 		pickerType: "calendar",
 		calendarOptions: {
@@ -25,7 +23,7 @@ $(function () {
 	
 	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
-		value: endDate,
+		value: today,
 		displayFormat: "yyyy-MM-dd",
 		pickerType: "calendar",
 		calendarOptions: {
@@ -390,7 +388,7 @@ $(function () {
 				default :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
 			}
 			
-			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다. ${companyName}`);
+			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건 ${companyName}`);
 		}
 	}).dxDataGrid("instance");
 });
