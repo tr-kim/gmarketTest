@@ -284,7 +284,6 @@ $(function () {
 		headerFilter: {
 			visible: true
 		},
-		height: 500,
 		searchPanel: {
 			visible: true,
 			width: 300
@@ -388,7 +387,7 @@ $(function () {
 				default :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
 			}
 			
-			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건 ${companyName}`);
+			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건`);
 		}
 	}).dxDataGrid("instance");
 });
