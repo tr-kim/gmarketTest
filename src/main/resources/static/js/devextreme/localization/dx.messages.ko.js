@@ -127,7 +127,7 @@
             "dxDataGrid-editingConfirmDeleteMessage": "Are you sure you want to delete this record?",
             "dxDataGrid-validationCancelChanges": "Cancel changes",
             "dxDataGrid-groupPanelEmptyText": "Drag a column header here to group by that column",
-            "dxDataGrid-noDataText": "No data",
+            "dxDataGrid-noDataText": "조회된 데이터가 없습니다.", // No data
             "dxDataGrid-searchPanelPlaceholder": "찾을 내용을 입력하세요.", // Search...
             "dxDataGrid-filterRowShowAllText": "(All)",
             "dxDataGrid-filterRowResetOperationText": "Reset",
