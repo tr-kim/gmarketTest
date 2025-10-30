@@ -8,14 +8,12 @@ let companyValue;
 let tableValue;
 
 $(function () {
-	const startDate = new Date();
-	const endDate = new Date();
-	endDate.setDate(endDate.getDate() + 7);
+	const today = new Date();
 	
 	//조회 기간
 	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
-		value: startDate,
+		value: today,
 		displayFormat: "yyyy-MM-dd",
 		pickerType: "calendar",
 		calendarOptions: {
@@ -25,7 +23,7 @@ $(function () {
 	
 	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
-		value: endDate,
+		value: today,
 		displayFormat: "yyyy-MM-dd",
 		pickerType: "calendar",
 		calendarOptions: {
@@ -33,71 +31,51 @@ $(function () {
 		}
 	}).dxDateBox("instance");
 	
-	// 사용자 등급 및 회사 업체에 따라 select box option 설정
-	let companyArray = [ { code: -1, name: '선택하세요' } ];
+	// 기본 옵션
+	const defaultOption = { code: -1, name: '선택하세요' };
 	
-	if((userGrade == 0 || (userGrade == 1 && companyCode == 0))) {
-		companyArray.push({ code: 0, name: '옥션' });
-	} 
+	// 대분류 목록 설정
+	const companyArray = [defaultOption];
+	const companyNames = ['옥션', 'G마켓', '스마일캐시'];
 	
-	if((userGrade == 0 || (userGrade == 1 && companyCode == 1))) {
-		companyArray.push({ code: 1, name: 'G마켓' });
-	}
+	companyNames.forEach((name, idx) => {
+		if (userGrade === 0 || (userGrade === 1 && companyCode === idx)) {
+			companyArray.push({ code: idx, name });
+		}
+	});
 	
-	if((userGrade == 0 || (userGrade == 1 && companyCode == 2))) {
-		companyArray.push({ code: 2, name: '스마일캐시' });
-	}
-
+	// 중분류 목록 설정
+	const tableArray = [0, 1, 2].reduce((acc, idx) => {
+		acc[idx] = [defaultOption, { code: 0, name: '전체' }];
+		return acc;
+	}, {});
+	
+	// codeList 병합
+	codeList.forEach(({ companyCode, code, name }) => {
+		if (tableArray[companyCode]) {
+			tableArray[companyCode].push({ code, name });
+		}
+	});
+	
 	//대분류
 	companyInstance = $('#companyCode').dxSelectBox({
 		dataSource: companyArray,
 		displayExpr: 'name',
 		valueExpr: 'code',
 		value: companyCode,
-		onValueChanged: function (e) {
-			//중분류 업데이트
+		onValueChanged(e) {
 			const selectedCode = e.value;
-			tableValue = e.component.option("displayValue");
-			companyValue = e.value;
-			tableInstance.option('dataSource', tableArray[selectedCode] || []);
-			tableInstance.option('value', -1); // 기본값 다시 설정
+			const newData = tableArray[selectedCode] || [defaultOption];
+			tableInstance.option({
+				dataSource: newData,
+				value: -1
+			});
 		}
 	}).dxSelectBox("instance");
 	
-	const tableArray = {
-		0: [
-			{ code: -1, name: '선택하세요' },
-			{ code: 0, name: '전체' }
-		],
-		1: [
-			{ code: -1, name: '선택하세요' },
-			{ code: 0, name: '전체' }
-		],
-		2: [
-			{ code: -1, name: '선택하세요' },
-			{ code: 0, name: '전체' }
-		]
-	};
-	
-	for(var i = 0; i < codeList.length; i++) {
-		const { companyCode, code, name } = codeList[i];
-		
-		switch (companyCode) {
-			case 0:
-				tableArray[0].push({ code: code, name: name });
-				break;
-			case 1:
-				tableArray[1].push({ code: code, name: name });
-				break;
-			case 2:
-				tableArray[2].push({ code: code, name: name });
-				break;
-		}
-	}
-
 	//중분류
 	tableInstance = $('#tableCode').dxSelectBox({
-		dataSource: tableArray[0],
+		dataSource: tableArray[companyCode] || [defaultOption],
 		displayExpr: 'name',
 		valueExpr: 'code',
 		value: 0
@@ -127,8 +105,21 @@ $(function () {
 		type: 'default',
 		width: 60,
 		onClick() {
-			const searchTableCode = tableInstance.option("selectedItem").code;
-			if(searchTableCode == -1 || searchTableCode < 0) { showDialogCustom("중분류를 선택하세요."); return false; }
+			const selectedCompany = companyInstance.option("selectedItem");
+			const selectedTable = tableInstance.option("selectedItem");
+			
+			const companyCode = selectedCompany ? selectedCompany.code : -1;
+			const tableCode = selectedTable ? selectedTable.code : -1;
+			
+			if (companyCode == null || companyCode == -1) {
+				showDialogCustom("대분류를 선택하세요.");
+				return false;
+			}
+			
+			if (tableCode == null || tableCode == -1) {
+				showDialogCustom("중분류를 선택하세요.");
+				return false;
+			}
 			
 			const startValue = startDateInstance.option("value");
 			const endValue = endDateInstance.option("value");
@@ -286,7 +277,6 @@ $(function () {
 		headerFilter: {
 			visible: true
 		},
-		height: 500,
 		searchPanel: {
 			visible: true,
 			width: 300
@@ -390,7 +380,7 @@ $(function () {
 				default :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
 			}
 			
-			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다. ${companyName}`);
+			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건`);
 		}
 	}).dxDataGrid("instance");
 });

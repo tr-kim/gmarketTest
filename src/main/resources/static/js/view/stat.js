@@ -246,7 +246,6 @@ $(function() {
 		selection: {
 			mode: 'single',
 		},
-		height: 500,
 		//행 마우스오버 시
 		hoverStateEnabled: true,
 		searchPanel: {

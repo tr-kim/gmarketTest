@@ -5,14 +5,12 @@ let titleInstance;
 let bulkHistDataGrid;
 
 $(function () {
-	const startDate = new Date();
-	const endDate = new Date();
-	endDate.setDate(endDate.getDate() + 7);
+	const today = new Date();
 	
 	//조회 기간
 	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
-		value: startDate,
+		value: today,
 		displayFormat: "yyyy-MM-dd",
 		pickerType: "calendar",
 		calendarOptions: {
@@ -22,7 +20,7 @@ $(function () {
 	
 	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
-		value: endDate,
+		value: today,
 		displayFormat: "yyyy-MM-dd",
 		pickerType: "calendar",
 		calendarOptions: {
@@ -146,7 +144,6 @@ $(function () {
 		headerFilter: {
 			visible: true
 		},
-		height: 500,
 		searchPanel: {
 			visible: true,
 			width: 300
@@ -203,8 +200,8 @@ $(function () {
 				type: "buttons",
 				buttons: [{
 					icon: "download",
-					onClick(e) {
-						alert("다운로드");
+					onClick: function(e) {
+						bulkHistTxt(e.row.data);
 					},
 				}],
 			},
@@ -224,7 +221,7 @@ $(function () {
 		},
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
-			$("#totalCount").text(`총 ${totalCount}건`);
+			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건`);
 		},
 	}).dxDataGrid("instance");
 
@@ -358,4 +355,64 @@ function openBulkDetailModal(data = {}) {
 	toggleBodyClass();
 }
 
+// txt 다운로드
+function bulkHistTxt(data){
+	const bulkMsgKey = data.bulkMsgKey;
+	const loginID = data.loginID;
+	const svcType = data.svcType;
+	const companyCode = companyInstance.option("value");
+
+	const startValue = startDateInstance.option("value");
+	const endValue = endDateInstance.option("value");
+	let startDateFormatted = "";
+	let endDateFormatted = "";
+			
+	// 날짜가 Date 객체인지 확인
+	if (startValue instanceof Date && !isNaN(startValue)) {
+		const yyyy = startValue.getFullYear();
+		const mm = String(startValue.getMonth() + 1).padStart(2, '0');
+		startDateFormatted = `${yyyy}${mm}`;
+	}
+	
+	if (endValue instanceof Date && !isNaN(endValue)) {
+		const yyyy = endValue.getFullYear();
+		const mm = String(endValue.getMonth() + 1).padStart(2, '0');
+		endDateFormatted = `${yyyy}${mm}`;
+	}
+
+	const params = {
+		bulkMsgKey: bulkMsgKey,
+		loginID: loginID,
+		svcType: svcType,
+		companyCode: companyCode,
+		startDate: startDateFormatted,
+		endDate: endDateFormatted
+	};
+	return fetch('/api/v1/bulkHist/txt', {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(params)
+	})
+	.then(response => {
+		if (!response.ok) throw new Error("서버 오류");
+		return response.json();
+	})
+	.then(data => {
+		return {
+			data: data.data,
+			totalCount: data.totalCount
+		};
+	})
+	.catch(error => {
+		console.error("데이터 로드 실패:", error);
+		showDialogCustom('error');
+		
+		return {
+			data: [],
+			totalCount: 0
+		};
+	});
+}
 
