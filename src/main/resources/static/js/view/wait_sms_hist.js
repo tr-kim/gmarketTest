@@ -45,8 +45,9 @@ $(function () {
 	//대분류
 	companyInstance = $('#companyCode').dxSelectBox({
 		dataSource: [
+			{ code: -1, name: '선택하세요' },
 			{ code: 0, name: '옥션' },
-			{ code: 1, name: '지마켓' },
+			{ code: 1, name: 'G마켓' },
 			{ code: 2, name: '스마일캐시' }
 		],
 		displayExpr: 'name',
@@ -66,6 +67,14 @@ $(function () {
 		type: 'default',
 		width: 60,
 		onClick() {
+			const selectedCompany = companyInstance.option("selectedItem");
+
+			const companyCode = selectedCompany ? selectedCompany.code : -1;
+			if (companyCode == null || companyCode == -1) {
+				showDialogCustom("대분류를 선택하세요.");
+				return false;
+			}
+
 			const startValue = startDateInstance.option("value");
 			const endValue = endDateInstance.option("value");
 			

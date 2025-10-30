@@ -274,7 +274,7 @@ $(function() {
 				dataField: "companyName", caption: "대분류", alignment: "center", calculateCellValue: function(rowData) {
 					switch (rowData.companyCode) {
 						case 0: return "옥션";
-						case 1: return "지마켓";
+						case 1: return "G마켓";
 						case 2: return "스마일캐시";
 						default: return "선택하세요";
 					}
