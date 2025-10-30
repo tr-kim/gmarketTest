@@ -68,7 +68,26 @@ public class RealServiceImpl implements RealService {
 	}
 	
 	@Override
-	public RealDto selectProcStatusList(String view, String tab) {
-		return new RealDto(); // 임시로 빈 객체를 반환
+	public List<?> selectProcStatusList(String view, String tab) {
+		
+		// TODO tab에 따라 데이터 변경
+		if(ConstantsUtils.SUMMARY.equals(view)) {
+//			
+//			List<ServiceStatusSummaryDto> auctionList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusSummaryList();
+//			List<ServiceStatusSummaryDto> gmarketList = commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusSummaryList();
+//			List<ServiceStatusSummaryDto> smailcashList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusSummaryList();	// 확인 필요
+			
+			return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusSummaryList();
+			
+		} else if(ConstantsUtils.DETAIL.equals(view)) {
+			
+//			List<ServiceStatusDetailDto> auctionList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusDetailList();
+//			List<ServiceStatusDetailDto> gmarketList = commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusDetailList();
+//			List<ServiceStatusDetailDto> smailcashList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusDetailList();	// 확인 필요
+			
+			return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusDetailList();
+		}
+		
+		return new ArrayList<>();
 	}
 }

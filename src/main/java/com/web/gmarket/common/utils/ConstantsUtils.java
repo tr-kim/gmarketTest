@@ -50,6 +50,8 @@ public class ConstantsUtils {
 	public static final String LAYOUT = "layout";
 	public static final String ACTIVE = "active";
 	public static final String STANBY = "stanby";
+	public static final String SUMMARY = "summary";
+	public static final String DETAIL = "detail";
 	
 	public static final String SMS = "sms";
 	public static final String LMS = "lms";

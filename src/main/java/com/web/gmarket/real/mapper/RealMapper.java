@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.web.gmarket.real.dto.RealDto;
+import com.web.gmarket.real.dto.ServiceStatusDetailDto;
+import com.web.gmarket.real.dto.ServiceStatusSummaryDto;
 
 @Mapper
 public interface RealMapper {
@@ -33,5 +35,19 @@ public interface RealMapper {
 	 * @return
 	 */
 	public List<RealDto> selectRealHistTableList(@Param(value = "codeList") List<Integer> codeList);
+	
+	/**
+	 * 서비스 / 프로세스 요약
+	 * 
+	 * @return
+	 */
+	public List<ServiceStatusSummaryDto> selectRealHistServiceStatusSummaryList();
+	
+	/**
+	 * 서비스 / 프로세스 상세
+	 * 
+	 * @return
+	 */
+	public List<ServiceStatusDetailDto> selectRealHistServiceStatusDetailList();
 
 }
