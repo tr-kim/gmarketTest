@@ -469,13 +469,132 @@ $(function () {
 	}
 	
 	// 상세뷰 렌더링
-	function renderProcStatusDetail(data, tab) {
-		console.log('상세뷰 ' + tab);
+	function renderProcStatusDetail(datas, tab) {
+//		console.log('상세뷰 ' + tab);
+//		console.log(datas);
+
+		// 데이터 구조 변경
+		// [] => dataId: [{}]
+		const obj = {};
+
+		datas.forEach(item => {
+			const { companyCode, svcName, procType } = item;
+			const typeName = companyCode == auctionCode ? 'AU' : companyCode == gmarketCode ? 'GM' : 'SC';
+			const serviceName = `${typeName}_${svcName}_${procType}`.replace(/-/gi, '_');
+			
+			// 값이 없는 경우 초기화
+			obj[serviceName] ??= [];
+
+		    // 공통 필드
+		    const base = {
+				procChk: item.swDownChk,
+		      	procSts: item.swDownSts,
+		      	procUpdate: item.swUpdateDateSts
+		    };
+
+		    // procType 별로 다른 필드 추가
+		    let filteredItem;
+		    if (procType === "DBP") {
+				filteredItem = {
+					dbChk: item.dbSeshChk,
+		        	dbSts: item.dbSeshSts,
+					dbUpdate: item.dbUpdateDateSts,
+		        	...base
+		      };
+		    } else if (procType === "IFP") {
+				filteredItem = {
+					dbChk: item.ktSeshChk,
+		        	dbSts: item.ktSeshSts,
+		        	dbUpdate: item.ktUpdateDateSts,
+		        	...base
+		      };
+		    } else {
+				filteredItem = {...base }
+			}
+
+		    obj[serviceName].push(filteredItem);
+  		});
+		
+//		console.log(obj);
+
+		// 운영: active, DR: standby 추후 변경 예정
+		if(tab == 'active') {
+			const active = document.getElementById("detail-active");
+			
+			active.querySelectorAll('tr.pro > td').forEach(item => {
+				const dataId = item.getAttribute('data-id');
+				const result = obj[dataId];
+				
+				// dataId 확인 및 값 확인
+				if (!dataId || !result) return;
+				
+				const spans = item.querySelectorAll('span');
+				
+				// 헬퍼 함수: 색상 초기화
+				spans.forEach(el => el.classList.remove('red', 'green', 'gray'));
+				
+				// 헬퍼 함수: 상태별 클래스 반환
+				const getClass = (update, status) => update == 0 ? 'gray' : status == 1 ? 'green' : 'red';
+				
+				// 추후 변경 예정
+				// STATP, MEMMON
+				if (dataId.includes('SAP') || dataId.includes('MON')) {
+					spans[0].classList.add(getClass(result[0].procUpdate, result[0].procSts));
+				} else {
+					result.forEach((r, i) => {
+					  spans[i * 2].classList.add(getClass(r.dbUpdate, r.dbSts));
+					  spans[i * 2 + 1].classList.add(getClass(r.procUpdate, r.procSts));
+					});
+				}
+			});
+		} else if(tab == 'standby') {
+			
+		}
 	}
 
 	// 요약뷰 렌더링
-	function renderProcStatusSummary(data, tab) {
-		console.log('요약뷰 ' + tab);
+	function renderProcStatusSummary(datas, tab) {
+//		console.log('요약뷰 ' + tab);
+// 		console.log(datas)
+		
+		// 운영: active, DR: standby 추후 변경 예정
+		if(tab == 'active') {
+			const active = document.getElementById("summery-active");
+			const tds = active.querySelectorAll('tr > td');
+			const typeMap = { DBP: 'db', IFP: 'ifp', SAP: 'sap', MON: 'mon' };
+			const statusMap = { NL: 'NormalCount', DW: 'DownCount', UNK: 'UnknownCount' };
+			
+			// dbNormalCount, dbDownCount, dbUnknownCount		DBP
+			// ifpNormalCount, ifpDownCount, ifpUnknownCount	IFP
+			// sapNormalCount, sapDownCount, sapUnknownCount	STATP
+			// monNormalCount, monDownCount, monUnknownCount	MEMMON
+
+			// 데이터 구조 변경
+			// [{}, {}, {}] => AU: {}, GM: {}, SC: {}
+			const dataMap = {};
+			datas.forEach(d => {
+			    const prefix = d.companyCode === auctionCode ? 'AU' : d.companyCode === gmarketCode ? 'GM' : 'SC';
+			    dataMap[prefix] = d;
+			});
+			
+//			console.log(dataMap);
+
+			tds.forEach(td => {
+			    const dataId = td.getAttribute('data-id');
+			    if (!dataId) return;
+
+			    const [prefix, type, status] = dataId.split('_');
+			    const data = dataMap[prefix];
+			    if (!data) return;
+				
+			    const typeKey = typeMap[type];
+			    const statusKey = statusMap[status];
+			    if (typeKey && statusKey) td.textContent = data[typeKey + statusKey];
+			});
+			
+		} else if(tab == 'standby') {
+			
+		}
 	}
 	
 	// 프로세스 데이터 조회
@@ -495,6 +614,7 @@ $(function () {
 			if (!res.ok) throw new Error(res.status);
 			
 			const data = await res.json();
+			if(data.length == 0 || !data) throw new Error('데이터가 존재하지 않습니다. : ' + tabParam);
 			
 			// 데이터 렌더링
 			if (viewParam === 'detail') {
@@ -520,7 +640,6 @@ $(function () {
 			fetchProcStatusData(CURRENT_VIEW, CURRENT_TAB[CURRENT_VIEW]);
 		}, PROC_ITV_SEC * 1000);
 	}
-	
 	
 	// 인입 시작================================================================================================================
 	// =======================================================================================================================
