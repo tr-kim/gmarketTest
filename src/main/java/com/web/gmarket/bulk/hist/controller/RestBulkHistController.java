@@ -1,6 +1,7 @@
 package com.web.gmarket.bulk.hist.controller;
 
 import java.util.List;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,10 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.gmarket.bulk.hist.dto.BulkHistDto;
 import com.web.gmarket.bulk.hist.service.BulkHistService;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/v1/bulkHist")
@@ -49,6 +53,19 @@ public class RestBulkHistController {
 		}
 	}
 	
+	@PostMapping("/txt")
+	public void txt(
+		@RequestParam("bulkMsgKey") String bulkMsgKey,
+		@RequestParam("loginID") String loginID,
+		@RequestParam("svcType") String svcType,
+		@RequestParam("companyCode") String companyCode,
+		@RequestParam("startDate") String startDate,
+		@RequestParam("endDate") String endDate,  
+		HttpServletResponse response
+	) throws IOException {
+		
+	}
+
 	@PutMapping("/update")
 	public void update() {
 	}
