@@ -217,9 +217,7 @@ $(function () {
 			onClick() {
 				fn_openManageModal(name);
 				
-				if (taskMap[name]) {
-					fn_manageList(name, taskMap[name]);
-				}
+				if (taskMap[name]) fn_manageList(name, taskMap[name]);
 			}
 		}).dxButton("instance");
 	}
@@ -240,11 +238,7 @@ $(function () {
 		const mm = String(date.getMinutes()).padStart(2, '0');
 		const ss = String(date.getSeconds()).padStart(2, '0');
 		
-		if (type === 'time') {
-			return `${hh}:${mm}:${ss}`;
-		} else {
-			return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
-		}
+		return type === 'time' ? `${hh}:${mm}:${ss}` : `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
 	}
 	
 	// 갱신 시간 표시
@@ -346,7 +340,7 @@ $(function () {
 		
 		const win = window.open(url, winName, features);
 		if (win) win.focus();
-		else alert('팝업이 차단되었습니다. 브라우저 설정을 확인하세요.');
+		else showDialogCustom('팝업이 차단되었습니다. 브라우저 설정을 확인하세요.');
 	}
 	
 	// 차트 관리 모달
@@ -377,6 +371,8 @@ $(function () {
 			selectionMode: 'multiple',
 			pageLoadMode: 'scrollBottom',
 			onSelectionChanged(e) {
+				
+				// 선택한 서비스명
 		        const selected = e.component.option("selectedItems");
 				
 				// 선택한 항목 제한(최대 6개)
@@ -398,26 +394,25 @@ $(function () {
 		}
 	}
 	
-	// 관리 목록 쿠키에 저장
+	// 관리 목록 이벤트
 	const manageSaveBtn = document.getElementById('manageSaveBtn');
 	manageSaveBtn.addEventListener('click', () => {
 		const id = document.getElementById("setManageId").value;
 		const list = $(`#${id}`).dxList('instance').option("selectedItems");
 		
+		// 쿠키 저장
 		setCookie(id, list);
 		
-		switch(id) {
-			case "manageListGmarket":
-				updateChartData(gmarketCode, 'gmarketChart', list, 'manageListGmarket');
-				break;
-			case "manageListAuction":
-				updateChartData(auctionCode, 'auctionChart', list, "manageListAuction");
-				break;
-			case "manageListSmilecash":
-				updateChartData(smilecashCode, 'smilecashChart', list, 'manageListSmilecash');
-				break;
-			default:
-				break;
+		// 차트 업데이트
+		const chartMap = {
+		    manageListGmarket: { code: gmarketCode, chartId: 'gmarketChart' },
+		    manageListAuction: { code: auctionCode, chartId: 'auctionChart' },
+		    manageListSmilecash: { code: smilecashCode, chartId: 'smilecashChart' }
+		};
+		
+		if (chartMap[id]) {
+		    const { code, chartId } = chartMap[id];
+		    updateChartData(code, chartId, list, id);
 		}
 		
 		// 닫기
@@ -437,9 +432,7 @@ $(function () {
 			processData: false,
 			contentType: false,
 			success: function(data) {
-				if (typeof successCallbock === 'function') {
-					successCallbock(data);
-				}
+				if (typeof successCallbock === 'function') successCallbock(data);
 			},
 			error: function(xhr, status, error) {
 				console.error("차트 데이터 요청 실패:", xhr, status, error); // 기본 에러 처리
@@ -617,11 +610,8 @@ $(function () {
 			if(data.length == 0 || !data) throw new Error('데이터가 존재하지 않습니다. : ' + tabParam);
 			
 			// 데이터 렌더링
-			if (viewParam === 'detail') {
-				renderProcStatusDetail(data, tabParam);
-			} else {
-				renderProcStatusSummary(data, tabParam);
-			}
+			if (viewParam === 'detail') renderProcStatusDetail(data, tabParam);
+			else renderProcStatusSummary(data, tabParam);
 			
 			// 시간 갱신
 			updateLastTime('#procUpdateTime', 'full');

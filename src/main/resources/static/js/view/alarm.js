@@ -37,50 +37,27 @@ $(function() {
 	}).dxDateBox("instance");
 	
 	// 사용자 등급 및 회사 업체에 따라 select box option 설정
-	let companyArray = [ { code: -1, name: '선택하세요' } ];
-	
-	if((userGrade == 0 || (userGrade == 1 && companyCode == 0))) {
-		companyArray.push({ code: 0, name: '옥션' });
-	} 
-	
-	if((userGrade == 0 || (userGrade == 1 && companyCode == 1))) {
-		companyArray.push({ code: 1, name: 'G마켓' });
-	}
-	
-	if((userGrade == 0 || (userGrade == 1 && companyCode == 2))) {
-		companyArray.push({ code: 2, name: '스마일캐시' });
-	}
+	const companyList = [
+	    { code: 0, name: '옥션' },
+	    { code: 1, name: 'G마켓' },
+	    { code: 2, name: '스마일캐시' }
+	];
+
+	let companyArray = [{ code: -1, name: '선택하세요' }];
+
+	companyList.forEach(company => {
+	    if (userGrade === 0 || (userGrade === 1 && companyCode === company.code)) companyArray.push(company);
+	});
 	
 	const svcArray = {
-		0: [
-			{ name: '선택하세요' },
-			{ name: '전체' }
-		],
-		1: [
-			{ name: '선택하세요' },
-			{ name: '전체' }
-		],
-		2: [
-			{ name: '선택하세요' },
-			{ name: '전체' }
-		]
+	    0: [{ name: '선택하세요' }, { name: '전체' }],
+	    1: [{ name: '선택하세요' }, { name: '전체' }],
+	    2: [{ name: '선택하세요' }, { name: '전체' }]
 	};
-	
-	for(var i = 0; i < nameList.length; i++) {
-		const { companyCode, name } = nameList[i];
-		
-		switch (companyCode) {
-			case 0:
-				svcArray[0].push({ name: name });
-				break;
-			case 1:
-				svcArray[1].push({ name: name });
-				break;
-			case 2:
-				svcArray[2].push({ name: name });
-				break;
-		}
-	}
+
+	nameList.forEach(({ companyCode, name }) => {
+	    if (svcArray[companyCode]) svcArray[companyCode].push({ name });
+	});
 	
 	// 대분류
 	companyInstance = $('#companyCategory').dxSelectBox({
@@ -91,7 +68,7 @@ $(function() {
 		name: "companyCode",
 		onValueChanged: function(e) {
 			//중분류 업데이트
-			serviceInstance.option('dataSource', svcArray[e.value] || []);
+			serviceInstance.option('dataSource', svcArray[e.value] || [{ name: '선택하세요' }]);
 			serviceInstance.option('value', '선택하세요'); // 기본값 다시 설정
 		}
 	}).dxSelectBox("instance");
@@ -102,7 +79,7 @@ $(function() {
 		displayExpr: 'name',
 		valueExpr: 'name',
 		name: "svcName",
-		value: '선택하세요',
+		value: '전체',
 		onValueChanged: function(e) {
 			
 		}
@@ -110,7 +87,37 @@ $(function() {
 
 	//조회 그리드
 	dataGrid = $("#alarmGrid").dxDataGrid({
-		dataSource: [],
+		dataSource: {
+			load: function(loadOptions) {
+				
+				const formData = new FormData(document.getElementById("alarmForm"));
+							
+				const skip = loadOptions.skip || 0;
+				const take = loadOptions.take || 50;
+
+				formData.append("skip", skip);
+				formData.append("take", take);
+
+				return $.ajax({
+					url: "/api/v1/alarm/list",
+					method: "POST",
+					data: formData,
+					processData: false,
+					contentType: false
+				}).then(function(result) {
+					return {
+						data: result.list,
+						totalCount: result.totalCount
+					};
+				}).catch(function() {
+					showDialogCustom("error");
+					return {
+						data: [],
+						totalCount: 0
+					};
+				});
+			}
+		},
 		key: "almSeq", //keyExpr
 		//행 선택 시
 		selection: {
@@ -215,7 +222,8 @@ $(function() {
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
 			
-			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다.`);
+//			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다.`);
+			$("#totalCount").text(`총 ${totalCount}건`);
 		},
 		onOptionChanged: function(e) {
 	   		if (e.fullName === "paging.pageSize") {

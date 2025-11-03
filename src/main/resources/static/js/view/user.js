@@ -449,8 +449,9 @@ $(function() {
 		},
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
-			const today = new Date().toISOString().replace(/\D/g, '').slice(0, 14);
-			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다. (검색시간 : ${today})`);
+//			const today = new Date().toISOString().replace(/\D/g, '').slice(0, 14);
+//			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다. (검색시간 : ${today})`);
+			$("#totalCount").text(`총 ${totalCount}건`);
 		},
 		onOptionChanged: function(e) {
 	   		if (e.fullName === "paging.pageSize") {
