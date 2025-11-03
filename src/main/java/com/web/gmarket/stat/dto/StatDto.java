@@ -70,10 +70,20 @@ public class StatDto extends StatCodeDto implements Serializable {
 	// 테이블 구분 코드 목록
 	private List<Integer> tableCodeList = new ArrayList<>();
 	
+	// 시작일
 	private String startDate;
+	
+	// 종료일
 	private String endDate;
 	
-	private int timeType = 1;
+	// 사직 시
+	private String startHour = "09";
+	
+	// 종료 시
+	private String endHour = "09";
+	
+	// 시간 구분 1: 시간(yyyyMMddHH), 2: 일(yyyyMMdd), 3: 월(yyyyMM), 4: 년(yyyy)
+	private int timeType = 2;
 
 	// 페이징
 	private int skip = 0;

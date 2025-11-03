@@ -49,8 +49,8 @@ public class StatServiceImpl implements StatService {
 		
 		// Controller 단에서 목록 조회랑 갯수 구하는 부분이 바뀌면 이 부분도 바뀌어야 한다.
 		// 날짜 포맷 변환
-		statDto.setStartDate(dateFormatConvert(statDto.getTimeType(), statDto.getStartDate()));
-		statDto.setEndDate(dateFormatConvert(statDto.getTimeType(), statDto.getEndDate()));
+		statDto.setStartDate(dateFormatConvert(statDto.getTimeType(), statDto.getStartDate(), StringUtils.defaultIfBlank(statDto.getStartHour().split(":")[0], "09")));
+		statDto.setEndDate(dateFormatConvert(statDto.getTimeType(), statDto.getEndDate(), StringUtils.defaultIfBlank(statDto.getEndHour().split(":")[0], "09")));
 
 		switch (statDto.getCompanyCode()) {
 			case ConstantsUtils.AUCTION_CODE:
@@ -79,10 +79,7 @@ public class StatServiceImpl implements StatService {
 		// 테이블 이름 저장
 		List<StatDto> list = commonService.getStatMapper(ConstantsUtils.DB_AUCTION).selectAuctionStatList(statDto);
 		Map<Integer, String> codeMap = codeList.stream().collect(Collectors.toMap(StatCodeDto::getTableCode, StatCodeDto::getTableName, (v1, v2) -> v1));
-		
-		for(StatDto dto : list) {
-			dto.setTableName(StringUtils.defaultIfBlank(codeMap.get(dto.getTableCode()), "-"));
-		}
+		list.forEach(dto -> dto.setTableName(StringUtils.defaultIfBlank(codeMap.get(dto.getTableCode()), "-")));
 
 		return list;
 	}
@@ -98,12 +95,12 @@ public class StatServiceImpl implements StatService {
 	}
 
 	// 날짜 포맷변환
-	public static String dateFormatConvert(int type, String date) {
+	public static String dateFormatConvert(int type, String date, String hour) {
 
 		switch (type) {
 			case 1: // 시간
-				DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-				LocalDateTime dateTime = LocalDateTime.parse(date, inputFormat);
+				DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+				LocalDateTime dateTime = LocalDateTime.parse(String.format("%s %s", date, hour), inputFormat);
 				
 				return dateTime.format(DateTimeFormatter.ofPattern("yyyyMMddHH"));
 			case 2: // 일
