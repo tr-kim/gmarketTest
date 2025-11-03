@@ -445,8 +445,14 @@ $('#search-btn').dxButton({
 		
 		const searchCompanyCode = formData.get("companyCode");
 		const searchTableCode = formData.get("tableCode");
-		const searchStartDate = new Date(formData.get("startDate"));
-		const searchEndDate = new Date(formData.get("endDate"));
+		const startDate = formData.get("startDate");	// 시작일
+		const endDate = formData.get("endDate");		// 종료일
+		const startHour = formData.get("startHour");	// 시작 시	
+		const endHour = formData.get("endHour");		// 종료 시
+		
+		// 조회 기간 확인
+		const searchStartDate = new Date(`${startDate}T${startHour}`);
+		const searchEndDate = new Date(`${endDate}T${endHour}`);
 		const diffMs = searchEndDate - searchStartDate;
 		const diffDays = diffMs / (1000 * 60 * 60 * 24);
 		
