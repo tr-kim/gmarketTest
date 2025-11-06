@@ -220,10 +220,18 @@ $(function () {
 				"searchPanel"
 			]
 		},
-		onContentReady: function(e) {
+		onOptionChanged(e) {
+			// 페이징 클릭 시 loadPanel 삭제
+	        if (e.fullName === "paging.pageSize") e.component.option("loadPanel.enabled", false);
+	    },
+	    onContentReady(e) {
+	        // 데이터 로드가 끝났을 때 복구
+	        const grid = e.component;
+	        if (!grid.option("loadPanel.enabled")) grid.option("loadPanel.enabled", true);
+			
 			const totalCount = e.component.totalCount();
-			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건`);
-		},
+			$("#totalCount").text(`총 ${totalCount}건`);
+	    }
 	}).dxDataGrid("instance");
 
 });

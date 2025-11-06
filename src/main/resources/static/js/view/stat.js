@@ -414,23 +414,20 @@ $(function() {
 				"searchPanel"
 			]
 		},
-		onContentReady: function(e) {
+		onOptionChanged(e) {
+			// 페이징 클릭 시 loadPanel 삭제
+	        if (e.fullName === "paging.pageSize") e.component.option("loadPanel.enabled", false);
+	    },
+	    onContentReady(e) {
+	        // 데이터 로드가 끝났을 때 복구
+	        const grid = e.component;
+	        if (!grid.option("loadPanel.enabled")) grid.option("loadPanel.enabled", true);
+			
 			const totalCount = e.component.totalCount();
-			
-			tableValue = (tableValue == "선택하세요" || tableValue === undefined) ? "" : tableValue;
-			
-//			var companyName;
-//			switch(companyValue) {
-//				case 0 : companyName = `(옥션 ${tableValue} 테이블)`; break;
-//				case 1 :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
-//				case 2 :  companyName = `(스마일캐시 ${tableValue} 테이블)`; break;
-//				default :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
-//			}
-			
-//			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다. ${companyName}`);
 			$("#totalCount").text(`총 ${totalCount}건`);
 			
-		}
+			tableValue = (tableValue == "선택하세요" || tableValue === undefined) ? "" : tableValue;
+	    }
 	}).dxDataGrid("instance");
 });
 

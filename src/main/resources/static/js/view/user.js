@@ -448,15 +448,18 @@ $(function() {
 			openCustomModal('add'); // 추가 모드
 		},
 		onContentReady: function(e) {
+			// 데이터 로드가 끝났을 때 복구
+	        const grid = e.component;
+	        if (!grid.option("loadPanel.enabled")) grid.option("loadPanel.enabled", true);
+			
 			const totalCount = e.component.totalCount();
 //			const today = new Date().toISOString().replace(/\D/g, '').slice(0, 14);
 //			$("#totalCount").text(`검색된 내용은 총 ${totalCount}건 입니다. (검색시간 : ${today})`);
 			$("#totalCount").text(`총 ${totalCount}건`);
 		},
 		onOptionChanged: function(e) {
-	   		if (e.fullName === "paging.pageSize") {
-				pageSize = e.value;
-    		}
+			// 페이징 클릭 시 loadPanel 삭제
+	        if (e.fullName === "paging.pageSize") e.component.option("loadPanel.enabled", false);
 	  	}
 	}).dxDataGrid("instance");
 });
