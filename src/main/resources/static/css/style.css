@@ -269,7 +269,7 @@ aside .psw_chg_btn:hover{
 /* 페이지 */
 /* hist.html */
 #histGrid .dx-bordered-bottom-view {
-    height: calc(100vh - 590px);
+    height: calc(100vh - 560px);
 }
 /* bulk_hist.html */
 #bulkHistGrid .dx-bordered-bottom-view {
@@ -277,7 +277,7 @@ aside .psw_chg_btn:hover{
 }
 /* wait_sms_hist.html */
 #waitHistGrid .dx-bordered-bottom-view {
-    height: calc(100vh - 530px);
+    height: calc(100vh - 520px);
 }
 /* stat.html */
 #statGrid .dx-bordered-bottom-view {
@@ -285,11 +285,11 @@ aside .psw_chg_btn:hover{
 }
 /* user.html */
 #userGrid .dx-bordered-bottom-view {
-    height: calc(100vh - 530px);
+    height: calc(100vh - 520px);
 }
 /* alarm.html */
 #alarmGrid .dx-bordered-bottom-view {
-    height: calc(100vh - 530px);
+    height: calc(100vh - 520px);
 }
 /* real_send_hist.html */
 #real_send_hist .content {
