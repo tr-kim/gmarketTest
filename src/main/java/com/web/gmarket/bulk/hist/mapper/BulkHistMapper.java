@@ -15,4 +15,6 @@ public interface BulkHistMapper {
     int selectBulkHistCount(BulkHistDto bulkHistDto);
     
     Map<String, Integer> selectBulkHistStatusCount(BulkHistDto dto);
+
+	List<String> selectTranPhoneList(BulkHistDto bulkHistDto);
 }

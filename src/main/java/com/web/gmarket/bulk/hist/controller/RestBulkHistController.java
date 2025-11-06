@@ -1,24 +1,22 @@
 package com.web.gmarket.bulk.hist.controller;
 
 import java.util.List;
-import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import com.web.gmarket.bulk.hist.dto.BulkHistDto;
 import com.web.gmarket.bulk.hist.service.BulkHistService;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/v1/bulkHist")
@@ -53,24 +51,22 @@ public class RestBulkHistController {
 		}
 	}
 	
-	@PostMapping("/txt")
-	public void txt(
-		@RequestParam("bulkMsgKey") String bulkMsgKey,
-		@RequestParam("loginID") String loginID,
-		@RequestParam("svcType") String svcType,
-		@RequestParam("companyCode") String companyCode,
-		@RequestParam("startDate") String startDate,
-		@RequestParam("endDate") String endDate,  
-		HttpServletResponse response
-	) throws IOException {
-		
-	}
-
-	@PutMapping("/update")
-	public void update() {
-	}
-	
-	@DeleteMapping("/delete")
-	public void delete() {
+	@PostMapping("/downloadTxt")
+	public ResponseEntity<StreamingResponseBody> downloadTxt(@RequestBody BulkHistDto bulkHistDto) {
+		try {
+			StreamingResponseBody stream = bulkHistService.getBulkTextList(bulkHistDto);
+	        
+			String fileName = "수신번호목록.xlsx";
+			String encodedFileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+			
+			return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFileName)
+				.contentType(MediaType.TEXT_PLAIN)
+				.body(stream);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 }

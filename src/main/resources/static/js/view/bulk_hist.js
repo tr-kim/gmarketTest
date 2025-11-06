@@ -233,85 +233,84 @@ $(function () {
 			$("#totalCount").text(`총 ${totalCount}건`);
 	    }
 	}).dxDataGrid("instance");
+	
+	//조회 버튼
+	$('#search-btn').dxButton({
+		stylingMode: 'contained',
+		text: '조회',
+		type: 'default',
+		width: 60,
+		onClick() {
+			const selectedCompany = companyInstance.option("selectedItem");
 
+			const companyCode = selectedCompany ? selectedCompany.code : -1;
+			if (companyCode == null || companyCode == -1) {
+				showDialogCustom("대분류를 선택하세요.");
+				return false;
+			}
+
+			const startValue = startDateInstance.option("value");
+			const endValue = endDateInstance.option("value");
+			
+			let startDateFormatted = "", startTimeFormatted = "";
+			let endDateFormatted = "", endTimeFormatted = "";		
+			
+			// 날짜가 Date 객체인지 확인
+			if (startValue instanceof Date && !isNaN(startValue)) {
+				const yyyy = startValue.getFullYear();
+				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
+				const dd = String(startValue.getDate()).padStart(2, '0');
+				startDateFormatted = `${yyyy}${mm}`;
+				startTimeFormatted = `${yyyy}${mm}${dd}`;
+			}
+			
+			if (endValue instanceof Date && !isNaN(endValue)) {
+				const yyyy = endValue.getFullYear();
+				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
+				const dd = String(endValue.getDate()).padStart(2, '0');
+				endDateFormatted = `${yyyy}${mm}`;
+				endTimeFormatted = `${yyyy}${mm}${dd}`;
+			}
+			
+			// 조회기간 구하기
+			const companyValue = companyInstance.option("value");
+			
+			if(companyValue != 0){
+				let start = new Date(
+					parseInt(startTimeFormatted.slice(0, 4)),
+					parseInt(startTimeFormatted.slice(4, 6)) - 1,
+					parseInt(startTimeFormatted.slice(6, 8))
+				);
+				
+				let end = new Date(
+					parseInt(endTimeFormatted.slice(0, 4)),
+					parseInt(endTimeFormatted.slice(4, 6)) - 1,
+					parseInt(endTimeFormatted.slice(6, 8))
+				);
+				
+				let diffMs = end - start;
+				let diffDays = diffMs / (1000 * 60 * 60 * 24);
+				
+				let errorMessage = "";
+
+				if (diffDays < 0) {
+					errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요.</div>`;
+				} else if (diffDays > 30) {
+					errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요. (30일 이내)
+					<br><br><span class="text-black-50">현재 입력한 조회 기간 : ${Math.floor(diffDays)}일</span></div>`;
+				}
+
+				if (errorMessage) {
+					showDialogCustom(errorMessage);
+					return;
+				}
+			}
+			
+			//재조회
+			bulkHistDataGrid.getDataSource().reload();
+		}
+	}).dxButton('instance');
 });
-
-//조회 버튼
-$('#search-btn').dxButton({
-	stylingMode: 'contained',
-	text: '조회',
-	type: 'default',
-	width: 60,
-	onClick() {
-		const selectedCompany = companyInstance.option("selectedItem");
-
-		const companyCode = selectedCompany ? selectedCompany.code : -1;
-		if (companyCode == null || companyCode == -1) {
-			showDialogCustom("대분류를 선택하세요.");
-			return false;
-		}
-
-		const startValue = startDateInstance.option("value");
-		const endValue = endDateInstance.option("value");
-		
-		let startDateFormatted = "", startTimeFormatted = "";
-		let endDateFormatted = "", endTimeFormatted = "";		
-		
-		// 날짜가 Date 객체인지 확인
-		if (startValue instanceof Date && !isNaN(startValue)) {
-			const yyyy = startValue.getFullYear();
-			const mm = String(startValue.getMonth() + 1).padStart(2, '0');
-			const dd = String(startValue.getDate()).padStart(2, '0');
-			startDateFormatted = `${yyyy}${mm}`;
-			startTimeFormatted = `${yyyy}${mm}${dd}`;
-		}
-		
-		if (endValue instanceof Date && !isNaN(endValue)) {
-			const yyyy = endValue.getFullYear();
-			const mm = String(endValue.getMonth() + 1).padStart(2, '0');
-			const dd = String(endValue.getDate()).padStart(2, '0');
-			endDateFormatted = `${yyyy}${mm}`;
-			endTimeFormatted = `${yyyy}${mm}${dd}`;
-		}
-		
-		// 조회기간 구하기
-		const companyValue = companyInstance.option("value");
-		
-		if(companyValue != 0){
-			let start = new Date(
-				parseInt(startTimeFormatted.slice(0, 4)),
-				parseInt(startTimeFormatted.slice(4, 6)) - 1,
-				parseInt(startTimeFormatted.slice(6, 8))
-			);
-			
-			let end = new Date(
-				parseInt(endTimeFormatted.slice(0, 4)),
-				parseInt(endTimeFormatted.slice(4, 6)) - 1,
-				parseInt(endTimeFormatted.slice(6, 8))
-			);
-			
-			let diffMs = end - start;
-			let diffDays = diffMs / (1000 * 60 * 60 * 24);
-			
-			let errorMessage = "";
-
-			if (diffDays < 0) {
-				errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요.</div>`;
-			} else if (diffDays > 30) {
-				errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요. (30일 이내)
-				<br><br><span class="text-black-50">현재 입력한 조회 기간 : ${Math.floor(diffDays)}일</span></div>`;
-			}
-
-			if (errorMessage) {
-				showDialogCustom(errorMessage);
-				return;
-			}
-		}
-		
-		//재조회
-		bulkHistDataGrid.getDataSource().reload();
-	}
-}).dxButton('instance');
 
 
 //엑셀 다운로드
@@ -373,17 +372,14 @@ function openBulkDetailModal(data = {}) {
 }
 
 // txt 다운로드
-function bulkHistTxt(data){
-	const bulkMsgKey = data.bulkMsgKey;
-	const loginID = data.loginID;
-	const svcType = data.svcType;
+async function bulkHistTxt(data){
 	const companyCode = companyInstance.option("value");
-
 	const startValue = startDateInstance.option("value");
 	const endValue = endDateInstance.option("value");
+	
 	let startDateFormatted = "";
 	let endDateFormatted = "";
-			
+	
 	// 날짜가 Date 객체인지 확인
 	if (startValue instanceof Date && !isNaN(startValue)) {
 		const yyyy = startValue.getFullYear();
@@ -396,40 +392,41 @@ function bulkHistTxt(data){
 		const mm = String(endValue.getMonth() + 1).padStart(2, '0');
 		endDateFormatted = `${yyyy}${mm}`;
 	}
-
+	
 	const params = {
-		bulkMsgKey: bulkMsgKey,
-		loginID: loginID,
-		svcType: svcType,
+		bulkMsgKey: data.bulkMsgKey,
+		loginID: data.loginID,
+		svcType: data.svcType,
 		companyCode: companyCode,
 		startDate: startDateFormatted,
 		endDate: endDateFormatted
 	};
-	return fetch('/api/v1/bulkHist/txt', {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify(params)
-	})
-	.then(response => {
-		if (!response.ok) throw new Error("서버 오류");
-		return response.json();
-	})
-	.then(data => {
-		return {
-			data: data.data,
-			totalCount: data.totalCount
-		};
-	})
-	.catch(error => {
-		console.error("데이터 로드 실패:", error);
-		showDialogCustom('error');
+	
+	try {
+        const response = await fetch('/api/v1/bulkHist/downloadTxt', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(params)
+        });
 		
-		return {
-			data: [],
-			totalCount: 0
-		};
-	});
+		if (!response.ok) throw new Error("파일 다운로드 실패");
+		
+		// Blob으로 받기
+		const blob = await response.blob();
+		
+		// 브라우저에서 다운로드 처리
+		const url = window.URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = "수신번호목록.txt"; // 서버에서 설정한 파일명과 동일
+		document.body.appendChild(a);
+		a.click();
+		a.remove();
+		window.URL.revokeObjectURL(url);
+		
+    } catch (error) {
+        console.error("파일 다운로드 오류:", error);
+        showDialogCustom('파일 다운로드 중 오류가 발생했습니다.');
+    }
 }
 

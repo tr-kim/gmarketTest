@@ -97,4 +97,33 @@
 		</choose>
 	</select>
 	
+	<select id="selectTranPhoneList" resultType="string">
+		/*
+			BulkHistMapper.selectTranPhoneList
+		*/
+		<choose>
+			<when test="monthTables != null and monthTables.size() > 0">
+				SELECT TRAN_PHONE
+				FROM (
+					<foreach collection="monthTables" item="tableName" separator=" UNION ALL ">
+						SELECT TRAN_PHONE
+						FROM ${tableName}
+						WHERE 
+							( B_MSG_KEY = #{bulkMsgKey} AND TRAN_STATUS = 5 )
+							OR 
+							( B_MSG_KEY = #{bulkMsgKey} AND TRAN_STATUS = 4 AND <![CDATA[TRAN_RSLT <> '0']]> )
+					</foreach>
+				) A
+			</when>
+			<otherwise>
+				SELECT TRAN_PHONE
+				FROM ${svcType}
+				WHERE 
+					( B_MSG_KEY = #{bulkMsgKey} AND TRAN_STATUS = 5 )
+					OR 
+					( B_MSG_KEY = #{bulkMsgKey} AND TRAN_STATUS = 4 AND <![CDATA[TRAN_RSLT <> '0']]> )
+			</otherwise>
+		</choose>
+	</select>
+	
 </mapper>

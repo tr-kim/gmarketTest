@@ -1,10 +1,14 @@
 package com.web.gmarket.bulk.hist.service.impl;
 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import com.web.gmarket.bulk.hist.dto.BulkHistDto;
 import com.web.gmarket.bulk.hist.mapper.BulkHistMapper;
@@ -95,5 +99,36 @@ public class BulkHistServiceImpl implements BulkHistService {
 	
 	public BulkHistMapper getMapper(String dbName) {
 		return dynamicDataSourceService.getMapper(dbName, BulkHistMapper.class);
+	}
+	
+	// 수신번호 조회 후 파일 생성
+	@Override
+	public StreamingResponseBody getBulkTextList(BulkHistDto bulkHistDto) {
+		
+		String dbName = DBUtils.getDBName(bulkHistDto.getCompanyCode());
+		
+		// 월별 리스트 생성
+		String startMonth = bulkHistDto.getStartDate();
+		String endMonth = bulkHistDto.getEndDate();
+		String svcType = bulkHistDto.getSvcType();
+		String tableName = SVC_TYPE_TABLE_MAP.getOrDefault(svcType, ConstantsUtils.SMSCLI_TBL_EVENT); // 없을 경우 기본값
+		
+		List<String> tableList = TableNameUtil.getMonthTableNames(startMonth, endMonth, tableName, jdbcTemplateProvider.getJdbcTemplate(dbName));
+		
+		bulkHistDto.setMonthTables(tableList);
+		
+		// 수신번호 조회
+		List<String> phoneList = getMapper(dbName).selectTranPhoneList(bulkHistDto);
+		
+		// TXT 파일 스트림 생성
+		return outputStream -> {
+	        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8))) {
+	            for (String phone : phoneList) {
+	                writer.write(phone);
+	                writer.newLine();
+	            }
+	            writer.flush();
+	        }
+		};
 	}
 }
