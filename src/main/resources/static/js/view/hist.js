@@ -226,7 +226,7 @@ $(function () {
 				phoneNum: phoneNumValue,
 				companyCode: companyValue,
 				//테스트 중. 전체 시 테이블명 수정 필요
-				tableName: (tableItem.name == "전체") ? "SMSCLI_TBL_EVENT" : tableItem.name,
+				tableName: (tableItem.name == "전체") ? "" : tableItem.name,
 				//페이징 서버사이드 처리
 				skip: loadOptions.skip ?? 0, //offset: 앞에서 건너뛸 레코드 수
 				take: loadOptions.take ?? 50, //limit: 가져올 레코드 수
@@ -368,17 +368,25 @@ $(function () {
 				"searchPanel"
 			]
 		},
+		onOptionChanged(e) {
+			// 페이징 클릭 시 loadPanel 삭제
+	        if (e.fullName === "paging.pageSize") e.component.option("loadPanel.enabled", false);
+	    },
 		onContentReady: function(e) {
-			const totalCount = e.component.totalCount();
-			var companyName;
-			tableValue = (tableValue == "선택하세요" || tableValue === undefined) ? "" : tableValue;
+			// 데이터 로드가 끝났을 때 복구
+	        const grid = e.component;
+	        if (!grid.option("loadPanel.enabled")) grid.option("loadPanel.enabled", true);
 			
-			switch(companyValue) {
-				case 0 : companyName = `(옥션 ${tableValue} 테이블)`; break;
-				case 1 :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
-				case 2 :  companyName = `(스마일캐시 ${tableValue} 테이블)`; break;
-				default :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
-			}
+			const totalCount = e.component.totalCount();
+//			var companyName;
+//			tableValue = (tableValue == "선택하세요" || tableValue === undefined) ? "" : tableValue;
+//			
+//			switch(companyValue) {
+//				case 0 : companyName = `(옥션 ${tableValue} 테이블)`; break;
+//				case 1 :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
+//				case 2 :  companyName = `(스마일캐시 ${tableValue} 테이블)`; break;
+//				default :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
+//			}
 			
 			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건`);
 		}

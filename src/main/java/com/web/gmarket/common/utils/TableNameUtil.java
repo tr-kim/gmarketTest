@@ -3,6 +3,7 @@ package com.web.gmarket.common.utils;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,19 +20,23 @@ public class TableNameUtil {
 		YearMonth start = YearMonth.parse(startMonth, formatter);
 		YearMonth end = YearMonth.parse(endMonth, formatter);
 		
+		// 테이블 이름 목록
+		List<String> tablePrefixList = Arrays.asList(tablePrefix.split(","));
+		
 		while (!start.isAfter(end)) {
-			String tableName = tablePrefix + "_" + start.format(formatter); // SMSCLI_TBL_XXX_YYYYMM
 			
-			// 테이블 존재 여부 확인
-			if (tableExists(tableName, jdbcTemplate)) {
-				tableNames.add(tableName);
-			}
+			for (String prefix : tablePrefixList) {
+		        String tableName = String.format("%s_%s", prefix, start.format(formatter)); // SMSCLI_TBL_XXX_YYYYMM
+		        if (tableExists(tableName, jdbcTemplate)) tableNames.add(tableName);	// 테이블 존재 여부 확인
+		    }
 			
 			start = start.plusMonths(1);
 		}
 		
-		// 발송 테이블을 마지막에 추가
-		tableNames.add(tablePrefix); // SMSCLI_TBL_XXX
+        // 발송 테이블을 마지막에 추가
+		for (String prefix : tablePrefixList) {
+		    if (tableExists(prefix, jdbcTemplate)) tableNames.add(prefix); // SMSCLI_TBL_XXX
+		}
 		
 		return tableNames;
 	}
