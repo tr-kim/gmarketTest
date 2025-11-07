@@ -44,7 +44,7 @@ public class TableNameUtil {
 	public static boolean tableExists(Integer companyCode, String tableName, JdbcTemplate jdbcTemplate) {
 		// String sql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?";
 		
-		String schema = (companyCode == 0) ? "" : "msdbgm."; // 지마켓 분기(기존 GMARKET_HIST_DB)
+		String schema = (companyCode == 0) ? "" : "msdbgm."; // 지마켓 스키마 구분(기존 GMARKET_HIST_DB: gmarket_hist)
 		String sql = String.format("SELECT COUNT(*) FROM %sINFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?", schema);
 		
 		Integer count = jdbcTemplate.queryForObject(sql, Integer.class, tableName);
