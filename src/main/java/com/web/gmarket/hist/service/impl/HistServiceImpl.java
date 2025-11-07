@@ -26,18 +26,21 @@ public class HistServiceImpl implements HistService {
 	
 	@Override
 	public List<HistDto> getHistList(HistDto histDto) {
+		Integer companyCode = histDto.getCompanyCode();
+		String dbName = DBUtils.getDBName(companyCode);
+		
+		//월별 리스트 생성
 		String startMonth = histDto.getStartDate();
 		String endMonth = histDto.getEndDate();
 		String tableName = histDto.getTableName();
-		String dbName = DBUtils.getDBName(histDto.getCompanyCode());
 		
 		// 중분류 구분이 전체일 경우 테이블 이름 가져오기
-		String tableNames = commonService.getStatCodeMapper().selectStatCodeList(histDto.getCompanyCode(), 0).stream()
-			    .map(StatCodeDto::getTableName)
-			    .collect(Collectors.joining(","));
+		String tableNames = commonService.getStatCodeMapper().selectStatCodeList(companyCode, 0).stream()
+				.map(StatCodeDto::getTableName)
+				.collect(Collectors.joining(","));
 		
-		//월별 리스트 생성
-		List<String> tableList = TableNameUtil.getMonthTableNames(startMonth, endMonth, tableName.isBlank() ? tableNames : tableName, jdbcTemplateProvider.getJdbcTemplate(dbName));
+		List<String> tableList = TableNameUtil.getMonthTableNames(companyCode, startMonth, endMonth, tableName.isBlank() ? tableNames : tableName, jdbcTemplateProvider.getJdbcTemplate(dbName));
+		
 		histDto.setMonthTables(tableList);
 		
 		return commonService.getHistMapper(dbName).selectHistList(histDto);
@@ -45,7 +48,8 @@ public class HistServiceImpl implements HistService {
 	
 	@Override
 	public int getHistCount(HistDto histDto) {
-		String dbName = DBUtils.getDBName(histDto.getCompanyCode());
+		Integer companyCode = histDto.getCompanyCode();
+		String dbName = DBUtils.getDBName(companyCode);
 		
 		return commonService.getHistMapper(dbName).selectHistCount(histDto);
 	}

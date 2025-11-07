@@ -54,8 +54,8 @@ public class BulkHistServiceImpl implements BulkHistService {
 	//목록 조회 후 상태 카운트 병합
 	@Override
 	public List<BulkHistDto> getBulkHistList(BulkHistDto bulkHistDto) {
-		
-		String dbName = DBUtils.getDBName(bulkHistDto.getCompanyCode());
+		Integer companyCode = bulkHistDto.getCompanyCode();
+		String dbName = DBUtils.getDBName(companyCode);
 		
 		//목록 조회
 		List<BulkHistDto> list = getMapper(dbName).selectBulkHistList(bulkHistDto);
@@ -72,7 +72,7 @@ public class BulkHistServiceImpl implements BulkHistService {
 			bulkHistDto.setBulkMsgKey(row.getBulkMsgKey());
 			
 			//월별 리스트 생성
-			List<String> tableList = TableNameUtil.getMonthTableNames(startMonth, endMonth, tableName, jdbcTemplateProvider.getJdbcTemplate(dbName));
+			List<String> tableList = TableNameUtil.getMonthTableNames(companyCode, startMonth, endMonth, tableName, jdbcTemplateProvider.getJdbcTemplate(dbName));
 			
 			bulkHistDto.setMonthTables(tableList);
 			
@@ -92,7 +92,8 @@ public class BulkHistServiceImpl implements BulkHistService {
 	
 	@Override
 	public int getBulkHistCount(BulkHistDto bulkHistDto) {
-		String dbName = DBUtils.getDBName(bulkHistDto.getCompanyCode());
+		Integer companyCode = bulkHistDto.getCompanyCode();
+		String dbName = DBUtils.getDBName(companyCode);
 		
 		return getMapper(dbName).selectBulkHistCount(bulkHistDto);
 	}
@@ -104,8 +105,8 @@ public class BulkHistServiceImpl implements BulkHistService {
 	// 수신번호 조회 후 파일 생성
 	@Override
 	public StreamingResponseBody getBulkTextList(BulkHistDto bulkHistDto) {
-		
-		String dbName = DBUtils.getDBName(bulkHistDto.getCompanyCode());
+		Integer companyCode = bulkHistDto.getCompanyCode();
+		String dbName = DBUtils.getDBName(companyCode);
 		
 		// 월별 리스트 생성
 		String startMonth = bulkHistDto.getStartDate();
@@ -113,7 +114,7 @@ public class BulkHistServiceImpl implements BulkHistService {
 		String svcType = bulkHistDto.getSvcType();
 		String tableName = SVC_TYPE_TABLE_MAP.getOrDefault(svcType, ConstantsUtils.SMSCLI_TBL_EVENT); // 없을 경우 기본값
 		
-		List<String> tableList = TableNameUtil.getMonthTableNames(startMonth, endMonth, tableName, jdbcTemplateProvider.getJdbcTemplate(dbName));
+		List<String> tableList = TableNameUtil.getMonthTableNames(companyCode, startMonth, endMonth, tableName, jdbcTemplateProvider.getJdbcTemplate(dbName));
 		
 		bulkHistDto.setMonthTables(tableList);
 		
