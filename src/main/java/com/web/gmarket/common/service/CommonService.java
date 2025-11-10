@@ -1,5 +1,8 @@
 package com.web.gmarket.common.service;
 
+import java.io.IOException;
+
+import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,9 +11,11 @@ import com.web.gmarket.bulk.broad.mapper.BroadcastMsgMapper;
 import com.web.gmarket.bulk.db.mapper.DbSendMapper;
 import com.web.gmarket.bulk.excel.mapper.ExcelSendMapper;
 import com.web.gmarket.common.config.DynamicDataSourceService;
+import com.web.gmarket.common.ftp.FtpClientManager;
 import com.web.gmarket.common.mapper.CommonSendMapper;
 import com.web.gmarket.common.mapper.ServiceInfoMapper;
 import com.web.gmarket.common.utils.ConstantsUtils;
+import com.web.gmarket.common.vo.FtpDto;
 import com.web.gmarket.hist.mapper.HistMapper;
 import com.web.gmarket.real.mapper.RealMapper;
 import com.web.gmarket.stat.mapper.StatCodeMapper;
@@ -23,6 +28,9 @@ public class CommonService {
 
 	@Autowired
     private DynamicDataSourceService dynamicDataSourceService;
+	
+	@Autowired
+	private FtpClientManager FtpClientManager;
 
     public DbSendMapper getDbSendMapper(String dbName) {
         return dynamicDataSourceService.getMapper(dbName, DbSendMapper.class);
@@ -70,5 +78,13 @@ public class CommonService {
     
     public ServiceInfoMapper getServiceInfoMapper() {
         return dynamicDataSourceService.getMapper(ConstantsUtils.DB_GMARKET, ServiceInfoMapper.class);
+    }
+    
+    public FTPClient createConnection(Integer code, String type) throws IOException {
+    	return FtpClientManager.createConnection(code, type);
+    }
+    
+    public void uploadFile(FTPClient ftpClient, FtpDto dto) throws IOException, IllegalArgumentException {
+    	FtpClientManager.uploadFile(ftpClient, dto);
     }
 }

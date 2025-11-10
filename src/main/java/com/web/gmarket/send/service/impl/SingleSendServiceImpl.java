@@ -1,5 +1,6 @@
 package com.web.gmarket.send.service.impl;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -15,7 +16,6 @@ import com.web.gmarket.common.dto.CommonSendDto;
 import com.web.gmarket.common.service.CommonService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.DBUtils;
-import com.web.gmarket.common.utils.FtpUtils;
 import com.web.gmarket.common.vo.FtpDto;
 import com.web.gmarket.send.dto.SingleSendDto;
 import com.web.gmarket.send.service.SingleSendService;
@@ -52,19 +52,30 @@ public class SingleSendServiceImpl implements SingleSendService {
 		
 		// MMS일 경우 이미지 파일 업로드
 		if(ConstantsUtils.MMS.equals(msgType)) {
-			FTPClient ftpClient = FtpUtils.createConnection(companyCode, ConstantsUtils.ACTIVE);
 			
-			FtpDto ftpDto = FtpDto.builder()
-					.companyCode(companyCode)
-					.msgType(msgType)
-					.imageName01(singleSendDto.getImageName01())
-					.imageName02(singleSendDto.getImageName02())
-					.build();
-			
-			FtpUtils.uploadFile(ftpClient, ftpDto);
-			
-			singleSendDto.setImagePath01(ftpDto.getImagePath01());
-			singleSendDto.setImagePath02(ftpDto.getImagePath02());
+			try {
+				
+				// FTP 연결
+				FTPClient ftpClient = commonService.createConnection(companyCode, ConstantsUtils.ACTIVE);
+				
+				// 파일 정보 셋팅
+				FtpDto ftpDto = FtpDto.builder()
+						.companyCode(companyCode)
+						.msgType(msgType)
+						.imageName01(singleSendDto.getImageName01())
+						.imageName02(singleSendDto.getImageName02())
+						.build();
+				
+				// 파일 업로드
+				commonService.uploadFile(ftpClient, ftpDto);
+				
+				// 이미지 경로 저장
+				singleSendDto.setImagePath01(ftpDto.getImagePath01());
+				singleSendDto.setImagePath02(ftpDto.getImagePath02());
+				
+			} catch (IOException e) {
+				throw new IOException(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> insertSingleSend FTP 에러 발생 ", e);
+			}
 		}
 		
 		// 데이터 설정

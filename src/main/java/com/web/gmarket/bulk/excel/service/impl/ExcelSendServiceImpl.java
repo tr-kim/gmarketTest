@@ -3,6 +3,7 @@ package com.web.gmarket.bulk.excel.service.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,7 +31,6 @@ import com.web.gmarket.common.dto.CommonSendDto;
 import com.web.gmarket.common.service.CommonService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.DBUtils;
-import com.web.gmarket.common.utils.FtpUtils;
 import com.web.gmarket.common.vo.FtpDto;
 import com.web.gmarket.common.vo.UploadProgress;
 
@@ -74,19 +74,30 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 			// MMS일 경우 이미지 파일 업로드
 			if(ConstantsUtils.MMS.equals(msgType)) {
-				FTPClient ftpClient = FtpUtils.createConnection(dto.getCompanyCode(), ConstantsUtils.ACTIVE);
 				
-				FtpDto ftpDto = FtpDto.builder()
-						.companyCode(dto.getCompanyCode())
-						.msgType(msgType)
-						.imageName01(dto.getImageName01())
-						.imageName02(dto.getImageName02())
-						.build();
-				
-				FtpUtils.uploadFile(ftpClient, ftpDto);
-				
-//				FTPClient ftp2 = FtpUtils.createConnection(dto.getLargeCategory(), ConstantsUtils.STANBY);
-//				FtpUtils.uploadFile(ftp2, dto);
+				try {
+					
+					// FTP 연결
+					FTPClient ftpClient = commonService.createConnection(dto.getCompanyCode(), ConstantsUtils.ACTIVE);
+					
+					// 파일 정보 셋팅
+					FtpDto ftpDto = FtpDto.builder()
+							.companyCode(dto.getCompanyCode())
+							.msgType(msgType)
+							.imageName01(dto.getImageName01())
+							.imageName02(dto.getImageName02())
+							.build();
+					
+					// 파일 업로드
+					commonService.uploadFile(ftpClient, ftpDto);
+					
+					// 파일 경로 저장
+					dto.setImagePath01(ftpDto.getImagePath01());
+					dto.setImagePath02(ftpDto.getImagePath02());
+					
+				} catch (IOException e) {
+					throw new IOException(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> insertExcelSend FTP 에러 발생 ", e);
+				}
 			}
 			
 			// 데이터 설정

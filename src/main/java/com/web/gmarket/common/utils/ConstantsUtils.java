@@ -45,6 +45,7 @@ public class ConstantsUtils {
 	public static final String FAILD_COUNT = "faildCount";
 	public static final String GMAREKT = "gmarket";
 	public static final String AUCTION = "auction";
+	public static final String SMILE_CASH = "smileCash";
 	public static final String SHA_512 = "SHA-512";
 	public static final String EUC_KR = "EUC-KR";
 	public static final String LAYOUT = "layout";

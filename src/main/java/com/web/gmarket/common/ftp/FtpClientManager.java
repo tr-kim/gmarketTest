@@ -1,103 +1,108 @@
-package com.web.gmarket.common.utils;
+package com.web.gmarket.common.ftp;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.SocketException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.web.gmarket.common.config.FtpProperties;
+import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.vo.FtpDto;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class FtpUtils {
+@Component
+@RequiredArgsConstructor
+public class FtpClientManager {
 	
-	@Autowired
-	private static FtpProperties ftpProperties;
+	private final FtpProperties ftpProperties;
 	
     /**
      * FTP 연결 생성
      */
-    public static FTPClient createConnection(Integer code, String type) throws SocketException, IOException {
+    public FTPClient createConnection(Integer code, String type) throws IOException {
     	
     	FTPClient ftpClient = new FTPClient();
     	
         try {
         	
-        	// Auction, Gmarket 유형 확인 후 정보 설정
-            ftpProperties.getProperties(code, type);
-            
+        	FtpServerInfo info = ftpProperties.getProperties(companyCodeToCompanyName(code), type);
+        	
             // 연결
             log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FTP 연결 시도");
-            ftpClient.connect(ftpProperties.getHost(), ftpProperties.getPort());
+            ftpClient.connect(info.getHost(), info.getPort());
             
             int reply = ftpClient.getReplyCode();
             
             if (!FTPReply.isPositiveCompletion(reply)) {
             	ftpClient.disconnect();
-            	log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FTP 연결 실패");
+            	throw new IOException("FTP 연결 실패: " + info.getHost());
             } else {
             	// 타임아웃 설정
-                ftpClient.setConnectTimeout(ftpProperties.getConnectionTimeout());
+                try {
+					ftpClient.setConnectTimeout(ftpProperties.getConnectionTimeout());
+				} catch (Exception e) {
+					log.error("FTP 연결 타임아웃 설정 중 오류 발생", e);
+				    throw new IOException("FTP 연결 타임아웃 설정 실패", e);
+				}
             }
             
             // 로그인
             log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FTP 로그인 시도 시도");
-            ftpClient.login(ftpProperties.getUsername(), ftpProperties.getPassword());
+            ftpClient.login(info.getUsername(), info.getPassword());
             
 //            log.info(String.format("%s%s", "서버 정보: ", ftpProperties.getHost()));
             
             // 현재 작업 디렉토리 변경
             log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 현재 작업 디렉토리: {}", ftpClient.printWorkingDirectory());
-            ftpClient.changeWorkingDirectory(ftpProperties.getPath());
+            ftpClient.changeWorkingDirectory(info.getPath());
             log.info( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 이동된 작업 디렉토리: {}", ftpClient.printWorkingDirectory());
             
-            Calendar c = Calendar.getInstance();
-            String makeDirectory = String.format("%s%s", String.valueOf(c.get(Calendar.YEAR)), "0" + String.valueOf(c.get(Calendar.MONTH) + 1));
+//            Calendar c = Calendar.getInstance();
+//            String makeDirectory = String.format("%s%s", String.valueOf(c.get(Calendar.YEAR)), StringUtils.leftPad(String.valueOf(c.get(Calendar.MONTH) + 1), 2, "0"));
+            
+            LocalDate now = LocalDate.now();
+            String makeDirectory = now.format(DateTimeFormatter.ofPattern("yyyyMM"));
             
             ftpClient.makeDirectory(makeDirectory);
-            ftpClient.changeWorkingDirectory(String.format("%s%s", ftpProperties.getPath(), makeDirectory));	// 디렉토리 생성 후 디렉토리로 이동
+            ftpClient.changeWorkingDirectory(String.format("%s%s", info.getPath(), makeDirectory));	// 디렉토리 생성 후 디렉토리로 이동
             log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 업로드 디렉토리: {}", ftpClient.printWorkingDirectory());
             
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
             
             log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FTP 작업 완료: {}", ftpClient.getReplyString());
-           
-        } catch (SocketException e) {
-        	e.printStackTrace();
-        	throw new SocketException(String.format("%s%s", ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FTP 소캣 에러 발생 ", e));
+            
+            return ftpClient;
         } catch (IOException e) {
-        	e.printStackTrace();
-            throw new IOException(String.format("%s%s", ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FTP 에러 발생 ", e));
-        } finally {
-        	closeConnection(ftpClient);
-		}
-        
-        return ftpClient;
+            closeConnection(ftpClient);
+            throw e;
+        } catch (Exception e) {
+            closeConnection(ftpClient);
+            throw new IOException("FTP 에러 발생", e);
+        }
     }
     
     /**
      * 파일 업로드
      * @throws IOException 
      */
-    public static void uploadFile(FTPClient ftpClient, FtpDto dto) throws IOException, IllegalArgumentException {
+    public void uploadFile(FTPClient ftpClient, FtpDto dto) throws IOException, IllegalArgumentException {
     	
     	FileInputStream fileInput1 = null;
     	FileInputStream fileInput2 = null;
     	
     	// Auction, Gmarket 유형 확인 후 정보 설정
-        ftpProperties.getProperties(dto.getCompanyCode(), dto.getMsgType());
-        
+    	FtpServerInfo info = ftpProperties.getProperties(companyCodeToCompanyName(dto.getCompanyCode()), dto.getMsgType());
+    	
         try {
         	
         	// 날짜 생성
@@ -124,7 +129,7 @@ public class FtpUtils {
         	log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Image Path 02 : {}", imageName2);
         	
         	String windowPath = ftpProperties.getWindowPath();
-        	String ftpPath = ftpProperties.getPath();
+        	String ftpPath = info.getPath();
         	
         	if(!StringUtils.isBlank(imageName1) && !StringUtils.isBlank(imageName2)) {
         		File uploadFile1 = new File(String.format("%s\\%s", uploadPath, imageName1));
@@ -185,13 +190,15 @@ public class FtpUtils {
         	if(fileInput2 != null) {
         		fileInput2.close();
         	}
+        	
+        	closeConnection(ftpClient);
         }
     }
     
     /**
      * 연결 종료
      */
-    public static void closeConnection(FTPClient ftpClient) {
+    public void closeConnection(FTPClient ftpClient) {
         if (ftpClient != null && ftpClient.isConnected()) {
             try {
                 ftpClient.logout();
@@ -199,7 +206,20 @@ public class FtpUtils {
                 log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> FTP 연결 종료");
             } catch (IOException e) {
                 log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> FTP 연결 종료 중 오류: {}", e);
+                e.printStackTrace();
             }
         }
+    }
+    
+    /**
+     * 회사 코드에 따라 회사 이름으로 변경
+     */
+    public String companyCodeToCompanyName(Integer code) {
+    	switch (code) {
+			case ConstantsUtils.AUCTION_CODE: return ConstantsUtils.AUCTION;
+			case ConstantsUtils.GMARKET_CODE: return ConstantsUtils.GMAREKT;
+			case ConstantsUtils.SMILE_CASH_CODE: return ConstantsUtils.SMILE_CASH;
+			default: return ConstantsUtils.GMAREKT;
+		}
     }
 }

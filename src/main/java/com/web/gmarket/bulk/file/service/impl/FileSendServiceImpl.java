@@ -3,6 +3,7 @@ package com.web.gmarket.bulk.file.service.impl;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -19,7 +20,6 @@ import com.web.gmarket.common.dto.CommonSendDto;
 import com.web.gmarket.common.service.CommonService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.DBUtils;
-import com.web.gmarket.common.utils.FtpUtils;
 import com.web.gmarket.common.vo.FtpDto;
 import com.web.gmarket.common.vo.UploadProgress;
 
@@ -54,20 +54,32 @@ public class FileSendServiceImpl implements FileSendService {
 		
 		// MMS일 경우 이미지 파일 업로드
 		if(ConstantsUtils.MMS.equals(msgType)) {
-			uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "MMS 이미지 파일 업로드"));
-			FTPClient ftpClient = FtpUtils.createConnection(companyCode, ConstantsUtils.ACTIVE);
 			
-			FtpDto ftpDto = FtpDto.builder()
-					.companyCode(companyCode)
-					.msgType(msgType)
-					.imageName01(fileSendDto.getImageName01())
-					.imageName02(fileSendDto.getImageName02())
-					.build();
+			try {
+				
+				// FTP 연결
+				uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "MMS 이미지 파일 업로드"));
+				FTPClient ftpClient = commonService.createConnection(companyCode, ConstantsUtils.ACTIVE);
+				
+				// 파일 정보 셋팅
+				FtpDto ftpDto = FtpDto.builder()
+						.companyCode(companyCode)
+						.msgType(msgType)
+						.imageName01(fileSendDto.getImageName01())
+						.imageName02(fileSendDto.getImageName02())
+						.build();
+				
+				// 파일 업로드
+				commonService.uploadFile(ftpClient, ftpDto);
+				
+				// 파일 경로 저장
+				fileSendDto.setImagePath01(ftpDto.getImagePath01());
+				fileSendDto.setImagePath02(ftpDto.getImagePath02());
+				
+			} catch (IOException e) {
+				throw new IOException(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> insertFileSend FTP 에러 발생 ", e);
+			}
 			
-			FtpUtils.uploadFile(ftpClient, ftpDto);
-			
-			fileSendDto.setImagePath01(ftpDto.getImagePath01());
-			fileSendDto.setImagePath02(ftpDto.getImagePath02());
 		}
 		
 		// 데이터 설정
