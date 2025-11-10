@@ -29,18 +29,26 @@ public class HistServiceImpl implements HistService {
 		Integer companyCode = histDto.getCompanyCode();
 		String dbName = DBUtils.getDBName(companyCode);
 		
-		//월별 리스트 생성
+		// 월별 리스트 목록 계산
 		String startMonth = histDto.getStartDate();
 		String endMonth = histDto.getEndDate();
 		String tableName = histDto.getTableName();
 		
-		// 중분류 구분이 전체일 경우 테이블 이름 가져오기
+		// 중분류 구분이 전체일 경우 전체 테이블명 가져오기
 		String tableNames = commonService.getStatCodeMapper().selectStatCodeList(companyCode, 0).stream()
 				.map(StatCodeDto::getTableName)
 				.collect(Collectors.joining(","));
 		
-		List<String> tableList = TableNameUtil.getMonthTableNames(companyCode, startMonth, endMonth, tableName.isBlank() ? tableNames : tableName, jdbcTemplateProvider.getJdbcTemplate(dbName));
+		// 월별 테이블 존재 여부 확인 및 목록 생성
+		List<String> tableList = TableNameUtil.getMonthTableNames(
+				companyCode,
+				startMonth,
+				endMonth,
+				tableName.isBlank() ? tableNames : tableName,
+				jdbcTemplateProvider.getJdbcTemplate(dbName)
+		);
 		
+		// 결과 DTO에 세팅
 		histDto.setMonthTables(tableList);
 		
 		return commonService.getHistMapper(dbName).selectHistList(histDto);
