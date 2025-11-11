@@ -12,9 +12,36 @@ import com.web.gmarket.common.utils.HtmlEscapingObjectMappingFactory;
  */
 @Configuration
 public class ObjectMapperConfig {
+	
+//	@Bean
+//    ObjectMapper objectMapper() {
+//        ObjectMapper mapper = new ObjectMapper();
+//
+//        // HTML escape 비활성화
+//        mapper.getFactory().setCharacterEscapes(new CharacterEscapes() {
+//
+//            private final int[] asciiEscapes = CharacterEscapes.standardAsciiEscapesForJSON();
+//
+//            @Override
+//            public int[] getEscapeCodesForAscii() {
+//                // 모든 ASCII 문자 escape하지 않도록
+//                return asciiEscapes;
+//            }
+//
+//            @Override
+//            public SerializableString getEscapeSequence(int ch) {
+//                // null 리턴 = escape 없음
+//                return null;
+//            }
+//        });
+//
+//        return mapper;
+//    }
 
     @Bean
     public ObjectMapper objectMapper() throws Exception {
         return new HtmlEscapingObjectMappingFactory().getObject();
     }
+	
+	
 }

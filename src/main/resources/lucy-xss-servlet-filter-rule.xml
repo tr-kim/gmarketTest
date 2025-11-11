@@ -46,7 +46,10 @@
     <except>
 	    <param>userPwd</param>
 	</except>
-
+	
+	<!-- // type1 : 가장 보안 수준이 높은 타입, 모든 태그를 필터링한다. (디폴트 타입, 권장) // -->
+	<filteringTagInComment enable="true" type="strict"/>
+	
 <!--    &lt;!&ndash; url 별 필터링 룰 선언 &ndash;&gt;-->
 <!--    <url-rule-set>-->
 
