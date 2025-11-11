@@ -5,14 +5,14 @@
 <mapper namespace="com.web.gmarket.hist.mapper.HistMapper">
 	
 	<resultMap id="HistResultMap" type="com.web.gmarket.hist.dto.HistDto">
-		<result property="tranPr" column="TRAN_PR" />
-		<result property="tranPhone" column="TRAN_PHONE" />
-		<result property="tranCallback" column="TRAN_CALLBACK" />
-		<result property="tranStatus" column="TRAN_STATUS" />
-		<result property="tranDate" column="TRAN_DATE" />
-		<result property="tranRslt" column="TRAN_RSLT" />
-		<result property="tranMsg" column="TRAN_MSG" />
-		<result property="corpReserved2" column="CORP_RESERVED2" />
+		<result property="TRAN_PR" column="TRAN_PR" />
+		<result property="TRAN_PHONE" column="TRAN_PHONE" />
+		<result property="TRAN_CALLBACK" column="TRAN_CALLBACK" />
+		<result property="TRAN_STATUS" column="TRAN_STATUS" />
+		<result property="TRAN_DATE" column="TRAN_DATE" />
+		<result property="TRAN_RSLT" column="TRAN_RSLT" />
+		<result property="TRAN_MSG" column="TRAN_MSG" />
+		<result property="CORP_RESERVED2" column="CORP_RESERVED2" />
 	</resultMap>
 	
 	<select id="selectHistList" resultMap="HistResultMap">
@@ -36,13 +36,30 @@
 <!--					WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}-->
 <!--						AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}-->
 					WHERE TRAN_DATE >= CONVERT(DATETIME, REPLACE(#{startTime}, '-', ''), 112)
-				 	  AND TRAN_DATE<![CDATA[ < ]]>DATEADD(DAY, 1, CONVERT(DATETIME, REPLACE(#{endTime}, '-', ''), 112))
+						AND TRAN_DATE<![CDATA[ < ]]>DATEADD(DAY, 1, CONVERT(DATETIME, REPLACE(#{endTime}, '-', ''), 112))
+					
 					<if test="phoneNum != null and phoneNum != ''">
 						AND TRAN_PHONE LIKE CONCAT('%', #{phoneNum}, '%')
 					</if>
 				</foreach>
 				)
-				ORDER BY TRAN_DATE DESC
+				
+				<!-- DevExtreme 정렬 처리 -->
+				<if test="sort != null and sort.size() > 0">
+					ORDER BY
+					<foreach collection="sort" item="s" separator=",">
+						${s.selector}
+						<choose>
+							<when test="s.desc">DESC</when>
+							<otherwise>ASC</otherwise>
+						</choose>
+					</foreach>
+				</if>
+				<if test="sort == null or sort.size() == 0">
+					ORDER BY TRAN_DATE DESC
+				</if>
+				
+				<!-- DevExtreme 페이징 처리 -->
 				<if test="take != null and skip != null">
 					OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 				</if>
@@ -63,10 +80,11 @@
 <!--						WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}-->
 <!--							AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}-->
 						WHERE TRAN_DATE >= CONVERT(DATETIME, REPLACE(#{startTime}, '-', ''), 112)
-						  AND TRAN_DATE<![CDATA[ < ]]>DATEADD(DAY, 1, CONVERT(DATETIME, REPLACE(#{endTime}, '-', ''), 112))
-							<if test="phoneNum != null and phoneNum != ''">
-								AND TRAN_PHONE LIKE CONCAT('%', #{phoneNum}, '%')
-							</if>
+							AND TRAN_DATE<![CDATA[ < ]]>DATEADD(DAY, 1, CONVERT(DATETIME, REPLACE(#{endTime}, '-', ''), 112))
+							
+						<if test="phoneNum != null and phoneNum != ''">
+							AND TRAN_PHONE LIKE CONCAT('%', #{phoneNum}, '%')
+						</if>
 					</foreach>
 				) TOTAL
 			</when>

@@ -185,7 +185,7 @@ $(function () {
 	
 	//조회 요청
 	const histDataSource = new DevExpress.data.CustomStore({
-		key: "tranPr",
+		key: "TRAN_PR",
 		load: (loadOptions) => {
 			const startValue = startDateInstance.option("value");
 			const endValue = endDateInstance.option("value");
@@ -219,17 +219,17 @@ $(function () {
 			const params = {
 				startDate: startDateFormatted,
 				endDate: endDateFormatted,
-//				startTime: startTimeFormatted + "000000",
-//				endTime: endTimeFormatted + "235959",
-				startTime: startTimeFormatted,
-				endTime: endTimeFormatted,
+				startTime: startTimeFormatted, // startTimeFormatted + "000000",
+				endTime: endTimeFormatted, // endTimeFormatted + "235959",
 				phoneNum: phoneNumValue,
 				companyCode: companyValue,
-				//테스트 중. 전체 시 테이블명 수정 필요
 				tableName: (tableItem.name == "전체") ? "" : tableItem.name,
-				//페이징 서버사이드 처리
-				skip: loadOptions.skip ?? 0, //offset: 앞에서 건너뛸 레코드 수
-				take: loadOptions.take ?? 50, //limit: 가져올 레코드 수
+				// DevExtreme 조회 옵션
+				filter: loadOptions.filter || [],   // searchPanel 검색
+				group: loadOptions.group || [],     // columns 검색
+				skip: loadOptions.skip ?? 0,        // 페이지 시작 위치(offset)
+				take: loadOptions.take ?? 50,       // 페이지 크기(limit)
+				sort: loadOptions.sort || [],       // 정렬
 			};
 			
 			return fetch('/api/v1/hist/list', {
@@ -266,7 +266,10 @@ $(function () {
 		dataSource: histDataSource,
 		loadMode: "raw", //서버사이드 처리
 		remoteOperations: {
-			paging: true //페이징 서버사이드 처리
+			filtering: false, // searchPanel 검색
+			grouping: false, // columns 검색
+			paging: true,
+			sorting: true
 		},
 		//행 선택 시
 		selection: {
@@ -296,15 +299,20 @@ $(function () {
 		columnResizingMode: 'widget',
 		columnAutoWidth: true,
 		columns: [
-			{ dataField: "tranPr", caption: "NO", alignment: "center" },
-			{ dataField: "tranPhone", caption: "수신 번호", alignment: "center" },
-			{ dataField: "tranCallback", caption: "발신 번호", alignment: "center" },
+			{ dataField: "TRAN_PR", caption: "NO", alignment: "center" },
+			{ dataField: "TRAN_PHONE", caption: "수신 번호", alignment: "center" },
+			{ dataField: "TRAN_CALLBACK", caption: "발신 번호", alignment: "center" },
 			{ 
-				dataField: "tranDate", 
+				dataField: "TRAN_DATE", 
 				caption: "발송 일시", 
-				alignment: "center" ,
+				alignment: "center",
 				customizeText: function(cellInfo) {
-					const value = cellInfo.value.trim();
+					const value = (cellInfo.value || '').toString().trim();
+					
+					// 값이 비어있으면 빈 문자열 반환
+					if (!value || value.length < 14) {
+						return '';
+					}
 					
 					const yyyy = value.slice(0, 4);
 					const mm = value.slice(4, 6);
@@ -316,11 +324,11 @@ $(function () {
 					return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 				}
 			},
-			{ dataField: "tranMsg", caption: "문자 내용", alignment: "left" },
+			{ dataField: "TRAN_MSG", caption: "문자 내용", alignment: "left" },
 			{ 
-				dataField: "tranRslt", 
+				dataField: "TRAN_RSLT", 
 				caption: "결과", 
-				alignment: "center" ,
+				alignment: "center",
 				customizeText: function(cellInfo) {
 					const raw = cellInfo.value;
 					const value = raw != null ? String(raw).trim() : "";
@@ -353,7 +361,7 @@ $(function () {
 					}
 				} 
 			},
-			{ dataField: "corpReserved2", caption: "Flow #", alignment: "center" }
+			{ dataField: "CORP_RESERVED2", caption: "Flow #", alignment: "center" }
 		],
 		toolbar: {
 			items: [
@@ -370,24 +378,14 @@ $(function () {
 		},
 		onOptionChanged(e) {
 			// 페이징 클릭 시 loadPanel 삭제
-	        if (e.fullName === "paging.pageSize") e.component.option("loadPanel.enabled", false);
+			// if (e.fullName === "paging.pageSize") e.component.option("loadPanel.enabled", false);
 	    },
 		onContentReady: function(e) {
 			// 데이터 로드가 끝났을 때 복구
-	        const grid = e.component;
-	        if (!grid.option("loadPanel.enabled")) grid.option("loadPanel.enabled", true);
+			// const grid = e.component;
+			// if (!grid.option("loadPanel.enabled")) grid.option("loadPanel.enabled", true);
 			
-			const totalCount = e.component.totalCount();
-//			var companyName;
-//			tableValue = (tableValue == "선택하세요" || tableValue === undefined) ? "" : tableValue;
-//			
-//			switch(companyValue) {
-//				case 0 : companyName = `(옥션 ${tableValue} 테이블)`; break;
-//				case 1 :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
-//				case 2 :  companyName = `(스마일캐시 ${tableValue} 테이블)`; break;
-//				default :  companyName = `(G마켓 ${tableValue} 테이블)`; break;
-//			}
-			
+			const totalCount = e.component.totalCount();	
 			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건`);
 		}
 	}).dxDataGrid("instance");
