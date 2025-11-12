@@ -40,6 +40,7 @@ public class RestHistController {
 			return ResponseEntity.ok(response);
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 	        Map<String, Object> error = new HashMap<>();
 	        error.put(ConstantsUtils.MESSAGE, "이력 조회 실패");
 	        error.put(ConstantsUtils.ERROR, e.getMessage());
