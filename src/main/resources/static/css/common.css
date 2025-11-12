@@ -216,6 +216,9 @@ input, textarea{
 .dx-dialog .dx-popup-title {
 	display: none;
 }
+.container .dx-datagrid-header-panel {
+    padding: 0 0 8px 0;
+}
 .btn-primary{
     --bs-btn-bg: #0f6cbd !important;
     --bs-btn-border-color: #0f6cbd !important;

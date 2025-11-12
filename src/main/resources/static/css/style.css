@@ -269,27 +269,27 @@ aside .psw_chg_btn:hover{
 /* 페이지 */
 /* hist.html */
 #histGrid .dx-bordered-bottom-view {
-    height: calc(100vh - 560px);
+    height: calc(100vh - 550px);
 }
 /* bulk_hist.html */
 #bulkHistGrid .dx-bordered-bottom-view {
-    height: calc(100vh - 520px);
+    height: calc(100vh - 510px);
 }
 /* wait_sms_hist.html */
 #waitHistGrid .dx-bordered-bottom-view {
-    height: calc(100vh - 520px);
+    height: calc(100vh - 510px);
 }
 /* stat.html */
 #statGrid .dx-bordered-bottom-view {
-    height: calc(100vh - 560px);
+    height: calc(100vh - 550px);
 }
 /* user.html */
 #userGrid .dx-bordered-bottom-view {
-    height: calc(100vh - 520px);
+    height: calc(100vh - 510px);
 }
 /* alarm.html */
 #alarmGrid .dx-bordered-bottom-view {
-    height: calc(100vh - 520px);
+    height: calc(100vh - 510px);
 }
 /* real_send_hist.html */
 #real_send_hist .content {
@@ -883,19 +883,21 @@ aside .psw_chg_btn:hover{
   align-items: center;
 }
 .img-question::after{
-    background: #aaa;
     position: absolute;
-    top:50%;
-    transform: translateY(-50%) rotate(45deg);
-    width: 10px;
-    height: 10px;
-    right: calc(100% - 5px);
+    width: 0;
+    height: 0;
     z-index: 0;
     transition: .2s;
+    border-left: 10px solid #000000a0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
 }
 .img-question::before{
     position: absolute;
-    background: #999;
+    background: #000000b0;
     color: #fff;
     white-space: nowrap;
     padding: .5rem;

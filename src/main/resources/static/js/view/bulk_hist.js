@@ -181,7 +181,7 @@ $(function () {
 			},
 			{ dataField: "MSG", caption: "메시지 내용", alignment: "left" },
 			{ dataField: "CNT", caption: "전체", alignment: "center" },
-			{
+			/*{
 				name: "detail",
 				caption: "상세",
 				type: "buttons",
@@ -191,7 +191,7 @@ $(function () {
 						openBulkDetailModal(e.row.data);
 					}
 				}],
-			},
+			},*/
 			{ dataField: "USER_ID", caption: "발송ID", alignment: "center" },
 			{ dataField: "SVC_TYPE", caption: "TYPE", alignment: "center" },
 			{ 				
@@ -226,6 +226,9 @@ $(function () {
 				},
 				"searchPanel"
 			]
+		},
+		onRowClick: function (e) {
+			openBulkDetailModal(e.data);
 		},
 		onOptionChanged(e) {
 			// 페이징 클릭 시 loadPanel 삭제
