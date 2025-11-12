@@ -135,7 +135,7 @@ $(function () {
 	
 	//조회 요청
 	const waitDataSource = new DevExpress.data.CustomStore({
-		key: "bulkMsgKey",
+		key: "B_MSG_KEY",
         load: (loadOptions) => {
 			const startValue = startDateInstance.option("value");
 			const endValue = endDateInstance.option("value");
@@ -170,9 +170,12 @@ $(function () {
 				endTime: endTimeFormatted + "235959",
 				waitTitle: titleValue,
 				companyCode: companyValue,
-				//페이징 서버사이드 처리
-				skip: loadOptions.skip ?? 0, //offset: 앞에서 건너뛸 레코드 수
-				take: loadOptions.take ?? 50, //limit: 가져올 레코드 수
+				// DevExtreme 조회 옵션
+				filter: loadOptions.filter || [],   // searchPanel 검색
+				group: loadOptions.group || [],     // columns 검색
+				skip: loadOptions.skip ?? 0,        // 페이지 시작 위치(offset)
+				take: loadOptions.take ?? 50,       // 페이지 크기(limit)
+				sort: loadOptions.sort || [],       // 정렬
 			};
 			
 			return fetch('/api/v1/wait/list', {
@@ -221,13 +224,16 @@ $(function () {
 		dataSource: waitDataSource,
 		loadMode: "raw", //서버사이드 처리
 		remoteOperations: {
-			paging: true //페이징 서버사이드 처리
+			filtering: false, // searchPanel 검색
+			grouping: false, // columns 검색
+			paging: true,
+			sorting: true
 		},
 		headerFilter: {
-			visible: true
+			visible: false
 		},
 		searchPanel: {
-			visible: true,
+			visible: false,
 			width: 300
 		},
 		paging: {
@@ -252,19 +258,19 @@ $(function () {
 		hoverStateEnabled: true,
 		columns: [
 			{ type: "selection" },
-			{ dataField: "title", caption: "제목", alignment: "left" },
+			{ dataField: "TITLE", caption: "제목", alignment: "left" },
 			{ 
-				dataField: "reqTime", 
+				dataField: "REQ_TIME", 
 				caption: "전송 일시", 
 				alignment: "center",
 				customizeText: function(cellInfo) {
 					return formatTimestamp(cellInfo.value);
 				}
 			},
-			{ dataField: "msg", caption: "메시지 내용", alignment: "left" },
-			{ dataField: "cnt", caption: "전체", alignment: "center" },
-			{ dataField: "svcType", caption: "상세", alignment: "center" },
-			{ dataField: "userID", caption: "발송ID", alignment: "center" },
+			{ dataField: "MSG", caption: "메시지 내용", alignment: "left" },
+			{ dataField: "CNT", caption: "전체", alignment: "center" },
+			{ dataField: "SVC_TYPE", caption: "상세", alignment: "center" },
+			{ dataField: "USER_ID", caption: "발송ID", alignment: "center" },
 		],
 		toolbar: {
 			items: [
@@ -281,12 +287,12 @@ $(function () {
 		},
 		onOptionChanged(e) {
 			// 페이징 클릭 시 loadPanel 삭제
-	        if (e.fullName === "paging.pageSize") e.component.option("loadPanel.enabled", false);
+			// if (e.fullName === "paging.pageSize") e.component.option("loadPanel.enabled", false);
 	    },
 		onContentReady: function(e) {
 			// 데이터 로드가 끝났을 때 복구
-	        const grid = e.component;
-	        if (!grid.option("loadPanel.enabled")) grid.option("loadPanel.enabled", true);
+			// const grid = e.component;
+			// if (!grid.option("loadPanel.enabled")) grid.option("loadPanel.enabled", true);
 			
 			const totalCount = e.component.totalCount();
 			$("#totalCount").text(`총 ${totalCount}건`);
@@ -310,7 +316,7 @@ $(function () {
 							const grid = e.component;
 							const nowPlus30 = getAfterTime(30);
 							const allItems = grid.getDataSource().items();
-							const allowedKeys = allItems.filter(row => row.reqTime > nowPlus30).map(row => row.bulkMsgKey);
+							const allowedKeys = allItems.filter(row => row.REQ_TIME > nowPlus30).map(row => row.B_MSG_KEY);
 							
 							const selectedKeys = grid.getSelectedRowKeys();
 							const isAlreadySelected = allowedKeys.length === selectedKeys.length && allowedKeys.every(key => selectedKeys.includes(key));
@@ -359,8 +365,8 @@ $(function () {
 										const companyValue = companyInstance.option("value");
 										
 										const param = selectedRowsData.map(row => ({
-											bulkMsgKey: row.bulkMsgKey,
-											svcType: row.svcType,
+											bulkMsgKey: row.B_MSG_KEY,
+											svcType: row.SVC_TYPE,
 											companyCode: companyValue
 										}));
 										
@@ -407,8 +413,8 @@ $(function () {
 			const nowPlus30 = getAfterTime(30); //현재시간+30분
 			
 			for (const row of e.selectedRowsData) {
-				if (nowPlus30 < row.reqTime) {
-					allowedRows.push(row.bulkMsgKey); //dataSource key
+				if (nowPlus30 < row.REQ_TIME) {
+					allowedRows.push(row.B_MSG_KEY); //dataSource key
 				} else {
 					const message = '전송 임박 항목은 선택되지 않습니다.';
 					showDialogCustom(message);

@@ -3,6 +3,10 @@ package com.web.gmarket.wait.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -10,163 +14,54 @@ import lombok.NoArgsConstructor;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WaitDto {
-    //조회 조건
+	//조회 조건
 	private String startDate;
 	private String endDate;
 	private String startTime;
 	private String endTime;
-    private String waitTitle;
-    private Integer companyCode; 
+	private String bulkMsgKey;
+	private String svcType;
+	private String waitTitle;
+	private Integer companyCode;
+	
+	// DevExtreme 조회 옵션
+	private List<Object> filter;
+	private List<Object> group;
 	private Integer skip;
 	private Integer take;
+	private List<Object> sort;
 	
-    //조회 컬럼
-    private String bulkMsgKey;
-	private String loginID;
-	private String userID;
-	private String title;
-	private String msg;
-	private String inTime;
-	private String reqTime;
-	private String cnt;
-    private String status;
-    private String svcType;
-    private String bulkSeq;
-
-    public String getStartDate() {
-		return startDate;
-	}
+	//조회 컬럼
+	@JsonProperty("B_SEQ")
+	private String B_SEQ;
 	
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
+	@JsonProperty("B_MSG_KEY")
+	private String B_MSG_KEY;
 	
-	public String getEndDate() {
-		return endDate;
-	}
+	@JsonProperty("LOGIN_ID")
+	private String LOGIN_ID;
 	
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
+	@JsonProperty("USER_ID")
+	private String USER_ID;
 	
-	public String getStartTime() {
-		return startTime;
-	}
+	@JsonProperty("TITLE")
+	private String TITLE;
 	
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
+	@JsonProperty("MSG")
+	private String MSG;
 	
-	public String getEndTime() {
-		return endTime;
-	}
+	@JsonProperty("IN_TIME")
+	private String IN_TIME;
 	
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
+	@JsonProperty("REQ_TIME")
+	private String REQ_TIME;
 	
-	public String getWaitTitle() {
-		return waitTitle;
-	}
+	@JsonProperty("CNT")
+	private String CNT;
 	
-	public void setWaitTitle(String waitTitle) {
-		this.waitTitle = waitTitle;
-	}
+	@JsonProperty("STATUS")
+	private String STATUS;
 	
-	public Integer getCompanyCode() {
-		return companyCode;
-	}
-	
-	public void setCompanyCode(Integer companyCode) {
-		this.companyCode = companyCode;
-	}
-	
-	public String getBulkMsgKey() {
-		return bulkMsgKey;
-	}
-	
-	public void setBulkMsgKey(String bulkMsgKey) {
-		this.bulkMsgKey = bulkMsgKey;
-	}
-	
-	public String getLoginID() {
-		return loginID;
-	}
-	
-	public void setLoginID(String loginID) {
-		this.loginID = loginID;
-	}
-	
-	public String getUserID() {
-		return userID;
-	}
-	
-	public void setUserID(String userID) {
-		this.userID = userID;
-	}
-	
-	public String getTitle() {
-		return title;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
-	public String getMsg() {
-		return msg;
-	}
-	
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
-	
-	public String getInTime() {
-		return inTime;
-	}
-	
-	public void setInTime(String inTime) {
-		this.inTime = inTime;
-	}
-	
-	public String getReqTime() {
-		return reqTime;
-	}
-	
-	public void setReqTime(String reqTime) {
-		this.reqTime = reqTime;
-	}
-	
-	public String getCnt() {
-		return cnt;
-	}
-	
-	public void setCnt(String cnt) {
-		this.cnt = cnt;
-	}
-
-    public String getStatus() {
-		return status;
-	}
-	
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
-	public String getSvcType() {
-		return svcType;
-	}
-	
-	public void setSvcType(String svcType) {
-		this.svcType = svcType;
-	}
-	
-	public String getBulkSeq() {
-		return bulkSeq;
-	}
-	
-	public void setBulkSeq(String bulkSeq) {
-		this.bulkSeq = bulkSeq;
-	}
-	
+	@JsonProperty("SVC_TYPE")
+	private String SVC_TYPE;
 }

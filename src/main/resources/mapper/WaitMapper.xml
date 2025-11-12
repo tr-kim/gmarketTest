@@ -4,17 +4,17 @@
   
 <mapper namespace="com.web.gmarket.wait.mapper.WaitMapper">
 	<resultMap id="WaitResultMap" type="com.web.gmarket.wait.dto.WaitDto">
-		<result property="bulkMsgKey" column="B_MSG_KEY" />
-		<result property="loginID" column="LOGIN_ID" />
-		<result property="userID" column="USER_ID" />
-		<result property="title" column="TITLE" />
-		<result property="msg" column="MSG" />
-		<result property="inTime" column="IN_TIME"/>
-		<result property="reqTime" column="REQ_TIME" />
-		<result property="cnt" column="CNT" />
-		<result property="status" column="STATUS" />
-		<result property="svcType" column="SVC_TYPE"/>
-		<result property="bulkSeq" column="B_SEQ" />
+		<result property="B_SEQ" column="B_SEQ" />
+		<result property="B_MSG_KEY" column="B_MSG_KEY" />
+		<result property="LOGIN_ID" column="LOGIN_ID" />
+		<result property="USER_ID" column="USER_ID" />
+		<result property="TITLE" column="TITLE" />
+		<result property="MSG" column="MSG" />
+		<result property="IN_TIME" column="IN_TIME"/>
+		<result property="REQ_TIME" column="REQ_TIME" />
+		<result property="CNT" column="CNT" />
+		<result property="STATUS" column="STATUS" />
+		<result property="SVC_TYPE" column="SVC_TYPE"/>
 	</resultMap>
 	
 	<select id="selectWaitList" resultMap="WaitResultMap">
@@ -23,6 +23,7 @@
 		*/
 		(
 		SELECT
+			B_SEQ,
 			B_MSG_KEY,
 			LOGIN_ID,
 			USER_ID,
@@ -32,8 +33,7 @@
 			REPLACE( REPLACE( REPLACE( CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') AS REQ_TIME,
 			CNT,
 			STATUS,
-			SVC_TYPE,
-			B_SEQ
+			SVC_TYPE
 		FROM
 			T_BROADCAST_MSG
 		WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}
@@ -42,7 +42,23 @@
 			AND TITLE LIKE CONCAT('%', #{waitTitle}, '%')
 		</if>
 		)
-		ORDER BY B_SEQ DESC
+		
+		<!-- DevExtreme 정렬 처리 -->
+		<if test="sort != null and sort.size() > 0">
+			ORDER BY
+			<foreach collection="sort" item="s" separator=",">
+				${s.selector}
+				<choose>
+					<when test="s.desc">DESC</when>
+					<otherwise>ASC</otherwise>
+				</choose>
+			</foreach>
+		</if>
+		<if test="sort == null or sort.size() == 0">
+			ORDER BY B_SEQ DESC
+		</if>
+		
+		<!-- DevExtreme 페이징 처리 -->
 		<if test="take != null and skip != null">
 			OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 		</if>
