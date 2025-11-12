@@ -60,7 +60,7 @@ $(function () {
 	
 	//조회 요청
 	const bulkHistDataSource = new DevExpress.data.CustomStore({
-		key: "bulkMsgKey",
+		key: "B_MSG_KEY",
         load: (loadOptions) => {
 			const startValue = startDateInstance.option("value");
 			const endValue = endDateInstance.option("value");
@@ -95,9 +95,12 @@ $(function () {
 				endTime: endTimeFormatted + "235959",
 				bulkTitle: titleValue,
 				companyCode: companyValue,
-				//페이징 서버사이드 처리
-				skip: loadOptions.skip ?? 0, //offset: 앞에서 건너뛸 레코드 수
-				take: loadOptions.take ?? 50, //limit: 가져올 레코드 수
+				// DevExtreme 조회 옵션
+				filter: loadOptions.filter || [],   // searchPanel 검색
+				group: loadOptions.group || [],     // columns 검색
+				skip: loadOptions.skip ?? 0,        // 페이지 시작 위치(offset)
+				take: loadOptions.take ?? 50,       // 페이지 크기(limit)
+				sort: loadOptions.sort || [],       // 정렬
 			};
 			
 			return fetch('/api/v1/bulkHist/list', {
@@ -134,7 +137,10 @@ $(function () {
 		dataSource: bulkHistDataSource,
 		loadMode: "raw", //서버사이드 처리
 		remoteOperations: {
-			paging: true //페이징 서버사이드 처리
+			filtering: false, // searchPanel 검색
+			grouping: false, // columns 검색
+			paging: true,
+			sorting: true
 		},
 		//행 선택 시
 		selection: {
@@ -143,10 +149,10 @@ $(function () {
 		//행 마우스오버 시
 		hoverStateEnabled: true,
 		headerFilter: {
-			visible: true
+			visible: false
 		},
 		searchPanel: {
-			visible: true,
+			visible: false,
 			width: 300
 		},
 		paging: {
@@ -164,18 +170,18 @@ $(function () {
 		columnResizingMode: 'widget',
 		columnAutoWidth: true,
 		columns: [
-			{ dataField: "title", caption: "제목", alignment: "left" },
+			{ dataField: "TITLE", caption: "제목", alignment: "left" },
 			{ 
-				dataField: "reqTime", 
+				dataField: "REQ_TIME", 
 				caption: "전송 일시", 
 				alignment: "center",
 				customizeText: function(cellInfo) {
 					return formatTimestamp(cellInfo.value);
 				}
 			},
-			{ dataField: "msg", caption: "메시지 내용", alignment: "left" },
-			{ dataField: "cnt", caption: "전체", alignment: "center" },
-			{
+			{ dataField: "MSG", caption: "메시지 내용", alignment: "left" },
+			{ dataField: "CNT", caption: "전체", alignment: "center" },
+			/*{
 				name: "detail",
 				caption: "상세",
 				type: "buttons",
@@ -185,14 +191,15 @@ $(function () {
 						openBulkDetailModal(e.row.data);
 					}
 				}],
-			},
-			{ dataField: "userID", caption: "발송ID", alignment: "center" },
-			{ dataField: "svcType", caption: "TYPE", alignment: "center" },
+			},*/
+			{ dataField: "USER_ID", caption: "발송ID", alignment: "center" },
+			{ dataField: "SVC_TYPE", caption: "TYPE", alignment: "center" },
 			{ 				
 				caption: "성공/실패", 
 				alignment: "center",
+				minWidth: 100,
 				calculateCellValue: function(rowData) {
-					return `${rowData.cntSucc}/${rowData.cntDup + rowData.cntSendFail}`;
+					return `${rowData.CNT_SUCC}/${rowData.CNT_DUP + rowData.CNT_SENDFAIL}`;
 				}
 			},
 			{
@@ -220,14 +227,17 @@ $(function () {
 				"searchPanel"
 			]
 		},
+		onRowClick: function (e) {
+			openBulkDetailModal(e.data);
+		},
 		onOptionChanged(e) {
 			// 페이징 클릭 시 loadPanel 삭제
-	        if (e.fullName === "paging.pageSize") e.component.option("loadPanel.enabled", false);
+			// if (e.fullName === "paging.pageSize") e.component.option("loadPanel.enabled", false);
 	    },
 	    onContentReady(e) {
-	        // 데이터 로드가 끝났을 때 복구
-	        const grid = e.component;
-	        if (!grid.option("loadPanel.enabled")) grid.option("loadPanel.enabled", true);
+			// 데이터 로드가 끝났을 때 복구
+			// const grid = e.component;
+			// if (!grid.option("loadPanel.enabled")) grid.option("loadPanel.enabled", true);
 			
 			const totalCount = e.component.totalCount();
 			$("#totalCount").text(`총 ${totalCount}건`);
@@ -345,27 +355,27 @@ function openBulkDetailModal(data = {}) {
 	let inTimeValue = "";
 	let reqTimeValue = "";
 	
-	if (data.inTime) {
-		inTimeValue = formatTimestamp(data.inTime);
+	if (data.IN_TIME) {
+		inTimeValue = formatTimestamp(data.IN_TIME);
 	}
 	
-	if (data.reqTime) {
-		reqTimeValue = formatTimestamp(data.reqTime);
+	if (data.REQ_TIME) {
+		reqTimeValue = formatTimestamp(data.REQ_TIME);
 	}
 	
-	currentKey = data.bulkMsgKey; 
-	document.getElementById('title').value = data.title;
+	currentKey = data.B_MSG_KEY; 
+	document.getElementById('title').value = data.TITLE;
 	document.getElementById('in_time').value = inTimeValue;
 	document.getElementById('req_time').value = reqTimeValue;
-	document.getElementById('user_id').value = data.userID;
+	document.getElementById('user_id').value = data.USER_ID;
 	document.getElementById('send_info').value = '전송 대상';
-	document.getElementById('total').value = data.cnt;
-	document.getElementById('insert_succ').value = data.succCnt;
-	document.getElementById('insert_fail').value = data.failCnt;
-	document.getElementById('stanby').value = data.cntStanby;
-	document.getElementById('tran').value = data.cntTran;
-	document.getElementById('succ_fail').value = `${data.cntSucc}/${data.cntDup + data.cntSendFail}`;
-	document.getElementById('msg').value = data.msg;
+	document.getElementById('total').value = data.CNT;
+	document.getElementById('insert_succ').value = data.SUCC_CNT;
+	document.getElementById('insert_fail').value = data.FAIL_CNT;
+	document.getElementById('stanby').value = data.CNT_STANBY;
+	document.getElementById('tran').value = data.CNT_TRAN;
+	document.getElementById('succ_fail').value = `${data.CNT_SUCC}/${data.CNT_DUP + data.CNT_SENDFAIL}`;
+	document.getElementById('msg').value = data.MSG;
 	
 	document.getElementById('bulk_hist_modal').classList.add('d-block');
 	toggleBodyClass();
@@ -394,9 +404,8 @@ async function bulkHistTxt(data){
 	}
 	
 	const params = {
-		bulkMsgKey: data.bulkMsgKey,
-		loginID: data.loginID,
-		svcType: data.svcType,
+		bulkMsgKey: data.B_MSG_KEY,
+		svcType: data.SVC_TYPE,
 		companyCode: companyCode,
 		startDate: startDateFormatted,
 		endDate: endDateFormatted

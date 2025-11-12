@@ -246,68 +246,68 @@ $(function() {
 					}
 				}
 			},
-			// {
-			// 	name: "edit_btn",
-			// 	caption: "수정",
-			// 	type: "buttons",
-			// 	buttons: [{
-			// 		icon: "edit",
-			// 		name: "edit",
-			// 		text: '',
-			// 	}, {
-			// 		icon: "remove",
-			// 		name: "delete",
-			// 		text: '',
-			// 		onClick: function(e) {
-			// 			const rowData = e.row.data;
+			/*{
+				name: "edit_btn",
+				caption: "수정",
+				type: "buttons",
+				buttons: [{
+					icon: "edit",
+					name: "edit",
+					text: '',
+				}, {
+					icon: "remove",
+					name: "delete",
+					text: '',
+					onClick: function(e) {
+						const rowData = e.row.data;
 						
-			// 			const confirmDialog = DevExpress.ui.dialog.custom({
-			// 				showTitle: false,
-			// 				messageHtml: "<div style='text-align: center;' class='pt-3'>삭제하시겠습니까?</div>",
-			// 				buttons: [{
-			// 					text: "확인",
-			// 					type: "default",
-			// 					onClick: function(e) {
-			// 						const param = { userId: rowData.userId };
+						const confirmDialog = DevExpress.ui.dialog.custom({
+							showTitle: false,
+							messageHtml: "<div style='text-align: center;' class='pt-3'>삭제하시겠습니까?</div>",
+							buttons: [{
+								text: "확인",
+								type: "default",
+								onClick: function(e) {
+									const param = { userId: rowData.userId };
 									
-			// 						deleteAjax('/api/v1/user/delete', param, function callback(data) {
-			// 							const code = data.code;
-			// 							const result = data.result;
+									deleteAjax('/api/v1/user/delete', param, function callback(data) {
+										const code = data.code;
+										const result = data.result;
 										
-			// 							if (code == 1000) {
-			// 								const message = '삭제되었습니다.';
-			// 								showDialogCustom(message, function (){
-			// 									search();
-			// 								});
+										if (code == 1000) {
+											const message = '삭제되었습니다.';
+											showDialogCustom(message, function (){
+												search();
+											});
 											
-			// 							} else if (code == 9003) {
-			// 								showDialogCustom(result);
+										} else if (code == 9003) {
+											showDialogCustom(result);
 											
-			// 							} else {
-			// 								const message = '삭제에 실패했습니다.';
-			// 								showDialogCustom(message);
-			// 							}
-			// 						});
-			// 						return { result: "ok" };
-			// 					}
-			// 				}, {
-			// 					text: "취소",
-			// 					onClick: function(e) {
-			// 						return { result: "cancel" };
-			// 					}
-			// 				}]
-			// 			});
+										} else {
+											const message = '삭제에 실패했습니다.';
+											showDialogCustom(message);
+										}
+									});
+									return { result: "ok" };
+								}
+							}, {
+								text: "취소",
+								onClick: function(e) {
+									return { result: "cancel" };
+								}
+							}]
+						});
 
-			// 			confirmDialog.show().done(function(dialogResult) {
-			// 				if (dialogResult.result === "ok") {
-			// 					console.log("삭제 완료");
-			// 				} else {
-			// 					console.log("취소");
-			// 				}
-			// 			});
-			// 		}
-			// 	}],
-			// },
+						confirmDialog.show().done(function(dialogResult) {
+							if (dialogResult.result === "ok") {
+								console.log("삭제 완료");
+							} else {
+								console.log("취소");
+							}
+						});
+					}
+				}],
+			},*/
 		],
 		toolbar: {
 			items: [
@@ -324,7 +324,6 @@ $(function() {
 		},
 		onRowClick: function (e) {
 			document.getElementById('reset_btn').classList.add('d-none');
-			console.log(document.getElementById('reset_btn'));
 			e.cancel = true; // 기본 편집 막기
 			openCustomModal('edit', e.data); // 수정 모드
 		},

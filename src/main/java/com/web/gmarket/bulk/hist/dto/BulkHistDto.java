@@ -2,6 +2,8 @@ package com.web.gmarket.bulk.hist.dto;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,231 +18,71 @@ public class BulkHistDto {
 	private String endDate;
 	private String startTime;
 	private String endTime;
+	private String bulkMsgKey;
 	private String bulkTitle;
+	private String svcType;
 	private Integer companyCode;
 	private List<String> monthTables;
+	
+	// DevExtreme 조회 옵션
+	private List<Object> filter;
+	private List<Object> group;
 	private Integer skip;
 	private Integer take;
+	private List<Object> sort;
 	
 	//조회 컬럼
-	private String bulkMsgKey;
-	private String loginID;
-	private String userID;
-	private String title;
-	private String msg;
-	private String inTime;
-	private String reqTime;
-	private String cnt;
-	private String status;
-	private String svcType;
-	private String bulkSeq;
-	private Integer succCnt;
-	private Integer failCnt;
-	private Integer cntStanby;
-	private Integer cntTran;
-	private Integer cntSucc;
-	private Integer cntDup;
-	private Integer cntSendFail;
+	@JsonProperty("B_MSG_KEY")
+	private String B_MSG_KEY;
 	
-	public String getStartDate() {
-		return startDate;
-	}
+	@JsonProperty("LOGIN_ID")
+	private String LOGIN_ID;
 	
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
+	@JsonProperty("USER_ID")
+	private String USER_ID;
 	
-	public String getEndDate() {
-		return endDate;
-	}
+	@JsonProperty("TITLE")
+	private String TITLE;
 	
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
+	@JsonProperty("MSG")
+	private String MSG;
 	
-	public String getStartTime() {
-		return startTime;
-	}
+	@JsonProperty("IN_TIME")
+	private String IN_TIME;
 	
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
+	@JsonProperty("REQ_TIME")
+	private String REQ_TIME;
 	
-	public String getEndTime() {
-		return endTime;
-	}
+	@JsonProperty("CNT")
+	private String CNT;
 	
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
+	@JsonProperty("STATUS")
+	private String STATUS;
 	
-	public String getBulkTitle() {
-		return bulkTitle;
-	}
+	@JsonProperty("SVC_TYPE")
+	private String SVC_TYPE;
 	
-	public void setBulkTitle(String bulkTitle) {
-		this.bulkTitle = bulkTitle;
-	}
+	@JsonProperty("B_SEQ")
+	private String B_SEQ;
 	
-	public Integer getCompanyCode() {
-		return companyCode;
-	}
+	@JsonProperty("SUCC_CNT")
+	private Integer SUCC_CNT;
 	
-	public void setCompanyCode(Integer companyCode) {
-		this.companyCode = companyCode;
-	}
+	@JsonProperty("FAIL_CNT")
+	private Integer FAIL_CNT;
 	
-	public List<String> getMonthTables() {
-		return monthTables;
-	}
+	@JsonProperty("CNT_STANBY")
+	private Integer CNT_STANBY;
 	
-	public void setMonthTables(List<String> monthTables) {
-		this.monthTables = monthTables;
-	}
+	@JsonProperty("CNT_TRAN")
+	private Integer CNT_TRAN;
 	
-	public String getBulkMsgKey() {
-		return bulkMsgKey;
-	}
+	@JsonProperty("CNT_SUCC")
+	private Integer CNT_SUCC;
 	
-	public void setBulkMsgKey(String bulkMsgKey) {
-		this.bulkMsgKey = bulkMsgKey;
-	}
+	@JsonProperty("CNT_DUP")
+	private Integer CNT_DUP;
 	
-	public String getLoginID() {
-		return loginID;
-	}
-	
-	public void setLoginID(String loginID) {
-		this.loginID = loginID;
-	}
-	
-	public String getUserID() {
-		return userID;
-	}
-	
-	public void setUserID(String userID) {
-		this.userID = userID;
-	}
-	
-	public String getTitle() {
-		return title;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
-	public String getMsg() {
-		return msg;
-	}
-	
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
-	
-	public String getInTime() {
-		return inTime;
-	}
-	
-	public void setInTime(String inTime) {
-		this.inTime = inTime;
-	}
-	
-	public String getReqTime() {
-		return reqTime;
-	}
-	
-	public void setReqTime(String reqTime) {
-		this.reqTime = reqTime;
-	}
-	
-	public String getCnt() {
-		return cnt;
-	}
-	
-	public void setCnt(String cnt) {
-		this.cnt = cnt;
-	}
-
-    public String getStatus() {
-		return status;
-	}
-	
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
-	public String getSvcType() {
-		return svcType;
-	}
-	
-	public void setSvcType(String svcType) {
-		this.svcType = svcType;
-	}
-	
-	public String getBulkSeq() {
-		return bulkSeq;
-	}
-	
-	public void setBulkSeq(String bulkSeq) {
-		this.bulkSeq = bulkSeq;
-	}
-	
-	public Integer getSuccCnt() {
-		return succCnt;
-	}
-	
-	public void setSuccCnt(Integer succCnt) {
-		this.succCnt = succCnt;
-	}
-	
-	public Integer getFailCnt() {
-		return failCnt;
-	}
-	
-	public void setFailCnt(Integer failCnt) {
-		this.failCnt = failCnt;
-	}
-
-	public Integer getCntStanby() {
-		return cntStanby;
-	}
-	
-	public void setCntStanby(Integer cntStanby) {
-		this.cntStanby = cntStanby;
-	}
-	
-	public Integer getCntTran() {
-		return cntTran;
-	}
-	
-	public void setCntTran(Integer cntTran) {
-		this.cntTran = cntTran;
-	}
-	
-	public Integer getCntSucc() {
-		return cntSucc;
-	}
-	
-	public void setCntSucc(Integer cntSucc) {
-		this.cntSucc = cntSucc;
-	}
-	
-	public Integer getCntDup() {
-		return cntDup;
-	}
-	
-	public void setCntDup(Integer cntDup) {
-		this.cntDup = cntDup;
-	}
-	
-	public Integer getCntSendFail() {
-		return cntSendFail;
-	}
-	
-	public void setCntSendFail(Integer cntSendFail) {
-		this.cntSendFail = cntSendFail;
-	}
+	@JsonProperty("CNT_SENDFAIL")
+	private Integer CNT_SENDFAIL;
 }
-
-   
