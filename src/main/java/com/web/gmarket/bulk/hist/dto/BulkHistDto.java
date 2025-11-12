@@ -32,6 +32,9 @@ public class BulkHistDto {
 	private List<Object> sort;
 	
 	//조회 컬럼
+	@JsonProperty("B_SEQ")
+	private String B_SEQ;
+	
 	@JsonProperty("B_MSG_KEY")
 	private String B_MSG_KEY;
 	
@@ -53,6 +56,9 @@ public class BulkHistDto {
 	@JsonProperty("REQ_TIME")
 	private String REQ_TIME;
 	
+	@JsonProperty("CALLBACK_NO")
+	private String CALLBACK_NO;
+	
 	@JsonProperty("CNT")
 	private String CNT;
 	
@@ -62,8 +68,8 @@ public class BulkHistDto {
 	@JsonProperty("SVC_TYPE")
 	private String SVC_TYPE;
 	
-	@JsonProperty("B_SEQ")
-	private String B_SEQ;
+	@JsonProperty("SEND_INFO")
+	private String SEND_INFO;
 	
 	@JsonProperty("SUCC_CNT")
 	private Integer SUCC_CNT;
