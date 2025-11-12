@@ -197,6 +197,7 @@ $(function () {
 			{ 				
 				caption: "성공/실패", 
 				alignment: "center",
+				minWidth: 100,
 				calculateCellValue: function(rowData) {
 					return `${rowData.CNT_SUCC}/${rowData.CNT_DUP + rowData.CNT_SENDFAIL}`;
 				}
@@ -351,11 +352,11 @@ function openBulkDetailModal(data = {}) {
 	let inTimeValue = "";
 	let reqTimeValue = "";
 	
-	if (data.inTime) {
+	if (data.IN_TIME) {
 		inTimeValue = formatTimestamp(data.IN_TIME);
 	}
 	
-	if (data.reqTime) {
+	if (data.REQ_TIME) {
 		reqTimeValue = formatTimestamp(data.REQ_TIME);
 	}
 	
