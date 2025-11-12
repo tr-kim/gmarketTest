@@ -225,8 +225,8 @@ $(function () {
 				companyCode: companyValue,
 				tableName: (tableItem.name == "전체") ? "" : tableItem.name,
 				// DevExtreme 조회 옵션
-				filter: loadOptions.filter || [],   // searchPanel 검색
-				group: loadOptions.group || [],     // columns 검색
+//				filter: loadOptions.filter || [],   // searchPanel 검색
+//				group: loadOptions.group || [],     // columns 검색
 				skip: loadOptions.skip ?? 0,        // 페이지 시작 위치(offset)
 				take: loadOptions.take ?? 50,       // 페이지 크기(limit)
 				sort: loadOptions.sort || [],       // 정렬
@@ -278,10 +278,10 @@ $(function () {
 		//행 마우스오버 시
 		hoverStateEnabled: true,
 		headerFilter: {
-			visible: true
+			visible: false
 		},
 		searchPanel: {
-			visible: true,
+			visible: false,
 			width: 300
 		},
 		paging: {
@@ -361,7 +361,7 @@ $(function () {
 					}
 				} 
 			},
-			{ dataField: "CORP_RESERVED2", caption: "Flow #", alignment: "center" }
+//			{ dataField: "CORP_RESERVED2", caption: "Flow #", alignment: "center" }
 		],
 		toolbar: {
 			items: [
@@ -378,12 +378,12 @@ $(function () {
 		},
 		onOptionChanged(e) {
 			// 페이징 클릭 시 loadPanel 삭제
-			// if (e.fullName === "paging.pageSize") e.component.option("loadPanel.enabled", false);
+			 if (e.fullName === "paging.pageSize") e.component.option("loadPanel.enabled", false);
 	    },
 		onContentReady: function(e) {
 			// 데이터 로드가 끝났을 때 복구
-			// const grid = e.component;
-			// if (!grid.option("loadPanel.enabled")) grid.option("loadPanel.enabled", true);
+			const grid = e.component;
+			if (!grid.option("loadPanel.enabled")) grid.option("loadPanel.enabled", true);
 			
 			const totalCount = e.component.totalCount();	
 			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건`);
