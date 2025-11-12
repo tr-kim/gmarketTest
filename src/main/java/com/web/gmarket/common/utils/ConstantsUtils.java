@@ -60,11 +60,6 @@ public class ConstantsUtils {
 	
 	public static final String TABLE_NAME = "tableName";
 	public static final String BULK_MSG_KEY = "bulkMsgKey";
-	public static final String CNT_STANBY = "cntStanby";
-	public static final String CNT_TRAN = "cntTran";
-	public static final String CNT_SUCC = "cntSucc";
-	public static final String CNT_DUP = "cntDup";
-	public static final String CNT_SEND_FAIL = "cntSendFail";
 	
 	// PAGE TYPE
 	public static final String STAT = "stat";

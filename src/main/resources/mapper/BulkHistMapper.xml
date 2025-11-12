@@ -5,19 +5,19 @@
 <mapper namespace="com.web.gmarket.bulk.hist.mapper.BulkHistMapper">
 
 	<resultMap id="BulkHistResultMap" type="com.web.gmarket.bulk.hist.dto.BulkHistDto">
-		<result property="bulkMsgKey" column="B_MSG_KEY" />
-		<result property="loginID" column="LOGIN_ID" />
-		<result property="userID" column="USER_ID" />
-		<result property="title" column="TITLE" />
-		<result property="msg" column="MSG" />
-		<result property="inTime" column="IN_TIME"/>
-		<result property="reqTime" column="REQ_TIME" />
-		<result property="cnt" column="CNT" />
-		<result property="status" column="STATUS" />
-		<result property="svcType" column="SVC_TYPE"/>
-		<result property="bulkSeq" column="B_SEQ" />
-		<result property="succCnt" column="SUCC_CNT" />
-		<result property="failCnt" column="FAIL_CNT" />
+		<result property="B_MSG_KEY" column="B_MSG_KEY" />
+		<result property="LOGIN_ID" column="LOGIN_ID" />
+		<result property="USER_ID" column="USER_ID" />
+		<result property="TITLE" column="TITLE" />
+		<result property="MSG" column="MSG" />
+		<result property="IN_TIME" column="IN_TIME"/>
+		<result property="REQ_TIME" column="REQ_TIME" />
+		<result property="CNT" column="CNT" />
+		<result property="STATUS" column="STATUS" />
+		<result property="SVC_TYPE" column="SVC_TYPE"/>
+		<result property="B_SEQ" column="B_SEQ" />
+		<result property="SUCC_CNT" column="SUCC_CNT" />
+		<result property="FAIL_CNT" column="FAIL_CNT" />
 	</resultMap>
 	
 	<select id="selectBulkHistList" resultMap="BulkHistResultMap">
@@ -48,7 +48,23 @@
 			AND TITLE LIKE CONCAT('%', #{bulkTitle}, '%')
 		</if>
 		)
-		ORDER BY B_SEQ DESC
+		
+		<!-- DevExtreme 정렬 처리 -->
+		<if test="sort != null and sort.size() > 0">
+			ORDER BY
+			<foreach collection="sort" item="s" separator=",">
+				${s.selector}
+				<choose>
+					<when test="s.desc">DESC</when>
+					<otherwise>ASC</otherwise>
+				</choose>
+			</foreach>
+		</if>
+		<if test="sort == null or sort.size() == 0">
+			ORDER BY B_SEQ DESC
+		</if>
+		
+		<!-- DevExtreme 페이징 처리 -->
 		<if test="take != null and skip != null">
 			OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 		</if>
@@ -78,11 +94,11 @@
 		<choose>
 			<when test="monthTables != null and monthTables.size() > 0">
 				SELECT
-					COUNT(CASE WHEN TRAN_STATUS = 1 THEN 1 END) AS cntStanby,
-					COUNT(CASE WHEN TRAN_STATUS IN (2, 3) THEN 1 END) AS cntTran,
-					COUNT(CASE WHEN TRAN_STATUS = 4 AND TRAN_RSLT = '0' THEN 1 END) AS cntSucc,
-					COUNT(CASE WHEN TRAN_STATUS = 5 THEN 1 END) AS cntDup,
-					COUNT(CASE WHEN TRAN_STATUS = 4 AND <![CDATA[TRAN_RSLT <> '0']]> THEN 1 END) AS cntSendFail
+					COUNT(CASE WHEN TRAN_STATUS = 1 THEN 1 END) AS CNT_STANBY,
+					COUNT(CASE WHEN TRAN_STATUS IN (2, 3) THEN 1 END) AS CNT_TRAN,
+					COUNT(CASE WHEN TRAN_STATUS = 4 AND TRAN_RSLT = '0' THEN 1 END) AS CNT_SUCC,
+					COUNT(CASE WHEN TRAN_STATUS = 5 THEN 1 END) AS CNT_DUP,
+					COUNT(CASE WHEN TRAN_STATUS = 4 AND <![CDATA[TRAN_RSLT <> '0']]> THEN 1 END) AS CNT_SENDFAIL
 				FROM (
 				<foreach collection="monthTables" item="tableName" separator=" UNION ALL ">
 					SELECT

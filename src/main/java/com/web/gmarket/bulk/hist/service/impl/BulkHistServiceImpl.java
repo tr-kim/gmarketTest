@@ -60,7 +60,7 @@ public class BulkHistServiceImpl implements BulkHistService {
 		
 		// 각 row 상태 카운트 조회 및 병합
 		for (BulkHistDto row : list) {
-			String svcType = row.getSvcType();
+			String svcType = row.getSVC_TYPE();
 			String tableName = SVC_TYPE_TABLE_MAP.get(svcType);
 			
 			if (tableName == null) {
@@ -68,7 +68,7 @@ public class BulkHistServiceImpl implements BulkHistService {
 			}
 			
 			// 대량발송 메시지 키
-			bulkHistDto.setBulkMsgKey(row.getBulkMsgKey());
+			bulkHistDto.setBulkMsgKey(row.getB_MSG_KEY());
 			
 			// 월별 테이블 존재 여부 확인 및 목록 생성
 			List<String> tableList = TableNameUtil.getMonthTableNames(
@@ -86,11 +86,11 @@ public class BulkHistServiceImpl implements BulkHistService {
 			Map<String, Integer> result = getMapper(dbName).selectBulkHistStatusCount(bulkHistDto);
 			
 			// 조회된 카운트 병합
-			row.setCntStanby(result.getOrDefault(ConstantsUtils.CNT_STANBY, 0)); 			// 전송대기
-			row.setCntTran(result.getOrDefault(ConstantsUtils.CNT_TRAN, 0)); 				// 전송중
-			row.setCntSucc(result.getOrDefault(ConstantsUtils.CNT_SUCC, 0)); 				// 성공
-			row.setCntDup(result.getOrDefault(ConstantsUtils.CNT_DUP, 0)); 					// 중복 전송으로 인한 실패
-			row.setCntSendFail(result.getOrDefault(ConstantsUtils.CNT_SEND_FAIL, 0)); 		// 전송실패
+			row.setCNT_STANBY(result.getOrDefault("CNT_STANBY", 0)); 			// 전송대기
+			row.setCNT_TRAN(result.getOrDefault("CNT_TRAN", 0)); 				// 전송중
+			row.setCNT_SUCC(result.getOrDefault("CNT_SUCC", 0)); 				// 성공
+			row.setCNT_DUP(result.getOrDefault("CNT_DUP", 0)); 					// 중복 전송으로 인한 실패
+			row.setCNT_SENDFAIL(result.getOrDefault("CNT_SENDFAIL", 0)); 		// 전송실패
 		}
 		
 		return list;
