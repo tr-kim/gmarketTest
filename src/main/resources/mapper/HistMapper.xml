@@ -37,7 +37,6 @@
 <!--						AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}-->
 					WHERE TRAN_DATE >= CONVERT(DATETIME, REPLACE(#{startTime}, '-', ''), 112)
 						AND TRAN_DATE<![CDATA[ < ]]>DATEADD(DAY, 1, CONVERT(DATETIME, REPLACE(#{endTime}, '-', ''), 112))
-					
 					<if test="phoneNum != null and phoneNum != ''">
 						AND TRAN_PHONE LIKE CONCAT('%', #{phoneNum}, '%')
 					</if>
@@ -81,7 +80,6 @@
 <!--							AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}-->
 						WHERE TRAN_DATE >= CONVERT(DATETIME, REPLACE(#{startTime}, '-', ''), 112)
 							AND TRAN_DATE<![CDATA[ < ]]>DATEADD(DAY, 1, CONVERT(DATETIME, REPLACE(#{endTime}, '-', ''), 112))
-							
 						<if test="phoneNum != null and phoneNum != ''">
 							AND TRAN_PHONE LIKE CONCAT('%', #{phoneNum}, '%')
 						</if>

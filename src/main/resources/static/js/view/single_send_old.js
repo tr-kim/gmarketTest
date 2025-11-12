@@ -447,7 +447,7 @@ $(function () {
 		},
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
-			$("#totalCount").text(`총 ${totalCount}건`);
+			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건`);
 		}
 		
 	});

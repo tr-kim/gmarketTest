@@ -96,8 +96,8 @@ $(function () {
 				bulkTitle: titleValue,
 				companyCode: companyValue,
 				// DevExtreme 조회 옵션
-				filter: loadOptions.filter || [],   // searchPanel 검색
-				group: loadOptions.group || [],     // columns 검색
+//				filter: loadOptions.filter || [],   // searchPanel 검색
+//				group: loadOptions.group || [],     // columns 검색
 				skip: loadOptions.skip ?? 0,        // 페이지 시작 위치(offset)
 				take: loadOptions.take ?? 50,       // 페이지 크기(limit)
 				sort: loadOptions.sort || [],       // 정렬
@@ -230,17 +230,9 @@ $(function () {
 		onRowClick: function (e) {
 			openBulkDetailModal(e.data);
 		},
-		onOptionChanged(e) {
-			// 페이징 클릭 시 loadPanel 삭제
-			// if (e.fullName === "paging.pageSize") e.component.option("loadPanel.enabled", false);
-	    },
 	    onContentReady(e) {
-			// 데이터 로드가 끝났을 때 복구
-			// const grid = e.component;
-			// if (!grid.option("loadPanel.enabled")) grid.option("loadPanel.enabled", true);
-			
 			const totalCount = e.component.totalCount();
-			$("#totalCount").text(`총 ${totalCount}건`);
+			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건`);
 	    }
 	}).dxDataGrid("instance");
 	
