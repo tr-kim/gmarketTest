@@ -9,52 +9,51 @@
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">발신번호</div>
 				<div class="col">
-					<input type="text" name="tranCallback" id="tranCallback" class="form-control" placeholder="발신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
+					<input type="text" name="tranCallback" id="tranCallback" class="form-control" placeholder="발신번호를 입력하세요." maxlength="15" oninput="onlyNumber(this)">
 				</div>
 			</li>
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">수신번호</div>
 				<div class="col">
-					<input type="text" name="tranPhone" id="tranPhone" class="form-control" placeholder="수신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
+					<input type="text" name="tranPhone" id="tranPhone" class="form-control" placeholder="수신번호를 입력하세요." maxlength="15" oninput="onlyNumber(this)">
 				</div>
 			</li>
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">대분류</div>
-				<div class="col d-flex">					
+				<div class="col d-flex">
 					<select name="companyCode" id="companyCode" class="form-select">
 						<option value="0">옥션</option>
 						<option value="1">G마켓</option>
 						<option value="2">스마일캐시</option>
-					</select>	
+					</select>
 				</div>
 			</li>
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">사용자ID</div>
 				<div class="col">
-					<input type="text" name="userId" id="userId" class="form-control" placeholder="사용자ID를 입력하세요." maxlength="100" th:value="${#authentication.principal.userId}">
+					<input type="text" name="userId" id="userId" class="form-control" placeholder="사용자ID를 입력하세요." maxlength="20" th:value="${#authentication.principal.userId}">
 				</div>
 			</li>
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">제목</div>
 				<div class="col">
-					<input type="text" name="msgTitle" id="msgTitle" class="form-control" maxlength="100" placeholder="제목을 입력하면 장문으로 변경됩니다.">
+					<input type="text" name="msgTitle" id="msgTitle" class="form-control" maxlength="60" placeholder="제목을 입력하면 장문으로 변경됩니다.">
 				</div>
 			</li>
 			<li>
 				<div class="col-2 font-weight-500">내용</div>
-					<div class="col">	
+					<div class="col">
 						<div class="d-flex grid overflow-visible">
 							<div class="msg_wrap col-5">
 							<div class="msg_wrap_hd d-flex">
 								<div class="msg_type col-3 sms py-2 px-2 text-center">
 									SMS
-								</div>	
+								</div>
 								<div class="msg_byte col text-end py-2 pe-2">
 									<span id="input_byte">0</span>/<span id="total_byte">80</span> byte
 								</div>
 							</div>
-							<textarea name="msgWrite" id="msgWrite" class="p-3 w-100"></textarea>
-							
+							<textarea name="msgWrite" id="msgWrite" class="p-3 w-100"></textarea>							
 						</div>
 						<div class="add_option col position-relative">
 							<ul class="option_tab d-flex px-3">
@@ -69,14 +68,14 @@
 								</div>
 								<span class="img-question position-absolute end-0 bottom-0 p-3"><i class="bi bi-question-circle"></i></span>
 							</div>
-						</div>	
-					</div>				
+						</div>
+					</div>
 				</div>
 			</li>
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">전송대상</div>
 				<div class="col">
-					<input type="text" name="sendInfo" id="sendInfo" class="form-control" placeholder="전송대상을 입력하세요." maxlength="100">
+					<input type="text" name="sendInfo" id="sendInfo" class="form-control" placeholder="전송대상을 입력하세요." maxlength="30">
 				</div>
 			</li>
 			<li class="align-items-center">
@@ -97,7 +96,7 @@
 						080 수신거부 번호
 						</label>
 					</div>
-					<input type="text" name="rejectNum" id="rejectNum" class="form-control" value="(거부)0800002004" maxlength="100">
+					<input type="text" name="rejectNum" id="rejectNum" class="form-control" th:value="${AUCTION_REJECT_NUM}" maxlength="20">
 				</div>
 			</li>
 			<li class="align-items-center">
@@ -106,19 +105,18 @@
 					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
 						<input type="radio" class="btn-check" name="send_time" id="send_time1" value="0" autocomplete="off" checked>
 						<label class="btn send_btn px-4" for="send_time1">즉시</label>
-
 						<input type="radio" class="btn-check" name="send_time" id="send_time2" value="1" autocomplete="off">
 						<label class="btn send_btn px-4" for="send_time2">예약</label>
 					</div>
 					<div id="reserveDate" class="text-primary ms-3"></div>
-				</div>					
+				</div>
 			</li>
 			<li class="d-flex align-items-center justify-content-center">
 				<button type="button" class="btn btn-primary px-5" id="final_send_btn" onclick="sendMessage()">즉시발송</button>
 			</li>
 		</ul>
 		<div class="loadpanel"></div>
-	</form>	
+	</form>
 	<th:block th:replace="~{/view/popup/reserveSend :: reserveSend}"></th:block>
 	<th:block th:replace="~{/view/popup/imgPreview :: imgPreview}"></th:block>
 	<th:block th:replace="~{/view/popup/confirmSend :: confirmSend}"></th:block>
