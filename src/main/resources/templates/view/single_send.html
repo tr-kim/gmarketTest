@@ -7,18 +7,6 @@
 	<form class="content row mx-0 send" id="send">
 		<ul>
 			<li class="align-items-center">
-				<div class="col-2 font-weight-500">발신번호</div>
-				<div class="col">
-					<input type="text" name="tranCallback" id="tranCallback" class="form-control" placeholder="발신번호를 입력하세요." maxlength="15" oninput="onlyNumber(this)">
-				</div>
-			</li>
-			<li class="align-items-center">
-				<div class="col-2 font-weight-500">수신번호</div>
-				<div class="col">
-					<input type="text" name="tranPhone" id="tranPhone" class="form-control" placeholder="수신번호를 입력하세요." maxlength="15" oninput="onlyNumber(this)">
-				</div>
-			</li>
-			<li class="align-items-center">
 				<div class="col-2 font-weight-500">대분류</div>
 				<div class="col d-flex">
 					<select name="companyCode" id="companyCode" class="form-select">
@@ -28,6 +16,18 @@
 					</select>
 				</div>
 			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">발신번호</div>
+				<div class="col">
+					<input type="text" name="tranCallback" id="tranCallback" class="form-control" placeholder="발신번호를 입력하세요." maxlength="15" th:value="${AUCTION_CALLBACK_NUM}" oninput="onlyNumber(this)">
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">수신번호</div>
+				<div class="col">
+					<input type="text" name="tranPhone" id="tranPhone" class="form-control" placeholder="수신번호를 입력하세요." maxlength="15" oninput="onlyNumber(this)">
+				</div>
+			</li>			
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">사용자ID</div>
 				<div class="col">
@@ -121,6 +121,7 @@
 	<th:block th:replace="~{/view/popup/imgPreview :: imgPreview}"></th:block>
 	<th:block th:replace="~{/view/popup/confirmSend :: confirmSend}"></th:block>
 	<script th:src="@{/js/view/single_send.js}"></script>
+	
 </body>
 
 </html>

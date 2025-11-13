@@ -451,7 +451,6 @@ $(function () {
 		});
 	});
 	
-	
 	//변수추가
 	document.querySelectorAll('#tag li button').forEach((btn, idx)=>{
 		btn.addEventListener('click',() => {
@@ -461,6 +460,23 @@ $(function () {
 			}
 		})
 	});
+
+	const companyCode = document.getElementById("companyCode");
+    const tranCallback = document.getElementById("tranCallback");
+
+    companyCode.addEventListener("change", function () {		
+        if (companyCode.value === "0") {
+            tranCallback.value = AUCTION_CALLBACK_NUM;
+			rejectNum.value = AUCTION_REJECT_NUM;			
+        } else if (companyCode.value === "1") {
+            tranCallback.value = GMARKET_CALLBACK_NUM;
+			rejectNum.value = GMARKET_REJECT_NUM;
+        } else {
+            tranCallback.value = "";
+			rejectNum.value = "";
+        }
+		console.log(companyCode.value, tranCallback.value, rejectNum.value);
+    });
 	
 });
 
@@ -758,6 +774,7 @@ function sendMessage(){
 			});
 		}
 	});
+
 }
 
 
