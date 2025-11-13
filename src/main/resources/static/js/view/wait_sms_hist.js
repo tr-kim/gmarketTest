@@ -237,7 +237,6 @@ $(function () {
 		columnAutoWidth: true,
 		allowColumnResizing: true,
 		columnResizingMode: 'widget',
-		columnAutoWidth: true,
 		selection: {
 			mode: "multiple",
 			allowSelectAll: false, //전체선택 체크박스 방지
@@ -246,7 +245,7 @@ $(function () {
 		hoverStateEnabled: true,
 		columns: [
 			{ type: "selection" },
-			{ dataField: "TITLE", caption: "제목", alignment: "left" },
+			{ dataField: "TITLE", caption: "제목", alignment: "left", width:200},
 			{ 
 				dataField: "REQ_TIME", 
 				caption: "전송 일시", 
@@ -255,7 +254,7 @@ $(function () {
 					return formatTimestamp(cellInfo.value);
 				}
 			},
-			{ dataField: "MSG", caption: "메시지 내용", alignment: "left" },
+			{ dataField: "MSG", caption: "메시지 내용", alignment: "left", width: 450 },
 			{ dataField: "CNT", caption: "전체", alignment: "center" },
 			{ dataField: "SVC_TYPE", caption: "상세", alignment: "center" },
 			{ dataField: "USER_ID", caption: "발송ID", alignment: "center" },

@@ -297,7 +297,6 @@ $(function () {
 		columnAutoWidth: true,
 		allowColumnResizing: true,
 		columnResizingMode: 'widget',
-		columnAutoWidth: true,
 		columns: [
 			{ dataField: "TRAN_PR", caption: "NO", alignment: "center" },
 			{ dataField: "TRAN_PHONE", caption: "수신 번호", alignment: "center" },
@@ -324,7 +323,7 @@ $(function () {
 					return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 				}
 			},
-			{ dataField: "TRAN_MSG", caption: "메시지 내용", alignment: "left" },
+			{ dataField: "TRAN_MSG", caption: "메시지 내용", alignment: "left", width: 450 },
 			{ 
 				dataField: "TRAN_RSLT", 
 				caption: "결과", 
@@ -389,7 +388,7 @@ $(function () {
 // 상세 보기 모달
 function openHistMessageInquiry(data = {}) {
 	
-	document.getElementById('msg').value = data.tran_MSG;
+	document.getElementById('msg').value = data.TRAN_MSG;
 	
 	document.getElementById('message_inquiry').classList.add('d-block');
 	toggleBodyClass();
