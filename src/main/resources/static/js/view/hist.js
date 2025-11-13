@@ -324,7 +324,7 @@ $(function () {
 					return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 				}
 			},
-			{ dataField: "TRAN_MSG", caption: "문자 내용", alignment: "left" },
+			{ dataField: "TRAN_MSG", caption: "메시지 내용", alignment: "left" },
 			{ 
 				dataField: "TRAN_RSLT", 
 				caption: "결과", 
@@ -376,6 +376,9 @@ $(function () {
 				"searchPanel"
 			]
 		},
+		onRowClick: function (e) {
+			openHistMessageInquiry(e.data);
+		},
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();	
 			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건`);
@@ -383,6 +386,14 @@ $(function () {
 	}).dxDataGrid("instance");
 });
 
+// 상세 보기 모달
+function openHistMessageInquiry(data = {}) {
+	
+	document.getElementById('msg').value = data.tran_MSG;
+	
+	document.getElementById('message_inquiry').classList.add('d-block');
+	toggleBodyClass();
+}
 
 //엑셀 다운로드
 function exportGridToExcel(gridInstance){

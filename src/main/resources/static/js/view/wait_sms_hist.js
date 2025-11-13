@@ -207,18 +207,6 @@ $(function () {
 		}
     });
 
-	//날짜 포맷팅
-	function formatTimestamp(str) {
-		str = str.trim();
-		const yyyy = str.slice(0, 4);
-		const mm = str.slice(4, 6);
-		const dd = str.slice(6, 8);
-		const hh = str.slice(8, 10);
-		const mi = str.slice(10, 12);
-		const ss = str.slice(12, 14);
-		return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
-	}
-
 	//조회 그리드
 	waitDataGrid = $("#waitHistGrid").dxDataGrid({
 		dataSource: waitDataSource,
@@ -284,6 +272,9 @@ $(function () {
 				},
 				"searchPanel"
 			]
+		},
+		onRowClick: function (e) {
+			openWaitMessageInquiry(e.data);
 		},
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
@@ -419,6 +410,40 @@ $(function () {
 	}).dxDataGrid("instance");
 });
 
+//날짜 포맷팅
+function formatTimestamp(str) {
+	str = str.trim();
+	const yyyy = str.slice(0, 4);
+	const mm = str.slice(4, 6);
+	const dd = str.slice(6, 8);
+	const hh = str.slice(8, 10);
+	const mi = str.slice(10, 12);
+	const ss = str.slice(12, 14);
+	return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+}
+
+// 상세 보기 모달
+function openWaitMessageInquiry(data = {}) {
+	let inTimeValue = "";
+	let reqTimeValue = "";
+
+	if (data.IN_TIME) {
+		inTimeValue = formatTimestamp(data.IN_TIME);
+	}
+	console.log(inTimeValue);
+	if (data.REQ_TIME) {
+		reqTimeValue = formatTimestamp(data.REQ_TIME);
+	}
+	
+	document.getElementById('title').value = data.TITLE;
+	document.getElementById('in_time').value = inTimeValue;
+	document.getElementById('req_time').value = reqTimeValue;
+	document.getElementById('user_id').value = data.USER_ID;	
+	document.getElementById('msg').value = data.MSG;
+	
+	document.getElementById('message_inquiry').classList.add('d-block');
+	toggleBodyClass();
+}
 
 //시간 구하기
 function getAfterTime(minute) {
