@@ -16,6 +16,12 @@
 					</select>
 				</div>
 			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">발신번호</div>
+				<div class="col d-flex">
+					<input type="text" name="tranCallback" id="tranCallback" class="form-control" placeholder="발신번호를 입력하세요." maxlength="15" th:value="${AUCTION_CALLBACK_NUM}" oninput="onlyNumber(this)">
+				</div>
+			</li>
 			<li class="align-items-center mb-2">
 				<div class="col-2 font-weight-500">메시지 분류</div>
 				<div class="col d-flex">
@@ -72,13 +78,7 @@
 				<div class="col">
 					<input type="text" name="reserved4" id="reserved4" class="form-control me-2" value="미지정" maxlength="20" readonly>
 				</div>
-			</li>
-			<li class="align-items-center">
-				<div class="col-2 font-weight-500">발신번호</div>
-				<div class="col d-flex">
-					<input type="text" name="tranCallback" id="tranCallback" class="form-control" placeholder="발신번호를 입력하세요." maxlength="15" oninput="onlyNumber(this)">
-				</div>
-			</li>
+			</li>			
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">사용자ID</div>
 				<div class="col">
