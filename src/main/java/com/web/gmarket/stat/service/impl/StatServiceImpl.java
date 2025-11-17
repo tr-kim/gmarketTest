@@ -79,7 +79,8 @@ public class StatServiceImpl implements StatService {
 		// 테이블 이름 저장
 		List<StatDto> list = commonService.getStatMapper(ConstantsUtils.DB_AUCTION).selectAuctionStatList(statDto);
 		Map<Integer, String> codeMap = codeList.stream().collect(Collectors.toMap(StatCodeDto::getTableCode, StatCodeDto::getTableName, (v1, v2) -> v1));
-		list.forEach(dto -> dto.setTableName(StringUtils.defaultIfBlank(codeMap.get(dto.getTableCode()), "-")));
+//		list.forEach(dto -> dto.setTableName(StringUtils.defaultIfBlank(codeMap.get(dto.getTableCode()), "-")));
+		list.forEach(dto -> dto.setTABLE_NAME(StringUtils.defaultIfBlank(codeMap.get(dto.getTABLE_CODE()), "-")));
 
 		return list;
 	}

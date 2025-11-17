@@ -3,6 +3,11 @@ let companyInstance;
 let companyValue;
 let tableInstance;
 let tableValue;
+let startDateInstance;
+let endDateInstance;
+let startHourInstance;
+let endHourInstance;
+let checkedRadio;
 const period = 30;	// 최대 검색 기간
 
 $(function() {
@@ -22,36 +27,47 @@ $(function() {
 	const startDate = new Date();
 	const endDate = new Date();
 	endDate.setDate(endDate.getDate() + 7);
+	
+	const startYear = startDate.getFullYear(); 
+	const startMonth = `${String(startDate.getMonth() + 1).padStart(2, '0')}`; 
+	const startDay = `${String(startDate.getDate()).padStart(2, '0')}`;
+	
+	const endYear = endDate.getFullYear(); 
+	const endMonth = `${String(endDate.getMonth() + 1).padStart(2, '0')}`; 
+	const endDay = `${String(endDate.getDate()).padStart(2, '0')}`; 
 
 	//라디오
 	const radios = document.querySelectorAll('input[name="timeType"]');
-
+	
+	// 시작일
+	startDateInstance = $("#startDate")	.dxDateBox({
+		type: "date",
+	    name: "startDate",
+		displayFormat: "yyyy-MM-dd"
+	}).dxDateBox("instance");
+	
+	// 종료일
+	endDateInstance = $("#endDate").dxDateBox({
+		type: "date",
+	    name: "endDate",
+		displayFormat: "yyyy-MM-dd"
+	}).dxDateBox("instance");
+	
 	radios.forEach(radio => {
 		radio.addEventListener('change', function() {
 			//시간
 			if (this.value == "1") {
-				recreateDateBox("#startDate", {
-					type: 'date',
-					name: "startDate",
-					value: startDate,
-					displayFormat: "yyyy-MM-dd",
-					pickerType: "calendar",
-					onValueChanged(e) {
-						const date = e.value;
-						if (date instanceof Date && !isNaN(date)) {
-							const yyyy = date.getFullYear();
-							const mm = String(date.getMonth() + 1).padStart(2, '0');
-							const dd = String(date.getDate()).padStart(2, '0');
-							const hh = String(date.getHours()).padStart(2, '0');
-							const min = String(date.getMinutes()).padStart(2, '0');
-
-							console.log(`${yyyy}${mm}${dd}${hh}${min}`);
-						}
-					}
-				});
 				
-				// 시작일 시
-				recreateDateBox("#startHour", {
+				// 시작일
+				startDateInstance.option("displayFormat", "yyyy-MM-dd");
+				startDateInstance.option("value", `${startYear}-${startMonth}-${startDay}`);
+				
+				// 종료일	
+				endDateInstance.option("displayFormat", "yyyy-MM-dd");
+				endDateInstance.option("value", `${endYear}-${endMonth}-${endDay}`);
+				
+				// 사작 시간
+				startHourInstance = $("#startHour")	.dxDateBox({
 					type: 'time',
 					name: "startHour",
 					value: startDate.getHours(),
@@ -59,42 +75,10 @@ $(function() {
 					pickerType: "list",
 					interval: 60,			// 분 선택 없애기 (1시간 단위)
 					width: 120,
-					onValueChanged(e) {
-						const date = e.value;
-						if (date instanceof Date && !isNaN(date)) {
-							const yyyy = date.getFullYear();
-							const mm = String(date.getMonth() + 1).padStart(2, '0');
-							const dd = String(date.getDate()).padStart(2, '0');
-							const hh = String(date.getHours()).padStart(2, '0');
-							const min = String(date.getMinutes()).padStart(2, '0');
-
-							console.log(`${yyyy}${mm}${dd}${hh}${min}`);
-						}
-					}
-				});
-
-				recreateDateBox("#endDate", {
-					type: 'date',
-					name: "endDate",
-					value: endDate,
-					displayFormat: "yyyy-MM-dd",
-					pickerType: "calendar",
-					onValueChanged(e) {
-						const date = e.value;
-						if (date instanceof Date && !isNaN(date)) {
-							const yyyy = date.getFullYear();
-							const mm = String(date.getMonth() + 1).padStart(2, '0');
-							const dd = String(date.getDate()).padStart(2, '0');
-							const hh = String(date.getHours()).padStart(2, '0');
-							const min = String(date.getMinutes()).padStart(2, '0');
-
-							console.log(`${yyyy}${mm}${dd}${hh}${min}`);
-						}
-					}
-				});
+				}).dxDateBox("instance");
 				
-				// 종료일 시
-				recreateDateBox("#endHour", {
+				// 종료 시간
+				endHourInstance = $("#endHour")	.dxDateBox({
 					type: 'time',
 					name: "endHour",
 					value: endDate.getHours(),
@@ -102,178 +86,73 @@ $(function() {
 					pickerType: "list",
 					interval: 60,			// 분 선택 없애기 (1시간 단위)
 					width: 120,
-					onValueChanged(e) {
-						const date = e.value;
-						if (date instanceof Date && !isNaN(date)) {
-							const yyyy = date.getFullYear();
-							const mm = String(date.getMonth() + 1).padStart(2, '0');
-							const dd = String(date.getDate()).padStart(2, '0');
-							const hh = String(date.getHours()).padStart(2, '0');
-							const min = String(date.getMinutes()).padStart(2, '0');
-
-							console.log(`${yyyy}${mm}${dd}${hh}${min}`);
-						}
-					}
-				});
+				}).dxDateBox("instance");
+			
 			} else if (this.value == "2") {
-				recreateDateBox("#startDate", {
-					type: "date",
-					name: "startDate",
-					value: startDate,
-					displayFormat: "yyyy-MM-dd",
-					onValueChanged(e) {
-						const date = e.value;
-						if (date instanceof Date && !isNaN(date)) {
-							const yyyy = date.getFullYear();
-							const mm = String(date.getMonth() + 1).padStart(2, '0');
-							const dd = String(date.getDate()).padStart(2, '0');
-
-							console.log(`${yyyy}${mm}${dd}`);
-						}
-					}
-				});
 				
-				recreateDateBox("#endDate", {
-					type: "date",
-					name: "endDate",
-					value: endDate,
-					displayFormat: "yyyy-MM-dd",
-					onValueChanged(e) {
-						const date = e.value;
-						if (date instanceof Date && !isNaN(date)) {
-							const yyyy = date.getFullYear();
-							const mm = String(date.getMonth() + 1).padStart(2, '0');
-							const dd = String(date.getDate()).padStart(2, '0');
-
-							console.log(`${yyyy}${mm}${dd}`);
-						}
-					}
-				});
+				// 시작일
+				startDateInstance.option("displayFormat", "yyyy-MM-dd");
+				startDateInstance.option("value", `${startYear}-${startMonth}-${startDay}`);
 				
-				// 값이 없을 경우 숨김 처리
-				recreateDateBox("#startHour", {
-					onInitialized(e) {
-				        const instance = e.component;
-				        if (!instance.option("value")) {
-				            instance.option("visible", false);
-				        }
-				    }
-				});
-				recreateDateBox("#endHour", {
-					onInitialized(e) {
-				        const instance = e.component;
-				        if (!instance.option("value")) {
-				            instance.option("visible", false);
-				        }
-				    }
-				});
-
+				// 종료일	
+				endDateInstance.option("displayFormat", "yyyy-MM-dd");
+				endDateInstance.option("value", `${endYear}-${endMonth}-${endDay}`);
+				
+				// 숨김 처리
+				if(startHourInstance && endHourInstance) {
+					startHourInstance.option("value", "");
+					endHourInstance.option("value", "");
+					
+					startHourInstance.option("visible", false);
+					endHourInstance.option("visible", false);
+				}
+				
 			} else if (this.value == "3") {
-				recreateDateBox("#startDate", {
-					type: "date",
-					name: "startDate",
-					value: startDate,
-					displayFormat: "yyyy-MM",
-					onValueChanged(e) {
-						const date = e.value;
-						if (date instanceof Date && !isNaN(date)) {
-							const yyyy = date.getFullYear();
-							const mm = String(date.getMonth() + 1).padStart(2, '0');
-
-							console.log(`${yyyy}${mm}`);
-						}
-					}
-				});
-
-				recreateDateBox("#endDate", {
-					type: "date",
-					name: "endDate",
-					value: endDate,
-					displayFormat: "yyyy-MM",
-					onValueChanged(e) {
-						const date = e.value;
-						if (date instanceof Date && !isNaN(date)) {
-							const yyyy = date.getFullYear();
-							const mm = String(date.getMonth() + 1).padStart(2, '0');
-
-							console.log(`${yyyy}${mm}`);
-						}
-					}
-				});
 				
-				// 값이 없을 경우 숨김 처리
-				recreateDateBox("#startHour", {
-					onInitialized(e) {
-				        const instance = e.component;
-				        if (!instance.option("value")) {
-				            instance.option("visible", false);
-				        }
-				    }
-				});
-				recreateDateBox("#endHour", {
-					onInitialized(e) {
-				        const instance = e.component;
-				        if (!instance.option("value")) {
-				            instance.option("visible", false);
-				        }
-				    }
-				});
+				// 시작일
+				startDateInstance.option("displayFormat", "yyyy-MM");
+				startDateInstance.option("value", `${startYear}-${startMonth}`);
+				
+				// 종료일	
+				endDateInstance.option("displayFormat", "yyyy-MM");
+				endDateInstance.option("value", `${endYear}-${endMonth}`);
+				
+				// 숨김 처리
+				if(startHourInstance && endHourInstance) {
+					startHourInstance.option("value", "");
+					endHourInstance.option("value", "");
+					
+					startHourInstance.option("visible", false);
+					endHourInstance.option("visible", false);
+				}
 				
 			} else if (this.value == "4") {
-				recreateDateBox("#startDate", {
-					showClearButton: true,
-					useMaskBehavior: true,
-					displayFormat: "yyyy '년' ",
-					type: 'date',
-					name: "startDate",
-					value: startDate,
-					onValueChanged(e) {
-						const date = e.value;
-						if (date instanceof Date && !isNaN(date)) {
-							const yyyy = date.getFullYear();
-							console.log(`${yyyy}`);
-						}
-					}
-				});
-
-				recreateDateBox("#endDate", {
-					showClearButton: true,
-					useMaskBehavior: true,
-					displayFormat: "yyyy '년' ",
-					type: 'date',
-					name: "endDate",
-					value: endDate,
-					onValueChanged(e) {
-						const date = e.value;
-						if (date instanceof Date && !isNaN(date)) {
-							const yyyy = date.getFullYear();
-							console.log(`${yyyy}`);
-						}
-					}
-				});
 				
-				// 값이 없을 경우 숨김 처리
-				recreateDateBox("#startHour", {
-					onInitialized(e) {
-				        const instance = e.component;
-				        if (!instance.option("value")) {
-				            instance.option("visible", false);
-				        }
-				    }
-				});
-				recreateDateBox("#endHour", {
-					onInitialized(e) {
-				        const instance = e.component;
-				        if (!instance.option("value")) {
-				            instance.option("visible", false);
-				        }
-				    }
-				});
+				// 시작일
+				startDateInstance.option("displayFormat", "yyyy '년' ");
+				startDateInstance.option("showClearButton", true);
+				startDateInstance.option("useMaskBehavior", true);
+				startDateInstance.option("value", `${startYear}`);
+				
+				// 종료일
+				endDateInstance.option("displayFormat", "yyyy '년' ");
+				endDateInstance.option("showClearButton", true);
+				endDateInstance.option("useMaskBehavior", true);
+				endDateInstance.option("value", `${endYear}`);
+				
+				// 숨김 처리
+				if(startHourInstance && endHourInstance) {
+					startHourInstance.option("value", "");
+					endHourInstance.option("value", "");
+					
+					startHourInstance.option("visible", false);
+					endHourInstance.option("visible", false);
+				}
 			}
 		})
-	})
+	});
 
-	const checkedRadio = document.querySelector('input[name="timeType"]:checked');
+	checkedRadio = document.querySelector('input[name="timeType"]:checked');
 	if (checkedRadio) checkedRadio.dispatchEvent(new Event('change'));
 
 	//중분류
@@ -324,24 +203,44 @@ $(function() {
 		dataSource: {
 			load: function(loadOptions) {
 				
-				const formData = new FormData(document.getElementById("statHistForm"));
-							
+				const companyCode = companyInstance.option('value');
+				const tableCode = tableInstance.option('value');
+				const timeType = checkedRadio.value;
+				const startDate = startDateInstance.option("text");
+				const endDate = endDateInstance.option("text");
+				
 				const skip = loadOptions.skip || 0;
 				const take = loadOptions.take || 50;
-
-				formData.append("skip", skip);
-				formData.append("take", take);
-
+				const sort = loadOptions.sort || [];
+				
+				const param = {
+					companyCode: companyCode
+					, tableCode: tableCode
+					, timeType: timeType
+					, startDate: startDate
+					, endDate: endDate
+					, skip: skip
+					, take: take
+					, sort: sort
+				};
+				
+				if(timeType == 1) {
+					const startHour = startHourInstance.option("value");
+					const endHour = endHourInstance.option("value");
+					
+					param.startHour = startHour;
+					param.endHour = endHour;
+				}
+				
 				return $.ajax({
 					url: "/api/v1/stat/list",
-					method: "POST",
-					data: formData,
-					processData: false,
-					contentType: false
+					type: "POST",
+					contentType: "application/json",
+					data: JSON.stringify(param),
 				}).then(function(result) {
 					return {
-						data: result.list,
-						totalCount: result.totalCount
+						data: result.list || [],
+						totalCount: result.totalCount || 0
 					};
 				}).catch(function() {
 					showDialogCustom("error");
@@ -353,7 +252,7 @@ $(function() {
 			}
 		},
 		headerFilter: {
-			visible: true
+			visible: false
 		},
 		//행 선택 시
 		selection: {
@@ -362,7 +261,7 @@ $(function() {
 		//행 마우스오버 시
 		hoverStateEnabled: true,
 		searchPanel: {
-			visible: true,
+			visible: false,
 			width: 300
 		},
 		paging: {
@@ -370,6 +269,7 @@ $(function() {
 		},
 		remoteOperations: {
 			paging: true //페이징 서버사이드 처리
+			, sorting: true
 		},
 		pager: {
 			visible: true,
@@ -382,24 +282,20 @@ $(function() {
 		columnResizingMode: 'widget',
 		columnAutoWidth: true,
 		columns: [
-			{ dataField: "resultDate", caption: "시간/일자", alignment: "center" },
+			{ dataField: "RESULT_DATE", caption: "시간/일자", alignment: "center" },
 			{
-				dataField: "companyName", caption: "대분류", alignment: "center", calculateCellValue: function(rowData) {
-					switch (rowData.companyCode) {
+				dataField: "", caption: "대분류", alignment: "center", calculateCellValue: function(rowData) {
+					switch (companyInstance.option('value')) {
 						case 0: return "옥션";
 						case 1: return "G마켓";
 						case 2: return "스마일캐시";
-						default: return "선택하세요";
 					}
 				}
 			},
-			{ dataField: "tableName", caption: "중분류", alignment: "center" },
-			{ dataField: "tryCnt", caption: "전체", alignment: "center" },
-			{ dataField: "succCnt", caption: "성공", alignment: "center" },
-			{ dataField: "failCnt", caption: "실패", alignment: "center",	 calculateCellValue: function(rowData) {
-					return rowData.tryCnt - rowData.succCnt;
-				} 
-			},
+			{ dataField: "TABLE_NAME", caption: "중분류", alignment: "center" },
+			{ dataField: "TRY_CNT", caption: "전체", alignment: "center" },
+			{ dataField: "SUCC_CNT", caption: "성공", alignment: "center" },
+			{ dataField: "FAIL_CNT", caption: "실패", alignment: "center" },
 		],
 		toolbar: {
 			items: [
@@ -430,46 +326,67 @@ $('#search-btn').dxButton({
 	type: 'default',
 	width: 60,
 	onClick() {
-		const formData = new FormData(document.getElementById("statHistForm"));
 		
-		const searchCompanyCode = formData.get("companyCode");
-		const searchTableCode = formData.get("tableCode");
-		const startDate = formData.get("startDate");	// 시작일
-		const endDate = formData.get("endDate");		// 종료일
-		const startHour = formData.get("startHour");	// 시작 시	
-		const endHour = formData.get("endHour");		// 종료 시
+		const companyCode = companyInstance.option('value');
+		const tableCode = tableInstance.option('value');
+		const timeType = document.querySelector('input[name="timeType"]:checked').value;
+		const startDate = startDateInstance.option("value");
+		const endDate = endDateInstance.option("value");
+		
+		// 구분값이 시간일 경우
+		if(timeType === "1") {
+			startHour = startHourInstance.option("value");
+			endHour = endHourInstance.option("value");
+		}
 		
 		// 조회 기간 확인
-		const searchStartDate = new Date(`${startDate}T${startHour}`);
-		const searchEndDate = new Date(`${endDate}T${endHour}`);
+		const searchStartDate = timeType === "1" ? new Date(`${startDate}T${startHour}:00:00`) : new Date(`${startDate}`);
+		const searchEndDate = timeType === "1" ? new Date(`${endDate}T${endHour}:00:00`) : new Date(`${endDate}`);
 		const diffMs = searchEndDate - searchStartDate;
 		const diffDays = diffMs / (1000 * 60 * 60 * 24);
 		
 		if(searchStartDate > searchEndDate) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
 		if(diffDays > period) { showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : ${diffDays} 일`); return false }
 
-		if(searchCompanyCode == -1 || searchCompanyCode < 0) { showDialogCustom("대분류를 선택하세요."); return false; }
-		if(searchTableCode == -1 || searchTableCode < 0) { showDialogCustom("중분류를 선택하세요."); return false; }
+		if(companyCode == -1 || companyCode < 0) { showDialogCustom("대분류를 선택하세요."); return false; }
+		if(tableCode == -1 || tableCode < 0) { showDialogCustom("중분류를 선택하세요."); return false; }
 
 		const dataSource = new DevExpress.data.DataSource({
 			load: function(loadOptions) {
 				
 				const skip = loadOptions.skip || 0;
 				const take = loadOptions.take || 50;
-
-				formData.append("skip", skip);
-				formData.append("take", take);
-
+				const sort = loadOptions.sort || [];
+				
+				const param = {
+					companyCode: companyCode
+					, tableCode: tableCode
+					, timeType: timeType
+					, startDate: startDate
+					, endDate: endDate
+					, skip: skip
+					, take: take
+					, sort: sort
+				};
+				
+				// 구분값이 시간일 경우
+				if(timeType === "1") {
+					const startHour = startHourInstance.option("value");
+					const endHour = endHourInstance.option("value");
+					
+					param.startHour = startHour;
+					param.endHour = endHour;
+				}
+				
 				return $.ajax({
 					url: "/api/v1/stat/list",
-					method: "POST",
-					data: formData,
-					processData: false,
-					contentType: false
+					type: "POST",
+					contentType: "application/json",
+					data: JSON.stringify(param),
 				}).then(function(result) {
 					return {
-						data: result.list,
-						totalCount: result.totalCount
+						data: result.list || [],
+						totalCount: result.totalCount || 0
 					};
 				}).catch(function() {
 					showDialogCustom("error");

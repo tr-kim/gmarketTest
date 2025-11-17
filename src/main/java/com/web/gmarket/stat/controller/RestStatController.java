@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +38,7 @@ public class RestStatController {
 	 */
 	@ResponseBody
 	@PostMapping("/list")
-	public ResponseEntity<?> list(Authentication authentication, StatDto statDto) {
+	public ResponseEntity<?> list(Authentication authentication, @RequestBody StatDto statDto) {
 		Map<String, Object> result = new HashMap<>();
 		
 		try {

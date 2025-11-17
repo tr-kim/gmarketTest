@@ -11,10 +11,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -292,8 +292,8 @@ public class RestExcelSendController {
 			String callee   = ExcelSendService.applyTranNum(calleeFlag,   calleeRow,   tranCallee,   row);
 			String message  = ExcelSendService.applyMessage(messageTemplate, row);
 			int messageLen  = ExcelSendService.getSMSLen(message);
-			int titleLen    = (title == null) ? 0 : title.length();
-			String errorMsg = ExcelSendService.checkStrLen(messageLen, titleLen, callee, callback, messageType);
+//			int titleLen    = (title == null) ? 0 : title.length();
+//			String errorMsg = ExcelSendService.checkStrLen(messageLen, titleLen, callee, callback, messageType);
 			String decodedMessage = StringEscapeUtils.unescapeHtml4(message);
 			
 			List<String> newRow = new ArrayList<>();
