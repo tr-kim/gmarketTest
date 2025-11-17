@@ -6,6 +6,22 @@
 	<p class="font-sz-20 font-weight-600 pt-3 text-666">파일 발송</p>
 	<form class="content row mx-0 send" id="fileSend">
 		<ul>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">대분류</div>
+				<div class="col d-flex">
+					<select name="companyCode" id="companyCode" class="form-select" onchange="setRejectNum();">
+						<option value="0">옥션</option>
+						<option value="1">G마켓</option>
+						<option value="2">스마일캐시</option>
+					</select>
+				</div>
+			</li>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">발신번호</div>
+				<div class="col d-flex">
+						<input type="text" name="callbackNo" id="callbackNo" class="form-control" placeholder="발신번호를 입력하세요." maxlength="15" th:value="${AUCTION_CALLBACK_NUM}" oninput="onlyNumber(this)">
+				</div>
+			</li>
 			<li class="align-items-center filebtn">
 				<div class="col-2 font-weight-500">파일선택</div>
 				<div class="col">
@@ -37,23 +53,7 @@
 						<span>입력 수신번호 <span class="direct_input_num">0</span> 건</span>
 					</div>
 				</div>
-			</li>
-			<li class="align-items-center">
-				<div class="col-2 font-weight-500">발신번호</div>
-				<div class="col d-flex">
-						<input type="text" name="callbackNo" id="callbackNo" class="form-control" placeholder="발신번호를 입력하세요." maxlength="15" oninput="onlyNumber(this)">
-				</div>
-			</li>
-			<li class="align-items-center">
-				<div class="col-2 font-weight-500">대분류</div>
-				<div class="col d-flex">
-					<select name="companyCode" id="companyCode" class="form-select" onchange="setRejectNum();">
-						<option value="0">옥션</option>
-						<option value="1">G마켓</option>
-						<option value="2">스마일캐시</option>
-					</select>
-				</div>
-			</li>
+			</li>					
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">사용자ID</div>
 				<div class="col">

@@ -436,7 +436,25 @@ $(function () {
 				MSG_WRITE.dispatchEvent(new Event('input'));
 			}
 		})
-	});
+	});      
+
+	// 대분류에 따른 발신번호, 수신거부 설정
+	const companyCode = document.getElementById("companyCode");
+    const tranCallback = document.getElementById("callbackNo");
+
+    companyCode.addEventListener("change", function () {		
+        if (companyCode.value === "0") {
+            tranCallback.value = AUCTION_CALLBACK_NUM;
+			rejectNum.value = AUCTION_REJECT_NUM;			
+        } else if (companyCode.value === "1") {
+            tranCallback.value = GMARKET_CALLBACK_NUM;
+			rejectNum.value = GMARKET_REJECT_NUM;
+        } else {
+            tranCallback.value = "";
+			rejectNum.value = "";
+        }
+		console.log(companyCode.value, tranCallback.value, rejectNum.value);
+    });
 });
 
 // 문자 발송

@@ -376,6 +376,7 @@ $(function () {
 	MSG_WRITE.addEventListener("input", handleInput); //내용
 	rejectNum.addEventListener("input", handleInput); //080 수신거부 번호
 
+	// 대분류에 따른 발신번호, 수신거부 설정
 	const companyCode = document.getElementById("companyCode");
     const tranCallback = document.getElementById("tranCallback");
 

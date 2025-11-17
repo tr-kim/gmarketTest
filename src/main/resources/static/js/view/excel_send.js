@@ -546,14 +546,19 @@ $(function () {
 			}
 		}
 	});
-	// document.querySelectorAll('#tag li button').forEach((btn, idx)=>{
-	// 	btn.addEventListener('click',() => {
-	// 		if(MSG_WRITE) {
-	// 			insertAtCursor(MSG_WRITE, btn.textContent);
-	// 			MSG_WRITE.dispatchEvent(new Event('input'));
-	// 		}
-	// 	})
-	// });
+	
+	// 대분류에 따른 수신거부 설정
+	const companyCode = document.getElementById("companyCode");
+
+    companyCode.addEventListener("change", function () {		
+        if (companyCode.value === "0") {
+			rejectNum.value = AUCTION_REJECT_NUM;			
+        } else if (companyCode.value === "1") {
+			rejectNum.value = GMARKET_REJECT_NUM;
+        } else {
+			rejectNum.value = "";
+        }
+    });
 });
 
 // 문자 발송
@@ -713,7 +718,9 @@ function sendMessage() {
 		formData.append("callback", callbackSelect === "직접입력" ? tranCallback : callbackSelect);		// 발신 번호
 		formData.append("calleeSelect", calleeSelect === "직접입력" ? 0 : 1);								// 수신 번호 유형 0: 직접입력, 1: 시트 선택
 		formData.append("callee", calleeSelect === "직접입력" ? tranCallee : calleeSelect);				// 수신 번호
-		formData.append("companyCode", companyCode);													// 대분류 0: 옥션, 1: 지마켓
+		formData.append("companyCode", companyCode);													// 대분류 0: 옥션, 1: 
+		
+
 		formData.append("userId", userId);																// 사용자 아이디
 		formData.append("msgTitle", msgTitle);															// 메시지 제목 LMS, MMS만 적용
 		formData.append("msgType", msgType);															// 메시지 유형 SMS, LMS, MMS

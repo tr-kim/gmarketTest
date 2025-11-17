@@ -6,6 +6,16 @@
 	<p class="font-sz-20 font-weight-600 pt-3 text-666">엑셀 발송</p>
 	<form class="content row mx-0 send" id="excelSend">
 		<ul>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">대분류</div>
+				<div class="col d-flex">
+					<select name="companyCode" id="companyCode" class="form-select" onchange="setRejectNum();">
+						<option value="0">옥션</option>
+						<option value="1">G마켓</option>
+						<option value="2">스마일캐시</option>
+					</select>
+				</div>
+			</li>
 			<li class="align-items-center filebtn">
 				<div class="col-2 font-weight-500">엑셀선택</div>
 				<div class="col">
@@ -61,17 +71,7 @@
 				<div>
 					<button type="button" class="btn btn-primary text-nowrap" onclick="reserve()">지정</button>
 				</div>
-			</li>
-			<li class="align-items-center">
-				<div class="col-2 font-weight-500">대분류</div>
-				<div class="col d-flex">
-					<select name="companyCode" id="companyCode" class="form-select" onchange="setRejectNum();">
-						<option value="0">옥션</option>
-						<option value="1">G마켓</option>
-						<option value="2">스마일캐시</option>
-					</select>
-				</div>
-			</li>
+			</li>			
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">사용자ID</div>
 				<div class="col">
