@@ -98,4 +98,9 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	failOnNoDiscoveredTests = false
+}
+
+war {
+    version = '1.0'
 }
