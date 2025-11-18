@@ -135,6 +135,10 @@
 	<th:block th:replace="~{/view/popup/passwordChg :: passwordChg}"></th:block>
 	<th:block th:replace="~{/view/popup/progressBar :: progressBar}"></th:block>
 	<script th:inline="javascript">
+		// 발신번호
+		const GMARKET_CALLBACK_NUM = /*[[${GMARKET_CALLBACK_NUM}]]*/ "";
+		const AUCTION_CALLBACK_NUM = /*[[${AUCTION_CALLBACK_NUM}]]*/ "";
+
 		// 수신거부 번호
 		const GMARKET_REJECT_NUM = /*[[${GMARKET_REJECT_NUM}]]*/ "";
 		const AUCTION_REJECT_NUM = /*[[${AUCTION_REJECT_NUM}]]*/ "";
@@ -142,7 +146,8 @@
 		// 사용자 등급 및 회사 코드
 		const userGrade = /*[[${#authentication.principal.userGrade}]]*/ -1;
 		const companyCode = /*[[${#authentication.principal.companyCode}]]*/ -1;
-	</script>s
+	</script>
+	
 	<script>
 		<!-- 한국어 적용(ko-KR) -->
 		DevExpress.localization.locale(navigator.language);

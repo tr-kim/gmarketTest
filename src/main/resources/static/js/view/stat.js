@@ -280,7 +280,6 @@ $(function() {
 		columnAutoWidth: true,
 		allowColumnResizing: true,
 		columnResizingMode: 'widget',
-		columnAutoWidth: true,
 		columns: [
 			{ dataField: "RESULT_DATE", caption: "시간/일자", alignment: "center" },
 			{

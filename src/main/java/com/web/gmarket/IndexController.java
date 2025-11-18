@@ -9,20 +9,20 @@ public class IndexController {
 	
 	@GetMapping("/")
 	public String redirectToIndex() {
-		return "redirect:/index";
+		return "redirect:/view/hist";
 	}
 	
 	@GetMapping("/index")
 	public String index(Model model) {
 		
-		model.addAttribute("layout", "/layouts/top_layout");
-		return "index"; // templates/index.html 렌더링
+//		model.addAttribute("layout", "/layouts/top_layout");
+		return "redirect:/view/hist";
 	}
 	
 	@GetMapping("/index/left")
 	public String left(Model model) {
 		
-		model.addAttribute("layout", "/layouts/left_layout");
-		return "index"; // templates/index.html 렌더링
+//		model.addAttribute("layout", "/layouts/left_layout");
+		return "redirect:/view/hist"; // templates/index.html 렌더링
 	}
 }

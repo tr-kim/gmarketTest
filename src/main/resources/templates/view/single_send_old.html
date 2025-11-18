@@ -3,7 +3,7 @@
 	layout:decorate="~{${layout}}" layout:fragment="content">
 
 <body>
-	<p class="font-sz-20 font-weight-600 pt-3 text-666">개별발송</p>
+	<p class="font-sz-20 font-weight-600 pt-3 text-666">개별 발송</p>
 	<form class="content row mx-0 send" id="send">
 		<ul>
 			<li class="align-items-center">
@@ -257,7 +257,7 @@
 						080 수신거부 번호
 						</label>
 					</div>
-					<input type="text" name="rejectNum" id="rejectNum" class="form-control" value="(거부)0800002004" maxlength="100" disabled>
+					<input type="text" name="rejectNum" id="rejectNum" class="form-control" th:value="${AUCTION_REJECT_NUM}" maxlength="100" disabled>
 				</div>
 			</li>
 			<li class="align-items-center">

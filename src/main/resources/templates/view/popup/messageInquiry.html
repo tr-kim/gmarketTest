@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="messageInquiry">
+	<div id="message_inquiry" class="modal-bg messageInquiry">
+		<div class="modal-wrap">
+			<div class="modal-hd">
+				<span class="font-sz-16 font-weight-600">상세 보기</span>
+				<button type="button" class="close_btn" onclick="closeModal('messageInquiry')">
+					<i class="bi bi-x-lg"></i>
+					<span class="visually-hidden">닫기</span>
+				</button>
+			</div>
+			<div class="modal-con">
+				<div class="row">
+					<div class="col-12 mb-3 hist-none">
+						<label class="d-block mb-1">제목</label>
+						<input type="text" class="form-control" name="title" id="title" readonly>
+					</div>
+					<div class="col-4 mb-3 hist-none">
+						<label class="d-block mb-1">등록 일시</label>
+						<input type="text" class="form-control" name="in_time" id="in_time" readonly>
+					</div>
+					<div class="col-4 mb-3 hist-none">
+						<label class="d-block mb-1">전송 일시</label>
+						<input type="text" class="form-control" name="req_time" id="req_time" readonly>
+					</div>
+					<div class="col-4 mb-3 hist-none">
+						<label class="d-block mb-1">발송 ID</label>
+						<input type="text" class="form-control" name="user_id" id="user_id" readonly>
+					</div>
+					<div class="col-12 mb-3">
+						<label class="d-block mb-1">메시지 내용</label>
+						<textarea type="text" class="form-control" name="msg" id="msg" readonly></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</th:block>
+
+</html>

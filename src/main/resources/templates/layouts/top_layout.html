@@ -128,6 +128,10 @@
     <th:block th:replace="~{/view/popup/passwordChg :: passwordChg}"></th:block>
 	<th:block th:replace="~{/view/popup/progressBar :: progressBar}"></th:block>
 	<script th:inline="javascript">
+		// 발신번호
+		const GMARKET_CALLBACK_NUM = /*[[${GMARKET_CALLBACK_NUM}]]*/ "";
+		const AUCTION_CALLBACK_NUM = /*[[${AUCTION_CALLBACK_NUM}]]*/ "";
+
 		// 수신거부 번호
 		const GMARKET_REJECT_NUM = /*[[${GMARKET_REJECT_NUM}]]*/ "";
 		const AUCTION_REJECT_NUM = /*[[${AUCTION_REJECT_NUM}]]*/ "";

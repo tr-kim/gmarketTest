@@ -168,9 +168,8 @@ $(function () {
 		columnAutoWidth: true,
 		allowColumnResizing: true,
 		columnResizingMode: 'widget',
-		columnAutoWidth: true,
 		columns: [
-			{ dataField: "TITLE", caption: "제목", alignment: "left" },
+			{ dataField: "TITLE", caption: "제목", alignment: "left" ,width:200},
 			{ 
 				dataField: "REQ_TIME", 
 				caption: "전송 일시", 
@@ -179,7 +178,7 @@ $(function () {
 					return formatTimestamp(cellInfo.value);
 				}
 			},
-			{ dataField: "MSG", caption: "메시지 내용", alignment: "left" },
+			{ dataField: "MSG", caption: "메시지 내용", alignment: "left", width: 450},
 			{ dataField: "CNT", caption: "전체", alignment: "center" },
 			/*{
 				name: "detail",

@@ -148,7 +148,6 @@ $(function() {
 		columnAutoWidth: true,
 		allowColumnResizing: true,
 		columnResizingMode: 'widget',
-		columnAutoWidth: true,
 		columns: [
 			{
 				dataField: "companyCode",

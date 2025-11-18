@@ -6,13 +6,23 @@
 	<p class="font-sz-20 font-weight-600 pt-3 text-666">엑셀 발송</p>
 	<form class="content row mx-0 send" id="excelSend">
 		<ul>
+			<li class="align-items-center">
+				<div class="col-2 font-weight-500">대분류</div>
+				<div class="col d-flex">
+					<select name="companyCode" id="companyCode" class="form-select" onchange="setRejectNum();">
+						<option value="0">옥션</option>
+						<option value="1">G마켓</option>
+						<option value="2">스마일캐시</option>
+					</select>
+				</div>
+			</li>
 			<li class="align-items-center filebtn">
 				<div class="col-2 font-weight-500">엑셀선택</div>
 				<div class="col">
 					<input type="file" name="excelFile" id="excelFile" class="form-control me-2" accept=".xls, .xlsx" onchange="excelFileUpload(this)">
 					<!-- <a href="" download class="text-nowrap font-weight-500 mx-2"><i class="bi bi-download me-1"></i>양식다운로드</a> -->
 				</div>
-			</li>	
+			</li>
 			<li>
 				<div class="col-2 font-weight-500">시트선택</div>
 				<div class="col-10">
@@ -25,7 +35,7 @@
 								<thead>
 									<tr>
 										<th>발신번호</th>
-										<th>수신번호</th>										
+										<th>수신번호</th>
 										<th>전송시간</th>
 									</tr>
 								</thead>
@@ -45,7 +55,7 @@
 					<select name="callbackSelect" id="callbackSelect" class="form-select me-2">
 						<option value="직접입력">직접입력</option>
 					</select>
-					<input type="text" name="tranCallback" id="tranCallback" class="form-control" placeholder="발신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
+					<input type="text" name="tranCallback" id="tranCallback" class="form-control" placeholder="발신번호를 입력하세요." maxlength="15" oninput="onlyNumber(this)">
 				</div>
 			</li>
 			<li class="align-items-center mb-2">
@@ -54,46 +64,36 @@
 					<select name="calleeSelect" id="calleeSelect" class="form-select me-2">
 						<option value="직접입력">직접입력</option>
 					</select>
-					<input type="text" name="tranCallee" id="tranCallee" class="form-control" placeholder="수신번호를 입력하세요." maxlength="20" oninput="onlyNumber(this)">
+					<input type="text" name="tranCallee" id="tranCallee" class="form-control" placeholder="수신번호를 입력하세요." maxlength="15" oninput="onlyNumber(this)">
 				</div>
 			</li>
 			<li class="align-items-center justify-content-end">
 				<div>
 					<button type="button" class="btn btn-primary text-nowrap" onclick="reserve()">지정</button>
 				</div>
-			</li>
-			<li class="align-items-center">
-				<div class="col-2 font-weight-500">대분류</div>
-				<div class="col d-flex">					
-					<select name="companyCode" id="companyCode" class="form-select" onchange="setRejectNum();">
-						<option value="0">옥션</option>
-						<option value="1">G마켓</option>
-						<option value="2">스마일캐시</option>
-					</select>	
-				</div>
-			</li>
+			</li>			
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">사용자ID</div>
 				<div class="col">
-					<input type="text" name="userId" id="userId" class="form-control" placeholder="사용자ID를 입력하세요." maxlength="100" th:value="${#authentication.principal.userId}">
+					<input type="text" name="userId" id="userId" class="form-control" placeholder="사용자ID를 입력하세요." maxlength="20" th:value="${#authentication.principal.userId}">
 				</div>
 			</li>
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">제목</div>
 				<div class="col">
-					<input type="text" name="msgTitle" id="msgTitle" class="form-control" maxlength="100" placeholder="제목을 입력하면 장문으로 변경됩니다.">
+					<input type="text" name="msgTitle" id="msgTitle" class="form-control" maxlength="60" placeholder="제목을 입력하면 장문으로 변경됩니다.">
 				</div>
 				<input type="hidden" name="titleByte" id="titleByte">
 			</li>
 			<li>
 				<div class="col-2 font-weight-500">내용</div>
-				<div class="col">	
+				<div class="col">
 					<div class="d-flex grid overflow-visible">
 						<div class="msg_wrap col-5">
 							<div class="msg_wrap_hd d-flex">
 								<div class="msg_type col-3 sms py-2 px-2 text-center">
 									SMS
-								</div>	
+								</div>
 								<div class="msg_byte col text-end py-2 pe-2">
 									<span id="input_byte">0</span>/<span id="total_byte">80</span> byte
 								</div>
@@ -109,7 +109,7 @@
 								<li class="col"><button type="button">변수선택</button></li>
 								<li class="col"><button type="button">특수문자</button></li>
 							</ul>
-							<div class="option_wrap px-3 py-2 d-block">								
+							<div class="option_wrap px-3 py-2 d-block">
 								<div id="file-uploader" class="position-relative"></div>
 								<div class="btn_wrap d-flex align-items-center position-absolute">
 									<div id="imgCheckBtn" class="me-1"></div>
@@ -119,7 +119,7 @@
 								<span class="img-question position-absolute end-0 bottom-0 p-3"><i class="bi bi-question-circle"></i></span>
 							</div>
 							<div class="option_wrap px-3 py-2" id="tag">
-								<ul class="row mt-2">								
+								<ul class="row mt-2">
 								</ul>
 							</div>
 							<div class="option_wrap px-3 py-2" id="unicode">
@@ -193,7 +193,7 @@
 								</ul>
 							</div>
 						</div>
-					</div>									
+					</div>
 				</div>
 			</li>
 			<li>
@@ -222,7 +222,7 @@
 			<li class="align-items-center">
 				<div class="col-2 font-weight-500">전송대상</div>
 				<div class="col">
-					<input type="text" name="sendInfo" id="sendInfo" class="form-control" placeholder="전송대상을 입력하세요." maxlength="100">
+					<input type="text" name="sendInfo" id="sendInfo" class="form-control" placeholder="전송대상을 입력하세요." maxlength="30">
 				</div>
 			</li>
 			<li class="align-items-center">
@@ -243,7 +243,7 @@
 						080 수신거부 번호
 						</label>
 					</div>
-					<input type="text" name="rejectNum" id="rejectNum" class="form-control" th:value="${AUCTION_REJECT_NUM}" maxlength="100">
+					<input type="text" name="rejectNum" id="rejectNum" class="form-control" th:value="${AUCTION_REJECT_NUM}" maxlength="20">
 				</div>
 			</li>
 			<li class="align-items-center">
@@ -252,12 +252,11 @@
 					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
 						<input type="radio" class="btn-check" name="send_time" id="send_time1" value="0" autocomplete="off" checked>
 						<label class="btn send_btn px-4" for="send_time1">즉시</label>
-
 						<input type="radio" class="btn-check" name="send_time" id="send_time2" value="1" autocomplete="off">
 						<label class="btn send_btn px-4" for="send_time2">예약</label>
 					</div>
 					<div id="reserveDate" class="text-primary ms-3"></div>
-				</div>					
+				</div>
 			</li>
 			<li class="reserveDateLi d-none">
 				<div class="col-2 font-weight-500">분할전송</div>
@@ -265,7 +264,6 @@
 					<div class="btn-group mb-2" role="group" aria-label="Basic radio toggle button group">
 						<input type="radio" class="btn-check" name="split_send" id="split_send1" value="N" autocomplete="off" checked>
 						<label class="btn send_btn px-4" for="split_send1">미사용</label>
-
 						<input type="radio" class="btn-check" name="split_send" id="split_send2" value="Y" autocomplete="off">
 						<label class="btn send_btn px-4" for="split_send2">사용</label>
 					</div>
@@ -285,11 +283,11 @@
 								<option value="100">100</option>
 								<option value="200">200</option>
 							</select>
-						</div>						
+						</div>
 						<span class="mx-1"> 분마다 </span>
 						<div class="col-2">
 							<select name="splitNum" id="splitNum" class="form-select me-2" disabled>
-								<option value="1">1</option>								
+								<option value="1">1</option>
 								<option value="10">10</option>
 								<option value="30">30</option>
 								<option value="50">50</option>
@@ -299,10 +297,10 @@
 								<option value="1000">1000</option>
 								<option value="2000">2000</option>
 							</select>
-						</div>						
+						</div>
 						<span class="mx-1"> 건씩 전송 </span>
 					</div>
-				</div>					
+				</div>
 			</li>
 			<li>
 				<div class="col-2 font-weight-500">전송범위</div>
@@ -314,10 +312,10 @@
 						</label>
 					</div>
 					<div class="d-flex align-items-center">
-						<input type="text" name="tranRangeStart" id="tranRangeStart" class="form-control" value="" maxlength="100" disabled>
+						<input type="text" name="tranRangeStart" id="tranRangeStart" class="form-control" value="" maxlength="10" disabled>
 						<span class="mx-1">~</span>
-						<input type="text" name="tranRangeEnd" id="tranRangeEnd" class="form-control" value="" maxlength="100" disabled>
-					</div>					
+						<input type="text" name="tranRangeEnd" id="tranRangeEnd" class="form-control" value="" maxlength="10" disabled>
+					</div>
 				</div>
 			</li>
 			<li class="d-flex align-items-center justify-content-center">

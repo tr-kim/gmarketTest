@@ -927,6 +927,19 @@ aside .psw_chg_btn:hover{
     width: 450px;
     height: 350px;
 }
+/* messageInquiry.html */
+#hist ~ .messageInquiry .hist-none{
+    display: none;
+}
+#hist ~ .messageInquiry .modal-wrap{
+    width: 600px;
+}
+.messageInquiry textarea{
+    height: 250px;
+}
+#hist ~ .messageInquiry textarea{
+    height: 400px;
+}
 /* bookmarkMsg */
 .bookmarkMsg .modal-wrap{
     width: 800px;
