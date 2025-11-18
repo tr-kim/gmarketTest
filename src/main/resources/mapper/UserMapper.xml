@@ -3,6 +3,30 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.web.gmarket.user.mapper.UserMapper">
+
+	<resultMap id="UserResultMap" type="com.web.gmarket.user.dto.UserDto">
+		<result property="USER_SEQ" column="USER_SEQ" />
+		<result property="USER_ID" column="USER_ID" />
+		<result property="USER_NAME" column="USER_NAME" />
+		<result property="TEL_NO" column="TEL_NO" />
+		<result property="HP_NO" column="HP_NO" />
+		<result property="EMAIL" column="EMAIL" />
+		<result property="COMPANY_CODE" column="COMPANY_CODE" />
+		<result property="USER_GRADE" column="USER_GRADE" />
+		<result property="SMS_YN" column="SMS_YN" />
+		<result property="EXCEL_YN" column="EXCEL_YN" />
+		<result property="FILE_YN" column="FILE_YN" />
+		<result property="DB_YN" column="DB_YN" />
+		<result property="REG_DATE" column="REG_DATE" />
+		<result property="CHG_DATE" column="CHG_DATE" />
+		<result property="USE_YN" column="USE_YN" />
+		<result property="DEL_FLAG" column="DEL_FLAG" />
+		<result property="USER_TEXT0" column="USER_TEXT0" />
+		<result property="USER_TEXT1" column="USER_TEXT1" />
+		<result property="LMS_YN" column="LMS_YN" />
+		<result property="MMS_YN" column="MMS_YN" />
+	</resultMap>
+
 	<select id="selectUserInfo" resultType="com.web.gmarket.user.dto.UserDto" parameterType="com.web.gmarket.user.dto.UserDto">
 	  	/*
 	  		UserMapper.selectUserInfo 사용자 정보 조회
@@ -39,27 +63,47 @@
 		AND DEL_FLAG = 'N'
 	</select>
 	
-	<select id="selectUserInfoList" resultType="com.web.gmarket.user.dto.UserDto" parameterType="com.web.gmarket.user.dto.UserDto">
+	<select id="selectUserInfoList" resultMap="UserResultMap" parameterType="com.web.gmarket.user.dto.UserDto">
 	  	/*
 	  		UserMapper.selectUserInfoList 사용자 정보 목록 조회
 	  	*/
-	    SELECT
-			USER_SEQ, USER_ID, USER_NAME, ISNULL(TEL_NO, '-') AS TEL_NO , ISNULL(HP_NO, '-') AS HP_NO, ISNULL(EMAIL, '-') AS EMAIL, COMPANY_CODE
-			, USER_GRADE, SMS_YN, EXCEL_YN, FILE_YN, DB_YN, REG_DATE, CHG_DATE
-			, USE_YN, DEL_FLAG, ISNULL(USER_TEXT0, '-') AS USER_TEXT0, ISNULL(USER_TEXT1, '-') AS USER_TEXT1, LMS_YN, MMS_YN
-		FROM T_SMS_CLIENT
-		WHERE 1 = 1
-		<if test='userId != null and !userId.isEmpty()'>
-			AND USER_ID = #{userId}
-		</if>
-		<if test="userGrade != null and userGrade != -1">
-			AND USER_GRADE = #{userGrade}
-		</if>
-		<if test='companyCode != null'>
-			AND COMPANY_CODE = #{companyCode}
-		</if>
-		AND DEL_FLAG = 'N'
-		ORDER BY USER_SEQ DESC
+	  	SELECT 
+	  		 USER_SEQ, USER_ID, USER_NAME, TEL_NO, HP_NO, EMAIL, COMPANY_CODE
+	  		 , USER_GRADE, SMS_YN, EXCEL_YN, FILE_YN, DB_YN, REG_DATE, CHG_DATE
+	  		 , USE_YN, DEL_FLAG, USER_TEXT0, USER_TEXT1, LMS_YN, MMS_YN
+	  	FROM (
+			SELECT
+				USER_SEQ, USER_ID, USER_NAME, ISNULL(TEL_NO, '-') AS TEL_NO , ISNULL(HP_NO, '-') AS HP_NO, ISNULL(EMAIL, '-') AS EMAIL, COMPANY_CODE
+				, USER_GRADE, SMS_YN, EXCEL_YN, FILE_YN, DB_YN, REG_DATE, CHG_DATE
+				, USE_YN, DEL_FLAG, ISNULL(USER_TEXT0, '-') AS USER_TEXT0, ISNULL(USER_TEXT1, '-') AS USER_TEXT1, LMS_YN, MMS_YN
+			FROM T_SMS_CLIENT
+			WHERE 1 = 1
+			<if test='userId != null and !userId.isEmpty()'>
+				AND USER_ID = #{userId}
+			</if>
+			<if test="userGrade != null and userGrade != -1">
+				AND USER_GRADE = #{userGrade}
+			</if>
+			<if test='companyCode != null'>
+				AND COMPANY_CODE = #{companyCode}
+			</if>
+			AND DEL_FLAG = 'N'
+		) T
+		<choose>
+	  		<when test="sort != null and sort.size() > 0">
+		ORDER BY
+			<foreach collection="sort" item="s" separator=",">
+				${s.selector}
+				<choose>
+					<when test="s.desc">DESC</when>
+					<otherwise>ASC</otherwise>
+				</choose>
+			</foreach>
+	  		</when>
+	  		<otherwise>
+	  	ORDER BY USER_SEQ DESC
+	  		</otherwise>
+	  	</choose>
 		OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 	</select>
 	

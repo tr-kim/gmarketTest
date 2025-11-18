@@ -100,24 +100,28 @@ $(function() {
 		dataSource: {
 			load: function(loadOptions) {
 				
-				const formData = new FormData(document.getElementById("userForm"));
-								
-				const skip = loadOptions.skip || 0;
-				const take = loadOptions.take || 50;
-	
-				formData.append("skip", skip);
-				formData.append("take", take);
+				const companyCode = companyInstance.option('value');
+				const userGrade = userGradeInstance.option('value');
+				const userId = userIdInstance.option('value');
+				
+				const param = {
+					companyCode: companyCode
+					, userGrade: userGrade
+					, userId: userId
+					, skip: loadOptions.skip || 0
+					, take: loadOptions.take || 50
+					, sort: loadOptions.sort || []
+				};
 				
 				return $.ajax({
 					url: "/api/v1/user/list",
 					method: "POST",
-					data: formData,
-					processData: false,
-					contentType: false
+					contentType: "application/json",
+					data: JSON.stringify(param),
 				}).then(function(result) {
 					return {
-						data: result.list,
-						totalCount: result.totalCount
+						data: result.list || [],
+						totalCount: result.totalCount || 0
 					};
 				}).catch(function() {
 					showDialogCustom("error");
@@ -140,7 +144,7 @@ $(function() {
 		//행 마우스오버 시
 		hoverStateEnabled: true,
 		headerFilter: {
-			visible: true
+			visible: false
 		},
 		// editing: {
 		// 	allowUpdating: true,
@@ -149,9 +153,10 @@ $(function() {
 		// },
 		remoteOperations: {
 			paging: true //페이징 서버사이드 처리
+			, sorting: true
 		},
 		searchPanel: {
-			visible: true,
+			visible: false,
 			width: 300
 		},
 		paging: {
@@ -172,6 +177,7 @@ $(function() {
 				dataField: "no"
 				, caption: "NO"
 				, alignment: "center"
+				, allowSorting: false
 				, cellTemplate: function(container, options) {
 					const pageIndex = options.component.pageIndex();
 					const pageSize = options.component.pageSize();
@@ -180,12 +186,13 @@ $(function() {
 					container.text(globalIndex);
 				}
 			},
-			{ dataField: "userId", caption: "사용자 ID", alignment: "center" },
-			{ dataField: "userName", caption: "이름", alignment: "center" },
+			{ dataField: "USER_ID", caption: "사용자 ID", alignment: "center" },
+			{ dataField: "USER_NAME", caption: "이름", alignment: "center" },
 			{
-				dataField: "companyCode",
+				dataField: "COMPANY_CODE",
 				caption: "구분",
 				alignment: "center",
+				allowSorting: false,
 				customizeText: function(cellInfo) {
 					switch (cellInfo.value) {
 						case 0: return "옥션";
@@ -196,7 +203,7 @@ $(function() {
 				}
 			},
 			{
-				dataField: "userGrade",
+				dataField: "USER_GRADE",
 				caption: "등급",
 				alignment: "center",
 				customizeText: function(cellInfo) {
@@ -210,7 +217,7 @@ $(function() {
 				}
 			},
 			{
-				dataField: "useYn",
+				dataField: "USE_YN",
 				caption: "사용 여부",
 				alignment: "center",
 				customizeText: function(cellInfo) {
@@ -222,7 +229,7 @@ $(function() {
 				}
 			},
 			{
-				dataField: "regDate",
+				dataField: "REG_DATE",
 				caption: "최초 등록일",
 				alignment: "center",
 				customizeText: function(cellInfo) {
@@ -234,7 +241,7 @@ $(function() {
 				}
 			},
 			{
-				dataField: "chgDate",
+				dataField: "CHG_DATE",
 				caption: "최종 수정일",
 				alignment: "center",
 				customizeText: function(cellInfo) {
@@ -543,16 +550,42 @@ $('#search-btn').dxButton({
     type: 'default',
     width: 60,
     onClick() {
-		const formData = new FormData(document.getElementById("userForm"));
 		
-		const skip = 0;
-		const take = pageSize || 50;
-
-		formData.append("skip", skip);
-		formData.append("take", take);
-	
+		const dataSource = new DevExpress.data.DataSource({
+			load: function(loadOptions) {
+				
+				const param = {
+					companyCode: companyInstance.option('value')
+					, userGrade: userGradeInstance.option('value')
+					, userId: userIdInstance.option('value')
+					, skip: loadOptions.skip || 0
+					, take: loadOptions.take || 50
+					, sort: loadOptions.sort || []
+				};
+				
+				return $.ajax({
+					url: "/api/v1/user/list",
+					type: "POST",
+					contentType: "application/json",
+					data: JSON.stringify(param),
+				}).then(function(result) {
+					return {
+						data: result.list || [],
+						totalCount: result.totalCount || 0
+					};
+				}).catch(function() {
+					showDialogCustom("error");
+					return {
+						data: [],
+						totalCount: 0
+					};
+				});
+			}
+		});
+		
 		//재조회
-		dataGrid.getDataSource().reload();
+		dataGrid.option("dataSource", dataSource);
+		dataGrid.refresh();
     },
 }).dxButton('instance');
 

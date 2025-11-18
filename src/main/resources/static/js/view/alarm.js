@@ -13,27 +13,27 @@ $(function() {
 	const endDate = new Date();
 	endDate.setDate(endDate.getDate() + 7);
 	
+	const startYear = startDate.getFullYear(); 
+	const startMonth = `${String(startDate.getMonth() + 1).padStart(2, '0')}`; 
+	const startDay = `${String(startDate.getDate()).padStart(2, '0')}`;
+	
+	const endYear = endDate.getFullYear(); 
+	const endMonth = `${String(endDate.getMonth() + 1).padStart(2, '0')}`; 
+	const endDay = `${String(endDate.getDate()).padStart(2, '0')}`; 
+	
 	//조회 기간
 	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
-		value: startDate,
+		value: `${startYear}-${startMonth}-${startDay}`,
 		name: "startDate",
-		displayFormat: "yyyy-MM-dd",
-		pickerType: "calendar",
-		calendarOptions: {
-			minZoomLevel: "year"
-		}
+		displayFormat: "yyyy-MM-dd"
 	}).dxDateBox("instance");
 	
 	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
-		value: endDate,
+		value: `${endYear}-${endMonth}-${endDay}`,
 		name: "endDate",
-		displayFormat: "yyyy-MM-dd",
-		pickerType: "calendar",
-		calendarOptions: {
-			minZoomLevel: "year"
-		}
+		displayFormat: "yyyy-MM-dd"
 	}).dxDateBox("instance");
 	
 	// 사용자 등급 및 회사 업체에 따라 select box option 설정
@@ -90,20 +90,26 @@ $(function() {
 		dataSource: {
 			load: function(loadOptions) {
 				
-				const formData = new FormData(document.getElementById("alarmForm"));
-							
-				const skip = loadOptions.skip || 0;
-				const take = loadOptions.take || 50;
-
-				formData.append("skip", skip);
-				formData.append("take", take);
-
+				const companyCode = companyInstance.option('value');
+				const startDate = startDateInstance.option("value");
+				const endDate = endDateInstance.option("value");
+				const svcName = serviceInstance.option("value");
+				
+				const param = {
+					companyCode: companyCode
+					, startDate: startDate
+					, endDate: endDate
+					, svcName: svcName
+					, skip: loadOptions.skip || 0
+					, take: loadOptions.take || 50
+					, sort: loadOptions.sort || []
+				};
+				
 				return $.ajax({
 					url: "/api/v1/alarm/list",
 					method: "POST",
-					data: formData,
-					processData: false,
-					contentType: false
+					contentType: "application/json",
+					data: JSON.stringify(param),
 				}).then(function(result) {
 					return {
 						data: result.list,
@@ -126,13 +132,14 @@ $(function() {
 		//행 마우스오버 시
 		hoverStateEnabled: true,
 		headerFilter: {
-			visible: true
+			visible: false
 		},
 		remoteOperations: {
 			paging: true //페이징 서버사이드 처리
+			, sorting: true
 		},
 		searchPanel: {
-			visible: true,
+			visible: false,
 			width: 300
 		},
 		paging: {
@@ -150,9 +157,10 @@ $(function() {
 		columnResizingMode: 'widget',
 		columns: [
 			{
-				dataField: "companyCode",
+				dataField: "COMPANY_CODE",
 				caption: "대분류",
 				alignment: "center",
+				allowSorting: false,   // 정렬 비활성화
 				customizeText: function(cellInfo) {
 					switch (cellInfo.value) {
 						case 0: return "옥션";
@@ -163,36 +171,36 @@ $(function() {
 				}
 			},
 			{
-				dataField: "svcName",
+				dataField: "SVC_NAME",
 				caption: "서비스",
 				alignment: "center"
 			},
 			{
-				dataField: "procName",
+				dataField: "PROC_NAME",
 				caption: "프로세스",
 				alignment: "center"
 			},
 			{
-				dataField: "monComment",
+				dataField: "MON_COMMENT",
 				caption: "오류",
-				alignment: "center"
+				alignment: "center",
+				allowSorting: false   // 정렬 비활성화
 			},
 			{
-				dataField: "almComment",
+				dataField: "ALM_COMMENT",
 				caption: "알림",
 				alignment: "center"
 			},
 			{
-				dataField: "almInfo",
+				dataField: "ALM_INFO",
 				caption: "상세",
 				alignment: "center",
-				allowHeaderFiltering: false,  // 헤더 필터 비활성화
+				allowSorting: false   // 정렬 비활성화
 			},
 			{
-				dataField: "almDate",
+				dataField: "ALM_DATE",
 				caption: "알림 발생 시간",
 				alignment: "center",
-				allowHeaderFiltering: false,  // 헤더 필터 비활성화
 			}
 		],
 		toolbar: {
@@ -233,36 +241,38 @@ $('#search-btn').dxButton({
     width: 60,
     onClick() {
 		
-		const formData = new FormData(document.getElementById("alarmForm"));
+		const companyCode = companyInstance.option('value');
+		const startDate = startDateInstance.option("value");
+		const endDate = endDateInstance.option("value");
+		let svcName = serviceInstance.option("value");
 		
-		const searchCompanyCode = formData.get("companyCode");
-		const svcName = formData.get("svcName");
-		const searchStartDate = new Date(formData.get("startDate"));
-		const searchEndDate = new Date(formData.get("endDate"));
-		const diffMs = searchEndDate - searchStartDate;
+		const diffMs = endDate - startDate;
 		const diffDays = diffMs / (1000 * 60 * 60 * 24);
 		
-		if(searchStartDate > searchEndDate) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
+		if(startDate > endDate) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
 		if(diffDays > period) { showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : ${diffDays} 일`); return false }
-		if(searchCompanyCode == -1 || searchCompanyCode < 0) { showDialogCustom("대분류를 선택하세요."); return false; }
+		if(companyCode == -1 || companyCode < 0) { showDialogCustom("대분류를 선택하세요."); return false; }
 		if(svcName === '선택하세요') { showDialogCustom("서비스명을 선택하세요."); return false; }
-		if(svcName === '전체') { formData.set("svcName", ''); }
+		if(svcName === '전체') svcName = "";
 		
 		const dataSource = new DevExpress.data.DataSource({
 			load: function(loadOptions) {
 				
-				const skip = loadOptions.skip || 0;
-				const take = loadOptions.take || 50;
-
-				formData.append("skip", skip);
-				formData.append("take", take);
+				const param = {
+					companyCode: companyCode
+					, startDate: startDate
+					, endDate: endDate
+					, svcName: svcName
+					, skip: loadOptions.skip || 0
+					, take: loadOptions.take || 50
+					, sort: loadOptions.sort || []
+				};
 
 				return $.ajax({
 					url: "/api/v1/alarm/list",
 					method: "POST",
-					data: formData,
-					processData: false,
-					contentType: false
+					contentType: "application/json",
+					data: JSON.stringify(param),
 				}).then(function(result) {
 					return {
 						data: result.list,

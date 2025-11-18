@@ -70,7 +70,7 @@ $(function() {
 				startHourInstance = $("#startHour")	.dxDateBox({
 					type: 'time',
 					name: "startHour",
-					value: startDate.getHours(),
+					value: new Date(2025, 0, 1, startDate.getHours(), 0, 0),	// type이 time이면 날짜는 아무거나 넣어도 상관없음
 					displayFormat: "HH시",
 					pickerType: "list",
 					interval: 60,			// 분 선택 없애기 (1시간 단위)
@@ -81,7 +81,7 @@ $(function() {
 				endHourInstance = $("#endHour")	.dxDateBox({
 					type: 'time',
 					name: "endHour",
-					value: endDate.getHours(),
+					value: new Date(2025, 0, 1, startDate.getHours(), 0, 0),	// type이 time이면 날짜는 아무거나 넣어도 상관없음
 					displayFormat: "HH시",
 					pickerType: "list",
 					interval: 60,			// 분 선택 없애기 (1시간 단위)
@@ -206,12 +206,8 @@ $(function() {
 				const companyCode = companyInstance.option('value');
 				const tableCode = tableInstance.option('value');
 				const timeType = checkedRadio.value;
-				const startDate = startDateInstance.option("text");
-				const endDate = endDateInstance.option("text");
-				
-				const skip = loadOptions.skip || 0;
-				const take = loadOptions.take || 50;
-				const sort = loadOptions.sort || [];
+				const startDate = startDateInstance.option("value");
+				const endDate = endDateInstance.option("value");
 				
 				const param = {
 					companyCode: companyCode
@@ -219,17 +215,14 @@ $(function() {
 					, timeType: timeType
 					, startDate: startDate
 					, endDate: endDate
-					, skip: skip
-					, take: take
-					, sort: sort
+					, skip: loadOptions.skip || 0
+					, take: loadOptions.take || 50
+					, sort: loadOptions.sort || []
 				};
 				
 				if(timeType == 1) {
-					const startHour = startHourInstance.option("value");
-					const endHour = endHourInstance.option("value");
-					
-					param.startHour = startHour;
-					param.endHour = endHour;
+					param.startHour = String(startHourInstance.option("value").getHours()).padStart(2, "0");
+					param.endHour = String( endHourInstance.option("value").getHours()).padStart(2, "0");
 				}
 				
 				return $.ajax({
@@ -283,7 +276,7 @@ $(function() {
 		columns: [
 			{ dataField: "RESULT_DATE", caption: "시간/일자", alignment: "center" },
 			{
-				dataField: "", caption: "대분류", alignment: "center", calculateCellValue: function(rowData) {
+				dataField: "", caption: "대분류", alignment: "center", allowSorting: false, calculateCellValue: function(rowData) {
 					switch (companyInstance.option('value')) {
 						case 0: return "옥션";
 						case 1: return "G마켓";
@@ -333,10 +326,8 @@ $('#search-btn').dxButton({
 		const endDate = endDateInstance.option("value");
 		
 		// 구분값이 시간일 경우
-		if(timeType === "1") {
-			startHour = startHourInstance.option("value");
-			endHour = endHourInstance.option("value");
-		}
+		const startHour = timeType === "1" ? String(startHourInstance.option("value").getHours()).padStart(2, "0") : "";
+		const endHour = timeType === "1" ? String( endHourInstance.option("value").getHours()).padStart(2, "0") : "";
 		
 		// 조회 기간 확인
 		const searchStartDate = timeType === "1" ? new Date(`${startDate}T${startHour}:00:00`) : new Date(`${startDate}`);
@@ -353,28 +344,21 @@ $('#search-btn').dxButton({
 		const dataSource = new DevExpress.data.DataSource({
 			load: function(loadOptions) {
 				
-				const skip = loadOptions.skip || 0;
-				const take = loadOptions.take || 50;
-				const sort = loadOptions.sort || [];
-				
 				const param = {
 					companyCode: companyCode
 					, tableCode: tableCode
 					, timeType: timeType
 					, startDate: startDate
 					, endDate: endDate
-					, skip: skip
-					, take: take
-					, sort: sort
+					, skip: loadOptions.skip || 0
+					, take: loadOptions.take || 50
+					, sort: loadOptions.sort || []
 				};
 				
 				// 구분값이 시간일 경우
 				if(timeType === "1") {
-					const startHour = startHourInstance.option("value");
-					const endHour = endHourInstance.option("value");
-					
-					param.startHour = startHour;
-					param.endHour = endHour;
+					param.startHour = String(startHourInstance.option("value").getHours()).padStart(2, "0");
+					param.endHour = String( endHourInstance.option("value").getHours()).padStart(2, "0");
 				}
 				
 				return $.ajax({

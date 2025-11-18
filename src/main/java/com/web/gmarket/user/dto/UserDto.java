@@ -1,7 +1,10 @@
 package com.web.gmarket.user.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.validation.ValidationGroups.NotBlankGroup1;
 import com.web.gmarket.common.validation.ValidationGroups.NotBlankGroup2;
@@ -33,8 +36,71 @@ public class UserDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	/****************************** 조회 컬럼 ***************************/
+	@JsonProperty("USER_SEQ")
+	private Integer USER_SEQ;
+	
+	@JsonProperty("USER_ID")
+	private String USER_ID;
+	
+	@JsonProperty("USER_NAME")
+	private String USER_NAME;
+	
+	@JsonProperty("TEL_NO")
+	private String TEL_NO;
+	
+	@JsonProperty("HP_NO")
+	private String HP_NO;
+	
+	@JsonProperty("EMAIL")
+	private String EMAIL;
+	
+	@JsonProperty("COMPANY_CODE")
+	private Integer COMPANY_CODE;
+	
+	@JsonProperty("USER_GRADE")
+	private Integer USER_GRADE;
+	
+	@JsonProperty("SMS_YN")
+	private String SMS_YN;
+	
+	@JsonProperty("EXCEL_YN")
+	private String EXCEL_YN;
+	
+	@JsonProperty("FILE_YN")
+	private String FILE_YN;
+	
+	@JsonProperty("DB_YN")
+	private String DB_YN;
+	
+	@JsonProperty("REG_DATE")
+	private String REG_DATE;
+	
+	@JsonProperty("CHG_DATE")
+	private String CHG_DATE;
+	
+	@JsonProperty("USE_YN")
+	private String USE_YN;
+	
+	@JsonProperty("DEL_FLAG")
+	private String DEL_FLAG;
+	
+	@JsonProperty("USER_TEXT0")
+	private String USER_TEXT0;
+	
+	@JsonProperty("USER_TEXT1")
+	private String USER_TEXT1;
+	
+	@JsonProperty("LMS_YN")
+	private String LMS_YN;
+	
+	@JsonProperty("MMS_YN")
+	private String MMS_YN;
+	
+	
+	/****************************** 검색 컬럼 ***************************/
 	// 사용자 시퀀스
-	private int userSeq;
+	private Integer userSeq;
 
 	// 사용자 아이디
 	@NotBlank(message = "아이디는 필수 입력 값입니다.", groups = NotBlankGroup1.class)
@@ -64,7 +130,7 @@ public class UserDto implements Serializable {
 	// 사용자 이메일
 //	@Pattern(regexp = "(^$|^[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,}$)", message = "유효한 이메일 형식이어야 합니다.", groups = PatternGroup.class)
 //	@Email
-	private String email;
+//	private String email;
 
 	// 회사코드(default : 0) - 0 : 옥션 - 1 : Gmarket
 	@Builder.Default
@@ -131,8 +197,10 @@ public class UserDto implements Serializable {
 	// 암호화 된 사용자 암호
 	private String enc1Pa;
 	
-	private int skip = 0;
-	private int take = 50;
+	// DevExtreme 조회 옵션
+	private Integer skip = 0;
+	private Integer take = 50;
+	private List<Object> sort = new ArrayList<>();
 	
 	@Builder(toBuilder = true)
 	private UserDto(int userSeq, String userId, String userPwd, String userName) {

@@ -95,7 +95,7 @@ public class RestUserController {
 	 */
 	@ResponseBody
 	@PostMapping("/list")
-	public ResponseEntity<?> list(Authentication authentication, UserDto userDto) {
+	public ResponseEntity<?> list(Authentication authentication, @RequestBody UserDto userDto) {
 
 		Map<String, Object> result = new HashMap<>();
 		

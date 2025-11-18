@@ -107,13 +107,13 @@ public class StatServiceImpl implements StatService {
 			case 2: // 일
 				return LocalDate.parse(date).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			case 3: // 월
-				LocalDate obj = LocalDate.parse(date);
+				YearMonth ym = YearMonth.parse(date, DateTimeFormatter.ofPattern("yyyy-MM"));
 				
-				return YearMonth.from(obj).format(DateTimeFormatter.ofPattern("yyyyMM"));
+                return ym.format(DateTimeFormatter.ofPattern("yyyyMM"));
 			case 4: // 연도
-				LocalDate dateObj = LocalDate.parse(date);
+				Year year = Year.parse(date, DateTimeFormatter.ofPattern("yyyy"));
 				
-				return Year.from(dateObj).format(DateTimeFormatter.ofPattern("yyyy"));
+				return year.format(DateTimeFormatter.ofPattern("yyyy"));
 			default:
 				// 현재 시간
 				Date today = new Date();
