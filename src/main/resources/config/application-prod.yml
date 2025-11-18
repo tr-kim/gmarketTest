@@ -20,7 +20,7 @@ spring:
     gmarket:
       hikari:
         driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-        jdbc-url: jdbc:log4jdbc:sqlserver://;serverName=192.168.0.122\SQLEXPRESS;databaseName=msdbgm;encrypt=true # encrypt=false 운영 환경에서는 true
+        jdbc-url: jdbc:log4jdbc:sqlserver://;serverName=192.168.0.122\SQLEXPRESS;databaseName=msdbgm;encrypt=false # true로 설정하면 TLS(SSL) 암호화 설정
         username: gmarket
         password: gmarket12#$
         maximum-pool-size: 10
@@ -31,7 +31,7 @@ spring:
     auction:
       hikari:
         driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-        jdbc-url: jdbc:log4jdbc:sqlserver://;serverName=192.168.0.122\SQLEXPRESS;databaseName=msdbau;encrypt=true # encrypt=false 운영 환경에서는 true
+        jdbc-url: jdbc:log4jdbc:sqlserver://;serverName=192.168.0.122\SQLEXPRESS;databaseName=msdbau;encrypt=false # true로 설정하면 TLS(SSL) 암호화 설정
         username: gmarket
         password: gmarket12#$
         maximum-pool-size: 10
