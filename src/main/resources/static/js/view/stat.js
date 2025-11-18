@@ -40,7 +40,7 @@ $(function() {
 	const radios = document.querySelectorAll('input[name="timeType"]');
 	
 	// 시작일
-	startDateInstance = $("#startDate")	.dxDateBox({
+	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
 	    name: "startDate",
 		displayFormat: "yyyy-MM-dd"
@@ -59,12 +59,12 @@ $(function() {
 			if (this.value == "1") {
 				
 				// 시작일
-				startDateInstance.option("displayFormat", "yyyy-MM-dd");
 				startDateInstance.option("value", `${startYear}-${startMonth}-${startDay}`);
+				startDateInstance.option("displayFormat", "yyyy-MM-dd");
 				
 				// 종료일	
-				endDateInstance.option("displayFormat", "yyyy-MM-dd");
 				endDateInstance.option("value", `${endYear}-${endMonth}-${endDay}`);
+				endDateInstance.option("displayFormat", "yyyy-MM-dd");
 				
 				// 사작 시간
 				startHourInstance = $("#startHour")	.dxDateBox({
@@ -87,16 +87,19 @@ $(function() {
 					interval: 60,			// 분 선택 없애기 (1시간 단위)
 					width: 120,
 				}).dxDateBox("instance");
+				
+				startHourInstance.option("visible", true);
+				endHourInstance.option("visible", true);
 			
 			} else if (this.value == "2") {
 				
 				// 시작일
-				startDateInstance.option("displayFormat", "yyyy-MM-dd");
 				startDateInstance.option("value", `${startYear}-${startMonth}-${startDay}`);
-				
-				// 종료일	
-				endDateInstance.option("displayFormat", "yyyy-MM-dd");
+				startDateInstance.option("displayFormat", "yyyy-MM-dd");
+			
+				// 종료일
 				endDateInstance.option("value", `${endYear}-${endMonth}-${endDay}`);
+				endDateInstance.option("displayFormat", "yyyy-MM-dd");
 				
 				// 숨김 처리
 				if(startHourInstance && endHourInstance) {
@@ -110,12 +113,12 @@ $(function() {
 			} else if (this.value == "3") {
 				
 				// 시작일
+				startDateInstance.option("value", new Date(startYear, startMonth - 1, 1));
 				startDateInstance.option("displayFormat", "yyyy-MM");
-				startDateInstance.option("value", `${startYear}-${startMonth}`);
 				
 				// 종료일	
+				endDateInstance.option("value", new Date(endYear, endMonth - 1, 1));
 				endDateInstance.option("displayFormat", "yyyy-MM");
-				endDateInstance.option("value", `${endYear}-${endMonth}`);
 				
 				// 숨김 처리
 				if(startHourInstance && endHourInstance) {
@@ -129,16 +132,16 @@ $(function() {
 			} else if (this.value == "4") {
 				
 				// 시작일
+				startDateInstance.option("value", `${startYear}`);
 				startDateInstance.option("displayFormat", "yyyy '년' ");
 				startDateInstance.option("showClearButton", true);
 				startDateInstance.option("useMaskBehavior", true);
-				startDateInstance.option("value", `${startYear}`);
 				
 				// 종료일
+				endDateInstance.option("value", `${endYear}`);
 				endDateInstance.option("displayFormat", "yyyy '년' ");
 				endDateInstance.option("showClearButton", true);
 				endDateInstance.option("useMaskBehavior", true);
-				endDateInstance.option("value", `${endYear}`);
 				
 				// 숨김 처리
 				if(startHourInstance && endHourInstance) {
@@ -325,22 +328,70 @@ $('#search-btn').dxButton({
 		const startDate = startDateInstance.option("value");
 		const endDate = endDateInstance.option("value");
 		
-		// 구분값이 시간일 경우
-		const startHour = timeType === "1" ? String(startHourInstance.option("value").getHours()).padStart(2, "0") : "";
-		const endHour = timeType === "1" ? String( endHourInstance.option("value").getHours()).padStart(2, "0") : "";
+		console.log(startDate)
+		console.log(endDate)
 		
-		// 조회 기간 확인
-		const searchStartDate = timeType === "1" ? new Date(`${startDate}T${startHour}:00:00`) : new Date(`${startDate}`);
-		const searchEndDate = timeType === "1" ? new Date(`${endDate}T${endHour}:00:00`) : new Date(`${endDate}`);
-		const diffMs = searchEndDate - searchStartDate;
-		const diffDays = diffMs / (1000 * 60 * 60 * 24);
+		let searchStartDate, searchEndDate;
 		
-		if(searchStartDate > searchEndDate) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
-		if(diffDays > period) { showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : ${diffDays} 일`); return false }
-
 		if(companyCode == -1 || companyCode < 0) { showDialogCustom("대분류를 선택하세요."); return false; }
 		if(tableCode == -1 || tableCode < 0) { showDialogCustom("중분류를 선택하세요."); return false; }
-
+		
+		if(timeType === "1") {
+			const startHour = String(startHourInstance.option("value").getHours()).padStart(2, "0");
+			const endHour = String( endHourInstance.option("value").getHours()).padStart(2, "0");
+			
+			const tempStartDate = new Date(`${startDate}T${startHour}:00:00`);
+			const tempEndDate = new Date(`${endDate}T${endHour}:00:00`);
+			
+			const diffMs = tempEndDate - tempStartDate;
+			const diffDays = diffMs / (1000 * 60 * 60 * 24);
+			
+			if(tempStartDate > tempEndDate) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
+			if(diffDays > period) { showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : ${diffDays} 일`); return false }
+			
+			searchStartDate = startDate;
+			searchEndDate = endDate;
+			
+		} else if(timeType === "2") {
+			const tempStartDate = new Date(`${startDate}`);
+			const tempEndDate = new Date(`${endDate}`);
+			
+			const diffMs = tempEndDate - tempStartDate;
+			const diffDays = diffMs / (1000 * 60 * 60 * 24);
+			
+			if(tempStartDate > tempEndDate) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
+			if(diffDays > period) { showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : ${diffDays} 일`); return false }
+			
+			searchStartDate = startDate;
+			searchEndDate = endDate;
+			
+		} else if(timeType === "3") {
+			
+			const startMonth = startDate.getMonth() + 1;
+			const endMonth = endDate.getMonth() + 1;
+			
+			const diffMs = endMonth - startMonth;
+			
+			if(startMonth > endMonth) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
+			if(diffMs > 1) { showDialogCustom(`조회 기간을 다시 입력하세요.(1달 이내)\n\n현재 입력한 조회 기간 : ${diffMs} 달`); return false }
+			
+			searchStartDate = `${startDate.getFullYear()}-${startMonth}`;
+			searchEndDate = `${endDate.getFullYear()}-${endMonth}`;
+			
+		} else if(timeType === "4") {
+			
+			const startYear = startDate.getFullYear();
+			const endYear = endDate.getFullYear();
+			
+			const diffMs = endYear - startYear;
+						
+			if(startYear > endYear) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
+			if(diffMs > 1) { showDialogCustom(`조회 기간을 다시 입력하세요.(1년 이내)\n\n현재 입력한 조회 기간 : ${diffMs} 년`); return false }
+			
+			searchStartDate = startYear;
+			searchEndDate = endYear;
+		}
+		
 		const dataSource = new DevExpress.data.DataSource({
 			load: function(loadOptions) {
 				
@@ -348,8 +399,8 @@ $('#search-btn').dxButton({
 					companyCode: companyCode
 					, tableCode: tableCode
 					, timeType: timeType
-					, startDate: startDate
-					, endDate: endDate
+					, startDate: searchStartDate
+					, endDate: searchEndDate
 					, skip: loadOptions.skip || 0
 					, take: loadOptions.take || 50
 					, sort: loadOptions.sort || []
