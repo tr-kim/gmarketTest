@@ -50,7 +50,7 @@ logging:
   #secret: HfjyZ8xMqo4tIiF6+gA0s37DEmG0ZxAhWdZUhqKsSg4=
 
 active:
-  file:-path: C:\\ExcelWebSetup.exe
+  file-path: C:\\ExcelWebSetup.exe
 
 ftp:
   window-path: D:/FTP
@@ -82,3 +82,12 @@ ftp:
       password: P@ssw0rd1!
       path: /img/
 
+file:
+  path:
+    excel: C:/excel_web/excel
+    txt: C:/excel_web/data
+    image:
+      single: C:/excel_web/img/single/
+      excel: C:/excel_web/img/excel/
+      file: C:/excel_web/img/file/
+      db: C:/excel_web/img/db/

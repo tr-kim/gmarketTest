@@ -53,6 +53,8 @@ public class ConstantsUtils {
 	public static final String STANBY = "stanby";
 	public static final String SUMMARY = "summary";
 	public static final String DETAIL = "detail";
+	public static final String EXCEL = "excel";
+	public static final String TXT = "TXT";
 	
 	public static final String SMS = "sms";
 	public static final String LMS = "lms";
@@ -92,6 +94,12 @@ public class ConstantsUtils {
 	public static final String USER_ID_EMPTY = "USER_ID_EMPTY";
 	public static final String USER_INFO_INCORRECT = "USER_INFO_INCORRECT";
 	public static final String USER_FAILD = "USER_FAILD";
+	
+	// Send Type
+	public static final String SEND_TYPE_SINGLE = "SINGLE";
+	public static final String SEND_TYPE_EXCEL = "EXCEL";
+	public static final String SEND_TYPE_FILE = "FILE";
+	public static final String SEND_TYPE_DB = "DB";
 	
 	// RSA
 	public static final String RSA_WEB_KEY = "_RSA_WEB_Key_";
@@ -138,18 +146,18 @@ public class ConstantsUtils {
 	// EXCEL
 	public static final int EXCEL_CELL_MAX = 5;
 	public static final int EXCEL_ROW_MAX = 20000;
-	public static final String EXCEL_PATH = "C:/excel_web/excel";
+//	public static final String EXCEL_PATH = "C:/excel_web/excel";
 	
 	// TXT
 	public static final int TEXT_ROW_MAX = 200000;
 	public static final String TXT_EXTENSION = ".txt";
-	public static final String TXT_PATH = "C:/excel_web/data";
+//	public static final String TXT_PATH = "C:/excel_web/data";
 	
 	// IMAGE
-	public static final String SINGLE_IMAGE_PATH   = "C:/excel_web/img/single/";
-	public static final String EXCEL_IMAGE_PATH   = "C:/excel_web/img/excel/";
-	public static final String FILE_IMAGE_PATH   = "C:/excel_web/img/file/";
-	public static final String DB_IMAGE_PATH = "C:/excel_web/img/db/";
+//	public static final String SINGLE_IMAGE_PATH   = "C:/excel_web/img/single/";
+//	public static final String EXCEL_IMAGE_PATH   = "C:/excel_web/img/excel/";
+//	public static final String FILE_IMAGE_PATH   = "C:/excel_web/img/file/";
+//	public static final String DB_IMAGE_PATH = "C:/excel_web/img/db/";
 	
 	// CALLBACK NUM
 	public static final String GMARKET_CALLBACK_NUM = "15665701";

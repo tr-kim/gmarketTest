@@ -61,7 +61,7 @@ public class RestExcelSendController {
 		UserDetailsDto user = (UserDetailsDto) authentication.getPrincipal();
 		String userId = user.getUserId();
 		
-		return ExcelSendService.uploadExcelFile(file, userId);
+		return excelSendService.uploadExcelFile(file, userId);
 	}
 	
 	
@@ -72,7 +72,7 @@ public class RestExcelSendController {
 	@PostMapping("/readSheet")
 	public Map<String, Object> readExcelSheet(@RequestParam("excelFile") String excelFile, @RequestParam("sheetName") String sheetName) throws IOException {
 		
-		return ExcelSendService.readExcelData(excelFile, sheetName);
+		return excelSendService.readExcelData(excelFile, sheetName);
 	}
 	
 	
@@ -95,7 +95,7 @@ public class RestExcelSendController {
 		Map<String, Object> result = new HashMap<>();
 		
 		// 시트 데이터 읽기
-		Map<String, Object> validation = ExcelSendService.readExcelData(excelFile, sheetName);
+		Map<String, Object> validation = excelSendService.readExcelData(excelFile, sheetName);
 		if (ConstantsUtils.ERROR.equals(validation.get(ConstantsUtils.STATUS))) {
 			return validation; // 실패 시 그대로 리턴
 		}
@@ -115,8 +115,8 @@ public class RestExcelSendController {
 		for (int i = 1; i < retData.size(); i++) {
 			List<String> row = retData.get(i);
 			
-			String callback = ExcelSendService.applyTranNum(callbackFlag, callbackRow, tranCallback, row);
-			String callee   = ExcelSendService.applyTranNum(calleeFlag,   calleeRow,   tranCallee,   row);
+			String callback = excelSendService.applyTranNum(callbackFlag, callbackRow, tranCallback, row);
+			String callee   = excelSendService.applyTranNum(calleeFlag,   calleeRow,   tranCallee,   row);
 			
 			List<String> newRow = new ArrayList<>();
 			newRow.add(callback); 	// 발신번호
@@ -157,7 +157,7 @@ public class RestExcelSendController {
 		Map<String, Object> result = new HashMap<>();
 		
 		// 시트 데이터 읽기
-		Map<String, Object> validation = ExcelSendService.readExcelData(excelFile, sheetName);
+		Map<String, Object> validation = excelSendService.readExcelData(excelFile, sheetName);
 		if (ConstantsUtils.ERROR.equals(validation.get(ConstantsUtils.STATUS))) {
 			return validation; // 실패 시 그대로 리턴
 		}
@@ -191,12 +191,12 @@ public class RestExcelSendController {
 		for (int i = 1; i < retData.size(); i++) {
 			List<String> row = retData.get(i);
 
-			String callback = ExcelSendService.applyTranNum(callbackFlag, callbackRow, tranCallback, row);
-			String callee   = ExcelSendService.applyTranNum(calleeFlag,   calleeRow,   tranCallee,   row);
-			String message  = ExcelSendService.applyMessage(messageTemplate, row);
-			int messageLen  = ExcelSendService.getSMSLen(message);
+			String callback = excelSendService.applyTranNum(callbackFlag, callbackRow, tranCallback, row);
+			String callee   = excelSendService.applyTranNum(calleeFlag,   calleeRow,   tranCallee,   row);
+			String message  = excelSendService.applyMessage(messageTemplate, row);
+			int messageLen  = excelSendService.getSMSLen(message);
 			int titleLen    = (title == null) ? 0 : title.length();
-			String errorMsg = ExcelSendService.checkStrLen(messageLen, titleLen, callee, callback, messageType);
+			String errorMsg = excelSendService.checkStrLen(messageLen, titleLen, callee, callback, messageType);
 			String decodedMessage = StringEscapeUtils.unescapeHtml4(message);
 			
 			List<String> newRow = new ArrayList<>();
@@ -252,7 +252,7 @@ public class RestExcelSendController {
 		List<List<String>> newData = new ArrayList<>();
 		
 		// 시트 데이터 읽기
-		Map<String, Object> validation = ExcelSendService.readExcelData(excelFile, sheetName);
+		Map<String, Object> validation = excelSendService.readExcelData(excelFile, sheetName);
 		if (ConstantsUtils.ERROR.equals(validation.get(ConstantsUtils.STATUS))) {
 			response.setContentType("text/plain;charset=UTF-8");
 			response.getWriter().write("엑셀 데이터 읽기 실패");
@@ -288,10 +288,10 @@ public class RestExcelSendController {
 		for (int i = 1; i < retData.size(); i++) {
 			List<String> row = retData.get(i);
 			
-			String callback = ExcelSendService.applyTranNum(callbackFlag, callbackRow, tranCallback, row);
-			String callee   = ExcelSendService.applyTranNum(calleeFlag,   calleeRow,   tranCallee,   row);
-			String message  = ExcelSendService.applyMessage(messageTemplate, row);
-			int messageLen  = ExcelSendService.getSMSLen(message);
+			String callback = excelSendService.applyTranNum(callbackFlag, callbackRow, tranCallback, row);
+			String callee   = excelSendService.applyTranNum(calleeFlag,   calleeRow,   tranCallee,   row);
+			String message  = excelSendService.applyMessage(messageTemplate, row);
+			int messageLen  = excelSendService.getSMSLen(message);
 //			int titleLen    = (title == null) ? 0 : title.length();
 //			String errorMsg = ExcelSendService.checkStrLen(messageLen, titleLen, callee, callback, messageType);
 			String decodedMessage = StringEscapeUtils.unescapeHtml4(message);

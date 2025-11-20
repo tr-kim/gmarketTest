@@ -1,6 +1,5 @@
 package com.web.gmarket.common.controller;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,28 +10,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.gmarket.common.service.CommonService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 
 @RestController
 @RequestMapping("/files")
 public class FileController {
 	
-	@Value("${active.file-path}")
-	private String activeFilePath;
+//	@Value("${active.file-path}")
+//	private String activeFilePath;
+	
+	private CommonService commonService;
 	
 	@PostMapping("/upload/fileUpload")
 	public ResponseEntity<?> uploadFile(
@@ -58,16 +54,16 @@ public class FileController {
 			String folderDate = today.format(DateTimeFormatter.ofPattern("yyyyMMdd"));  // 20250910
 			
 			// 폴더 경로
-			String path = null;
-			if ("SINGLE".equalsIgnoreCase(sendType.trim())) {
-				path = ConstantsUtils.SINGLE_IMAGE_PATH;
-			} else if ("EXCEL".equalsIgnoreCase(sendType.trim())) {
-				path = ConstantsUtils.EXCEL_IMAGE_PATH;
-			} else if ("FILE".equalsIgnoreCase(sendType.trim())) {
-				path = ConstantsUtils.FILE_IMAGE_PATH;
-			} else if ("DB".equalsIgnoreCase(sendType.trim())) {
-				path = ConstantsUtils.DB_IMAGE_PATH;
-			}
+			String path = commonService.getImageFilePath(sendType.trim());
+//			if ("SINGLE".equalsIgnoreCase(sendType.trim())) {
+//				path = ConstantsUtils.SINGLE_IMAGE_PATH;
+//			} else if ("EXCEL".equalsIgnoreCase(sendType.trim())) {
+//				path = ConstantsUtils.EXCEL_IMAGE_PATH;
+//			} else if ("FILE".equalsIgnoreCase(sendType.trim())) {
+//				path = ConstantsUtils.FILE_IMAGE_PATH;
+//			} else if ("DB".equalsIgnoreCase(sendType.trim())) {
+//				path = ConstantsUtils.DB_IMAGE_PATH;
+//			}
 			
 			Path monthPath = Paths.get(path, folderMonth);
 			Path datePath  = Paths.get(monthPath.toString(), folderDate);
@@ -111,21 +107,21 @@ public class FileController {
 		}
 	}
 
-	@GetMapping("/download/activeFile")
-    public ResponseEntity<Resource> downloadFile() {
-        // 서버에 저장된 파일 경로
-        File file = new File(activeFilePath);
-
-        if (!file.exists()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Resource resource = new FileSystemResource(file);
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .contentLength(file.length())
-                .body(resource);
-    }
+//	@GetMapping("/download/activeFile")
+//    public ResponseEntity<Resource> downloadFile() {
+//        // 서버에 저장된 파일 경로
+//        File file = new File(activeFilePath);
+//
+//        if (!file.exists()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        Resource resource = new FileSystemResource(file);
+//
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+//                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+//                .contentLength(file.length())
+//                .body(resource);
+//    }
 }

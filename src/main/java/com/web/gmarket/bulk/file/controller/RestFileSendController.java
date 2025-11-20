@@ -50,7 +50,7 @@ public class RestFileSendController {
 		UserDetailsDto user = (UserDetailsDto) authentication.getPrincipal();
 		String userId = user.getUserId();
 		
-		return FileSendService.uploadTxtFile(file, userId);
+		return fileSendService.uploadTxtFile(file, userId);
 	}
 	
 	

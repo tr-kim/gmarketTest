@@ -11,6 +11,7 @@ import com.web.gmarket.bulk.broad.mapper.BroadcastMsgMapper;
 import com.web.gmarket.bulk.db.mapper.DbSendMapper;
 import com.web.gmarket.bulk.excel.mapper.ExcelSendMapper;
 import com.web.gmarket.common.config.DynamicDataSourceService;
+import com.web.gmarket.common.config.FilePathConfig;
 import com.web.gmarket.common.ftp.FtpClientManager;
 import com.web.gmarket.common.mapper.CommonSendMapper;
 import com.web.gmarket.common.mapper.ServiceInfoMapper;
@@ -31,6 +32,12 @@ public class CommonService {
 	
 	@Autowired
 	private FtpClientManager FtpClientManager;
+	
+	private final FilePathConfig filePathConfig;
+
+    public CommonService(FilePathConfig filePathConfig) {
+        this.filePathConfig = filePathConfig;
+    }
 
     public DbSendMapper getDbSendMapper(String dbName) {
         return dynamicDataSourceService.getMapper(dbName, DbSendMapper.class);
@@ -86,5 +93,31 @@ public class CommonService {
     
     public void uploadFile(FTPClient ftpClient, FtpDto dto) throws IOException, IllegalArgumentException {
     	FtpClientManager.uploadFile(ftpClient, dto);
+    }
+    
+    public String getFilePath(String type) {
+    	switch(type) {
+    		case ConstantsUtils.EXCEL:
+    			return filePathConfig.getExcel();
+    		case ConstantsUtils.TXT:
+    			return filePathConfig.getTxt();
+    		default:
+    			return null;
+    	}
+    }
+    
+    public String getImageFilePath(String type) {
+    	switch(type) {
+    		case ConstantsUtils.SEND_TYPE_SINGLE:
+    			return filePathConfig.getImageSingle();
+    		case ConstantsUtils.SEND_TYPE_EXCEL:
+    			return filePathConfig.getImageExcel();
+    		case ConstantsUtils.SEND_TYPE_FILE:
+    			return filePathConfig.getImageFile();
+    		case ConstantsUtils.SEND_TYPE_DB:
+    			return filePathConfig.getImageDb();
+    		default:
+    			return null;
+    	}
     }
 }

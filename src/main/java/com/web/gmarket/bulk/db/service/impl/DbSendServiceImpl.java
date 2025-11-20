@@ -86,6 +86,7 @@ public class DbSendServiceImpl implements DbSendService {
 				FtpDto ftpDto = FtpDto.builder()
 						.companyCode(dbSendDto.getCompanyCode())
 						.msgType(msgType)
+						.sendType(ConstantsUtils.SEND_TYPE_DB)
 						.imageName01(dbSendDto.getImageName01())
 						.imageName02(dbSendDto.getImageName02())
 						.build();

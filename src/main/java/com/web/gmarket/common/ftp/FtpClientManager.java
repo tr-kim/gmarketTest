@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.web.gmarket.common.utils.ConstantsUtils;
@@ -26,16 +28,25 @@ public class FtpClientManager {
 	
 	private final FtpProperties ftpProperties;
 	
+	@Autowired
+//	private CommonService commonService;
+	
+	private static final Map<Integer, String> COMPANY_MAP = Map.of(
+	    ConstantsUtils.AUCTION_CODE, ConstantsUtils.AUCTION,
+	    ConstantsUtils.GMARKET_CODE, ConstantsUtils.GMAREKT,
+	    ConstantsUtils.SMILE_CASH_CODE, ConstantsUtils.SMILE_CASH
+	);
+	
     /**
      * FTP 연결 생성
      */
-    public FTPClient createConnection(Integer code, String type) throws IOException {
+    public FTPClient createConnection(int code, String type) throws IOException {
     	
     	FTPClient ftpClient = new FTPClient();
     	
         try {
         	
-        	FtpServerInfo info = ftpProperties.getProperties(companyCodeToCompanyName(code), type);
+        	FtpServerInfo info = ftpProperties.getProperties(COMPANY_MAP.getOrDefault(code, ConstantsUtils.GMAREKT), type);
         	
             // 연결
             log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FTP 연결 시도");
@@ -101,7 +112,7 @@ public class FtpClientManager {
     	FileInputStream fileInput2 = null;
     	
     	// Auction, Gmarket 유형 확인 후 정보 설정
-    	FtpServerInfo info = ftpProperties.getProperties(companyCodeToCompanyName(dto.getCompanyCode()), dto.getMsgType());
+    	FtpServerInfo info = ftpProperties.getProperties(COMPANY_MAP.getOrDefault(dto.getCompanyCode(), ConstantsUtils.GMAREKT), dto.getMsgType());
     	
         try {
         	
@@ -118,8 +129,11 @@ public class FtpClientManager {
         	log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Month : {}", month);
         	log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Date : {}", date);
         	
+        	
+        	
         	// 업로드 경로 설정
-        	String uploadPath = String.format("%s\\%s\\%s", ConstantsUtils.EXCEL_IMAGE_PATH, month, date);
+//        	String uploadPath = String.format("%s\\%s\\%s", commonService.getImageFilePath(dto.getSendType()), month, date);
+        	String uploadPath = "";
         	log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UploadPath : {}", uploadPath);
         	
         	String imageName1 = dto.getImageName01();
@@ -209,17 +223,5 @@ public class FtpClientManager {
                 e.printStackTrace();
             }
         }
-    }
-    
-    /**
-     * 회사 코드에 따라 회사 이름으로 변경
-     */
-    public String companyCodeToCompanyName(Integer code) {
-    	switch (code) {
-			case ConstantsUtils.AUCTION_CODE: return ConstantsUtils.AUCTION;
-			case ConstantsUtils.GMARKET_CODE: return ConstantsUtils.GMAREKT;
-			case ConstantsUtils.SMILE_CASH_CODE: return ConstantsUtils.SMILE_CASH;
-			default: return ConstantsUtils.GMAREKT;
-		}
     }
 }

@@ -15,6 +15,7 @@ public class FtpDto {
 
 	private Integer companyCode;
 	private String msgType;
+	private String sendType;
 	private String imageName01;
 	private String imageName02;
 	private String imagePath01;

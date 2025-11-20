@@ -62,6 +62,7 @@ public class SingleSendServiceImpl implements SingleSendService {
 				FtpDto ftpDto = FtpDto.builder()
 						.companyCode(companyCode)
 						.msgType(msgType)
+						.sendType(ConstantsUtils.SEND_TYPE_SINGLE)
 						.imageName01(singleSendDto.getImageName01())
 						.imageName02(singleSendDto.getImageName02())
 						.build();
