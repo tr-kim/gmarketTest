@@ -34,10 +34,11 @@
 			CNT,
 			STATUS,
 			SVC_TYPE
-		FROM
-			T_BROADCAST_MSG
-		WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}
-			AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}
+		FROM T_BROADCAST_MSG
+<!--		WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}	-->
+<!--			AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}	-->
+		WHERE REQ_TIME >= CONVERT(DATETIME, REPLACE(#{startTime}, '-', ''), 112)
+			AND REQ_TIME<![CDATA[ < ]]>DATEADD(DAY, 1, CONVERT(DATETIME, REPLACE(#{endTime}, '-', ''), 112))
 		<if test="waitTitle != null and waitTitle != ''">
 			AND TITLE LIKE CONCAT('%', #{waitTitle}, '%')
 		</if>
@@ -71,8 +72,10 @@
 		SELECT COUNT(*) FROM (			
 			SELECT 1 AS CNT
 			FROM T_BROADCAST_MSG
-			WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}
-				AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}
+<!--			WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}	-->
+<!--				AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}	-->
+			WHERE REQ_TIME >= CONVERT(DATETIME, REPLACE(#{startTime}, '-', ''), 112)
+				AND REQ_TIME<![CDATA[ < ]]>DATEADD(DAY, 1, CONVERT(DATETIME, REPLACE(#{endTime}, '-', ''), 112))
 			<if test="waitTitle != null and waitTitle != ''">
 				AND TITLE LIKE CONCAT('%', #{waitTitle}, '%')
 			</if>		

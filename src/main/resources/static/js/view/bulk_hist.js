@@ -91,8 +91,8 @@ $(function () {
 			const params = {
 				startDate: startDateFormatted,
 				endDate: endDateFormatted,
-				startTime: startTimeFormatted + "000000",
-				endTime: endTimeFormatted + "235959",
+				startTime: startTimeFormatted, // startTimeFormatted + "000000",
+				endTime: endTimeFormatted, // endTimeFormatted + "235959",
 				bulkTitle: titleValue,
 				companyCode: companyValue,
 				// DevExtreme 조회 옵션
