@@ -126,6 +126,7 @@
 				return;
 			}
 
+			// RSA 암호 코드
 			const publicKeyModulus = $("#publicKeyModulus").val();
 			const publicKeyExponent = $("#publicKeyExponent").val();
 			
@@ -142,6 +143,7 @@
 				$("#loginForm").submit();
 			} else {
 				alert("암호화 키가 올바르지 않습니다.");
+				location.reload();
 			}
 		});
 		
@@ -153,7 +155,6 @@
 		$(".excelWebSetup .close_btn").click(function(){
 			$(".modal-bg").removeClass("d-block");
 		});
-		
 		
 	</script>
 </body>

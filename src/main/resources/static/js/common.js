@@ -127,6 +127,7 @@ window.addEventListener('load', function() {
 					});
 				} else {
 					showDialogCustom("암호화 키가 올바르지 않습니다.");
+					location.reload();
 				}
 			});
 		});
