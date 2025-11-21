@@ -141,15 +141,11 @@ $(function() {
 				
 				// 시작일
 				startDateInstance.option("value", new Date(startYear, 0, 1));
-				startDateInstance.option("displayFormat", "yyyy '년' ");
-				startDateInstance.option("showClearButton", true);
-				startDateInstance.option("useMaskBehavior", true);
+				startDateInstance.option("displayFormat", "yyyy");
 				
 				// 종료일
 				endDateInstance.option("value", new Date(endYear, 0, 1));
-				endDateInstance.option("displayFormat", "yyyy '년' ");
-				endDateInstance.option("showClearButton", true);
-				endDateInstance.option("useMaskBehavior", true);
+				endDateInstance.option("displayFormat", "yyyy");
 				
 				// 숨김 처리
 				if(startHourInstance && endHourInstance) {
