@@ -139,8 +139,8 @@ $(function() {
 		allowColumnResizing: true,
 		columnResizingMode: 'widget',
 		columns: [
-			{
-				dataField: "no"
+			/*{
+				dataField: "NO"
 				, caption: "NO"
 				, alignment: "center"
 				, allowSorting: false
@@ -151,7 +151,7 @@ $(function() {
 
 					container.text(globalIndex);
 				}
-			},
+			},*/
 			{ dataField: "USER_ID", caption: "ID", alignment: "center" },
 			{ dataField: "USER_NAME", caption: "이름", alignment: "center" },
 			{
