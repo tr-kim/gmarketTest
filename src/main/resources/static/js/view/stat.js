@@ -367,8 +367,8 @@ $('#search-btn').dxButton({
 			
 		} else if(timeType === "3") {
 			
-			const startMonth = startDate.getMonth() + 1;
-			const endMonth = endDate.getMonth() + 1;
+			const startMonth = String(startDate.getMonth() + 1).padStart(2, '0');
+			const endMonth = String(endDate.getMonth() + 1).padStart(2, '0');
 			const diffMs = endMonth - startMonth;
 			
 			if(startMonth > endMonth) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
