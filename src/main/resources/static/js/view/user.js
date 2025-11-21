@@ -57,7 +57,7 @@ $(function() {
 
 	//사용자ID
 	userIdInstance = $('#user_id').dxTextBox({
-		placeholder: '아이디를 입력하세요.'
+		placeholder: 'ID를 입력하세요.'
 		, inputAttr: { name: "userId" }
 	}).dxTextBox("instance");
 	
@@ -152,7 +152,7 @@ $(function() {
 					container.text(globalIndex);
 				}
 			},
-			{ dataField: "USER_ID", caption: "사용자 ID", alignment: "center" },
+			{ dataField: "USER_ID", caption: "ID", alignment: "center" },
 			{ dataField: "USER_NAME", caption: "이름", alignment: "center" },
 			{
 				dataField: "COMPANY_CODE",
@@ -184,7 +184,7 @@ $(function() {
 			},
 			{
 				dataField: "USE_YN",
-				caption: "사용 여부",
+				caption: "계정 상태",
 				alignment: "center",
 				customizeText: function(cellInfo) {
 					switch (cellInfo.value) {

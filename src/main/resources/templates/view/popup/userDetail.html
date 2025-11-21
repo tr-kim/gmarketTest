@@ -13,7 +13,20 @@
 			<div class="modal-con">
 				<div class="mb-3 row">
 					<div class="col-6 mb-3">
-						<label class="d-block mb-1">사용자 등급</label>
+						<label class="d-block mb-1">* ID</label>
+						<input type="text" class="form-control" name="userId" id="user_id_detail" readonly aria-readonly="true" placeholder="ID를 입력하세요.">
+					</div>
+					<div class="col-6 mb-3">
+						<label class="d-block mb-1">* 이름</label>
+						<input type="text" class="form-control" name="userName" id="user_name_detail" placeholder="이름을 입력하세요.">
+					</div>
+					<div class="col-6 mb-3">
+						<label class="d-block mb-1">* 구분</label>
+						<input type="text" class="form-control" name="companyCodeName" id="company_code_name_detail" readonly aria-readonly="true">
+						<input type="hidden" class="form-control" name="companyCode" id="company_code_detail" readonly aria-readonly="true">
+					</div>
+					<div class="col-6 mb-3">
+						<label class="d-block mb-1">등급</label>
 						<select name="userGrade" id="user_grade_detail" class="form-select select_2" aria-readonly="true">
 							<option th:if="${#authentication.principal.userGrade == 0}" value="0">슈퍼관리자</option>
 							<option value="1">관리자</option>
@@ -22,21 +35,15 @@
 						</select>
 					</div>
 					<div class="col-6 mb-3">
-						<label class="d-block mb-1">* 구분</label>
-						<input type="text" class="form-control" name="companyCodeName" id="company_code_name_detail" readonly aria-readonly="true">
-						<input type="hidden" class="form-control" name="companyCode" id="company_code_detail" readonly aria-readonly="true">
+						<label class="d-block mb-1">* 암호</label>
+						<input type="password" class="form-control" name="userPwd" id="password_detail" data-type="password" placeholder="암호를 입력하세요.">
 					</div>
-					<div class="col-6 mb-3">
-						<label class="d-block mb-1">* 사용자 ID</label>
-						<input type="text" class="form-control" name="userId" id="user_id_detail" readonly aria-readonly="true" placeholder="사용자 아이디를 입력하세요.">
-					</div>
-					<div class="col-6 mb-3">
-						<label class="d-block mb-1">* 사용자 암호</label>
-						<input type="password" class="form-control" name="userPwd" id="password_detail" data-type="password" placeholder="사용자 암호를 입력하세요.">
-					</div>
-					<div class="col-6 mb-3">
-						<label class="d-block mb-1">* 사용자 이름</label>
-						<input type="text" class="form-control" name="userName" id="user_name_detail" placeholder="사용자 이름을 입력하세요.">
+					<div class="col-6">
+						<label class="d-block mb-1">계정 상태</label>
+						<select name="useYn" id="use_yn_detail" class="form-select select_Y">
+							<option value="Y">사용</option>
+							<option value="N">미사용</option>
+						</select>
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">전화번호</label>
@@ -46,12 +53,8 @@
 						<label class="d-block mb-1">핸드폰 번호</label>
 						<input type="text" class="form-control" name="telNo" id="user_phone2_detail" placeholder="핸드폰 번호를 입력하세요.">
 					</div>
-					<!--					<div class="col-6 mb-3">-->
-					<!--						<label class="d-block mb-1">EMAIL</label>-->
-					<!--						<input type="text" class="form-control" name="email" id="user_email_detail" data-type="email" placeholder="EMAIL를 입력하세요.">-->
-					<!--					</div>-->
 					<div class="col-6 mb-3">
-						<label class="d-block mb-1">SMS 발송 기능</label>
+						<label class="d-block mb-1">개별 발송 기능</label>
 						<select name="smsYn" id="user_sms_detail" class="form-select select_Y">
 							<option value="Y">사용</option>
 							<option value="N">미사용</option>
@@ -88,13 +91,6 @@
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">MMS 발송 기능</label>
 						<select name="mmsYn" id="user_mms_detail" class="form-select select_N">
-							<option value="Y">사용</option>
-							<option value="N">미사용</option>
-						</select>
-					</div>
-					<div class="col-6">
-						<label class="d-block mb-1">계정 상태</label>
-						<select name="useYn" id="use_yn_detail" class="form-select select_Y">
 							<option value="Y">사용</option>
 							<option value="N">미사용</option>
 						</select>
