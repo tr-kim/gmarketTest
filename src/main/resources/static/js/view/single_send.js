@@ -198,7 +198,7 @@ $(function () {
 	
 	$('#calendar').dxCalendar({
 		value: new Date(),
-		zoomLevel: "month",
+		minZoomLevel: "decade",
 		onValueChanged(data) {
 			const date = data.value;
 			if (date instanceof Date && !isNaN(date)) {
