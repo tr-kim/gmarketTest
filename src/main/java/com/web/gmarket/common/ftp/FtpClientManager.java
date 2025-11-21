@@ -12,9 +12,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.web.gmarket.common.config.FilePathConfig;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.vo.FtpDto;
 
@@ -28,8 +28,7 @@ public class FtpClientManager {
 	
 	private final FtpProperties ftpProperties;
 	
-	@Autowired
-//	private CommonService commonService;
+	private final FilePathConfig filePathConfig;
 	
 	private static final Map<Integer, String> COMPANY_MAP = Map.of(
 	    ConstantsUtils.AUCTION_CODE, ConstantsUtils.AUCTION,
@@ -132,8 +131,7 @@ public class FtpClientManager {
         	
         	
         	// 업로드 경로 설정
-//        	String uploadPath = String.format("%s\\%s\\%s", commonService.getImageFilePath(dto.getSendType()), month, date);
-        	String uploadPath = "";
+        	String uploadPath = String.format("%s\\%s\\%s", filePathConfig.getImageFilePath(dto.getSendType()), month, date);
         	log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UploadPath : {}", uploadPath);
         	
         	String imageName1 = dto.getImageName01();

@@ -131,9 +131,7 @@ public class RestUserController {
 		
 		try {
 			
-			if(ValidateHandingUtils.validateHandling(errors) != null) {
-				return ValidateHandingUtils.validateHandling(errors);
-			}
+			if(ValidateHandingUtils.validateHandling(errors) != null) return ValidateHandingUtils.validateHandling(errors);
 
 			UserDto info = userService.selectUserInfo(userDto.getUserId(), null);
 
@@ -173,9 +171,7 @@ public class RestUserController {
 		
 		try {
 			
-			if(ValidateHandingUtils.validateHandling(errors) != null) {
-				return ValidateHandingUtils.validateHandling(errors);
-			}
+			if(ValidateHandingUtils.validateHandling(errors) != null) return ValidateHandingUtils.validateHandling(errors);
 
 			UserDto info = userService.selectUserInfo(userDto.getUserId(), null);
 

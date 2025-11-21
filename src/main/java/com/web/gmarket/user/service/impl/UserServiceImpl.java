@@ -102,9 +102,8 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	public static String createHash(String data) throws Exception {
-		if (StringUtils.isBlank(data)) {
-			throw new NullPointerException();
-		}
+		
+		if (StringUtils.isBlank(data)) throw new NullPointerException();
 
 		MessageDigest md = MessageDigest.getInstance(ConstantsUtils.SHA_512);
 		byte[] raw = md.digest(data.getBytes(ConstantsUtils.EUC_KR));

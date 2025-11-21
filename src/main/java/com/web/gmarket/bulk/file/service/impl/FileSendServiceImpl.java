@@ -209,7 +209,8 @@ public class FileSendServiceImpl implements FileSendService {
 		String nowStr = sdf.format(new Date());
 		
 		// String savedFileName = "SEND_" + nowStr + "_" + originalFilename;
-		String savedFileName = "SEND_" + nowStr + "_" + userId + TXT_EXTENSION;
+		// String savedFileName = "SEND_" + nowStr + "_" + userId + TXT_EXTENSION; 
+		String savedFileName = String.format("SEND_%s_%s%s", nowStr, userId, TXT_EXTENSION); 
 		File savedFile = new File(commonService.getFilePath(ConstantsUtils.TXT), savedFileName);
 		
 		List<Map<String, Object>> textNumbers = new ArrayList<>();

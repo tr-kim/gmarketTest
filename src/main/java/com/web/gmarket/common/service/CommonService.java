@@ -97,27 +97,19 @@ public class CommonService {
     
     public String getFilePath(String type) {
     	switch(type) {
-    		case ConstantsUtils.EXCEL:
-    			return filePathConfig.getExcel();
-    		case ConstantsUtils.TXT:
-    			return filePathConfig.getTxt();
-    		default:
-    			return null;
+    		case ConstantsUtils.EXCEL: return filePathConfig.getExcel();
+    		case ConstantsUtils.TXT: return filePathConfig.getTxt();
+    		default: throw new IllegalArgumentException("File Path Unknown type: " + type);
     	}
     }
     
     public String getImageFilePath(String type) {
     	switch(type) {
-    		case ConstantsUtils.SEND_TYPE_SINGLE:
-    			return filePathConfig.getImageSingle();
-    		case ConstantsUtils.SEND_TYPE_EXCEL:
-    			return filePathConfig.getImageExcel();
-    		case ConstantsUtils.SEND_TYPE_FILE:
-    			return filePathConfig.getImageFile();
-    		case ConstantsUtils.SEND_TYPE_DB:
-    			return filePathConfig.getImageDb();
-    		default:
-    			return null;
+    		case ConstantsUtils.SEND_TYPE_SINGLE: return filePathConfig.getImageSingle();
+    		case ConstantsUtils.SEND_TYPE_EXCEL: return filePathConfig.getImageExcel();
+    		case ConstantsUtils.SEND_TYPE_FILE: return filePathConfig.getImageFile();
+    		case ConstantsUtils.SEND_TYPE_DB: return filePathConfig.getImageDb();
+    		default: throw new IllegalArgumentException("Image File Path Unknown type: " + type);
     	}
     }
 }

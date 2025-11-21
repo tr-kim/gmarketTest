@@ -23,18 +23,18 @@
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">구분</label>
 						<select name="companyCode" id="company_code_data" class="form-select select_0">
-							<option th:if="${#authentication.principal.userGrade == 0 
-								or (#authentication.principal.userGrade == 1 and #authentication.principal.companyCode == 0)}" th:selected="${#authentication.principal.companyCode == 0}" value="0">옥션</option>
-							<option th:if="${#authentication.principal.userGrade == 0 
-								or (#authentication.principal.userGrade == 1 and #authentication.principal.companyCode == 1)}" th:selected="${#authentication.principal.companyCode == 1}" value="1">G마켓</option>
-							<option th:if="${#authentication.principal.userGrade == 0 
-								or (#authentication.principal.userGrade == 1 and #authentication.principal.companyCode == 2)}" th:selected="${#authentication.principal.companyCode == 2}" value="2">스마일캐시</option>
+							<option th:each="entry : ${ { 0: '옥션', 1: 'G마켓', 2: '스마일캐시' }.entrySet() }"
+							        th:if="${#authentication.principal.userGrade == 0 or entry.key == #authentication.principal.companyCode}"
+							        th:value="${entry.key}"
+							        th:selected="${entry.key == #authentication.principal.companyCode}"
+							        th:text="${entry.value}">
+							</option>
 						</select>
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">등급</label>
 						<select name="userGrade" id="user_grade_data" class="form-select select_2">
-							<option th:if="${#authentication.principal.companyCode == 0}" value="0">슈퍼관리자</option>
+							<option th:if="${#authentication.principal.userGrade == 0}" value="0">슈퍼관리자</option>
 							<option value="1">관리자</option>
 							<option value="2" selected>사용자</option>
 							<option value="3">운영자</option>
@@ -56,7 +56,7 @@
 						<input type="text" class="form-control" name="hpNo" id="user_phone1_data" data-type="phoneNum" placeholder="전화번호를 입력하세요.">
 					</div>
 					<div class="col-6 mb-3">
-						<label class="d-block mb-1">핸드폰번호</label>
+						<label class="d-block mb-1">핸드폰 번호</label>
 						<input type="text" class="form-control" name="telNo" id="user_phone2_data" data-type="phoneNum" placeholder="핸드폰번호를 입력하세요.">
 					</div>
 					<div class="col-6 mb-3">
