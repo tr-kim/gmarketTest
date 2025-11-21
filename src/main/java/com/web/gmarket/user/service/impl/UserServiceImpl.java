@@ -31,9 +31,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto selectUserInfo(String userId, String delFlag) {
 		
-		UserDto userDto = new UserDto();
-		userDto.setUserId(userId);
-		userDto.setDelFlag(delFlag);
+		UserDto userDto = UserDto.builder().userId(userId).delFlag(delFlag).build();
 		
 		return commonService.getUserMapper().selectUserInfo(userDto);
 	}
@@ -72,6 +70,7 @@ public class UserServiceImpl implements UserService {
 			if (userDtoList == null || userDtoList.isEmpty()) {
 				result.put(ConstantsUtils.CODE, ConstantsUtils.DATA_DOSE_NOT_EXIST);
 				result.put(ConstantsUtils.RESULT, "삭제할 항목이 없습니다.");
+				
 				return ResponseEntity.badRequest().body(result);
 			}
 
@@ -79,10 +78,7 @@ public class UserServiceImpl implements UserService {
 				String userId = dto.getUserId();
 				if (StringUtils.isBlank(userId)) continue;
 
-				Map<String, Object> param = new HashMap<>();
-				param.put("userId", userId);
-
-				commonService.getUserMapper().deleteUserInfo(param);
+				commonService.getUserMapper().deleteUserInfo(userId);
 			}
 
 			result.put(ConstantsUtils.CODE, ConstantsUtils.SUCCESS_CODE);

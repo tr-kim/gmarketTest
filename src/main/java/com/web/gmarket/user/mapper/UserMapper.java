@@ -1,9 +1,9 @@
 package com.web.gmarket.user.mapper;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.web.gmarket.user.dto.UserDto;
 
@@ -57,7 +57,7 @@ public interface UserMapper {
 	 * @param userId
 	 * @return
 	 */
-	public int deleteUserInfo(Map<String, Object> param);
+	public int deleteUserInfo(@Param(value = "userId") String userId);
 
 	/**
 	 * 사용자 비밀번호 변경
