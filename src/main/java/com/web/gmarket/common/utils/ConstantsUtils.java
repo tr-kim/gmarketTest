@@ -166,4 +166,7 @@ public class ConstantsUtils {
 	// REJECT NUM
 	public static final String GMARKET_REJECT_NUM = "(거부)0800002004";
 	public static final String AUCTION_REJECT_NUM = "(거부)0803990000";
+	
+	// GMARKET SCHEMA
+	public static final String GMARKET_SCHEMA = "msdbgm."; // 기존 gmarket_hist
 }

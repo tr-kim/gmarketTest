@@ -43,14 +43,22 @@ $(function() {
 	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
 	    name: "startDate",
-		displayFormat: "yyyy-MM-dd"
+		displayFormat: "yyyy-MM-dd",
+		pickerType: "calendar",
+		calendarOptions: {
+			minZoomLevel: "decade"
+		}
 	}).dxDateBox("instance");
 	
 	// 종료일
 	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
 	    name: "endDate",
-		displayFormat: "yyyy-MM-dd"
+		displayFormat: "yyyy-MM-dd",
+		pickerType: "calendar",
+		calendarOptions: {
+			minZoomLevel: "decade"
+		}
 	}).dxDateBox("instance");
 	
 	radios.forEach(radio => {

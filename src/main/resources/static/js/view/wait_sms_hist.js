@@ -14,32 +14,20 @@ $(function () {
 		type: "date",
 		value: startDate,
 		displayFormat: "yyyy-MM-dd",
-		onValueChanged(e) {
-			const date = e.value;
-			if (date instanceof Date && !isNaN(date)) {
-				const yyyy = date.getFullYear();
-				const mm = String(date.getMonth() + 1).padStart(2, '0');
-				const dd = String(date.getDate()).padStart(2, '0');
-				
-				console.log(`${yyyy}${mm}${dd}`);
-			}
-		},
+		pickerType: "calendar",
+		calendarOptions: {
+			minZoomLevel: "decade"
+		}
 	}).dxDateBox("instance");
 
 	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
 		value: endDate,
 		displayFormat: "yyyy-MM-dd",
-		onValueChanged(e) {
-			const date = e.value;
-			if (date instanceof Date && !isNaN(date)) {
-				const yyyy = date.getFullYear();
-				const mm = String(date.getMonth() + 1).padStart(2, '0');
-				const dd = String(date.getDate()).padStart(2, '0');
-				
-				console.log(`${yyyy}${mm}${dd}`);
-			}
-		},
+		pickerType: "calendar",
+		calendarOptions: {
+			minZoomLevel: "decade"
+		}
 	}).dxDateBox("instance");
 
 	//대분류

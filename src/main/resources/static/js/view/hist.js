@@ -17,7 +17,7 @@ $(function () {
 		displayFormat: "yyyy-MM-dd",
 		pickerType: "calendar",
 		calendarOptions: {
-			minZoomLevel: "year"
+			minZoomLevel: "decade"
 		}
 	}).dxDateBox("instance");
 	
@@ -27,7 +27,7 @@ $(function () {
 		displayFormat: "yyyy-MM-dd",
 		pickerType: "calendar",
 		calendarOptions: {
-			minZoomLevel: "year"
+			minZoomLevel: "decade"
 		}
 	}).dxDateBox("instance");
 	

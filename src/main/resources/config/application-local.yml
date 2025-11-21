@@ -9,6 +9,12 @@ spring:
       add-mappings: true
       static-locations: classpath:/static/
       #static-locations: file:src/main/resources/static/
+      chain:
+        enabled: true
+        strategy:
+          content:
+            enabled: true
+            paths: /**
   thymeleaf:
     prefix: classpath:/templates/
     #prefix: file:src/main/resources/templates/

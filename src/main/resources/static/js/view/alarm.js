@@ -26,14 +26,22 @@ $(function() {
 		type: "date",
 		value: `${startYear}-${startMonth}-${startDay}`,
 		name: "startDate",
-		displayFormat: "yyyy-MM-dd"
+		displayFormat: "yyyy-MM-dd",
+		pickerType: "calendar",
+		calendarOptions: {
+			minZoomLevel: "decade"
+		}
 	}).dxDateBox("instance");
 	
 	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
 		value: `${endYear}-${endMonth}-${endDay}`,
 		name: "endDate",
-		displayFormat: "yyyy-MM-dd"
+		displayFormat: "yyyy-MM-dd",
+		pickerType: "calendar",
+		calendarOptions: {
+			minZoomLevel: "decade"
+		}
 	}).dxDateBox("instance");
 	
 	// 사용자 등급 및 회사 업체에 따라 select box option 설정
