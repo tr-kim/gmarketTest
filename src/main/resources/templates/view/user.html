@@ -44,6 +44,10 @@
 	<div class="content">
 		<div id="userGrid"></div>
 	</div>
+	
+	<input type="hidden" id="publicKeyModulus" name="publicKeyModulus">
+	<input type="hidden" id="publicKeyExponent" name="publicKeyExponent">
+	
 	<th:block th:replace="~{/view/popup/addUser :: addUser}"></th:block>
 	<th:block th:replace="~{/view/popup/userDetail :: userDetail}"></th:block>
 	<script th:src="@{/js/view/user.js}"></script>

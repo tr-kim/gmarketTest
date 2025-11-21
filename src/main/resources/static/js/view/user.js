@@ -11,20 +11,14 @@ let pageSize;
 $(function() {
 
 	let companyArray;
-	let companyValue;
+	const allCompanies = [{ Code: 0, Name: '옥션' }, { Code: 1, Name: 'G마켓' }, { Code: 2, Name: '스마일캐시' }];
 
 	if (userGrade == 0) {
-		companyArray = [{ Code: 0, Name: '옥션', }, { Code: 1, Name: 'G마켓' }, { Code: 2, Name: '스마일캐시' }];
-		companyValue = 1;
-	} else if (userGrade == 1 && companyCode == 0) {
-		companyArray = [{ Code: 0, Name: '옥션' }];
-		companyValue = 0;
-	} else if (userGrade == 1 && companyCode == 1) {
-		companyArray = [{ Code: 1, Name: 'G마켓' }];
-		companyValue = 1;
-	} else if (userGrade == 1 && companyCode == 2) {
-		companyArray = [{ Code: 2, Name: '스마일캐시' }];
-		companyValue = 2;
+		// 슈퍼관리자는 모든 회사 선택 가능
+		companyArray = allCompanies;
+	} else if (userGrade == 1) {
+		// 일반 관리자는 자신이 속한 회사만 선택 가능
+		companyArray = allCompanies.filter(c => c.Code === companyCode);
 	}
 
 	//구분
@@ -32,57 +26,29 @@ $(function() {
 		dataSource: companyArray,
 		displayExpr: 'Name',
 		valueExpr: 'Code',
-		value: companyValue
+		value: userGrade == 0 ? 1 : companyCode
 		, inputAttr: { name: "companyCode" }
 		// , onValueChanged: function(e) {
 		// 	dataGrid.option('editing.refreshMode', e.value);
 		// }
 	}).dxSelectBox("instance");
 
-	let userGradeData;
-	let userGradeValue;
-
-	if (userGrade == 0) {
-		userGradeData = [{
-			Grade: -1,
-			Name: '전체',
-		},{
-			Grade: 0,
-			Name: '슈퍼관리자',
-		}, {
-			Grade: 1,
-			Name: '관리자',
-		}, {
-			Grade: 2,
-			Name: '사용자',
-		}, {
-			Grade: 3,
-			Name: '운영자',
-		}];
-		userGradeValue = -1;
-	} else {
-		userGradeData = [{
-			Grade: -1,
-			Name: '전체',
-		},{
-			Grade: 1,
-			Name: '관리자',
-		}, {
-			Grade: 2,
-			Name: '사용자',
-		}, {
-			Grade: 3,
-			Name: '운영자',
-		}];
-		userGradeValue = -1;
-	};
+	let userGradeData = [{ Grade: -1, Name: '전체' }];
+	
+	if (userGrade == 0) userGradeData.push({ Grade: 0, Name: '슈퍼관리자' });
+	
+	userGradeData.push(
+	    { Grade: 1, Name: '관리자' },
+	    { Grade: 2, Name: '사용자' },
+	    { Grade: 3, Name: '운영자' }
+	);
 
 	//사용자등급
 	 userGradeInstance = $('#user_grade').dxSelectBox({
 		dataSource: userGradeData,
 		displayExpr: 'Name',
 		valueExpr: 'Grade',
-		value: userGradeValue
+		value: -1
 		, inputAttr: { name: "userGrade" }
 		// , onValueChanged: function(e) {
 		// 	dataGrid.option('editing.refreshMode', e.value);
@@ -396,7 +362,7 @@ $(function() {
 											const selectedRowsData = grid.getSelectedRowsData();
 											
 											const param = selectedRowsData.map(row => ({
-												userId: row.userId
+												userId: row.USER_ID
 											}));
 											
 											deleteAjax('/api/v1/user/delete', param, function callback(data) {
@@ -433,11 +399,8 @@ $(function() {
 							});
 
 							confirmDialog.show().done(function (dialogResult) {
-								if (dialogResult.result === "ok") {
-									console.log("삭제 완료");
-								} else {
-									console.log("취소");
-								}
+								if (dialogResult.result === "ok") console.log("삭제 완료");
+								else console.log("취소");
 							});
 						}
 					}
@@ -459,82 +422,39 @@ $(function() {
 	}).dxDataGrid("instance");
 });
 
-// 사용자 등록 모달 - 초기화
-function userModalReset() {
-	document.querySelectorAll('#user_add_modal input').forEach(input => {
-		input.value = "";
-	});
-
-	document.querySelectorAll('#user_add_modal select.select_Y').forEach(select => {
-		select.value = "Y";
-	});
-
-	document.querySelectorAll('#user_add_modal select.select_N').forEach(select => {
-		select.value = "N";
-	});
-
-	document.querySelectorAll('#user_add_modal select.select_0').forEach(select => {
-		select.value = "0";
-	});
-
-	document.querySelectorAll('#user_add_modal select.select_2').forEach(select => {
-		select.value = "2";
-	});
-}
-
 // 등록 팝업창 및 수정 팝업창
 function openCustomModal(mode, data = {}) {
 	currentMode = mode;
 
-	const param = {};
-	postAjax('/api/v1/user/rsa', param, rsaCallback);
-
+	postAjax('/api/v1/user/rsa', {}, rsaCallback);
+	
 	if (mode === 'edit') {
-		document.querySelector('#user_add_modal .modal-hd > span').textContent = '사용자 수정';
-		document.getElementById('reset_btn').classList.add('d-block');
+		document.getElementById('user_detail_modal').classList.add('d-block');
 		toggleBodyClass();
 
 		currentKey = data.userSeq; // keyExpr 기준
-		document.getElementById('user_grade_data').value = data.userGrade;
-		document.getElementById('company_code_data').value = data.companyCode;
-		document.getElementById('user_id_data').value = data.userId;
-		document.getElementById('user_psw_data').value = '';
-		document.getElementById('user_name_data').value = data.userName;
-		document.getElementById('user_phone1_data').value = data.hpNo;
-		document.getElementById('user_phone2_data').value = data.telNo;
-		document.getElementById('user_sms_data').value = data.smsYn;
-		document.getElementById('user_excel_data').value = data.excelYn;
-		document.getElementById('user_file_data').value = data.fileYn;
-		document.getElementById('user_db_data').value = data.dbYn;
-		document.getElementById('user_lms_data').value = data.lmsYn;
-		document.getElementById('user_mms_data').value = data.mmsYn;
-		document.getElementById('use_yn_data').value = data.useYn;
+		document.getElementById('user_grade_detail').value = data.USER_GRADE;
+		document.getElementById('company_code_detail').value = data.COMPANY_CODE;
+		document.getElementById('company_code_name_detail').value = data.COMPANY_CODE == 0 ? "옥션" : data.COMPANY_CODE == 1 ? "G마켓" : "스마일캐시";
+		document.getElementById('user_id_detail').value = data.USER_ID;
+		document.getElementById('password_detail').value = '';
+		document.getElementById('user_name_detail').value = data.USER_NAME;
+		document.getElementById('user_phone1_detail').value = data.HP_NO;
+		document.getElementById('user_phone2_detail').value = data.TEL_NO;
+		document.getElementById('user_sms_detail').value = data.SMS_YN;
+		document.getElementById('user_excel_detail').value = data.EXCEL_YN;
+		document.getElementById('user_file_detail').value = data.FILE_YN;
+		document.getElementById('user_db_detail').value = data.DB_YN;
+		document.getElementById('user_lms_detail').value = data.LMS_YN;
+		document.getElementById('user_mms_detail').value = data.MMS_YN;
+		document.getElementById('use_yn_detail').value = data.USE_YN;
 
-		document.getElementById('user_id_data').readOnly = true;
 	} else {
-		document.querySelector('#user_add_modal .modal-hd > span').textContent = '사용자 등록';
-
 		currentKey = null;
-		document.getElementById('user_grade_data').value = "2";
-		document.getElementById('company_code_data').value = "0";
-		document.getElementById('user_id_data').value = '';
-		document.getElementById('user_psw_data').value = '';
-		document.getElementById('user_name_data').value = '';
-		document.getElementById('user_phone1_data').value = '';
-		document.getElementById('user_phone2_data').value = '';
-		document.getElementById('user_sms_data').value = 'Y';
-		document.getElementById('user_excel_data').value = 'N';
-		document.getElementById('user_file_data').value = 'N';
-		document.getElementById('user_db_data').value = 'N';
-		document.getElementById('user_lms_data').value = 'N';
-		document.getElementById('user_mms_data').value = 'N';
-		document.getElementById('use_yn_data').value = 'Y';
-
-		document.getElementById('user_id_data').readOnly = false;
+		
+		document.getElementById('user_add_modal').classList.add('d-block');
+		toggleBodyClass();
 	}
-
-	document.getElementById('user_add_modal').classList.add('d-block');
-	toggleBodyClass();
 }
 
 // 비밀번호 암호화 성공 함수
@@ -602,76 +522,8 @@ $('#add_btn').dxButton({
     width: 60,
     onClick() {
 		openCustomModal('add');
-		if(document.getElementById('reset_btn').classList.contains('d-none')){
-			document.getElementById('reset_btn').classList.remove('d-none');
-		}		
-		toggleBodyClass();
-    },
-}).dxButton('instance');
-
-// 사용자 등록 모달 - 닫기 버튼
-document.getElementById('close_btn').addEventListener('click', function(e) {
-	e.preventDefault();
-	
-	document.getElementById('user_add_modal').classList.remove('d-block');
-	userModalReset();
-	toggleBodyClass();
-});
-
-// 사용자 등록 모달 - 초기화 버튼
-$('#reset_btn').dxButton({
-    stylingMode: 'outlined',
-    text: '초기화',
-    type: 'default',
-    width: 65,
-    onClick() {
-		userModalReset();
-    },
-}).dxButton('instance');
-
-// 사용자 등록 모달 - 저장 버튼
-$('#save_btn').dxButton({
-    stylingMode: 'default',
-    text: '저장',
-    type: 'default',
-    width: 60,
-    onClick() {
-		const password = $("#user_psw_data").val();
-		const publicKeyModulus = $("#publicKeyModulus").val();
-		const publicKeyExponent = $("#publicKeyExponent").val();
-
-		// RSA 암호화
-		let rsa = new RSAKey();
-		rsa.setPublic(publicKeyModulus, publicKeyExponent);
-
-		const encrypted = rsa.encrypt(password);
-		const base64 = hex2b64(encrypted);
-
-		let formData = new FormData();
-		formData.append("userId", $("#user_id_data").val());
-		formData.append("userPwd", encodeURIComponent(base64));
-		formData.append("userName", $("#user_name_data").val());
-		formData.append("userGrade", $("#user_grade_data").val());
-		formData.append("companyCode", $("#company_code_data").val());
-		formData.append("hpNo", $("#user_phone1_data").val());
-		formData.append("telNo", $("#user_phone2_data").val());
-		formData.append("email", $("#user_email_data").val());
-		formData.append("smsYn", $("#user_sms_data").val());
-		formData.append("excelYn", $("#user_excel_data").val());
-		formData.append("fileYn", $("#user_file_data").val());
-		formData.append("dbYn", $("#user_db_data").val());
-		formData.append("lmsYn", $("#user_lms_data").val());
-		formData.append("mmsYn", $("#user_mms_data").val());
-		formData.append("useYn", $("#use_yn_data").val());
-
-		if (currentMode === 'edit') {
-			putFormAjax("/api/v1/user/update", formData, successCallback);
-		} else if (currentMode === 'add') {
-			postFormAjax("/api/v1/user/insert", formData, successCallback);
-		}
-
-		const grid = $('#userGrid').dxDataGrid('instance');
-		grid.saveEditData();
+		const reset_btn = document.getElementById('reset_btn');
+		if(reset_btn.classList.contains('d-none')) reset_btn.classList.remove('d-none');
 		toggleBodyClass();
     },
 }).dxButton('instance');
@@ -681,24 +533,29 @@ function successCallback(data) {
 	let code = data.code;
 	let result = data.result;
 
+	// 등록 및 수정 성공
 	if (code == 1000) {
 		const message = currentMode === 'edit' ? "수정되었습니다." : "등록되었습니다.";
 		showDialogCustom(message, function (){
-			document.getElementById('user_add_modal').classList.remove('d-block');
+			const className = currentMode === 'edit' ? "user_detail_modal" : "user_add_modal";
+			document.getElementById(className).classList.remove('d-block');
 			userModalReset();
 			dataGrid.getDataSource().reload();
 			toggleBodyClass();
 		});
-		
+	
+	// 등록 및 수정 오류
 	} else if (code == 9001 || code == 9100 || code == 9101 || code == 9002) {
 		showDialogCustom(result);
-		
+	
+	// 그 이외의 오류
 	} else {
 		const message = currentMode === 'edit' ? "수정에 실패했습니다." : "등록에 실패했습니다.";
 		showDialogCustom(message);		
 	}
 }
 
+// 날짜 포맷 변환
 function formatTimestamp(str) {
 	str = str.trim();
 	const yyyy = str.slice(0, 4);

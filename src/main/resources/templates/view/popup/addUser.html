@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="addUser">
-	<div id="user_add_modal" class="modal-bg addUser">
+	<div id="user_add_modal" class="modal-bg userAddModal">
 		<div class="modal-wrap">
 			<div class="modal-hd">
 				<span class="font-sz-16 font-weight-600">사용자 등록</span>
@@ -15,44 +15,42 @@
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">사용자 등급</label>
 						<select name="userGrade" id="user_grade_data" class="form-select select_2">
-							<option value="0">슈퍼관리자</option>
+							<option th:if="${#authentication.principal.companyCode == 0}" value="0">슈퍼관리자</option>
 							<option value="1">관리자</option>
-							<option value="2">사용자</option>
+							<option value="2" selected>사용자</option>
 							<option value="3">운영자</option>
 						</select>
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">구분</label>
 						<select name="companyCode" id="company_code_data" class="form-select select_0">
-							<option value="0">옥션</option>
-							<option value="1">G마켓</option>
-							<option value="2">스마일캐시</option>
+							<option th:if="${#authentication.principal.userGrade == 0 
+								or (#authentication.principal.userGrade == 1 and #authentication.principal.companyCode == 0)}" th:selected="${#authentication.principal.companyCode == 0}" value="0">옥션</option>
+							<option th:if="${#authentication.principal.userGrade == 0 
+								or (#authentication.principal.userGrade == 1 and #authentication.principal.companyCode == 1)}" th:selected="${#authentication.principal.companyCode == 1}" value="1">G마켓</option>
+							<option th:if="${#authentication.principal.userGrade == 0 
+								or (#authentication.principal.userGrade == 1 and #authentication.principal.companyCode == 2)}" th:selected="${#authentication.principal.companyCode == 2}" value="2">스마일캐시</option>
 						</select>
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">* 사용자 ID</label>
-						<input type="text" class="form-control" name="userId" id="user_id_data" data-type="userId"
-							placeholder="사용자 ID를 입력하세요.">
+						<input type="text" class="form-control" name="userId" id="user_id_data" data-type="userId" placeholder="사용자 아이디를 입력하세요.">
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">* 사용자 암호</label>
-						<input type="password" class="form-control" name="userPwd" id="user_psw_data"
-							data-type="password" placeholder="사용자 암호를 입력하세요.">
+						<input type="password" class="form-control" name="userPwd" id="user_psw_data" data-type="password" placeholder="사용자 암호를 입력하세요.">
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">* 사용자 이름</label>
-						<input type="text" class="form-control" name="userName" id="user_name_data" data-type="userName"
-							placeholder="사용자 이름을 입력하세요.">
+						<input type="text" class="form-control" name="userName" id="user_name_data" data-type="userName" placeholder="사용자 이름을 입력하세요.">
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">전화번호</label>
-						<input type="text" class="form-control" name="hpNo" id="user_phone1_data" data-type="phoneNum"
-							placeholder="전화번호를 입력하세요.">
+						<input type="text" class="form-control" name="hpNo" id="user_phone1_data" data-type="phoneNum" placeholder="전화번호를 입력하세요.">
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">핸드폰 번호</label>
-						<input type="text" class="form-control" name="telNo" id="user_phone2_data" data-type="phoneNum"
-							placeholder="핸드폰 번호를 입력하세요.">
+						<input type="text" class="form-control" name="telNo" id="user_phone2_data" data-type="phoneNum" placeholder="핸드폰 번호를 입력하세요.">
 					</div>
 					<!--					<div class="col-6 mb-3">-->
 					<!--						<label class="d-block mb-1">EMAIL</label>-->
@@ -61,8 +59,8 @@
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">SMS 발송 기능</label>
 						<select name="smsYn" id="user_sms_data" class="form-select select_Y">
-							<option value="Y" selected>사용</option>
-							<option value="N">미사용</option>
+							<option value="Y">사용</option>
+							<option value="N" selected>미사용</option>
 						</select>
 					</div>
 					<div class="col-6 mb-3">
@@ -108,8 +106,6 @@
 						</select>
 					</div>
 				</div>
-				<input type="hidden" id="publicKeyModulus" name="publicKeyModulus">
-				<input type="hidden" id="publicKeyExponent" name="publicKeyExponent">
 			</div>
 			<div class="modal-ft">
 				<div id="reset_btn" class="me-2"></div>
@@ -117,6 +113,93 @@
 			</div>
 		</div>
 	</div>
+	<script>
+		
+		// 사용자 등록 모달 - 초기화
+		function userModalReset() {
+			document.querySelectorAll('#user_add_modal input').forEach(input => {
+				input.value = "";
+			});
+
+			document.querySelectorAll('#user_add_modal select.select_Y').forEach(select => {
+				select.value = "Y";
+			});
+
+			document.querySelectorAll('#user_add_modal select.select_N').forEach(select => {
+				select.value = "N";
+			});
+
+			document.querySelectorAll('#user_add_modal select.select_0').forEach(select => {
+				select.value = companyCode;
+			});
+
+			document.querySelectorAll('#user_add_modal select.select_2').forEach(select => {
+				select.value = "2";
+			});
+		}
+		
+		// 사용자 등록 모달 - 닫기 버튼
+		document.getElementById('close_btn').addEventListener('click', function(e) {
+			e.preventDefault();
+			
+			closeModal('userAddModal');
+			userModalReset();
+		});
+
+		// 사용자 등록 모달 - 초기화 버튼
+		$('#reset_btn').dxButton({
+		    stylingMode: 'outlined',
+		    text: '초기화',
+		    type: 'default',
+		    width: 65,
+		    onClick() {
+				userModalReset();
+		    },
+		}).dxButton('instance');
+
+		// 사용자 등록 모달 - 저장 버튼
+		$('#save_btn').dxButton({
+		    stylingMode: 'default',
+		    text: '저장',
+		    type: 'default',
+		    width: 60,
+		    onClick() {
+				const password = $("#user_psw_data").val();
+				const publicKeyModulus = $("#publicKeyModulus").val();
+				const publicKeyExponent = $("#publicKeyExponent").val();
+
+				// RSA 암호화
+				let rsa = new RSAKey();
+				rsa.setPublic(publicKeyModulus, publicKeyExponent);
+
+				const encrypted = rsa.encrypt(password);
+				const base64 = hex2b64(encrypted);
+
+				let formData = new FormData();
+				formData.append("userId", $("#user_id_data").val());
+				formData.append("userPwd", encodeURIComponent(base64));
+				formData.append("userName", $("#user_name_data").val());
+				formData.append("userGrade", $("#user_grade_data").val());
+				formData.append("companyCode", $("#company_code_data").val());
+				formData.append("hpNo", $("#user_phone1_data").val());
+				formData.append("telNo", $("#user_phone2_data").val());
+				// formData.append("email", $("#user_email_data").val());
+				formData.append("smsYn", $("#user_sms_data").val());
+				formData.append("excelYn", $("#user_excel_data").val());
+				formData.append("fileYn", $("#user_file_data").val());
+				formData.append("dbYn", $("#user_db_data").val());
+				formData.append("lmsYn", $("#user_lms_data").val());
+				formData.append("mmsYn", $("#user_mms_data").val());
+				formData.append("useYn", $("#use_yn_data").val());
+				
+				postFormAjax("/api/v1/user/insert", formData, successCallback);
+
+				const grid = $('#userGrid').dxDataGrid('instance');
+				grid.saveEditData();
+				toggleBodyClass();
+		    },
+		}).dxButton('instance');
+	</script>
 </th:block>
 
 </html>

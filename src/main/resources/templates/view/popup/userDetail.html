@@ -4,8 +4,8 @@
 	<div id="user_detail_modal" class="modal-bg userDetail">
 		<div class="modal-wrap">
 			<div class="modal-hd">
-				<span class="font-sz-16 font-weight-600">사용자 등록</span>
-				<button class="close_btn" id="close_btn">
+				<span class="font-sz-16 font-weight-600">사용자 수정</span>
+				<button class="close_btn" onclick="closeModal('userDetail')">
 					<i class="bi bi-x-lg"></i>
 					<span class="visually-hidden">닫기</span>
 				</button>
@@ -14,98 +14,143 @@
 				<div class="mb-3 row">
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">사용자 등급</label>
-						<select name="userGrade" id="user_grade_data_detail" class="form-select select_2" aria-readonly="true">
-							<option value="0">슈퍼관리자</option>
+						<select name="userGrade" id="user_grade_detail" class="form-select select_2" aria-readonly="true">
+							<option th:if="${#authentication.principal.userGrade == 0}" value="0">슈퍼관리자</option>
 							<option value="1">관리자</option>
 							<option value="2">사용자</option>
 							<option value="3">운영자</option>
 						</select>
 					</div>
 					<div class="col-6 mb-3">
-						<label class="d-block mb-1">구분</label>
-						<select name="companyCode" id="company_code_data_detail" class="form-select select_0" aria-readonly="true">
-							<option value="0">옥션</option>
-							<option value="1">G마켓</option>
-							<option value="2">스마일캐시</option>
-						</select>
+						<label class="d-block mb-1">* 구분</label>
+						<input type="text" class="form-control" name="companyCodeName" id="company_code_name_detail" readonly aria-readonly="true">
+						<input type="hidden" class="form-control" name="companyCode" id="company_code_detail" readonly aria-readonly="true">
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">* 사용자 ID</label>
-						<input type="text" class="form-control" name="userId" id="user_id_data_detail" aria-readonly="true">
+						<input type="text" class="form-control" name="userId" id="user_id_detail" readonly aria-readonly="true" placeholder="사용자 아이디를 입력하세요.">
 					</div>
-<!--					<div class="col-6 mb-3">-->
-<!--						<label class="d-block mb-1">* 사용자 암호</label>-->
-<!--						<input type="password" class="form-control" name="userPwd" id="user_psw_data" data-type="password" placeholder="사용자 암호를 입력하세요.">-->
-<!--					</div>-->
+					<div class="col-6 mb-3">
+						<label class="d-block mb-1">* 사용자 암호</label>
+						<input type="password" class="form-control" name="userPwd" id="password_detail" data-type="password" placeholder="사용자 암호를 입력하세요.">
+					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">* 사용자 이름</label>
-						<input type="text" class="form-control" name="userName" id="user_name_data_detail" aria-readonly="true">
+						<input type="text" class="form-control" name="userName" id="user_name_detail" placeholder="사용자 이름을 입력하세요.">
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">전화번호</label>
-						<input type="text" class="form-control" name="hpNo" id="user_phone1_data_detail" aria-readonly="true">
+						<input type="text" class="form-control" name="hpNo" id="user_phone1_detail" placeholder="전화번호를 입력하세요.">
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">핸드폰 번호</label>
-						<input type="text" class="form-control" name="telNo" id="user_phone2_data_detail" aria-readonly="true">
+						<input type="text" class="form-control" name="telNo" id="user_phone2_detail" placeholder="핸드폰 번호를 입력하세요.">
 					</div>
 					<!--					<div class="col-6 mb-3">-->
 					<!--						<label class="d-block mb-1">EMAIL</label>-->
-					<!--						<input type="text" class="form-control" name="email" id="user_email_data" data-type="email" placeholder="EMAIL를 입력하세요.">-->
+					<!--						<input type="text" class="form-control" name="email" id="user_email_detail" data-type="email" placeholder="EMAIL를 입력하세요.">-->
 					<!--					</div>-->
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">SMS 발송 기능</label>
-						<select name="smsYn" id="user_sms_data_detail" class="form-select select_Y" aria-readonly="true">
+						<select name="smsYn" id="user_sms_detail" class="form-select select_Y">
 							<option value="Y">사용</option>
 							<option value="N">미사용</option>
 						</select>
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">엑셀 발송 기능</label>
-						<select name="excelYn" id="user_excel_data_detail" class="form-select select_N" aria-readonly="true">
+						<select name="excelYn" id="user_excel_detail" class="form-select select_N">
 							<option value="Y">사용</option>
 							<option value="N">미사용</option>
 						</select>
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">파일 발송 기능</label>
-						<select name="fileYn" id="user_file_data_detail" class="form-select select_N" aria-readonly="true">
+						<select name="fileYn" id="user_file_detail" class="form-select select_N">
 							<option value="Y">사용</option>
 							<option value="N">미사용</option>
 						</select>
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">DB 발송 기능</label>
-						<select name="dbYn" id="user_db_data_detail" class="form-select select_N" aria-readonly="true">
+						<select name="dbYn" id="user_db_detail" class="form-select select_N">
 							<option value="Y">사용</option>
 							<option value="N" selected>미사용</option>
 						</select>
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">LMS 발송 기능</label>
-						<select name="lmsYn" id="user_lms_data_detail" class="form-select select_N" aria-readonly="true">
+						<select name="lmsYn" id="user_lms_detail" class="form-select select_N">
 							<option value="Y">사용</option>
 							<option value="N">미사용</option>
 						</select>
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">MMS 발송 기능</label>
-						<select name="mmsYn" id="user_mms_data_detail" class="form-select select_N" aria-readonly="true">
+						<select name="mmsYn" id="user_mms_detail" class="form-select select_N">
 							<option value="Y">사용</option>
 							<option value="N">미사용</option>
 						</select>
 					</div>
 					<div class="col-6">
 						<label class="d-block mb-1">계정 상태</label>
-						<select name="useYn" id="use_yn_data_detail" class="form-select select_Y" aria-readonly="true">
+						<select name="useYn" id="use_yn_detail" class="form-select select_Y">
 							<option value="Y">사용</option>
 							<option value="N">미사용</option>
 						</select>
 					</div>
 				</div>
 			</div>
+			<div class="modal-ft">
+				<div id="modify_btn"></div>
+			</div>
 		</div>
 	</div>
+	<script>
+		
+		// 사용자 수정 모달 - 수정 버튼
+		$('#modify_btn').dxButton({
+		    stylingMode: 'default',
+		    text: '수정',
+		    type: 'default',
+		    width: 60,
+		    onClick() {
+				const password = $("#password_detail").val();
+				const publicKeyModulus = $("#publicKeyModulus").val();
+				const publicKeyExponent = $("#publicKeyExponent").val();
+
+				// RSA 암호화
+				let rsa = new RSAKey();
+				rsa.setPublic(publicKeyModulus, publicKeyExponent);
+
+				const encrypted = rsa.encrypt(password);
+				const base64 = hex2b64(encrypted);
+
+				let formData = new FormData();
+				formData.append("userId", $("#user_id_detail").val());
+				formData.append("userPwd", encodeURIComponent(base64));
+				formData.append("userName", $("#user_name_detail").val());
+				formData.append("userGrade", $("#user_grade_detail").val());
+				formData.append("companyCode", $("#company_code_detail").val());
+				formData.append("hpNo", $("#user_phone1_detail").val());
+				formData.append("telNo", $("#user_phone2_detail").val());
+				// formData.append("email", $("#user_email_data").val());
+				formData.append("smsYn", $("#user_sms_detail").val());
+				formData.append("excelYn", $("#user_excel_detail").val());
+				formData.append("fileYn", $("#user_file_detail").val());
+				formData.append("dbYn", $("#user_db_detail").val());
+				formData.append("lmsYn", $("#user_lms_detail").val());
+				formData.append("mmsYn", $("#user_mms_detail").val());
+				formData.append("useYn", $("#use_yn_detail").val());
+				
+				putFormAjax("/api/v1/user/update", formData, successCallback);
+
+				const grid = $('#userGrid').dxDataGrid('instance');
+				grid.saveEditData();
+				toggleBodyClass();
+		    },
+		}).dxButton('instance');
+	</script>
 </th:block>
 
 </html>
