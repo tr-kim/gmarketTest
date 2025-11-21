@@ -565,7 +565,7 @@ $(function () {
 function sendMessage() {
 	
 	if(userExcelUse == "N" || userExcelUse == null || userExcelUse == "") {
-		showDialogCustom("현재 계정은 엑셀 발송이 제한되어 있습니다. 자세한 내용은 관리자에게 문의하세요.");
+		showDialogCustom("발송 권한이 없습니다.<br>관리자에게 문의하세요.");
 		return;
 	}
 	
