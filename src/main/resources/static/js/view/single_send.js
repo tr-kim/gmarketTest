@@ -364,54 +364,64 @@ $(function () {
 	}
 
 	//입력 이벤트 핸들링
-	/*function handleInput(e) {
-    	let target = e ? e.target : null;
-		let titleContent = MSG_TITLE.value;
-		let writeContent = MSG_WRITE.value;
-		let rejectContent = document.getElementById('rejectNum').value;
+	function truncateByByte(str, maxByte) {
+		let total = 0;
+		let cutIndex = str.length;
 
-		let titleSize = getByteSize(titleContent);
-		let writeSize = getByteSize(writeContent);
-		let rejectSize = document.getElementById('rejectNum').disabled ? 0 : getByteSize(rejectContent);
+		for (let i = 0; i < str.length; i++) {
+			const byte = str.charCodeAt(i) > 127 ? 2 : 1;
+			total += byte;
+			if (total > maxByte) {
+				cutIndex = i;
+				break;
+			}
+		}
+		return str.slice(0, cutIndex);
+	}
 
+	function handleInput(e) {
+		const target = e ? e.target : null;
+		const rejectInput = document.getElementById('rejectNum');
+		const rejectDisabled = rejectInput.disabled;
+
+		let write = MSG_WRITE.value;
+		let reject = rejectDisabled ? '' : rejectInput.value;
+
+		let writeSize = getByteSize(write);
+		let rejectSize = getByteSize(reject);
 		let totalSize = writeSize + rejectSize;
 
-		if(userLmsUse == "N" || userLmsUse == null || userLmsUse == "") {
-			if (totalSize > 80){				
+		const maxByte = (!userLmsUse || userLmsUse === "N") ? 80 : 2000;
 
-				if (target) target.value = target.value.slice(0, -1);
+		if (totalSize > maxByte && target) {
+			if (target === MSG_WRITE) {
+				write = truncateByByte(write, maxByte - rejectSize);
+				MSG_WRITE.value = write;
+			} else {
+				reject = truncateByByte(reject, maxByte - writeSize);
+				rejectInput.value = reject;
+			}
 
-				showDialogCustom("발송 권한이 없습니다.<br>관리자에게 문의하세요.");
-
-				return; 
-			}				
-		}
-
-		if (totalSize > 2000) {
-			showDialogCustom(`최대 2000byte까지 입력 가능합니다.`);
-
-			// 초과된 input에서 마지막 문자 제거
-			if (target) target.value = target.value.slice(0, -1);
-
-			// 다시 합산
-			writeSize = getByteSize(MSG_WRITE.value);
-			rejectSize = document.getElementById('rejectNum').disabled ? 0 : getByteSize(rejectContent);
+			writeSize = getByteSize(write);
+			rejectSize = getByteSize(reject);
 			totalSize = writeSize + rejectSize;
+
+			showDialogCustom(maxByte === 80
+				? "발송 권한이 없습니다.<br>관리자에게 문의하세요."
+				: "최대 2000byte까지 입력 가능합니다."
+			);
 		}
 
+		// 메시지 타입 판단
 		const hasImg = hasImage();
+		if (hasImg) setMsgType(2, totalSize);
+		else if (MSG_TITLE.value.trim() !== '' || totalSize > 80) setMsgType(1, totalSize);
+		else setMsgType(0, totalSize);
 
-		if (hasImg) {
-			setMsgType(2, totalSize); // MMS
-		} else if (titleContent.trim() !== '' || totalSize > 80) {
-			setMsgType(1, totalSize); // LMS
-		} else {
-			setMsgType(0, totalSize); // SMS
-		}
+		INPUT_BYTE.textContent = totalSize;
+	}
 
-		console.log(`title:${titleSize}, write:${writeSize}, reject:${rejectSize}, total:${totalSize}`);
-	}*/
-	function handleInput(e) {
+	/*function handleInput(e) {
 		const target = e ? e.target : null;
 		const rejectDisabled = document.getElementById('rejectNum').disabled;
 
@@ -432,6 +442,7 @@ $(function () {
 					writeSize = getByteSize(MSG_WRITE.value);
 					rejectSize = rejectDisabled ? 0 : getByteSize(rejectContent);
 					totalSize = writeSize + rejectSize;
+					INPUT_BYTE.textContent = totalSize;
 				}
 			}
 			showDialogCustom("발송 권한이 없습니다.<br>관리자에게 문의하세요.");
@@ -446,8 +457,20 @@ $(function () {
 					writeSize = getByteSize(MSG_WRITE.value);
 					rejectSize = rejectDisabled ? 0 : getByteSize(rejectContent);
 					totalSize = writeSize + rejectSize;
+					INPUT_BYTE.textContent = totalSize;
 				}
 			}
+
+			// 메시지 타입 판단
+			const hasImg = hasImage();
+			if (hasImg) {
+				setMsgType(2, totalSize);
+			} else if (MSG_TITLE.value.trim() !== '' || totalSize > 80) {
+				setMsgType(1, totalSize);
+			} else {
+				setMsgType(0, totalSize);
+			}
+
 			showDialogCustom("최대 2000byte까지 입력 가능합니다.");
 			return;
 		}
@@ -461,9 +484,7 @@ $(function () {
 		} else {
 			setMsgType(0, totalSize);
 		}
-
-		console.log(`write:${writeSize}, reject:${rejectSize}, total:${totalSize}`);
-	}
+	}*/
 
 
 	const rejectNum = document.getElementById('rejectNum')
