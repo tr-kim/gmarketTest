@@ -413,8 +413,8 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 //							cloneMessage[j] = cloneMessage[j].replace("[%" + code + "%]", excelValue);
 //							cloneSubject[j] = cloneSubject[j].replace("[%" + code + "%]", excelValue);
 
-							cloneMessage.add(cloneMessage.get(j).replace("[%" + code + "%]", excelValue));
-							cloneSubject.add(cloneSubject.get(j).replace("[%" + code + "%]", excelValue));
+							cloneMessage.set(j, cloneMessage.get(j).replace("[%" + code + "%]", excelValue));
+							cloneSubject.set(j, cloneSubject.get(j).replace("[%" + code + "%]", excelValue));
 
 						} catch (ArrayIndexOutOfBoundsException e) {
 							throw new ArrayIndexOutOfBoundsException(e.getMessage());
@@ -505,9 +505,9 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 
 //						cloneMessage[j] = cloneMessage[j].replace("[%" + code + "%]", "");
 //						cloneSubject[j] = cloneSubject[j].replace("[%" + code + "%]", "");
-
-						cloneMessage.add(cloneMessage.get(j).replace("[%" + code + "%]", ""));
-						cloneSubject.add(cloneSubject.get(j).replace("[%" + code + "%]", ""));
+						
+						cloneMessage.set(j, cloneMessage.get(j).replace("[%" + code + "%]", ""));
+						cloneSubject.set(j, cloneSubject.get(j).replace("[%" + code + "%]", ""));
 
 					} catch (ArrayIndexOutOfBoundsException e) {
 						throw new ArrayIndexOutOfBoundsException(e.getMessage());

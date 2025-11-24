@@ -7,19 +7,14 @@ let currentMode = ''; // 전역 변수로 모드 추적
 let currentKey = null;
 
 let pageSize;
+const allCompanies = [{ Code: 0, Name: '옥션' }, { Code: 1, Name: 'G마켓' }, { Code: 2, Name: '스마일캐시' }];
 
 $(function() {
 
 	let companyArray;
-	const allCompanies = [{ Code: 0, Name: '옥션' }, { Code: 1, Name: 'G마켓' }, { Code: 2, Name: '스마일캐시' }];
-
-	if (userGrade == 0) {
-		// 슈퍼관리자는 모든 회사 선택 가능
-		companyArray = allCompanies;
-	} else if (userGrade == 1) {
-		// 일반 관리자는 자신이 속한 회사만 선택 가능
-		companyArray = allCompanies.filter(c => c.Code === companyCode);
-	}
+	
+	if (userGrade == 0) companyArray = allCompanies; // 슈퍼관리자는 모든 회사 선택 가능
+	else if (userGrade == 1) companyArray = allCompanies.filter(c => c.Code === companyCode); // 일반 관리자는 자신이 속한 회사만 선택 가능
 
 	//구분
 	companyInstance = $('#companyCode').dxSelectBox({
@@ -199,11 +194,8 @@ $(function() {
 				caption: "최초 등록일",
 				alignment: "center",
 				customizeText: function(cellInfo) {
-					if(cellInfo && cellInfo.value){
-						return formatTimestamp(cellInfo.value);
-					} else {
-						return '-';
-					}
+					if(cellInfo && cellInfo.value) return formatTimestamp(cellInfo.value);
+					else return '-';
 				}
 			},
 			{
@@ -211,11 +203,8 @@ $(function() {
 				caption: "최종 수정일",
 				alignment: "center",
 				customizeText: function(cellInfo) {
-					if(cellInfo && cellInfo.value){
-						return formatTimestamp(cellInfo.value);
-					} else {
-						return '-';
-					}
+					if(cellInfo && cellInfo.value) return formatTimestamp(cellInfo.value);
+					else return '-';
 				}
 			},
 			/*{
@@ -435,7 +424,7 @@ function openCustomModal(mode, data = {}) {
 		currentKey = data.userSeq; // keyExpr 기준
 		document.getElementById('user_grade_detail').value = data.USER_GRADE;
 		document.getElementById('company_code_detail').value = data.COMPANY_CODE;
-		document.getElementById('company_code_name_detail').value = data.COMPANY_CODE == 0 ? "옥션" : data.COMPANY_CODE == 1 ? "G마켓" : "스마일캐시";
+		document.getElementById('company_code_name_detail').value = allCompanies.find(c => c.Code === data.COMPANY_CODE)?.Name;
 		document.getElementById('user_id_detail').value = data.USER_ID;
 		document.getElementById('password_detail').value = '';
 		document.getElementById('user_name_detail').value = data.USER_NAME;
