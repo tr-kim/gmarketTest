@@ -134,6 +134,11 @@ $(function () {
 		text: '이미지 체크',
 		type: 'danger',
 		onClick() {
+			if(userMmsUse == "N" || userMmsUse == null || userMmsUse == "") {				
+				showDialogCustom("발송 권한이 없습니다.<br>관리자에게 문의하세요.");
+				fileUploader.reset();	
+				return;					
+			}
 			if (fileUploader.option('value').length === 0) {
 				showDialogCustom('이미지 파일을 선택하세요.');
 				return;
@@ -338,27 +343,13 @@ $(function () {
 	});	
 
 	//문자 byte 표시
-	function getByteLength(str) {
-		let resultStr = "";
+	function getByteSize(str) {
 		let size = 0;
 
 		for (let i = 0; i < str.length; i++) {
 			const ch = str.charAt(i);
 			const byteSize = new Blob([ch]).size;
-			const addSize = (byteSize === 2 || byteSize === 3) ? 2 : 1;
-
-			if (size + addSize > 2000) {
-				showDialogCustom(`최대 2000byte까지 입력 가능합니다.`);
-				break;
-			}
-
-			resultStr += ch;
-			size += addSize;
-		}
-
-		if (str !== resultStr) {
-			
-			MSG_WRITE.value = resultStr;
+			size += (byteSize >= 2) ? 2 : 1;
 		}
 
 		return size;
@@ -374,32 +365,63 @@ $(function () {
 	}
 
 	//입력 이벤트 핸들링
-	function handleInput() {
-    const titleContent = MSG_TITLE.value;
-    const titleByteLength = getByteLength(titleContent);
+	function truncateByByte(str, maxByte) {
+		let total = 0;
+		let cutIndex = str.length;
 
-    const writeContent = MSG_WRITE.value;
-    const writeByteLength = getByteLength(writeContent);
+		for (let i = 0; i < str.length; i++) {
+			const byte = str.charCodeAt(i) > 127 ? 2 : 1;
+			total += byte;
+			if (total > maxByte) {
+				cutIndex = i;
+				break;
+			}
+		}
+		return str.slice(0, cutIndex);
+	}
 
-    let totalByteLength = writeByteLength; // 기본은 내용 바이트 수
+	function handleInput(e) {
+		const target = e ? e.target : null;
+		const rejectInput = document.getElementById('rejectNum');
+		const rejectDisabled = rejectInput.disabled;
 
-    // rejectCheckDefault가 활성화(checked)되어 있고 rejectNum도 입력되면 바이트 합산
-    if (!document.getElementById('rejectNum').disabled) {
-        const rejectNumContent = document.getElementById('rejectNum').value;
-        const rejectNumByteLength = getByteLength(rejectNumContent);
-        totalByteLength += rejectNumByteLength;
-    }
+		let write = MSG_WRITE.value;
+		let reject = rejectDisabled ? '' : rejectInput.value;
 
-    const hasImg = hasImage();
+		let writeSize = getByteSize(write);
+		let rejectSize = getByteSize(reject);
+		let totalSize = writeSize + rejectSize;
 
-    if (hasImg) {
-        setMsgType(2, totalByteLength); // MMS
-    } else if (titleContent.trim() !== '' || totalByteLength > 80) {
-        setMsgType(1, totalByteLength); // LMS
-    } else {
-        setMsgType(0, totalByteLength); // SMS
-    }
-}
+		const maxByte = (!userLmsUse || userLmsUse === "N") ? 80 : 2000;
+
+		if (totalSize > maxByte && target) {
+			if (target === MSG_WRITE) {
+				write = truncateByByte(write, maxByte - rejectSize);
+				MSG_WRITE.value = write;
+			} else {
+				reject = truncateByByte(reject, maxByte - writeSize);
+				rejectInput.value = reject;
+			}
+
+			writeSize = getByteSize(write);
+			rejectSize = getByteSize(reject);
+			totalSize = writeSize + rejectSize;
+
+			showDialogCustom(maxByte === 80
+				? "발송 권한이 없습니다.<br>관리자에게 문의하세요."
+				: "최대 2000byte까지 입력 가능합니다."
+			);
+		}
+
+		// 메시지 타입 판단
+		const hasImg = hasImage();
+		if (hasImg) setMsgType(2, totalSize);
+		else if (MSG_TITLE.value.trim() !== '' || totalSize > 80) setMsgType(1, totalSize);
+		else setMsgType(0, totalSize);
+
+		INPUT_BYTE.textContent = totalSize;
+	}
+
 
 	const rejectNum = document.getElementById('rejectNum')
 	MSG_TITLE.addEventListener("input", handleInput); //제목

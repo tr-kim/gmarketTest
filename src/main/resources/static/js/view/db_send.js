@@ -130,6 +130,11 @@ $(function () {
 		text: '이미지 체크',
 		type: 'danger',
 		onClick() {
+			if(userMmsUse == "N" || userMmsUse == null || userMmsUse == "") {				
+				showDialogCustom("발송 권한이 없습니다.<br>관리자에게 문의하세요.");
+				fileUploader.reset();	
+				return;					
+			}
 			if (fileUploader.option('value').length === 0) {
 				showDialogCustom('이미지 파일을 선택하세요.');
 				return;
