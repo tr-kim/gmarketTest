@@ -59,7 +59,7 @@ window.addEventListener('load', function() {
 
 			const pw1 = document.getElementById('new-psw');
 			const pw2 = document.getElementById('new-psw2');
-			const reg = /^[A-Za-z0-9_]+$/;
+			const reg = /^[A-Za-z0-9]+$/;
 
 			if (isEmpty(pw1.value)) {
 				const message = '비밀번호를 입력해주세요.';
