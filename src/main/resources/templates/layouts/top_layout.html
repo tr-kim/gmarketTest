@@ -139,6 +139,10 @@
 		// 사용자 등급 및 회사 코드
 		const userGrade = /*[[${#authentication.principal.userGrade}]]*/ -1;
 		const companyCode = /*[[${#authentication.principal.companyCode}]]*/ -1;
+
+		//LMS, MMS 사용 여부
+		let userLmsUse = /*[[${#authentication.principal.lmsYn}]]*/ 'N';
+		let userMmsUse = /*[[${#authentication.principal.mmsYn}]]*/ 'N';
 	</script>
 	<script>
 		<!-- 한국어 적용(ko-KR) -->

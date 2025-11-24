@@ -567,6 +567,12 @@ function reservedDelete(btn){
 
 // 문자 발송
 function sendMessage(){
+
+	if(userDbUse == "N" || userDbUse == null || userDbUse == "") {
+		showDialogCustom("발송 권한이 없습니다.<br>관리자에게 문의하세요.");
+		return;
+	}
+
 	const reserved4 = document.getElementById('reserved4');
 	const msgType = document.querySelector('.msg_type').textContent.trim();
     const uploader = $('#file-uploader').dxFileUploader('instance');

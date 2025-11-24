@@ -119,6 +119,10 @@ $(function () {
 			updatingFiles = false;
 		},
 		onUploadStarted(e) {
+			if(userMmsUse == "N" || userMmsUse == null || userMmsUse == "") {
+				showDialogCustom("발송 권한이 없습니다.<br>관리자에게 문의하세요.");
+				return;
+			}
 			const files = e.component.option('value');
 			e.component.option("uploadCustomData", {
 				imgNumFlag: files.length,
@@ -458,6 +462,7 @@ $(function () {
 
 	//입력 이벤트 핸들링
 	function handleInput() {
+	
     const titleContent = MSG_TITLE.value;
     const titleByteLength = getByteLength(titleContent);
 

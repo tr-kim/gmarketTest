@@ -132,6 +132,11 @@ $(function () {
 		text: '이미지 체크',
 		type: 'danger',
 		onClick() {
+			if(userMmsUse == "N" || userMmsUse == null || userMmsUse == "") {				
+				showDialogCustom("발송 권한이 없습니다.<br>관리자에게 문의하세요.");
+				fileUploader.reset();	
+				return;					
+			}
 			if (fileUploader.option('value').length === 0) {
 				showDialogCustom('이미지 파일을 선택하세요.');
 				return;
@@ -337,27 +342,13 @@ $(function () {
 	});
 
 	//문자 byte 표시
-	function getByteLength(str) {
-		let resultStr = "";
+	function getByteSize(str) {
 		let size = 0;
 
 		for (let i = 0; i < str.length; i++) {
 			const ch = str.charAt(i);
 			const byteSize = new Blob([ch]).size;
-			const addSize = (byteSize === 2 || byteSize === 3) ? 2 : 1;
-
-			if (size + addSize > 2000) {
-				showDialogCustom(`최대 2000byte까지 입력 가능합니다.`);
-				break;
-			}
-
-			resultStr += ch;
-			size += addSize;
-		}
-
-		if (str !== resultStr) {
-			
-			MSG_WRITE.value = resultStr;
+			size += (byteSize >= 2) ? 2 : 1;
 		}
 
 		return size;
@@ -373,54 +364,107 @@ $(function () {
 	}
 
 	//입력 이벤트 핸들링
-	function handleInput() {
-    const titleContent = MSG_TITLE.value;
-    const titleByteLength = getByteLength(titleContent);
+	/*function handleInput(e) {
+    	let target = e ? e.target : null;
+		let titleContent = MSG_TITLE.value;
+		let writeContent = MSG_WRITE.value;
+		let rejectContent = document.getElementById('rejectNum').value;
 
-    const writeContent = MSG_WRITE.value;
-    const writeByteLength = getByteLength(writeContent);
+		let titleSize = getByteSize(titleContent);
+		let writeSize = getByteSize(writeContent);
+		let rejectSize = document.getElementById('rejectNum').disabled ? 0 : getByteSize(rejectContent);
 
-    let totalByteLength = writeByteLength; // 기본은 내용 바이트 수
+		let totalSize = writeSize + rejectSize;
 
-    // checkDefault가 활성화(checked)되어 있고 rejectNum도 입력되면 바이트 합산
-    if (!document.getElementById('rejectNum').disabled) {
-        const rejectNumContent = document.getElementById('rejectNum').value;
-        const rejectNumByteLength = getByteLength(rejectNumContent);
-        totalByteLength += rejectNumByteLength;
-    }
+		if(userLmsUse == "N" || userLmsUse == null || userLmsUse == "") {
+			if (totalSize > 80){				
 
-    const hasImg = hasImage();
+				if (target) target.value = target.value.slice(0, -1);
 
-    if (hasImg) {
-        setMsgType(2, totalByteLength); // MMS
-    } else if (titleContent.trim() !== '' || totalByteLength > 80) {
-        setMsgType(1, totalByteLength); // LMS
-    } else {
-        setMsgType(0, totalByteLength); // SMS
-    }
-}
-	// function handleInput() {
-	// 	const titleContent = MSG_TITLE.value;
-	// 	const titleByteLength = getByteLength(titleContent);
-		
-	// 	const writeContent = MSG_WRITE.value;
-	// 	const writeByteLength = getByteLength(writeContent);
-		
-	// 	const hasImg = hasImage();
-		
-	// 	//console.log("hasImage():", hasImg);
-	// 	//console.log("title:", titleContent.trim(), "| byte:", writeByteLength);
-		
-	// 	if (hasImg) {
-	// 		setMsgType(2, writeByteLength); //MMS
-			
-	// 	} else if (titleContent.trim() !== '' || writeByteLength > 80) {
-	// 		setMsgType(1, writeByteLength); //LMS
-			
-	// 	} else {
-	// 		setMsgType(0, writeByteLength); //SMS
-	// 	}
-	// }
+				showDialogCustom("발송 권한이 없습니다.<br>관리자에게 문의하세요.");
+
+				return; 
+			}				
+		}
+
+		if (totalSize > 2000) {
+			showDialogCustom(`최대 2000byte까지 입력 가능합니다.`);
+
+			// 초과된 input에서 마지막 문자 제거
+			if (target) target.value = target.value.slice(0, -1);
+
+			// 다시 합산
+			writeSize = getByteSize(MSG_WRITE.value);
+			rejectSize = document.getElementById('rejectNum').disabled ? 0 : getByteSize(rejectContent);
+			totalSize = writeSize + rejectSize;
+		}
+
+		const hasImg = hasImage();
+
+		if (hasImg) {
+			setMsgType(2, totalSize); // MMS
+		} else if (titleContent.trim() !== '' || totalSize > 80) {
+			setMsgType(1, totalSize); // LMS
+		} else {
+			setMsgType(0, totalSize); // SMS
+		}
+
+		console.log(`title:${titleSize}, write:${writeSize}, reject:${rejectSize}, total:${totalSize}`);
+	}*/
+	function handleInput(e) {
+		const target = e ? e.target : null;
+		const rejectDisabled = document.getElementById('rejectNum').disabled;
+
+		// 현재 값 가져오기
+		let writeContent = MSG_WRITE.value;
+		let rejectContent = document.getElementById('rejectNum').value;
+
+		// 바이트 계산
+		let writeSize = getByteSize(writeContent);
+		let rejectSize = rejectDisabled ? 0 : getByteSize(rejectContent);
+		let totalSize = writeSize + rejectSize;
+
+		// 권한 없는 경우 80byte 초과 금지
+		if ((userLmsUse == "N" || !userLmsUse) && totalSize > 80) {
+			if (target) {
+				while (totalSize > 80 && target.value.length > 0) {
+					target.value = target.value.slice(0, -1); // 뒤에서부터 제거
+					writeSize = getByteSize(MSG_WRITE.value);
+					rejectSize = rejectDisabled ? 0 : getByteSize(rejectContent);
+					totalSize = writeSize + rejectSize;
+				}
+			}
+			showDialogCustom("발송 권한이 없습니다.<br>관리자에게 문의하세요.");
+			return;
+		}
+
+		// 2000byte 초과 금지
+		if (totalSize > 2000) {
+			if (target) {
+				while (totalSize > 2000 && target.value.length > 0) {
+					target.value = target.value.slice(0, -1);
+					writeSize = getByteSize(MSG_WRITE.value);
+					rejectSize = rejectDisabled ? 0 : getByteSize(rejectContent);
+					totalSize = writeSize + rejectSize;
+				}
+			}
+			showDialogCustom("최대 2000byte까지 입력 가능합니다.");
+			return;
+		}
+
+		// 메시지 타입 판단
+		const hasImg = hasImage();
+		if (hasImg) {
+			setMsgType(2, totalSize);
+		} else if (MSG_TITLE.value.trim() !== '' || totalSize > 80) {
+			setMsgType(1, totalSize);
+		} else {
+			setMsgType(0, totalSize);
+		}
+
+		console.log(`write:${writeSize}, reject:${rejectSize}, total:${totalSize}`);
+	}
+
 
 	const rejectNum = document.getElementById('rejectNum')
 	MSG_TITLE.addEventListener("input", handleInput); //제목
@@ -599,6 +643,15 @@ function updateDirectNumberStats() {
 
 //문자 발송
 function sendMessage(){
+
+	console.log(userSmsUse);
+
+	if(userSmsUse == "N" || userSmsUse == null || userSmsUse == "") {
+		
+		showDialogCustom("발송 권한이 없습니다.<br>관리자에게 문의하세요.");
+		return;
+	}
+
 	const msgType = document.querySelector('.msg_type').textContent.trim();
 	const uploader = $('#file-uploader').dxFileUploader('instance');
 	const files = uploader.option('value');
