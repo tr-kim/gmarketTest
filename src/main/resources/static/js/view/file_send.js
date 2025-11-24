@@ -459,6 +459,12 @@ $(function () {
 
 // 문자 발송
 function sendMessage(){
+
+	if(userFileUse == "N" || userFileUse == null || userFileUse == "") {
+		showDialogCustom("발송 권한이 없습니다.<br>관리자에게 문의하세요.");
+		return;
+	}
+
 	// 파일선택
 	if (!TEXT_FILE_NAME) {
 		const message = '파일을 선택하세요.';
