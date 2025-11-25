@@ -132,7 +132,7 @@
 		        <if test="companyCode != null">COMPANY_CODE = #{companyCode},</if>
 		        <if test="telNo != null">TEL_NO = #{telNo},</if>
 		        <if test="hpNo != null">HP_NO = #{hpNo},</if>
-		        <if test="excelYn != null">SMS_YN = #{smsYn},</if>
+		        <if test="smsYn != null">SMS_YN = #{smsYn},</if>
 		        <if test="excelYn != null">EXCEL_YN = #{excelYn},</if>
 		        <if test="fileYn != null">FILE_YN = #{fileYn},</if>
 		        <if test="dbYn != null">DB_YN = #{dbYn},</if>
