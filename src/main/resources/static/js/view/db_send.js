@@ -398,7 +398,33 @@ $(function () {
         }
 		console.log(companyCode.value, tranCallback.value, rejectNum.value);
     });
-	
+
+	// LMS, MMS 권한에 따른 메시지분류 옵션 변경
+	const messageType = document.getElementById('messageType');
+	if(!(userLmsUse == "N" || userLmsUse == null || userLmsUse == "")) {
+		if(!messageType.querySelector('option[value="lms"]')) {
+			let opt = document.createElement("option");
+			opt.value = "lms";
+			opt.text = "LMS";
+			messageType.appendChild(opt); 
+		}
+	} else {
+		const opt = messageType.querySelector('option[value="lms"]');
+		if(opt) opt.remove();
+	}
+
+	if(!(userMmsUse == "N" || userMmsUse == null || userMmsUse == "")) {
+		if(!messageType.querySelector('option[value="mms"]')) {
+			let opt = document.createElement("option");
+			opt.value = "mms";
+			opt.text = "MMS";
+			messageType.appendChild(opt); 
+		}
+	} else {
+		const opt = messageType.querySelector('option[value="mms"]');
+		if(opt) opt.remove();
+	}
+
 });
 
 
