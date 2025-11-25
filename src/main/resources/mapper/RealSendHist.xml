@@ -123,10 +123,8 @@
 			        ELSE 'ETC'
 			    END AS PROC_TYPE,
 			    COMPANY_CODE, SVC_NAME,
-			    MAX(PROC_STS) AS MAX_STS,
-			    MIN(PROC_STS) AS MIN_STS,
-			    MAX(UPDATE_DATE) AS MAX_LAST_UPDATE,
-			    MIN(UPDATE_DATE) AS MIN_LAST_UPDATE
+			    MIN(PROC_STS) AS PROC_STS,
+			    MIN(UPDATE_DATE) AS UPDATE_DATE
 			FROM T_PROC_STATUS
 			GROUP BY COMPANY_CODE, SVC_NAME, PROC_NAME
 		),
@@ -134,9 +132,9 @@
 		    SELECT 
 		        COMPANY_CODE, PROC_TYPE,
 		        CASE 
-		            WHEN DATEDIFF(MINUTE, MAX_LAST_UPDATE, GETDATE()) > 5 OR DATEDIFF(MINUTE, MIN_LAST_UPDATE, GETDATE()) > 5 THEN 'N'  <!-- 5분 이상 미갱신 → Unknown -->
-		            WHEN MAX_STS = 0 OR MIN_STS = 0 THEN 'F'                    														<!-- 하나라도 비정상 -->
-		            WHEN MAX_STS = 1 AND MIN_STS = 1 THEN 'T'                   														<!-- 모두 정상 -->
+		            WHEN DATEDIFF(MINUTE, UPDATE_DATE, GETDATE()) > 5 THEN 'N'  <!-- 5분 이상 미갱신 → Unknown -->
+		            WHEN PROC_STS = 0 THEN 'F'                    				<!-- 하나라도 비정상 -->
+		            WHEN PROC_STS = 1 THEN 'T'                   				<!-- 모두 정상 -->
 		        END AS FLAG
 		    FROM PROC_DATA
 		)
