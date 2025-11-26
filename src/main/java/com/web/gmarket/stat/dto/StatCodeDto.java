@@ -34,8 +34,8 @@ public class StatCodeDto {
 	private String chgDate;
 	
 	// 테이블 사용 여부(Default : Y) - Y : 사용 - N : 미사용
-	private String useYn = ConstantsUtils.FALG_Y;
+	private String useYn = ConstantsUtils.FLAG_Y;
 	
 	// 테이블 삭제 여부(Default : N) - Y : 삭제 - N : 미삭제
-	private String delFlag = ConstantsUtils.FALG_N;
+	private String delFlag = ConstantsUtils.FLAG_N;
 }

@@ -223,7 +223,7 @@ public class RestUserController {
 
 		try {
 
-			UserDto info = userService.selectUserInfo(userDto.getUserId(), ConstantsUtils.FALG_N);
+			UserDto info = userService.selectUserInfo(userDto.getUserId(), ConstantsUtils.FLAG_N);
 
 			if (info != null) {
 				int cnt = userService.updateUserPassword(userDto);

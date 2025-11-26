@@ -42,7 +42,7 @@ public class RestSingleSendController {
 			UserDetailsDto userDto = (UserDetailsDto) authentication.getPrincipal();
 			
 			// SMS 사용 여부 체크
-			if(ConstantsUtils.FALG_N.equals(userDto.getSmsYn())) {
+			if(ConstantsUtils.FLAG_N.equals(userDto.getSmsYn())) {
 				result.put(ConstantsUtils.CODE, ConstantsUtils.USER_NOT_SMS_SEND);
 				result.put(ConstantsUtils.RESULT, "SMS 발송 권한이 없습니다.");
 				

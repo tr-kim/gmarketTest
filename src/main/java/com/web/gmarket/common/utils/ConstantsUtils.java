@@ -3,10 +3,10 @@ package com.web.gmarket.common.utils;
 public class ConstantsUtils {
 	private ConstantsUtils() {} // 인스턴스화 방지
 	
-	public static final String FALG_T = "T";
-	public static final String FALG_F = "F";
-	public static final String FALG_Y = "Y";
-	public static final String FALG_N = "N";
+	public static final String FLAG_T = "T";
+	public static final String FLAG_F = "F";
+	public static final String FLAG_Y = "Y";
+	public static final String FLAG_N = "N";
 	
 	// SUCCESS CODE
 	public static final int SUCCESS_CODE = 1000;

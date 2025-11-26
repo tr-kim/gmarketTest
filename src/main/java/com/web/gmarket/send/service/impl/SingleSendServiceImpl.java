@@ -139,7 +139,7 @@ public class SingleSendServiceImpl implements SingleSendService {
 				throw new IllegalArgumentException(String.format("%s%s", "혀용되지 않은 메시지 타입입니다 : ", msgType));
 		}
 		++totalCnt;
-		commonService.getBroadcastMsgMapper(dbName).updateBroadcastMsgCountByType(bMsgKey, flagCnt > 0 ? ++succCnt : ++failCnt, flagCnt > 0 ? ConstantsUtils.FALG_T : ConstantsUtils.FALG_F);
+		commonService.getBroadcastMsgMapper(dbName).updateBroadcastMsgCountByType(bMsgKey, flagCnt > 0 ? ++succCnt : ++failCnt, flagCnt > 0 ? ConstantsUtils.FLAG_T : ConstantsUtils.FLAG_F);
 		
 		
 		result.put(ConstantsUtils.TOTAL_COUNT, totalCnt);
