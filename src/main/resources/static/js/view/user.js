@@ -207,6 +207,59 @@ $(function() {
 					else return '-';
 				}
 			},
+			{
+				name: "pwdResetBtn",
+				caption: "초기화",
+				type: "buttons",
+				buttons: [{
+					icon: "key",
+					onClick: function(e) {
+//						alert(e.row.data.USER_ID);
+						
+						
+						showDialogConfirmCustom('비밀번호를 초기화하겠습니까?', function() {
+							let formData = new FormData();
+							const param = {};
+							const userId = e.row.data.USER_ID;
+							postAjax('/api/v1/user/rsa', param, function callback(data) {
+
+								const publicKeyModulus = data.RSA_MODULUS;
+								const publicKeyExponent = data.RSA_EXPONENT;
+								
+								if(publicKeyModulus != "" && publicKeyExponent != "") {
+									// RSA 암호화
+									let rsa = new RSAKey();
+									rsa.setPublic(publicKeyModulus, publicKeyExponent);
+
+									const encrypted = rsa.encrypt(userId);
+									const base64 = hex2b64(encrypted);
+
+									formData.append("userId", userId);
+									formData.append("userPwd", encodeURIComponent(base64));
+
+									putFormAjax("/api/v1/user/passwordChg", formData, function callback(data) {
+										const code = data.code;
+										const result = data.result;
+
+										if (code == 1000) {
+											showDialogCustom('비밀번호가 정상적으로 초기화되었습니다.<br /><span style="font-size: 12px;font-weight: bold;">※ 초기화된 비밀번호는 사용자 아이디입니다.</span>');
+											
+										} else if (code == 9003) {
+											showDialogCustom(result);
+											
+										} else {
+											showDialogCustom('비밀번호 초기화 중 오류가 발생했습니다.');
+										}
+									});
+								} else {
+									showDialogCustom("암호화 키가 올바르지 않습니다.");
+									location.reload();
+								}
+							});
+						});
+					},
+				}],
+			},
 			/*{
 				name: "edit_btn",
 				caption: "수정",
@@ -415,7 +468,7 @@ $(function() {
 function openCustomModal(mode, data = {}) {
 	currentMode = mode;
 
-	postAjax('/api/v1/user/rsa', {}, rsaCallback);
+//	postAjax('/api/v1/user/rsa', {}, rsaCallback);
 	
 	if (mode === 'edit') {
 		document.getElementById('user_detail_modal').classList.add('d-block');
@@ -426,10 +479,10 @@ function openCustomModal(mode, data = {}) {
 		document.getElementById('company_code_detail').value = data.COMPANY_CODE;
 		document.getElementById('company_code_name_detail').value = allCompanies.find(c => c.Code === data.COMPANY_CODE)?.Name;
 		document.getElementById('user_id_detail').value = data.USER_ID;
-		document.getElementById('password_detail').value = '';
+//		document.getElementById('password_detail').value = '';
 		document.getElementById('user_name_detail').value = data.USER_NAME;
-		document.getElementById('user_phone1_detail').value = data.HP_NO;
-		document.getElementById('user_phone2_detail').value = data.TEL_NO;
+//		document.getElementById('user_phone1_detail').value = data.TEL_NO;
+		document.getElementById('user_phone2_detail').value = data.HP_NO;
 		document.getElementById('user_sms_detail').value = data.SMS_YN;
 		document.getElementById('user_excel_detail').value = data.EXCEL_YN;
 		document.getElementById('user_file_detail').value = data.FILE_YN;

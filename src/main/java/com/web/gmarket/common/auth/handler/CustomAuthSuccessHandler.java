@@ -28,7 +28,7 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
 		
-		log.debug("4.onAuthenticationSuccess :: SUCCESS");
+		log.info("4.onAuthenticationSuccess :: SUCCESS");
 
 		// SecurityContext 설정
 	    SecurityContext context = SecurityContextHolder.getContext();

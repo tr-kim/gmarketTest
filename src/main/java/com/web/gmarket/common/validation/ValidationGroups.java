@@ -18,4 +18,5 @@ public class ValidationGroups {
     public interface PatternGroup3 {}
     public interface PatternGroup4 {}
     public interface PatternGroup5 {}
+    public interface PatternGroup6 {}
 }

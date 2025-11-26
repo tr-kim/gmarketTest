@@ -8,15 +8,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.validation.ValidationGroups.NotBlankGroup1;
 import com.web.gmarket.common.validation.ValidationGroups.NotBlankGroup2;
-import com.web.gmarket.common.validation.ValidationGroups.NotBlankGroup3;
 import com.web.gmarket.common.validation.ValidationGroups.PatternGroup1;
 import com.web.gmarket.common.validation.ValidationGroups.PatternGroup2;
 import com.web.gmarket.common.validation.ValidationGroups.PatternGroup3;
 import com.web.gmarket.common.validation.ValidationGroups.PatternGroup4;
 import com.web.gmarket.common.validation.ValidationGroups.PatternGroup5;
+import com.web.gmarket.common.validation.ValidationGroups.PatternGroup6;
 import com.web.gmarket.common.validation.ValidationGroups.SizeGroup1;
 import com.web.gmarket.common.validation.ValidationGroups.SizeGroup2;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -106,17 +107,17 @@ public class UserDto implements Serializable {
 	@NotBlank(message = "아이디는 필수 입력 값입니다.", groups = NotBlankGroup1.class)
 	@Size(min = 3, max = 10, message = "아이디는 3~10자 이내로 입력해야 합니다.", groups = SizeGroup1.class)
 	@Pattern(regexp = "^(?!.*\\s).*$", message = "아이디는 공백을 포함할 수 없습니다.", groups = PatternGroup1.class)
-	@Pattern(regexp = "^[A-Za-z0-9_]+$", message = "아이디에 허용되지않는 문자가 입력되었습니다.", groups = PatternGroup2.class)
+	@Pattern(regexp = "^[A-Za-z0-9]+$", message = "아이디에 허용되지 않는 문자가 포함되어 있습니다.", groups = PatternGroup2.class)
 	private String userId;
 
 	// 사용자 패스워드
-	@NotBlank(message = "비밀번호는 필수 입력 값입니다.", groups = NotBlankGroup2.class)
+//	@NotBlank(message = "비밀번호는 필수 입력 값입니다.", groups = NotBlankGroup2.class)
 	@Size(min = 8, max = 20, message = "비밀번호는 8~20자 이내로 입력해야 합니다.", groups = SizeGroup2.class)
-	@Pattern(regexp = "^[A-Za-z0-9]+$", message = "비밀번호에 허용되지않는 문자가 입력되었습니다.", groups = PatternGroup3.class)
+	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%&])[A-Za-z0-9!@#$%&]+$", message = "비밀번호 형식이 올바르지 않습니다.", groups = PatternGroup3.class)
 	private String userPwd;
 
 	// 사용자 이름
-	@NotBlank(message = "사용자 이름은 필수 입력 값입니다.", groups = NotBlankGroup3.class)
+	@NotBlank(message = "사용자 이름은 필수 입력 값입니다.", groups = NotBlankGroup2.class)
 	private String userName;
 
 	// 사용자 전화번호
@@ -128,9 +129,9 @@ public class UserDto implements Serializable {
 	private String telNo;
 
 	// 사용자 이메일
-//	@Pattern(regexp = "(^$|^[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,}$)", message = "유효한 이메일 형식이어야 합니다.", groups = PatternGroup.class)
-//	@Email
-//	private String email;
+	@Pattern(regexp = "(^$|^[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,}$)", message = "유효한 이메일 형식이어야 합니다.", groups = PatternGroup6.class)
+	@Email
+	private String email;
 
 	// 회사코드(default : 0) - 0 : 옥션 - 1 : Gmarket
 	@Builder.Default
@@ -145,22 +146,22 @@ public class UserDto implements Serializable {
 	// SMS 사용 여부(Default : Y) - Y / N
 	@Builder.Default
 	@NotBlank(message = "SMS 사용 여부는 필수 입력 값입니다.")
-	private String smsYn = ConstantsUtils.FALG_Y;
+	private String smsYn = ConstantsUtils.FLAG_Y;
 
 	// EXCEL 발송 사용 여부(Default : N)- Y / N
 	@Builder.Default
 	@NotBlank(message = "EXCEL 발송 사용 여부는 필수 입력 값입니다.")
-	private String excelYn = ConstantsUtils.FALG_N;
+	private String excelYn = ConstantsUtils.FLAG_N;
 
 	// FILE 발송 사용 여부(Default : N) - Y / N
 	@Builder.Default
 	@NotBlank(message = "FILE 발송 사용 여부는 필수 입력 값입니다.")
-	private String fileYn = ConstantsUtils.FALG_N;
+	private String fileYn = ConstantsUtils.FLAG_N;
 
 	// DB 발송 사용 여부(Default : N) - Y / N
 	@Builder.Default
 	@NotBlank(message = "DB 발송 사용 여부는 필수 입력 값입니다.")
-	private String dbYn = ConstantsUtils.FALG_N;
+	private String dbYn = ConstantsUtils.FLAG_N;
 
 	// 정보 등록일 (Default : 현재시간)
 	private String regDate;
@@ -171,12 +172,12 @@ public class UserDto implements Serializable {
 	// 계정 사용 여부(Default : Y) - Y / N
 	@Builder.Default
 	@NotBlank(message = "DB 발송 사용 여부는 필수 입력 값입니다.")
-	private String useYn = ConstantsUtils.FALG_N;
+	private String useYn = ConstantsUtils.FLAG_N;
 
 	// 계정 삭제 여부(Default : N) - Y / N
 	@Builder.Default
 	@NotBlank(message = "계정 삭제 여부는 필수 입력 값입니다.")
-	private String delFlag = ConstantsUtils.FALG_N;
+	private String delFlag = ConstantsUtils.FLAG_N;
 
 	// 사용자를 위한 저장공간 1(텍스트)
 	private String userText0;
@@ -187,15 +188,18 @@ public class UserDto implements Serializable {
 	// LMS 사용 여부(Default : N) - Y / N
 	@Builder.Default
 	@NotBlank(message = "LMS 사용 여부는 필수 입력 값입니다.")
-	private String lmsYn = ConstantsUtils.FALG_N;
+	private String lmsYn = ConstantsUtils.FLAG_N;
 
 	// MMS 사용 여부(Default : N) - Y / N
 	@Builder.Default
 	@NotBlank(message = "MMS 사용 여부는 필수 입력 값입니다.")
-	private String mmsYn = ConstantsUtils.FALG_N;
+	private String mmsYn = ConstantsUtils.FLAG_N;
 
 	// 암호화 된 사용자 암호
 	private String enc1Pa;
+	
+	// 비밀번호 초기화 여부
+	private String passwordResetYn = ConstantsUtils.FLAG_N;
 	
 	// DevExtreme 조회 옵션
 	private Integer skip = 0;

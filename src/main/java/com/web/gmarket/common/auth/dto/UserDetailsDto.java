@@ -243,4 +243,13 @@ public class UserDetailsDto implements UserDetails {
     public String getMmsYn() {
         return userDto.getMmsYn();
     }
+    
+    /**
+     * 비밀번호 초기화 여부를 반환합니다.
+     *
+     * @return String
+     */
+    public String getPasswordResetYn() {
+        return userDto.getPasswordResetYn();
+    }
 }

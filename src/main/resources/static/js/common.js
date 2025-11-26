@@ -4,6 +4,11 @@ let PROCESSED = 0;
 let PROGRESS_BAR_STATUS;
 
 window.addEventListener('load', function() {
+	
+	// 비밀번호 초기화 여부
+	const alreadyShown = sessionStorage.getItem('passwordResetDialogShown');
+	if(passwordReset === 'Y' && !alreadyShown) showDialogCustom('비밀번호를 변경해주세요.', function() { sessionStorage.setItem('passwordResetDialogShown', 'Y'); });
+	
 	//상단메뉴일때
 	if (document.querySelector('header')) {
 		//메뉴 클릭
@@ -41,95 +46,16 @@ window.addEventListener('load', function() {
 		user_profile.addEventListener('click', function(e) {
 			e.stopPropagation();
 			psw_chg_btn.classList.toggle('d-block');
-		})
+		});
+		
 		document.addEventListener('click', function(e) {
 			if (!user_profile.contains(e.target)) {
 				psw_chg_btn.classList.remove('d-block');
 			}
 		});
+		
 		psw_chg_btn.addEventListener('click', function() {
 			passwordChg.classList.add('d-block');
-		});
-
-		// 비밀번호 변겅
-		const password_chg_save = document.getElementById("password_chg_save");
-
-		password_chg_save.addEventListener('click', function(e) {
-			e.preventDefault();
-
-			const pw1 = document.getElementById('new-psw');
-			const pw2 = document.getElementById('new-psw2');
-			const reg = /^[A-Za-z0-9]+$/;
-
-			if (isEmpty(pw1.value)) {
-				const message = '비밀번호를 입력해주세요.';
-				showDialogCustom(message);
-				return;
-			}
-
-			if (isEmpty(pw2.value)) {
-				const message = '비밀번호를 다시 입력해주세요.';
-				showDialogCustom(message);
-				return;
-			}
-
-			if (!(pw1.value === pw2.value)) {
-				const message = '비밀번호가 일치하지 않습니다. 다시 입력해주세요.';
-				showDialogCustom(message);
-				return;
-			}
-
-			if (!(reg.test(pw1.value))) {
-				const message = '비밀번호에 허용되지 않는 문자가 포함되었습니다.';
-				showDialogCustom(message);
-				return;
-			}
-
-			let formData = new FormData();
-			const param = {};
-			postAjax('/api/v1/user/rsa', param, function callback(data) {
-
-				const password = pw1.value;
-				const publicKeyModulus = data.RSA_MODULUS;
-				const publicKeyExponent = data.RSA_EXPONENT;
-				
-				if(publicKeyModulus != "" && publicKeyExponent != "") {
-					// RSA 암호화
-					let rsa = new RSAKey();
-					rsa.setPublic(publicKeyModulus, publicKeyExponent);
-
-					const encrypted = rsa.encrypt(password);
-					const base64 = hex2b64(encrypted);
-
-					formData.append("userId", $("#pwd_chg_user_id").val());
-					formData.append("userPwd", encodeURIComponent(base64));
-
-					putFormAjax("/api/v1/user/passwordChg", formData, function callback(data) {
-						const code = data.code;
-						const result = data.result;
-
-						if (code == 1000) {
-							const message = '비밀번호가 변경되었습니다.';
-							showDialogCustom(message, function (){
-								pw1.value = '';
-								pw2.value = '';
-								document.getElementById('psw-ck').textContent = '';
-								document.querySelector('.passwordChg').classList.remove('d-block');
-							});
-							
-						} else if (code == 9003) {
-							showDialogCustom(result);
-							
-						} else {
-							const message = '비밀번호 변경에 실패했습니다.';
-							showDialogCustom(message);
-						}
-					});
-				} else {
-					showDialogCustom("암호화 키가 올바르지 않습니다.");
-					location.reload();
-				}
-			});
 		});
 	}
 	
@@ -446,6 +372,29 @@ function showDialogCustom(message, onConfirm){
 				if (typeof onConfirm === 'function') onConfirm();
 			}
 		}]
+	}).show();
+}
+
+// 공통 알림 팝업
+function showDialogConfirmCustom(message, onConfirm){
+	
+	DevExpress.ui.dialog.custom({
+		showTitle: false,
+		messageHtml: `<div style='text-align: center;' class="pt-3">${message}</div>`,
+		buttons: [
+			{
+				text: "확인",
+				onClick: function () {
+					if (typeof onConfirm === 'function') onConfirm();
+				}
+			},
+			{
+				text: "취소",
+				onClick: function () {
+					return false;
+				}
+			}
+		]
 	}).show();
 }
 

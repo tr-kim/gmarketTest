@@ -58,7 +58,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         	String userName = request.getParameter("userId");
         	String userPwd = request.getParameter("userPwd");
         	
-            log.debug("1.CustomAuthenticationFilter :: userId:" + userName);
+            log.info("1.CustomAuthenticationFilter :: userId:" + userName);
             
             // RSA 복호화
             HttpSession session = request.getSession();

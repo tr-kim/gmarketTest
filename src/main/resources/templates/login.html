@@ -110,6 +110,8 @@
 
 
 	<script th:inline="javascript">
+		sessionStorage.removeItem('passwordResetDialogShown');	// 비밀번호 초기화 여부
+		
 		$("#loginBtn").click(function (e) {
 			e.preventDefault();
 

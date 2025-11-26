@@ -35,7 +35,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		log.debug("2.CustomAuthenticationProvider");
+		log.info("2.CustomAuthenticationProvider");
 
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
 
@@ -46,13 +46,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		// Spring Security - UserDetailsService를 통해 DB에서 아이디로 사용자 조회
 		UserDetailsDto userDetailsDto = (UserDetailsDto) userDetailsService.loadUserByUsername(userId);
 
-		if (userDetailsDto == null || ConstantsUtils.FALG_Y.equals(userDetailsDto.getDelFlag())) { // 사용자 존재 여부 또는 계정 삭제 여부
+		if (userDetailsDto == null || ConstantsUtils.FLAG_Y.equals(userDetailsDto.getDelFlag())) { // 사용자 존재 여부 또는 계정 삭제 여부
 			throw new UsernameNotFoundException(ConstantsUtils.NOT_USER);
-		} else if (ConstantsUtils.FALG_N.equals(userDetailsDto.getUseYn())) { // 계정 사용 여부
+		} else if (ConstantsUtils.FLAG_N.equals(userDetailsDto.getUseYn())) { // 계정 사용 여부
 			throw new DisabledException(ConstantsUtils.NOT_USE);
 		} else if (!(passwordEncoder.matches(userPw, userDetailsDto.getUserPwd()))) { // 비밀번호 불일치
 			throw new BadCredentialsException(ConstantsUtils.PASSWORD_NOT_MATCH);
 		}
+		
+		userDetailsDto.setPasswordResetYn(passwordEncoder.matches(userId, userDetailsDto.getUserPwd()) ? ConstantsUtils.FLAG_Y : ConstantsUtils.FLAG_N);		// 비밀번호 초기화 여부
 
 		return new UsernamePasswordAuthenticationToken(userDetailsDto, userPw, userDetailsDto.getAuthorities());
 	}

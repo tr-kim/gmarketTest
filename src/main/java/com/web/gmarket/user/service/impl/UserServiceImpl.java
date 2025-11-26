@@ -48,8 +48,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public int insertUserInfo(UserDto userDto) {
+		
+		// 사용자 아이디로 비밀번호 초기값 설정
+		userDto.setUserPwd(userDto.getUserId());
+		
 		// 비밀번호 암호화 및 hash 값 넣기
-		passwordEncode(userDto);
+		this.passwordEncode(userDto);
 		
 		return commonService.getUserMapper().insertUserInfo(userDto);
 	}
@@ -57,7 +61,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public int updateUserInfo(UserDto userDto) {
 		// 비밀번호 암호화 및 hash 값 넣기
-		passwordEncode(userDto);
+//		passwordEncode(userDto);
 		
 		return commonService.getUserMapper().updateUserInfo(userDto);
 	}
@@ -96,12 +100,30 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public int updateUserPassword(UserDto userDto) {
 		// 비밀번호 암호화 및 hash 값 넣기
-		passwordEncode(userDto);
+		this.passwordEncode(userDto);
 		
 		return commonService.getUserMapper().updateUserPassword(userDto);
 	}
 	
-	public static String createHash(String data) throws Exception {
+	public UserDto passwordEncode(UserDto userDto) {
+
+		try {
+			
+			PasswordEncoder encoder = new BCryptPasswordEncoder();
+			String password = userDto.getUserPwd();
+
+			userDto.setEnc1Pa(this.createHash(password));
+			userDto.setUserPwd(encoder.encode(password));
+
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			e.printStackTrace();
+		}
+
+		return userDto;
+	}
+	
+	public String createHash(String data) throws Exception {
 		
 		if (StringUtils.isBlank(data)) throw new NullPointerException();
 
@@ -114,23 +136,5 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		return result.toString();
-	}
-
-	public static UserDto passwordEncode(UserDto userDto) {
-
-		try {
-			
-			PasswordEncoder encoder = new BCryptPasswordEncoder();
-			String password = userDto.getUserPwd();
-
-			userDto.setEnc1Pa(createHash(password));
-			userDto.setUserPwd(encoder.encode(password));
-
-		} catch (Exception e) {
-			log.error(e.getLocalizedMessage());
-			e.printStackTrace();
-		}
-
-		return userDto;
 	}
 }
