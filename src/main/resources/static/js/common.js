@@ -7,7 +7,7 @@ window.addEventListener('load', function() {
 	
 	// 비밀번호 초기화 여부
 	const alreadyShown = sessionStorage.getItem('passwordResetDialogShown');
-	if(passwordReset === 'Y' && !alreadyShown) showDialogCustom('안전한 계정을 위해 지금 비밀번호를 변경해 주세요.', function() { sessionStorage.setItem('passwordResetDialogShown', 'Y'); });
+	if(passwordReset === 'Y' && !alreadyShown) showDialogCustom('초기화된 비밀번호입니다. <br/>안전을 위해 비밀번호 변경해주세요.', function() { sessionStorage.setItem('passwordResetDialogShown', 'Y'); });
 	
 	//상단메뉴일때
 	if (document.querySelector('header')) {
@@ -375,7 +375,7 @@ function showDialogCustom(message, onConfirm){
 	}).show();
 }
 
-// 공통 알림 팝업
+// 공통 알림 팝업 - 확인 취소
 function showDialogConfirmCustom(message, onConfirm){
 	
 	DevExpress.ui.dialog.custom({
@@ -395,6 +395,26 @@ function showDialogConfirmCustom(message, onConfirm){
 				}
 			}
 		]
+	}).show();
+}
+
+// 공통 알림 팝업 - 제목
+function showDialogTitleCustom(title, message, onConfirm){
+	if (message === 'error') {
+		message = '오류가 발생했습니다.<br>관리자에게 문의바랍니다.';
+	}
+	
+	DevExpress.ui.dialog.custom({
+		showTitle: true,
+		title: title,
+		dragEnabled: false,		// move 제거
+		messageHtml: `<div style='text-align: center;' class="pt-3">${message}</div>`,
+		buttons: [{
+			text: "확인",
+			onClick: function () {
+				if (typeof onConfirm === 'function') onConfirm();
+			}
+		}]
 	}).show();
 }
 
