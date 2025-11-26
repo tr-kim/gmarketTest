@@ -128,12 +128,12 @@
 
 				let formData = new FormData();
 				formData.append("userId", $("#user_id_detail").val());
-				formData.append("userPwd", encodeURIComponent(base64));
+				// formData.append("userPwd", encodeURIComponent(base64));
 				formData.append("userName", $("#user_name_detail").val());
 				formData.append("userGrade", $("#user_grade_detail").val());
 				formData.append("companyCode", $("#company_code_detail").val());
-				formData.append("hpNo", $("#user_phone1_detail").val());
-				formData.append("telNo", $("#user_phone2_detail").val());
+				// formData.append("telNo", $("#user_phone1_detail").val());
+				formData.append("hpNo", $("#user_phone2_detail").val());
 				// formData.append("email", $("#user_email_data").val());
 				formData.append("smsYn", $("#user_sms_detail").val());
 				formData.append("excelYn", $("#user_excel_detail").val());
