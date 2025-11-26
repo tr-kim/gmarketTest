@@ -32,9 +32,9 @@
 	  		UserMapper.selectUserInfo 사용자 정보 조회
 	  	*/
 	    SELECT 
-			USER_SEQ, USER_ID, USER_PWD, USER_NAME, ISNULL(TEL_NO, '-') AS TEL_NO , ISNULL(HP_NO, '-') AS HP_NO, ISNULL(EMAIL, '-') AS EMAIL, COMPANY_CODE
+			USER_SEQ, USER_ID, USER_PWD, USER_NAME, ISNULL(TEL_NO, '') AS TEL_NO , ISNULL(HP_NO, '') AS HP_NO, ISNULL(EMAIL, '') AS EMAIL, COMPANY_CODE
 			, USER_GRADE, SMS_YN, EXCEL_YN, FILE_YN, DB_YN, REG_DATE, CHG_DATE
-			, USE_YN, DEL_FLAG, ISNULL(USER_TEXT0, '-') AS USER_TEXT0, ISNULL(USER_TEXT1, '-') AS USER_TEXT1, LMS_YN, MMS_YN, ISNULL(ENC_1_PA, '-') AS ENC_1_PA  
+			, USE_YN, DEL_FLAG, ISNULL(USER_TEXT0, '') AS USER_TEXT0, ISNULL(USER_TEXT1, '') AS USER_TEXT1, LMS_YN, MMS_YN, ISNULL(ENC_1_PA, '') AS ENC_1_PA  
 		FROM T_SMS_CLIENT
 		WHERE USER_ID = #{userId}
 		<if test='delFlag != null and !delFlag.isEmpty()'>
@@ -112,10 +112,10 @@
 	  		UserMapper.insertUserInfo 사용자 정보 등록
 	  	*/
 	  	INSERT INTO T_SMS_CLIENT (
-			USER_ID, USER_PWD, USER_NAME, USER_GRADE, COMPANY_CODE, TEL_NO
+			USER_ID, USER_PWD, USER_NAME, USER_GRADE, COMPANY_CODE
 			, HP_NO, EXCEL_YN, FILE_YN, DB_YN, LMS_YN, MMS_YN, USE_YN, ENC_1_PA
 		) VALUES (
-			#{userId}, #{userPwd}, #{userName}, #{userGrade}, #{companyCode}, #{telNo}
+			#{userId}, #{userPwd}, #{userName}, #{userGrade}, #{companyCode}
 			, #{hpNo}, #{excelYn}, #{fileYn}, #{dbYn}, #{lmsYn}, #{mmsYn}, #{useYn}, #{enc1Pa}
 		)
 	</insert>
@@ -126,20 +126,20 @@
 	  	*/
 		UPDATE T_SMS_CLIENT
 			<set>
-		        <if test="userPwd != null">USER_PWD = #{userPwd},</if>
-		        <if test="userName != null">USER_NAME = #{userName},</if>
-		        <if test="userGrade != null">USER_GRADE = #{userGrade},</if>
-		        <if test="companyCode != null">COMPANY_CODE = #{companyCode},</if>
-		        <if test="telNo != null">TEL_NO = #{telNo},</if>
+<!--		        <if test="userPwd != null and userPwd != ''">USER_PWD = #{userPwd},</if>-->
+		        <if test="userName != null and userName != ''">USER_NAME = #{userName},</if>
+		        <if test="userGrade != null and userGrade != ''">USER_GRADE = #{userGrade},</if>
+		        <if test="companyCode != null and companyCode != ''">COMPANY_CODE = #{companyCode},</if>
+<!--		        <if test="telNo != null">TEL_NO = #{telNo},</if>-->
 		        <if test="hpNo != null">HP_NO = #{hpNo},</if>
-		        <if test="smsYn != null">SMS_YN = #{smsYn},</if>
-		        <if test="excelYn != null">EXCEL_YN = #{excelYn},</if>
-		        <if test="fileYn != null">FILE_YN = #{fileYn},</if>
-		        <if test="dbYn != null">DB_YN = #{dbYn},</if>
-		        <if test="lmsYn != null">LMS_YN = #{lmsYn},</if>
-		        <if test="mmsYn != null">MMS_YN = #{mmsYn},</if>
-		        <if test="useYn != null">USE_YN = #{useYn},</if>
-		        <if test="enc1Pa != null">ENC_1_PA = #{enc1Pa},</if>
+		        <if test="smsYn != null and smsYn != ''">SMS_YN = #{smsYn},</if>
+		        <if test="excelYn != null and excelYn != ''">EXCEL_YN = #{excelYn},</if>
+		        <if test="fileYn != null and fileYn != ''">FILE_YN = #{fileYn},</if>
+		        <if test="dbYn != null and dbYn != ''">DB_YN = #{dbYn},</if>
+		        <if test="lmsYn != null and lmsYn != ''">LMS_YN = #{lmsYn},</if>
+		        <if test="mmsYn != null and mmsYn != ''">MMS_YN = #{mmsYn},</if>
+		        <if test="useYn != null and useYn != ''">USE_YN = #{useYn},</if>
+		        <if test="enc1Pa != null and enc1Pa != ''">ENC_1_PA = #{enc1Pa},</if>
 		        CHG_DATE = CONVERT(VARCHAR(10), GETDATE(), 112) + REPLACE(CONVERT(VARCHAR(8), GETDATE(), 108), ':', '')
 		    </set>
 		WHERE USER_ID = #{userId}

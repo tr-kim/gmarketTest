@@ -40,24 +40,28 @@
 							<option value="3">운영자</option>
 						</select>
 					</div>
+<!--					<div class="col-6 mb-3">-->
+<!--						<label class="d-block mb-1">전화번호</label>-->
+<!--						<input type="text" class="form-control" name="hpNo" id="user_phone1_data" data-type="phoneNum" placeholder="전화번호를 입력하세요." maxlength="30">-->
+<!--					</div>-->
 					<div class="col-6 mb-3">
-						<label class="d-block mb-1">* 비밀번호</label>
-						<input type="password" class="form-control" name="userPwd" id="user_psw_data" data-type="password" placeholder="비밀번호를 입력하세요." maxlength="30">
+						<label class="d-block mb-1">핸드폰번호</label>
+						<input type="text" class="form-control" name="telNo" id="user_phone2_data" data-type="phoneNum" placeholder="핸드폰번호를 입력하세요." maxlength="30">
 					</div>
+<!--					<div class="col-6 mb-3">-->
+<!--						<label class="d-block mb-1">EMAIL</label>-->
+<!--						<input type="text" class="form-control" name="email" id="user_email_data" data-type="email" placeholder="이메일을 입력하세요." maxlength="50">-->
+<!--					</div>-->
+<!--					<div class="col-6 mb-3">-->
+<!--						<label class="d-block mb-1">* 비밀번호</label>-->
+<!--						<input type="password" class="form-control" name="userPwd" id="user_psw_data" data-type="password" placeholder="비밀번호를 입력하세요." maxlength="30">-->
+<!--					</div>-->
 					<div class="col-6">
 						<label class="d-block mb-1">계정 상태</label>
 						<select name="useYn" id="use_yn_data" class="form-select select_Y">
 							<option value="Y" selected>사용</option>
 							<option value="N">미사용</option>
 						</select>
-					</div>
-					<div class="col-6 mb-3">
-						<label class="d-block mb-1">전화번호</label>
-						<input type="text" class="form-control" name="hpNo" id="user_phone1_data" data-type="phoneNum" placeholder="전화번호를 입력하세요." maxlength="30">
-					</div>
-					<div class="col-6 mb-3">
-						<label class="d-block mb-1">핸드폰번호</label>
-						<input type="text" class="form-control" name="telNo" id="user_phone2_data" data-type="phoneNum" placeholder="핸드폰번호를 입력하세요." maxlength="30">
 					</div>
 					<div class="col-6 mb-3">
 						<label class="d-block mb-1">개별 발송 기능</label>
@@ -160,24 +164,24 @@
 		    type: 'default',
 		    width: 60,
 		    onClick() {
-				const password = $("#user_psw_data").val();
-				const publicKeyModulus = $("#publicKeyModulus").val();
-				const publicKeyExponent = $("#publicKeyExponent").val();
+				// const password = $("#user_psw_data").val();
+				// const publicKeyModulus = $("#publicKeyModulus").val();
+				// const publicKeyExponent = $("#publicKeyExponent").val();
 
 				// RSA 암호화
-				let rsa = new RSAKey();
-				rsa.setPublic(publicKeyModulus, publicKeyExponent);
+				// let rsa = new RSAKey();
+				// rsa.setPublic(publicKeyModulus, publicKeyExponent);
 
-				const encrypted = rsa.encrypt(password);
-				const base64 = hex2b64(encrypted);
+				// const encrypted = rsa.encrypt(password);
+				// const base64 = hex2b64(encrypted);
 
 				let formData = new FormData();
 				formData.append("userId", $("#user_id_data").val());
-				formData.append("userPwd", encodeURIComponent(base64));
+				// formData.append("userPwd", encodeURIComponent(base64));
 				formData.append("userName", $("#user_name_data").val());
 				formData.append("userGrade", $("#user_grade_data").val());
 				formData.append("companyCode", $("#company_code_data").val());
-				formData.append("hpNo", $("#user_phone1_data").val());
+				// formData.append("hpNo", $("#user_phone1_data").val());
 				formData.append("telNo", $("#user_phone2_data").val());
 				// formData.append("email", $("#user_email_data").val());
 				formData.append("smsYn", $("#user_sms_data").val());
