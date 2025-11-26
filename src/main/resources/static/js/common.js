@@ -7,7 +7,7 @@ window.addEventListener('load', function() {
 	
 	// 비밀번호 초기화 여부
 	const alreadyShown = sessionStorage.getItem('passwordResetDialogShown');
-	if(passwordReset === 'Y' && !alreadyShown) showDialogCustom('비밀번호를 변경해주세요.', function() { sessionStorage.setItem('passwordResetDialogShown', 'Y'); });
+	if(passwordReset === 'Y' && !alreadyShown) showDialogCustom('안전한 계정을 위해 지금 비밀번호를 변경해 주세요.', function() { sessionStorage.setItem('passwordResetDialogShown', 'Y'); });
 	
 	//상단메뉴일때
 	if (document.querySelector('header')) {
