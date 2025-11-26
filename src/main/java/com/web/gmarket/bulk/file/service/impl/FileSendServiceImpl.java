@@ -169,7 +169,7 @@ public class FileSendServiceImpl implements FileSendService {
 					default:
 						throw new IllegalArgumentException(String.format("%s%s", "혀용되지 않은 메시지 타입입니다 : ", msgType));
 				}
-				commonService.getBroadcastMsgMapper(dbName).updateBroadcastMsgCountByType(bMsgKey, flagCnt > 0 ? ++succCnt : ++failCnt, flagCnt > 0 ? ConstantsUtils.FALG_T : ConstantsUtils.FALG_F);
+				commonService.getBroadcastMsgMapper(dbName).updateBroadcastMsgCountByType(bMsgKey, flagCnt > 0 ? ++succCnt : ++failCnt, flagCnt > 0 ? ConstantsUtils.FLAG_T : ConstantsUtils.FLAG_F);
 				++sendCnt;
 				
 				int progress = (int) (((float) sendCnt / totalCnt) * 100);
