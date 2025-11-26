@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.net.ftp.FTPClient;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -91,7 +90,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 				try {
 					
 					// FTP 연결
-					FTPClient ftpClient = commonService.createConnection(dto.getCompanyCode(), ConstantsUtils.ACTIVE);
+//					FTPClient ftpClient = commonService.createConnection(dto.getCompanyCode(), ConstantsUtils.ACTIVE);
 					
 					// 파일 정보 셋팅
 					FtpDto ftpDto = FtpDto.builder()
@@ -103,7 +102,8 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 							.build();
 					
 					// 파일 업로드
-					commonService.uploadFile(ftpClient, ftpDto);
+//					commonService.uploadFile(ftpClient, ftpDto);
+					commonService.uploadFile(ftpDto);
 					
 					// 파일 경로 저장
 					dto.setImagePath01(ftpDto.getImagePath01());

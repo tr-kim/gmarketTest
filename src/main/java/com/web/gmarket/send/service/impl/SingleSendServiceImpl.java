@@ -6,7 +6,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +55,7 @@ public class SingleSendServiceImpl implements SingleSendService {
 			try {
 				
 				// FTP 연결
-				FTPClient ftpClient = commonService.createConnection(companyCode, ConstantsUtils.ACTIVE);
+//				FTPClient ftpClient = commonService.createConnection(companyCode, ConstantsUtils.ACTIVE);
 				
 				// 파일 정보 셋팅
 				FtpDto ftpDto = FtpDto.builder()
@@ -68,7 +67,8 @@ public class SingleSendServiceImpl implements SingleSendService {
 						.build();
 				
 				// 파일 업로드
-				commonService.uploadFile(ftpClient, ftpDto);
+//				commonService.uploadFile(ftpClient, ftpDto);
+				commonService.uploadFile(ftpDto);
 				
 				// 이미지 경로 저장
 				singleSendDto.setImagePath01(ftpDto.getImagePath01());

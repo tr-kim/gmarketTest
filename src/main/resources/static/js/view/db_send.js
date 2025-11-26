@@ -643,10 +643,10 @@ function sendMessage(){
 		
 		// 메시지 유형 XXX
 		const msgType = document.getElementById("messageType").value;
-		if(msgType == "mms") {
-			showDialogCustom("MMS 개발 진행 중입니다.");
-			return;
-		}
+//		if(msgType == "mms") {
+//			showDialogCustom("MMS 개발 진행 중입니다.");
+//			return;
+//		}
 		
 		// 대분류
 		const companyCode = document.getElementById("companyCode").value;

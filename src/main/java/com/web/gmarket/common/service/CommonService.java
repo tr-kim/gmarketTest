@@ -95,6 +95,10 @@ public class CommonService {
     	FtpClientManager.uploadFile(ftpClient, dto);
     }
     
+    public void uploadFile(FtpDto dto) throws IOException, IllegalArgumentException {
+    	FtpClientManager.uploadFile(dto);
+    }
+    
     public String getFilePath(String type) {
     	switch(type) {
     		case ConstantsUtils.EXCEL: return filePathConfig.getExcel();

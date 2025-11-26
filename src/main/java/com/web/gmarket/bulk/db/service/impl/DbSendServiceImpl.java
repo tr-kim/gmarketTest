@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,7 +79,7 @@ public class DbSendServiceImpl implements DbSendService {
 			try {
 				
 				// FTP 연결
-				FTPClient ftpClient = commonService.createConnection(dbSendDto.getCompanyCode(), ConstantsUtils.ACTIVE);
+//				FTPClient ftpClient = commonService.createConnection(dbSendDto.getCompanyCode(), ConstantsUtils.ACTIVE);
 				
 				// FTP 정보 셋팅
 				FtpDto ftpDto = FtpDto.builder()
@@ -92,7 +91,8 @@ public class DbSendServiceImpl implements DbSendService {
 						.build();
 				
 				// 파일 업로드
-				commonService.uploadFile(ftpClient, ftpDto);
+//				commonService.uploadFile(ftpClient, ftpDto);
+				commonService.uploadFile(ftpDto);
 				
 				// 이미지 경로 저장
 				dbSendDto.setImagePath01(ftpDto.getImagePath01());

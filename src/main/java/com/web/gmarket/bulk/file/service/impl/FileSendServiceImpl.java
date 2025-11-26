@@ -70,7 +70,7 @@ public class FileSendServiceImpl implements FileSendService {
 				
 				// FTP 연결
 				uploadStatus.put(jobId, new UploadProgress(0, 0, 0, "MMS 이미지 파일 업로드"));
-				FTPClient ftpClient = commonService.createConnection(companyCode, ConstantsUtils.ACTIVE);
+//				FTPClient ftpClient = commonService.createConnection(companyCode, ConstantsUtils.ACTIVE);
 				
 				// 파일 정보 셋팅
 				FtpDto ftpDto = FtpDto.builder()
@@ -82,7 +82,8 @@ public class FileSendServiceImpl implements FileSendService {
 						.build();
 				
 				// 파일 업로드
-				commonService.uploadFile(ftpClient, ftpDto);
+//				commonService.uploadFile(ftpClient, ftpDto);
+				commonService.uploadFile(ftpDto);
 				
 				// 파일 경로 저장
 				fileSendDto.setImagePath01(ftpDto.getImagePath01());

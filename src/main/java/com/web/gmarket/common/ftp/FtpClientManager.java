@@ -207,6 +207,97 @@ public class FtpClientManager {
         }
     }
     
+    
+    /**
+     * 파일 업로드
+     * @throws IOException 
+     */
+    public void uploadFile(FtpDto dto) throws IOException, IllegalArgumentException {
+    	
+    	FileInputStream fileInput1 = null;
+    	FileInputStream fileInput2 = null;
+    	
+    	// Auction, Gmarket 유형 확인 후 정보 설정
+    	FtpServerInfo info = ftpProperties.getProperties(COMPANY_MAP.getOrDefault(dto.getCompanyCode(), ConstantsUtils.GMAREKT), dto.getMsgType());
+    	
+        try {
+        	
+        	// 날짜 생성
+        	LocalDateTime now = LocalDateTime.now();
+        	
+        	// 날짜 포맷 변환
+        	DateTimeFormatter sfMonth = DateTimeFormatter.ofPattern("yyyyMM");
+        	DateTimeFormatter sfDate = DateTimeFormatter.ofPattern("yyyyMMdd");
+        	
+        	String month = now.format(sfMonth);
+        	String date = now.format(sfDate);
+        	
+        	log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Month : {}", month);
+        	log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Date : {}", date);
+        	
+        	
+        	
+        	// 업로드 경로 설정
+        	String uploadPath = String.format("%s\\%s\\%s", filePathConfig.getImageFilePath(dto.getSendType()), month, date);
+        	log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UploadPath : {}", uploadPath);
+        	
+        	String imageName1 = dto.getImageName01();
+        	String imageName2 = dto.getImageName02();
+        	
+        	log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Image Path 01 : {}", imageName1);
+        	log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Image Path 02 : {}", imageName2);
+        	
+        	String windowPath = ftpProperties.getWindowPath();
+        	String ftpPath = info.getPath();
+        	
+        	if(!StringUtils.isBlank(imageName1) && !StringUtils.isBlank(imageName2)) {
+        		File uploadFile1 = new File(String.format("%s\\%s", uploadPath, imageName1));
+        		File uploadFile2 = new File(String.format("%s\\%s", uploadPath, imageName2));
+        		
+        		fileInput1 =  new FileInputStream(uploadFile1);
+        		fileInput2 =  new FileInputStream(uploadFile2);
+        		
+        		// 이미지 경로 저장
+            	dto.setImagePath01(String.format("%s%s%s/%s", windowPath, ftpPath, month, imageName1));
+            	dto.setImagePath02(String.format("%s%s%s/%s", windowPath, ftpPath, month, imageName2));
+        		
+        	} else if(!StringUtils.isBlank(imageName1)) {
+        		File uploadFile = new File(String.format("%s\\%s", uploadPath, imageName1));
+        		fileInput1 =  new FileInputStream(uploadFile);
+        		
+        		// 이미지 경로 저장
+            	dto.setImagePath01(String.format("%s%s%s/%s", windowPath, ftpPath, month, imageName1));
+        		
+        	} else if(!StringUtils.isBlank(imageName2)) {
+        		
+        		File uploadFile = new File(String.format("%s\\%s", uploadPath, imageName2));
+        		fileInput2 =  new FileInputStream(uploadFile);
+        		
+        		// 이미지 경로 저장
+            	dto.setImagePath02(String.format("%s%s%s/%s", windowPath, ftpPath, month, imageName2));
+            	
+        	} else {
+        		throw new IllegalArgumentException("이미지 파일 이름이 존재하지 않습니다.");
+        	}
+            
+        } catch (IllegalArgumentException e) {
+        	e.printStackTrace();
+            throw new IllegalArgumentException(e.getMessage(), e);
+        } catch (IOException e) {
+        	e.printStackTrace();
+            throw new IOException("파일 업로드 중 오류 발생", e);
+        } finally {
+        	
+        	if(fileInput1 != null) {
+        		fileInput1.close();
+        	}
+        	
+        	if(fileInput2 != null) {
+        		fileInput2.close();
+        	}
+        }
+    }
+    
     /**
      * 연결 종료
      */

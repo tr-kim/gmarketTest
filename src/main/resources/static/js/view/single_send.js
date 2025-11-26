@@ -638,10 +638,10 @@ function sendMessage(){
 		
 		// 메시지 유형 XXX
 		const msgTypeValue = document.querySelector('.msg_type').textContent.trim();
-		if(msgTypeValue == "MMS") {
-			showDialogCustom("MMS 개발 진행 중입니다.");
-			return;
-		}
+//		if(msgTypeValue == "MMS") {
+//			showDialogCustom("MMS 개발 진행 중입니다.");
+//			return;
+//		}
 		
 		// 메시지 유형
 		const msgType = msgTypeValue === "SMS" ? 'sms' : msgTypeValue === "LMS" ? 'lms' : 'mms';
