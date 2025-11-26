@@ -73,7 +73,7 @@ public class RestFileSendController {
 			UserDetailsDto userDto = (UserDetailsDto) authentication.getPrincipal();
 			
 			// 파일 발송 여부 체크
-			if(ConstantsUtils.FALG_N.equals(userDto.getFileYn())) {
+			if(ConstantsUtils.FLAG_N.equals(userDto.getFileYn())) {
 				result.put(ConstantsUtils.CODE, ConstantsUtils.USER_NOT_FILE_SEND);
 				result.put(ConstantsUtils.RESULT, "파일 발송 권한이 없습니다.");
 				

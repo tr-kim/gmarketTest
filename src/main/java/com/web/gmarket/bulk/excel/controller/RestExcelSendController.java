@@ -375,7 +375,7 @@ public class RestExcelSendController {
 			UserDetailsDto userDto = (UserDetailsDto) authentication.getPrincipal();
 			
 			// 엑셀 발송 여부 체크
-			if(ConstantsUtils.FALG_N.equals(userDto.getExcelYn())) {
+			if(ConstantsUtils.FLAG_N.equals(userDto.getExcelYn())) {
 				result.put(ConstantsUtils.CODE, ConstantsUtils.USER_NOT_EXCEL_SEND);
 				result.put(ConstantsUtils.RESULT, "엑셀 발송 권한이 없습니다.");
 				

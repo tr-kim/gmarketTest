@@ -111,7 +111,7 @@ public class RestDbSendController {
 			UserDetailsDto userDto = (UserDetailsDto) authentication.getPrincipal();
 			
 			// DB 발송 여부 체크
-			if(ConstantsUtils.FALG_N.equals(userDto.getDbYn())) {
+			if(ConstantsUtils.FLAG_N.equals(userDto.getDbYn())) {
 				result.put(ConstantsUtils.CODE, ConstantsUtils.USER_NOT_DB_SEND);
 				result.put(ConstantsUtils.RESULT, "DB 발송 권한이 없습니다.");
 				

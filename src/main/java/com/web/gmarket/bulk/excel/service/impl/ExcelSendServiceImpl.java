@@ -187,7 +187,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 							throw new IllegalArgumentException(String.format("%s%s", "혀용되지 않은 메시지 타입입니다 : ", msgType));
 					}
 
-					commonService.getBroadcastMsgMapper(dbName).updateBroadcastMsgCountByType(bMsgKey, flagCnt > 0 ? ++succCnt : ++failCnt, flagCnt > 0 ? ConstantsUtils.FALG_T : ConstantsUtils.FALG_F);
+					commonService.getBroadcastMsgMapper(dbName).updateBroadcastMsgCountByType(bMsgKey, flagCnt > 0 ? ++succCnt : ++failCnt, flagCnt > 0 ? ConstantsUtils.FLAG_T : ConstantsUtils.FLAG_F);
 					
 					int progress = (int) (((float) sendCnt / bulkCnt) * 100);
 					uploadStatus.put(jobId, new UploadProgress(progress, sendCnt, bulkCnt, String.format("%d/%d 행 처리 완료", sendCnt, bulkCnt)));
@@ -307,7 +307,7 @@ public class ExcelSendServiceImpl implements ExcelSendService {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
 		
 		// 분할 전송 아닌 경우 현재시간, 전송인 경우 입력된 값으로 변환
-		LocalDateTime date = ConstantsUtils.FALG_N.equals(dto.getSplitSend()) ? LocalDateTime.now() : LocalDateTime.parse(dto.getSendTime(), formatter);
+		LocalDateTime date = ConstantsUtils.FLAG_N.equals(dto.getSplitSend()) ? LocalDateTime.now() : LocalDateTime.parse(dto.getSendTime(), formatter);
 
 		int intStrY1 = -1;
 		int intStrM1 = -1;

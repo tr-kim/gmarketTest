@@ -98,7 +98,7 @@ public class ExcelSendDto {
 	private String sendTime;
 	
 	// 분할 전송 여부 Y, N
-	private String splitSend = ConstantsUtils.FALG_N;
+	private String splitSend = ConstantsUtils.FLAG_N;
 	
 	// 분할 전송
 	private Integer splitMinute = 0;
