@@ -90,9 +90,9 @@ ftp:
 
 file:
   path:
-    excel: C:/excel_web/excel
-    txt: C:/excel_web/data
-    image-single: C:/excel_web/img/single/
-    image-excel: C:/excel_web/img/excel/
-    image-file: C:/excel_web/img/file/
-    image-db: C:/excel_web/img/db/
+    excel: D:/excel_web/excel
+    txt: D:/excel_web/data
+    image-single: D:/excel_web/img/single/
+    image-excel: D:/excel_web/img/excel/
+    image-file: D:/excel_web/img/file/
+    image-db: D:/excel_web/img/db/
