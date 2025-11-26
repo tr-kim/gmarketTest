@@ -216,7 +216,6 @@ $(function() {
 					onClick: function(e) {
 //						alert(e.row.data.USER_ID);
 						
-						
 						showDialogConfirmCustom('비밀번호를 초기화하겠습니까?', function() {
 							let formData = new FormData();
 							const param = {};
@@ -242,8 +241,7 @@ $(function() {
 										const result = data.result;
 
 										if (code == 1000) {
-											showDialogCustom('비밀번호가 정상적으로 초기화되었습니다.<br /><span style="font-size: 12px;font-weight: bold;">※ 초기화된 비밀번호는 사용자 아이디입니다.</span>');
-											
+											showDialogTitleCustom('초기화 완료', '초기화된 비밀번호는 아이디와 동일합니다.');
 										} else if (code == 9003) {
 											showDialogCustom(result);
 											
