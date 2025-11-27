@@ -92,8 +92,7 @@ file:
   path:
     excel: C:/excel_web/excel
     txt: C:/excel_web/data
-    image:
-      single: C:/excel_web/img/single/
-      excel: C:/excel_web/img/excel/
-      file: C:/excel_web/img/file/
-      db: C:/excel_web/img/db/
+    image-single: C:/excel_web/img/single/
+    image-excel: C:/excel_web/img/excel/
+    image-file: C:/excel_web/img/file/
+    image-db: C:/excel_web/img/db/

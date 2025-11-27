@@ -360,7 +360,7 @@ $(function () {
 					}
 				} 
 			},
-//			{ dataField: "CORP_RESERVED2", caption: "Flow #", alignment: "center" }
+			{ dataField: "CORP_RESERVED2", caption: "Flow #", alignment: "center" } // 통신사 코드
 		],
 		toolbar: {
 			items: [

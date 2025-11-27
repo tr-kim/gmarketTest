@@ -184,7 +184,7 @@ $(function() {
 				customizeText: function(cellInfo) {
 					switch (cellInfo.value) {
 						case "Y": return "사용";
-						case "N": return "일시정지";
+						case "N": return "미사용";
 						default: return "-";
 					}
 				}

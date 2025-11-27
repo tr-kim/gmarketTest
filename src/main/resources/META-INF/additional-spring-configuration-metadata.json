@@ -303,5 +303,25 @@
     "name": "active.file-path",
     "type": "java.lang.String",
     "description": "A description for 'active.file-path'"
+  },
+  {
+    "name": "file.path.image-single",
+    "type": "java.lang.String",
+    "description": "A description for 'file.path.image-single'"
+  },
+  {
+    "name": "file.path.image-excel",
+    "type": "java.lang.String",
+    "description": "A description for 'file.path.image-excel'"
+  },
+  {
+    "name": "file.path.image-file",
+    "type": "java.lang.String",
+    "description": "A description for 'file.path.image-file'"
+  },
+  {
+    "name": "file.path.image-db",
+    "type": "java.lang.String",
+    "description": "A description for 'file.path.image-db'"
   }
 ]}
