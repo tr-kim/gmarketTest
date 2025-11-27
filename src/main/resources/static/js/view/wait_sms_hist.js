@@ -5,14 +5,12 @@ let titleInstance;
 let waitDataGrid;
 
 $(function () {
-	const startDate = new Date();
-	const endDate = new Date();
-	endDate.setDate(endDate.getDate() + 7);
+	const today = new Date();
 	
 	//조회 기간
 	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
-		value: startDate,
+		value: today,
 		displayFormat: "yyyy-MM-dd",
 		pickerType: "calendar",
 		calendarOptions: {
@@ -22,7 +20,7 @@ $(function () {
 
 	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
-		value: endDate,
+		value: today,
 		displayFormat: "yyyy-MM-dd",
 		pickerType: "calendar",
 		calendarOptions: {

@@ -24,17 +24,15 @@ $(function() {
 	});
 	
 	// 일주일 기본값 설정
-	const startDate = new Date();
-	const endDate = new Date();
-	endDate.setDate(endDate.getDate() + 7);
+	const today = new Date();
 	
-	const startYear = startDate.getFullYear(); 
-	const startMonth = `${String(startDate.getMonth() + 1).padStart(2, '0')}`; 
-	const startDay = `${String(startDate.getDate()).padStart(2, '0')}`;
+	const startYear = today.getFullYear(); 
+	const startMonth = `${String(today.getMonth() + 1).padStart(2, '0')}`; 
+	const startDay = `${String(today.getDate()).padStart(2, '0')}`;
 	
-	const endYear = endDate.getFullYear(); 
-	const endMonth = `${String(endDate.getMonth() + 1).padStart(2, '0')}`; 
-	const endDay = `${String(endDate.getDate()).padStart(2, '0')}`; 
+	const endYear = today.getFullYear(); 
+	const endMonth = `${String(today.getMonth() + 1).padStart(2, '0')}`; 
+	const endDay = `${String(today.getDate()).padStart(2, '0')}`; 
 
 	//라디오
 	const radios = document.querySelectorAll('input[name="timeType"]');
@@ -74,11 +72,11 @@ $(function() {
 				endDateInstance.option("value", `${endYear}-${endMonth}-${endDay}`);
 				endDateInstance.option("displayFormat", "yyyy-MM-dd");
 				
-				// 사작 시간
+				// 시작 시간
 				startHourInstance = $("#startHour")	.dxDateBox({
 					type: 'time',
 					name: "startHour",
-					value: new Date(2025, 0, 1, startDate.getHours(), 0, 0),	// type이 time이면 날짜는 아무거나 넣어도 상관없음
+					value: new Date(2025, 0, 1, 0, 0, 0),	// type이 time이면 날짜는 아무거나 넣어도 상관없음
 					displayFormat: "HH시",
 					pickerType: "list",
 					interval: 60,			// 분 선택 없애기 (1시간 단위)
@@ -89,7 +87,7 @@ $(function() {
 				endHourInstance = $("#endHour")	.dxDateBox({
 					type: 'time',
 					name: "endHour",
-					value: new Date(2025, 0, 1, startDate.getHours(), 0, 0),	// type이 time이면 날짜는 아무거나 넣어도 상관없음
+					value: new Date(2025, 0, 1, 23, 0, 0),	// type이 time이면 날짜는 아무거나 넣어도 상관없음
 					displayFormat: "HH시",
 					pickerType: "list",
 					interval: 60,			// 분 선택 없애기 (1시간 단위)
@@ -281,7 +279,14 @@ $(function() {
 		allowColumnResizing: true,
 		columnResizingMode: 'widget',
 		columns: [
-			{ dataField: "RESULT_DATE", caption: "시간/일자", alignment: "center" },
+			{ 
+				dataField: "RESULT_DATE", 
+				caption: "시간/일자", 
+				alignment: "center",
+				customizeText: function(cellInfo) {
+					return formatTimestamp(cellInfo.value);
+				}
+			},
 			{
 				dataField: "", caption: "대분류", alignment: "center", allowSorting: false, calculateCellValue: function(rowData) {
 					switch (companyInstance.option('value')) {
@@ -309,6 +314,9 @@ $(function() {
 				"searchPanel"
 			]
 		},
+		onRowClick: function (e) {
+			openStatFailDetail(e.data);
+		},
 	    onContentReady(e) {
 			const totalCount = e.component.totalCount();
 			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건`);
@@ -317,6 +325,53 @@ $(function() {
 	    }
 	}).dxDataGrid("instance");
 });
+
+//날짜 포맷팅
+function formatTimestamp(str) {
+    if (!str) return "";
+    str = String(str).trim();
+
+    const len = str.length;
+    const yyyy = str.slice(0, 4);
+    const mm = str.slice(4, 6);
+    const dd = str.slice(6, 8);
+    const hh = str.slice(8, 10);
+
+    switch (len) {
+        case 4: 
+            return yyyy;
+
+        case 6: 
+            return `${yyyy}-${mm}`;
+
+        case 8: 
+            return `${yyyy}-${mm}-${dd}`;
+
+        case 10: 
+            return `${yyyy}-${mm}-${dd} ${hh}:00`;
+
+        default:
+            return str; 
+    }
+}
+
+// 실패 상세 보기 모달
+function openStatFailDetail(data = {}) {
+	
+	// document.getElementById('fail00').value = data.FAIL_00;
+	document.getElementById('fail01').value = data.FAIL_01;
+	document.getElementById('fail02').value = data.FAIL_02;
+	document.getElementById('fail03').value = data.FAIL_03;
+	document.getElementById('fail04').value = data.FAIL_04;
+	document.getElementById('fail05').value = data.FAIL_05;
+	document.getElementById('fail06').value = data.FAIL_06;
+	document.getElementById('fail07').value = data.FAIL_07;
+	document.getElementById('fail08').value = data.FAIL_08;
+	document.getElementById('fail09').value = data.FAIL_09;
+	
+	document.getElementById('stat_modal').classList.add('d-block');
+	toggleBodyClass();
+}
 
 // 검색
 $('#search-btn').dxButton({

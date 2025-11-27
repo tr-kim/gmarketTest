@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="statFailDetail">
+	<div id="stat_modal" class="modal-bg statFailDetail">
+		<div class="modal-wrap">
+			<div class="modal-hd">
+				<span class="font-sz-16 font-weight-600">실패 상세</span>
+				<button type="button" class="close_btn" id="close_btn"  onclick="closeModal('statFailDetail')">
+					<i class="bi bi-x-lg"></i>
+					<span class="visually-hidden">닫기</span>
+				</button>
+			</div>
+			<div class="modal-con">
+				<div class="row justify-content-between mb-3">
+					<div class="col-5 d-flex">
+						<label class="col-form-label col-6" for="fail00">기타 오류</label>
+						<div class="col-6">
+							<input type="text" readonly class="form-control" id="fail00">
+						</div>
+					</div>
+					<div class="col-5 d-flex">
+						<label class="col-form-label col-6" for="fail01">메시지 형식 오류</label>
+						<div class="col-6">
+							<input type="text" readonly class="form-control" id="fail01">
+						</div>
+					</div>
+				</div>
+				<div class="row justify-content-between mb-3">
+					<div class="col-5 d-flex">
+						<label class="col-form-label col-6" for="fail02">유효시간 만료</label>
+						<div class="col-6">
+							<input type="text" readonly class="form-control" id="fail02">
+						</div>
+					</div>
+					<div class="col-5 d-flex">
+						<label class="col-form-label col-6" for="fail03">결번</label>
+						<div class="col-6">
+							<input type="text" readonly class="form-control" id="fail03">
+						</div>
+					</div>
+				</div>
+				<div class="row justify-content-between mb-3">
+					<div class="col-5 d-flex">
+						<label class="col-form-label col-6" for="fail04">단말기 Power Off</label>
+						<div class="col-6">
+							<input type="text" readonly class="form-control" id="fail04">
+						</div>
+					</div>
+					<div class="col-5 d-flex">
+						<label class="col-form-label col-6" for="fail05">음영</label>
+						<div class="col-6">
+							<input type="text" readonly class="form-control" id="fail05">
+						</div>
+					</div>
+				</div>
+				<div class="row justify-content-between mb-3">
+					<div class="col-5 d-flex">
+						<label class="col-form-label col-6" for="fail06">전송 건수 초과</label>
+						<div class="col-6">
+							<input type="text" readonly class="form-control" id="fail06">
+						</div>
+					</div>
+					<div class="col-5 d-flex">
+						<label class="col-form-label col-6" for="fail07">스팸 차단</label>
+						<div class="col-6">
+							<input type="text" readonly class="form-control" id="fail07">
+						</div>
+					</div>
+				</div>
+				<div class="row justify-content-between">
+					<div class="col-5 d-flex">
+						<label class="col-form-label col-6" for="fail08">중복 메시지</label>
+						<div class="col-6">
+							<input type="text" readonly class="form-control" id="fail08">
+						</div>
+					</div>
+					<div class="col-5 d-flex">
+						<label class="col-form-label col-6" for="fail09">수신거부 등록번호</label>
+						<div class="col-6">
+							<input type="text" readonly class="form-control" id="fail09">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</th:block>
+
+</html>

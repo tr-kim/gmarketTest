@@ -9,17 +9,15 @@ const period = 30;	// 최대 검색 기간
 
 $(function() {
 	
-	const startDate = new Date();
-	const endDate = new Date();
-	endDate.setDate(endDate.getDate() + 7);
+	const today = new Date();
 	
-	const startYear = startDate.getFullYear(); 
-	const startMonth = `${String(startDate.getMonth() + 1).padStart(2, '0')}`; 
-	const startDay = `${String(startDate.getDate()).padStart(2, '0')}`;
+	const startYear = today.getFullYear(); 
+	const startMonth = `${String(today.getMonth() + 1).padStart(2, '0')}`; 
+	const startDay = `${String(today.getDate()).padStart(2, '0')}`;
 	
-	const endYear = endDate.getFullYear(); 
-	const endMonth = `${String(endDate.getMonth() + 1).padStart(2, '0')}`; 
-	const endDay = `${String(endDate.getDate()).padStart(2, '0')}`; 
+	const endYear = today.getFullYear(); 
+	const endMonth = `${String(today.getMonth() + 1).padStart(2, '0')}`; 
+	const endDay = `${String(today.getDate()).padStart(2, '0')}`; 
 	
 	//조회 기간
 	startDateInstance = $("#startDate").dxDateBox({
