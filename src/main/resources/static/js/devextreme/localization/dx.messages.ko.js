@@ -79,7 +79,7 @@
             "dxDateBox-simulatedDataPickerTitleTime": "Select time",
             "dxDateBox-simulatedDataPickerTitleDate": "Select date",
             "dxDateBox-simulatedDataPickerTitleDateTime": "Select date and time",
-            "dxDateBox-validation-datetime": "Value must be a date or time",
+            "dxDateBox-validation-datetime": "날짜를 형식에 맞게 입력해 주세요.", // Value must be a date or time
             "dxDateRangeBox-invalidStartDateMessage": "Start value must be a date",
             "dxDateRangeBox-invalidEndDateMessage": "End value must be a date",
             "dxDateRangeBox-startDateOutOfRangeMessage": "Start date is out of range",
