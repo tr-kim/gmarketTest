@@ -59,7 +59,7 @@ public class RealSendHistController {
 		return "view/real_send_hist_old";
 	}
 
-	// 지마켓 상세
+	// G마켓 상세
 	@GetMapping("/real/detail/gmarket")
 	public String gmarketDetail(Model model) {
 

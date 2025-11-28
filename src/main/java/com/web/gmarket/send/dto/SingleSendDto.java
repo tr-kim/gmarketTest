@@ -73,7 +73,7 @@ public class SingleSendDto {
 	// 수신 거부 여부
 	private boolean rejectCheckDefault = false;
 	
-	// 수신 거부 번호 옥션(default), 지마켓
+	// 수신 거부 번호 옥션(default), G마켓
 	private String rejectNum = ConstantsUtils.AUCTION_REJECT_NUM;
 	
 	// 수신번호 갯수

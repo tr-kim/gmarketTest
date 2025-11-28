@@ -47,7 +47,7 @@ public class FileSendServiceImpl implements FileSendService {
 	@Transactional(rollbackFor = Exception.class)
 	public void insertFileSend(FileSendDto fileSendDto, Map<String, UploadProgress> uploadStatus, String jobId) throws Exception {
 		
-		// 0: 옥션, 1: 지마켓
+		// 0: 옥션, 1: G마켓
 		int companyCode = fileSendDto.getCompanyCode();
 		String dbName = DBUtils.getDBName(companyCode);
 		

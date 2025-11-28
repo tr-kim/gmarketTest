@@ -32,7 +32,7 @@ public class SingleSendServiceImpl implements SingleSendService {
 	@Transactional(rollbackFor = Exception.class)
 	public Map<String, Integer> insertSingleSend(SingleSendDto singleSendDto) throws Exception {
 		
-		// 0: 옥션, 1: 지마켓
+		// 0: 옥션, 1: G마켓
 		int companyCode = singleSendDto.getCompanyCode();
 		String dbName = DBUtils.getDBName(companyCode);
 		Map<String, Integer> result = new HashMap<>();

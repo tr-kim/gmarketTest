@@ -721,7 +721,7 @@ function sendMessage() {
 		formData.append("callback", callbackSelect === "직접입력" ? tranCallback : callbackSelect);		// 발신 번호
 		formData.append("calleeSelect", calleeSelect === "직접입력" ? 0 : 1);								// 수신 번호 유형 0: 직접입력, 1: 시트 선택
 		formData.append("callee", calleeSelect === "직접입력" ? tranCallee : calleeSelect);				// 수신 번호
-		formData.append("companyCode", companyCode);													// 대분류 0: 옥션, 1: 
+		formData.append("companyCode", companyCode);													// 대분류 0: 옥션, 1: G마켓
 		
 
 		formData.append("userId", userId);																// 사용자 아이디

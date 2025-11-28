@@ -85,12 +85,12 @@ public class StatServiceImpl implements StatService {
 		return list;
 	}
 
-	// 지마켓 목록 갯수
+	// G마켓 목록 갯수
 	public int selectGmarketStatListCount(StatDto statDto) {
 		return commonService.getStatMapper(ConstantsUtils.DB_GMARKET).selectGmarketStatListCount(statDto);
 	}
 
-	// 지마켓 목록 조회
+	// G마켓 목록 조회
 	public List<StatDto> selectGmarketStatList(StatDto statDto) {
 		return commonService.getStatMapper(ConstantsUtils.DB_GMARKET).selectGmarketStatList(statDto);
 	}

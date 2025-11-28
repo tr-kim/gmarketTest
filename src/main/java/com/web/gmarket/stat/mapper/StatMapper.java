@@ -35,7 +35,7 @@ public interface StatMapper {
 	public int selectGmarketStatListCount(StatDto statDto);
 	
 	/**
-	 * 지마켓 정산/통계 목록 조회
+	 * G마켓 정산/통계 목록 조회
 	 * 
 	 * @param statDto
 	 * @return

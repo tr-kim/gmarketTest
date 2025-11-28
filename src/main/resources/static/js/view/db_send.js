@@ -685,7 +685,7 @@ function sendMessage(){
 		
 		const formData = new FormData();
 		formData.append("msgType", msgType);									// 메시지 유형 SMS, LMS, MMS
-		formData.append("companyCode", companyCode);							// 대분류 0: 옥션, 1: 지마켓
+		formData.append("companyCode", companyCode);							// 대분류 0: 옥션, 1: G마켓
 		formData.append("reserved4", reserved4);								// 요청번호
 		formData.append("tranCallback", tranCallback);							// 발신번호
 		formData.append("userId", userId);										// 사용자 아이디

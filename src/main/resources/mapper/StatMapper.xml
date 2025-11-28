@@ -133,7 +133,7 @@
 	
 	<select id="selectGmarketStatListCount" resultType="int" parameterType="com.web.gmarket.stat.dto.StatDto">
 	  	/*
-	  		StatMapper.selectStatListGmarketCount 지마켓 정산/통계 목록 갯수
+	  		StatMapper.selectStatListGmarketCount G마켓 정산/통계 목록 갯수
 	  	*/
 	  	
 		SELECT COUNT(*)
@@ -170,7 +170,7 @@
 	
 	<select id="selectGmarketStatList" resultMap="StatResultMap" parameterType="com.web.gmarket.stat.dto.StatDto">
 	  	/*
-	  		StatMapper.selectStatList 지마켓 정산/통계 목록 조회
+	  		StatMapper.selectStatList G마켓 정산/통계 목록 조회
 	  	*/
 	  	
 	  	SELECT

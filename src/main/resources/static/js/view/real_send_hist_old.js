@@ -35,7 +35,7 @@ function makeChartOne(title, ctx) {
 					, tension: 0.1
 				},
 				{
-					label: '지마켓'
+					label: 'G마켓'
 					, data: []
 					, borderColor: borderColor[1]
 					, backgroundColor: backgroundColor[1]
@@ -90,7 +90,7 @@ function totalCallback(data) {
 	
 	totalChart.data.labels.push(inTime);						// 시간
 	totalChart.data.datasets[0].data.push(auctionSendCnt);		// 옥션
-	totalChart.data.datasets[1].data.push(gmarketSendCnt);		// 지마켓
+	totalChart.data.datasets[1].data.push(gmarketSendCnt);		// G마켓
 
 	// 10개 초과 시 기존 데이터 삭제
 	if (totalChart.data.labels.length > maxPoints) {
@@ -167,12 +167,12 @@ const auctionTotalChart = makeChartTwo("옥션 전체현황", document.getElemen
 let auctionTotalTimer;
 let auctionTotalFlag = 0;
 
-// 지마켓 전체 현황 차트
-const gmarketTotalChart = makeChartTwo("지마켓 전체현황", document.getElementById('gmarket_total_chart').getContext('2d'));
+// G마켓 전체 현황 차트
+const gmarketTotalChart = makeChartTwo("G마켓 전체현황", document.getElementById('gmarket_total_chart').getContext('2d'));
 let gmarketTotalTimer;
 let gmarketTotalFlag = 0;
 
-// SMSCLI_TBL_EMG (지마켓) 현황 차트
+// SMSCLI_TBL_EMG (G마켓) 현황 차트
 const gmarketChart01 = makeChartTwo(`${gmarketTableName[0]} (G마켓)`, document.getElementById('gmarket_chart_01').getContext('2d'));
 let gmarketTimer01;
 let gmarketFlag01 = 0;
@@ -182,7 +182,7 @@ const auctionChart01 = makeChartTwo(`${auctionTableName[4]}  (옥션)`, document
 let auctionTimer01;
 let auctionFlag01 = 0;
 
-// SMSCLI_TBL_ETC (지마켓) 현황 차트
+// SMSCLI_TBL_ETC (G마켓) 현황 차트
 const gmarketChart02 = makeChartTwo(`${gmarketTableName[1]} (G마켓)`, document.getElementById('gmarket_chart_02').getContext('2d'));
 let gmarketTimer02;
 let gmarketFlag02 = 0;
@@ -193,7 +193,7 @@ let auctionTimer02;
 let auctionFlag02 = 0;
 
 
-// SMSCLI_TBL_ORDER (지마켓) 현황 차트
+// SMSCLI_TBL_ORDER (G마켓) 현황 차트
 const gmarketChart03 = makeChartTwo(`${gmarketTableName[2]} (G마켓)`, document.getElementById('gmarket_chart_03').getContext('2d'));
 let gmarketTimer03;
 let gmarketFlag03 = 0;
@@ -204,7 +204,7 @@ const auctionChart03 = makeChartTwo(`${auctionTableName[5]} (옥션)`, document.
 let auctionTimer03;
 let auctionFlag03 = 0;
 
-// SMSCLI_TBL_TRAN (지마켓) 현황 차트
+// SMSCLI_TBL_TRAN (G마켓) 현황 차트
 const gmarketChart04 = makeChartTwo(`${gmarketTableName[3]} (G마켓)`, document.getElementById('gmarket_chart_04').getContext('2d'));
 let gmarketTimer04;
 let gmarketFlag04 = 0;
@@ -214,7 +214,7 @@ const auctionChart04 = makeChartTwo(`${auctionTableName[3]} (옥션)`, document.
 let auctionTimer04;
 let auctionFlag04 = 0;
 
-// 옥션, 지마켓 데이터 조회
+// 옥션, G마켓 데이터 조회
 function chartData(url, param, chart) {
 	
 	$.ajax({
@@ -233,7 +233,7 @@ function chartData(url, param, chart) {
 	});
 };
 
-// // 옥션, 지마켓 데이터 조회 성공 함수
+// // 옥션, G마켓 데이터 조회 성공 함수
 function chartDataCallback(data, chart) {
 	
 	if(data != null && data != "") {
@@ -278,7 +278,7 @@ $(document).ready(function() {
 		}
 	});
 
-	// 지마켓 전체 현황 시작/중지 이벤트
+	// G마켓 전체 현황 시작/중지 이벤트
 	$("#gmarket_total_btn").click(function(e) {
 		e.preventDefault();
 		
@@ -312,7 +312,7 @@ $(document).ready(function() {
 		}
 	});
 
-	// SMSCLI_TBL_EMG (지마켓) 현황 시작/중지 이벤트
+	// SMSCLI_TBL_EMG (G마켓) 현황 시작/중지 이벤트
 	$("#gmarket_chart_01_btn").click(function(e) {
 		e.preventDefault();
 		
@@ -346,7 +346,7 @@ $(document).ready(function() {
 		}
 	});
 
-	// SMSCLI_TBL_ETC (지마켓) 현황 시작/중지 이벤트
+	// SMSCLI_TBL_ETC (G마켓) 현황 시작/중지 이벤트
 	$("#gmarket_chart_02_btn").click(function(e) {
 		e.preventDefault();
 		
@@ -380,7 +380,7 @@ $(document).ready(function() {
 		}
 	});
 
-	// SMSCLI_TBL_ORDER (지마켓) 현황 시작/중지 이벤트
+	// SMSCLI_TBL_ORDER (G마켓) 현황 시작/중지 이벤트
 	$("#gmarket_chart_03_btn").click(function(e) {
 		e.preventDefault();
 		
@@ -414,7 +414,7 @@ $(document).ready(function() {
 		}
 	});
 
-	// SMSCLI_TBL_TRAN (지마켓) 현황 시작/중지 이벤트
+	// SMSCLI_TBL_TRAN (G마켓) 현황 시작/중지 이벤트
 	$("#gmarket_chart_04_btn").click(function(e) {
 		e.preventDefault();
 		

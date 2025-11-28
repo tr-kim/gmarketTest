@@ -21,7 +21,7 @@ public interface RealMapper {
 	public List<RealDto> selectRealHistTotalList(@Param(value = "totalMonTime") int totalMonTime, @Param(value = "alarmFlag") int alarmFlag, @Param(value = "codeList") List<Integer> codeList);
 	
 	/**
-	 * 옥션 및 지마켓 전체 테이블 현황
+	 * 옥션 및 G마켓 전체 테이블 현황
 	 * 
 	 * @param companyCode
 	 * @return

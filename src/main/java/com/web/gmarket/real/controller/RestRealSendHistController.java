@@ -50,7 +50,7 @@ public class RestRealSendHistController {
 	
 
 	/**
-	 * 옥션 및 지마켓 전체 현황
+	 * 옥션 및 G마켓 전체 현황
 	 * 
 	 * @param authentication
 	 * @param code
@@ -62,7 +62,7 @@ public class RestRealSendHistController {
 		
 		try {
 			
-			// 0이면 옥션, 1이면 지마켓
+			// 0: 옥션, 1: G마켓
 			return new ResponseEntity<>(realService.selectRealHistList(code), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

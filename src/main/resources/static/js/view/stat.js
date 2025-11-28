@@ -255,7 +255,7 @@ $(function() {
 			filtering: false, // searchPanel 검색
 			grouping: false, // columns 검색
 			paging: true,
-			sorting: false // 지마켓만 TABLE_NAME 정렬 가능. 옥션은 SQLServerException 발생하여 false로 변경.
+			sorting: false // G마켓만 TABLE_NAME 정렬 가능. 옥션은 SQLServerException 발생하여 false로 변경.
 		},
 		//행 선택 시
 		selection: {

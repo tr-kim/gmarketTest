@@ -18,7 +18,7 @@
 		*/
 		SELECT
 			RESERVED4,
-			CASE WHEN #{companyCode} = 0 THEN '옥션' ELSE '지마켓' END AS TRAN_PR,
+			CASE WHEN #{companyCode} = 0 THEN '옥션' ELSE 'G마켓' END AS TRAN_PR,
 			COUNT(RESERVED4) AS CNT,
 			'${companyCode}' AS RESULT_COMPANY,
 			'${tableName}' AS RESULT_TABLE
