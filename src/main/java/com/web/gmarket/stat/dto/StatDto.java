@@ -48,10 +48,10 @@ public class StatDto extends StatCodeDto implements Serializable {
 	@JsonProperty("FAIL_CNT")
 	private Integer FAIL_CNT;
 
-	// 전송 실패 횟수 (기타 오류) - API 버전오류, 인증실패, BIND 미수행 - 호스팅 시스템 내부 오류 - ISMC 전달 오류 - 기타
-	// 오류
-//	@JsonProperty("FAIL_00")
-//	private Integer FAIL_00;
+	// 전송 실패 횟수 (기타 오류)
+	// API 버전 오류, 인증 실패, BIND 미수행, 호스팅 시스템 내부 오류, ISMC 전달 오류
+	@JsonProperty("FAIL_00")
+	private Integer FAIL_00;
 
 	// 전송 실패 횟수 (메시지 형식 오류)
 	@JsonProperty("FAIL_01")

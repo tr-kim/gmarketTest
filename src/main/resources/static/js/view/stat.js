@@ -222,10 +222,11 @@ $(function() {
 					, endDate: endDate
 					, skip: loadOptions.skip || 0
 					, take: loadOptions.take || 50
-					, sort: loadOptions.sort || []
+					// , sort: loadOptions.sort || []
 				};
 				
-				if(timeType == 1) {
+				// 구분값이 시간일 경우
+				if(timeType === "1") {
 					param.startHour = String(startHourInstance.option("value").getHours()).padStart(2, "0");
 					param.endHour = String( endHourInstance.option("value").getHours()).padStart(2, "0");
 				}
@@ -249,8 +250,12 @@ $(function() {
 				});
 			}
 		},
-		headerFilter: {
-			visible: false
+		loadMode: "raw", //서버사이드 처리
+		remoteOperations: {
+			filtering: false, // searchPanel 검색
+			grouping: false, // columns 검색
+			paging: true,
+			sorting: false // 지마켓만 TABLE_NAME 정렬 가능. 옥션은 SQLServerException 발생하여 false로 변경.
 		},
 		//행 선택 시
 		selection: {
@@ -258,6 +263,9 @@ $(function() {
 		},
 		//행 마우스오버 시
 		hoverStateEnabled: true,
+		headerFilter: {
+			visible: false
+		},
 		searchPanel: {
 			visible: false,
 			width: 300
@@ -265,12 +273,9 @@ $(function() {
 		paging: {
 			pageSize: 50
 		},
-		remoteOperations: {
-			paging: true //페이징 서버사이드 처리
-			, sorting: true
-		},
 		pager: {
 			visible: true,
+			showInfo: true,
 			showNavigationButtons: true,
 			showPageSizeSelector: true,
 			allowedPageSizes: [50, 100, 200]
@@ -357,8 +362,7 @@ function formatTimestamp(str) {
 
 // 실패 상세 보기 모달
 function openStatFailDetail(data = {}) {
-	
-	// document.getElementById('fail00').value = data.FAIL_00;
+	document.getElementById('fail00').value = data.FAIL_00;
 	document.getElementById('fail01').value = data.FAIL_01;
 	document.getElementById('fail02').value = data.FAIL_02;
 	document.getElementById('fail03').value = data.FAIL_03;
@@ -380,7 +384,6 @@ $('#search-btn').dxButton({
 	type: 'default',
 	width: 60,
 	onClick() {
-		
 		const companyCode = companyInstance.option('value');
 		const tableCode = tableInstance.option('value');
 		const timeType = document.querySelector('input[name="timeType"]:checked').value;
@@ -444,7 +447,7 @@ $('#search-btn').dxButton({
 			searchStartDate = startYear;
 			searchEndDate = endYear;
 		} else {
-			console.log("시간 구분 유형 에러 : ", timeType);
+			console.log('timeType:', timeType, ', type:', typeof timeType);
 			return false;
 		}
 		
@@ -459,7 +462,7 @@ $('#search-btn').dxButton({
 					, endDate: searchEndDate
 					, skip: loadOptions.skip || 0
 					, take: loadOptions.take || 50
-					, sort: loadOptions.sort || []
+					// , sort: loadOptions.sort || []
 				};
 				
 				// 구분값이 시간일 경우
