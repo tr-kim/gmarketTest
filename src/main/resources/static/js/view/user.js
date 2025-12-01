@@ -21,11 +21,8 @@ $(function() {
 		dataSource: companyArray,
 		displayExpr: 'Name',
 		valueExpr: 'Code',
-		value: userGrade == 0 ? 1 : companyCode
+		value: companyCode
 		, inputAttr: { name: "companyCode" }
-		// , onValueChanged: function(e) {
-		// 	dataGrid.option('editing.refreshMode', e.value);
-		// }
 	}).dxSelectBox("instance");
 
 	let userGradeData = [{ Grade: -1, Name: '전체' }];
