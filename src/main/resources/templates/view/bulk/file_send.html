@@ -10,9 +10,12 @@
 				<div class="col-2 font-weight-500">대분류</div>
 				<div class="col d-flex">
 					<select name="companyCode" id="companyCode" class="form-select" onchange="setRejectNum();">
-						<option value="0">옥션</option>
-						<option value="1">G마켓</option>
-						<option value="2">스마일캐시</option>
+						<option th:each="entry : ${ { 0: '옥션', 1: 'G마켓', 2: '스마일캐시' }.entrySet() }"
+						        th:if="${#authentication.principal.userGrade == 0 or entry.key == #authentication.principal.companyCode}"
+						        th:value="${entry.key}"
+						        th:selected="${entry.key == #authentication.principal.companyCode}"
+						        th:text="${entry.value}">
+						</option>
 					</select>
 				</div>
 			</li>
