@@ -80,7 +80,7 @@ $(function() {
 					displayFormat: "HH시",
 					pickerType: "list",
 					interval: 60,			// 분 선택 없애기 (1시간 단위)
-					width: 120,
+					width: 135,
 				}).dxDateBox("instance");
 				
 				// 종료 시간
@@ -91,7 +91,7 @@ $(function() {
 					displayFormat: "HH시",
 					pickerType: "list",
 					interval: 60,			// 분 선택 없애기 (1시간 단위)
-					width: 120,
+					width: 135,
 				}).dxDateBox("instance");
 				
 				startHourInstance.option("visible", true);

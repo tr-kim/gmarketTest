@@ -920,7 +920,7 @@ function initSend(){
 	document.getElementById('msgWrite').value = "";
 	document.getElementById('reserved4').value = "미지정";
 	document.getElementById('msgTitle').value = "";
-	document.getElementById('tranCallback').value = "";
+	//document.getElementById('tranCallback').value = "";
 	document.getElementById('sendInfo').value = "";
 	//document.getElementById('stat').value = ""; // 상태
 
