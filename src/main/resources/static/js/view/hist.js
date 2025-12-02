@@ -263,6 +263,7 @@ $(function () {
 	
 	//조회 그리드
 	histDataGrid = $("#histGrid").dxDataGrid({
+		key: ["TRAN_PHONE", "TRAN_CALLBACK"],
 		dataSource: histDataSource,
 		loadMode: "raw", //서버사이드 처리
 		remoteOperations: {
