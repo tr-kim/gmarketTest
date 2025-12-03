@@ -12,17 +12,6 @@ const period = 30;	// 최대 검색 기간
 
 $(function() {
 	
-	const tableArray = {
-	    0: [{ code: -1, name: '선택하세요' }, { code: 0, name: '전체' }],
-	    1: [{ code: -1, name: '선택하세요' }, { code: 0, name: '전체' }],
-	    2: [{ code: -1, name: '선택하세요' }, { code: 0, name: '전체' }]
-	};
-
-	codeList.forEach(item => {
-	    const { companyCode, code, name } = item;
-	    if (tableArray[companyCode]) tableArray[companyCode].push({ code, name });
-	});
-	
 	// 일주일 기본값 설정
 	const today = new Date();
 	
@@ -159,10 +148,28 @@ $(function() {
 
 	checkedRadio = document.querySelector('input[name="timeType"]:checked');
 	if (checkedRadio) checkedRadio.dispatchEvent(new Event('change'));
+	
+	// 기본 옵션
+	const defaultOption = { code: -1, name: '선택하세요' };
+	
+	// 중분류 목록 설정
+	const tableArray = [0, 1, 2].reduce((acc, idx) => {
+		acc[idx] = [defaultOption, { code: 0, name: '전체' }];
+		return acc;
+	}, {});
+	
+	// codeList 병합
+	codeList.forEach(({ companyCode, code, name }) => {
+		if (tableArray[companyCode]) {
+			tableArray[companyCode].push({ code, name });
+		}
+	});
+	
+	console.log(tableArray[companyCode])
 
 	//중분류
 	tableInstance = $('#tableCategory').dxSelectBox({
-		dataSource: tableArray[1],
+		dataSource: tableArray[companyCode] || [defaultOption],
 		displayExpr: 'name',
 		valueExpr: 'code',
 		value: 0,
@@ -197,7 +204,7 @@ $(function() {
 		onValueChanged: function(e) {
 			//중분류 업데이트
 			companyValue = e.value;
-			tableInstance.option('dataSource', tableArray[companyValue] || [{ name: '선택하세요' }]);
+			tableInstance.option('dataSource', tableArray[companyValue] || [defaultOption]);
 			tableInstance.option('value', -1); // 기본값 다시 설정
 			
 		}
