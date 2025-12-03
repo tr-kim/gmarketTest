@@ -298,13 +298,13 @@ $(function () {
 		allowColumnResizing: true,
 		columnResizingMode: 'widget',
 		columns: [
-			{ dataField: "TRAN_PR", caption: "NO", alignment: "center" },
+			{ dataField: "TRAN_PR", caption: "NO", alignment: "center"},
 			{ dataField: "", caption: "대분류", alignment: "center"
 				, customizeText: function() {
 					return companyInstance.option("selectedItem").name;
 				} 
 			},
-			{ dataField: "TABLE_NAME", caption: "중분류", alignment: "center" },
+			{ dataField: "TABLE_NAME", caption: "중분류", alignment: "center", width: 250},
 			{ dataField: "TRAN_PHONE", caption: "수신 번호", alignment: "center" },
 			{ dataField: "TRAN_CALLBACK", caption: "발신 번호", alignment: "center" },
 			{ 

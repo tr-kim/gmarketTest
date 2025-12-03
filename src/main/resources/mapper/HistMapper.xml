@@ -33,7 +33,11 @@
 						TRAN_RSLT,
 						TRAN_MSG,
 						CORP_RESERVED2,
-						LEFT(#{tableName}, LEN(#{tableName}) - CHARINDEX('_', REVERSE(#{tableName}))) AS TABLE_NAME
+						CASE
+					        WHEN RIGHT(#{tableName}, 7) LIKE '_[0-9][0-9][0-9][0-9][0-9][0-9]'
+					        THEN LEFT(#{tableName}, LEN(#{tableName}) - 7)
+					        ELSE #{tableName}
+					    END AS TABLE_NAME
 					FROM ${tableName}
 <!--					WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}-->
 <!--						AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), TRAN_DATE, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}-->
