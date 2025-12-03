@@ -177,17 +177,16 @@ $(function () {
 		allowColumnResizing: true,
 		columnResizingMode: 'widget',
 		columns: [
-			{ dataField: "", caption: "대분류", alignment: "center" , width: 100, 
+			{ dataField: "", caption: "대분류", alignment: "center", 
 				customizeText: function() {
 					return companyInstance.option("selectedItem").name;
 				}
 			},
-			{ dataField: "TITLE", caption: "제목", alignment: "center" ,width: 200},
-			{ 
+			{ dataField: "TITLE", caption: "제목", alignment: "left", width: 200},
+			{
 				dataField: "REQ_TIME", 
 				caption: "전송 일시", 
 				alignment: "center",
-				width: 200,
 				customizeText: function(cellInfo) {
 					return formatTimestamp(cellInfo.value);
 				}
