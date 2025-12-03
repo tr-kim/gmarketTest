@@ -145,7 +145,6 @@ $(function() {
 				dataField: "COMPANY_CODE",
 				caption: "구분",
 				alignment: "center",
-				allowSorting: false,
 				customizeText: function(cellInfo) {
 					switch (cellInfo.value) {
 						case 0: return "옥션";
@@ -331,11 +330,9 @@ $(function() {
 		},
 		// onEditingStart(e) {
 		// 	document.getElementById('reset_btn').classList.add('d-none');
-		// 	console.log(document.getElementById('reset_btn'));
 		// 	e.cancel = true; // 기본 편집 막기
 		// 	openCustomModal('edit', e.data); // 수정 모드
 		// },
-	
 		onToolbarPreparing: function (e) {
 			const toolbarItems = e.toolbarOptions.items;
 
@@ -408,15 +405,6 @@ $(function() {
 												}
 											});
 											return { result: "ok" };
-											// const result = selectedRows.map(row => ({
-											// 	bulkMsgKey: row.bulkMsgKey,
-											// 	svcType: row.svcType
-											// }));
-											// console.log(result);
-
-											// // 삭제 로직 실행
-
-											// return { result: "ok" };
 										}
 									},
 									{
@@ -427,10 +415,13 @@ $(function() {
 									}
 								]
 							});
-
-							confirmDialog.show().done(function (dialogResult) {
-								if (dialogResult.result === "ok") console.log("삭제 완료");
-								else console.log("취소");
+							
+							confirmDialog.show().done(function(dialogResult) {
+								if (dialogResult.result === "ok") {
+									console.log("삭제 완료");
+								} else {
+									console.log("취소");
+								}
 							});
 						}
 					}

@@ -179,15 +179,15 @@ $(function() {
 		}
 	}).dxSelectBox("instance");
 	
-	// 사용자 등급 및 회사 업체에 따라 select box option 설정
+	// 계정 구분에 따른 option 설정
+	let companyArray = [{ code: -1, name: '선택하세요' }];
+	
 	const companyList = [
 	    { code: 0, name: '옥션' },
 	    { code: 1, name: 'G마켓' },
 	    { code: 2, name: '스마일캐시' }
 	];
-
-	let companyArray = [{ code: -1, name: '선택하세요' }];
-
+	
 	companyList.forEach(company => {
 	    if (userGrade === 0 || (userGrade === 1 && companyCode === company.code)) companyArray.push(company);
 	});
@@ -289,7 +289,7 @@ $(function() {
 		allowColumnResizing: true,
 		columnResizingMode: 'widget',
 		columns: [
-			{ 
+			{
 				dataField: "RESULT_DATE", 
 				caption: "시간/일자", 
 				alignment: "center",
@@ -298,7 +298,10 @@ $(function() {
 				}
 			},
 			{
-				dataField: "", caption: "대분류", alignment: "center", allowSorting: false, calculateCellValue: function(rowData) {
+				dataField: "",
+				caption: "대분류",
+				alignment: "center",
+				calculateCellValue: function(rowData) {
 					switch (companyInstance.option('value')) {
 						case 0: return "옥션";
 						case 1: return "G마켓";

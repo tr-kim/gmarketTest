@@ -429,7 +429,6 @@ function openWaitMessageInquiry(data = {}) {
 	if (data.IN_TIME) {
 		inTimeValue = formatTimestamp(data.IN_TIME);
 	}
-	console.log(inTimeValue);
 	if (data.REQ_TIME) {
 		reqTimeValue = formatTimestamp(data.REQ_TIME);
 	}

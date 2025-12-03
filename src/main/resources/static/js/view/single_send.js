@@ -100,11 +100,11 @@ $(function () {
 		onUploaded(e) {
 			// 응답 JSON
 			const response = JSON.parse(e.request.response);
-			console.log("이미지 업로드 결과:", response);
+			// console.log("이미지 업로드 결과:", response);
 			
 			if (response.status === "success") {
 				IMAGE_FILE_NAME.push(response.fileName);
-				console.log("누적 파일명:", IMAGE_FILE_NAME);
+				// console.log("누적 파일명:", IMAGE_FILE_NAME);
 				
 				// 이미지 체크 표시
 				let imgCheck = document.querySelector('.img-check');
@@ -358,7 +358,6 @@ $(function () {
 	function hasImage() {
 		const uploader = $("#file-uploader").dxFileUploader("instance");
 		const files = uploader?.option("value") || [];
-		//console.log("Current uploader value:", files);
 		
 		return files.length > 0;
 	}
@@ -474,7 +473,6 @@ $(function () {
             tranCallback.value = "";
 			rejectNum.value = "";
         }
-		console.log(companyCode.value, tranCallback.value, rejectNum.value);
     });
 	
 });
@@ -565,7 +563,6 @@ function delDirectNumber(element){
 	confirmDialog.show().done(function(dialogResult) {
 		if (dialogResult.result === "ok") {
 			console.log("삭제 완료");
-			
 		} else {
 			console.log("취소");
 		}
@@ -598,15 +595,11 @@ function updateDirectNumberStats() {
 
 //문자 발송
 function sendMessage(){
-
-	console.log(userSmsUse);
-
 	if(userSmsUse == "N" || userSmsUse == null || userSmsUse == "") {
-		
 		showDialogCustom("발송 권한이 없습니다.<br>관리자에게 문의하세요.");
 		return;
 	}
-
+	
 	const msgType = document.querySelector('.msg_type').textContent.trim();
 	const uploader = $('#file-uploader').dxFileUploader('instance');
 	const files = uploader.option('value');
@@ -712,8 +705,6 @@ function sendMessage(){
 		})
 		.then(res => res.json())
 		.then(data => {
-			console.log(data);
-			
 			const code = data.code;
 			const result = data.result;
 			
@@ -764,8 +755,6 @@ function sendMessage(){
 			}, { once: true });
 			
 		} else {
-			console.log("메시지 확인취소");
-			
 			DevExpress.ui.dialog.custom({
 				showTitle: false,
 				messageHtml: "<div style='text-align: center;'>발송하시겠습니까?</div>",

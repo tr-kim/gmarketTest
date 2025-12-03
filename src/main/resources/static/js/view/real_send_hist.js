@@ -463,13 +463,10 @@ $(function () {
 	
 	// 상세뷰 렌더링
 	function renderProcStatusDetail(datas, tab) {
-//		console.log('상세뷰 ' + tab);
-//		console.log(datas);
-
 		// 데이터 구조 변경
 		// [] => dataId: [{}]
 		const obj = {};
-
+		
 		datas.forEach(item => {
 			const { companyCode, svcName, procType } = item;
 			const typeName = companyCode == auctionCode ? 'AU' : companyCode == gmarketCode ? 'GM' : 'SC';
@@ -508,8 +505,6 @@ $(function () {
 		    obj[serviceName].push(filteredItem);
   		});
 		
-//		console.log(obj);
-
 		// 운영: active, DR: standby 추후 변경 예정
 		if(tab == 'active') {
 			const active = document.getElementById("detail-active");
@@ -547,9 +542,6 @@ $(function () {
 
 	// 요약뷰 렌더링
 	function renderProcStatusSummary(datas, tab) {
-//		console.log('요약뷰 ' + tab);
-// 		console.log(datas)
-		
 		// 운영: active, DR: standby 추후 변경 예정
 		if(tab == 'active') {
 			const active = document.getElementById("summery-active");
@@ -570,8 +562,6 @@ $(function () {
 			    dataMap[prefix] = d;
 			});
 			
-//			console.log(dataMap);
-
 			tds.forEach(td => {
 			    const dataId = td.getAttribute('data-id');
 			    if (!dataId) return;

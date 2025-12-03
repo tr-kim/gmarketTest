@@ -4,11 +4,9 @@ let startDateInstance;
 let endDateInstance;
 let serviceInstance;
 
-let pageSize;
 const period = 30;	// 최대 검색 기간
 
 $(function() {
-	
 	const today = new Date();
 	
 	const startYear = today.getFullYear(); 
@@ -19,7 +17,7 @@ $(function() {
 	const endMonth = `${String(today.getMonth() + 1).padStart(2, '0')}`; 
 	const endDay = `${String(today.getDate()).padStart(2, '0')}`; 
 	
-	//조회 기간
+	// 조회 기간
 	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
 		value: `${startYear}-${startMonth}-${startDay}`,
@@ -42,15 +40,15 @@ $(function() {
 		}
 	}).dxDateBox("instance");
 	
-	// 사용자 등급 및 회사 업체에 따라 select box option 설정
+	// 계정 구분에 따른 option 설정
+	let companyArray = [{ code: -1, name: '선택하세요' }];
+	
 	const companyList = [
 	    { code: 0, name: '옥션' },
 	    { code: 1, name: 'G마켓' },
 	    { code: 2, name: '스마일캐시' }
 	];
-
-	let companyArray = [{ code: -1, name: '선택하세요' }];
-
+	
 	companyList.forEach(company => {
 	    if (userGrade === 0 || (userGrade === 1 && companyCode === company.code)) companyArray.push(company);
 	});
@@ -60,7 +58,7 @@ $(function() {
 	    1: [{ name: '선택하세요' }, { name: '전체' }],
 	    2: [{ name: '선택하세요' }, { name: '전체' }]
 	};
-
+	
 	nameList.forEach(({ companyCode, name }) => {
 	    if (svcArray[companyCode]) svcArray[companyCode].push({ name });
 	});
@@ -78,7 +76,7 @@ $(function() {
 			serviceInstance.option('value', '선택하세요'); // 기본값 다시 설정
 		}
 	}).dxSelectBox("instance");
-		
+	
 	// 서비스
 	serviceInstance = $('#serviceCategory').dxSelectBox({
 		dataSource: svcArray[companyCode] || [{ name: '선택하세요' }],
@@ -94,8 +92,8 @@ $(function() {
 	//조회 그리드
 	dataGrid = $("#alarmGrid").dxDataGrid({
 		dataSource: {
+			key: "ALM_SEQ",
 			load: function(loadOptions) {
-				
 				const companyCode = companyInstance.option('value');
 				const startDate = startDateInstance.option("value");
 				const endDate = endDateInstance.option("value");
@@ -130,7 +128,13 @@ $(function() {
 				});
 			}
 		},
-		key: "almSeq", //keyExpr
+		loadMode: "raw", //서버사이드 처리
+		remoteOperations: {
+			filtering: false, // searchPanel 검색
+			grouping: false, // columns 검색
+			paging: true,
+			sorting: true
+		},
 		//행 선택 시
 		selection: {
 			mode: 'single'
@@ -139,10 +143,6 @@ $(function() {
 		hoverStateEnabled: true,
 		headerFilter: {
 			visible: false
-		},
-		remoteOperations: {
-			paging: true //페이징 서버사이드 처리
-			, sorting: true
 		},
 		searchPanel: {
 			visible: false,
@@ -166,7 +166,6 @@ $(function() {
 				dataField: "COMPANY_CODE",
 				caption: "대분류",
 				alignment: "center",
-				allowSorting: false,   // 정렬 비활성화
 				customizeText: function(cellInfo) {
 					switch (cellInfo.value) {
 						case 0: return "옥션";
@@ -189,8 +188,7 @@ $(function() {
 			{
 				dataField: "MON_COMMENT",
 				caption: "오류",
-				alignment: "center",
-				allowSorting: false   // 정렬 비활성화
+				alignment: "center"
 			},
 			{
 				dataField: "ALM_COMMENT",
@@ -200,8 +198,7 @@ $(function() {
 			{
 				dataField: "ALM_INFO",
 				caption: "상세",
-				alignment: "center",
-				allowSorting: false   // 정렬 비활성화
+				alignment: "center"
 			},
 			{
 				dataField: "ALM_DATE",
@@ -222,13 +219,6 @@ $(function() {
 				"searchPanel"
 			]
 		},
-		onRowClick: function (e) {
-
-		},
-		onInitNewRow(e) {
-			e.cancel = true; // 기본 추가 막기
-			openCustomModal('add'); // 추가 모드
-		},
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
 			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건`);
@@ -243,7 +233,6 @@ $('#search-btn').dxButton({
     type: 'default',
     width: 60,
     onClick() {
-		
 		const companyCode = companyInstance.option('value');
 		const startDate = startDateInstance.option("value");
 		const endDate = endDateInstance.option("value");
