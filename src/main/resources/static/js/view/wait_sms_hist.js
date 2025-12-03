@@ -239,11 +239,17 @@ $(function () {
 		hoverStateEnabled: true,
 		columns: [
 			{ type: "selection" },
-			{ dataField: "TITLE", caption: "제목", alignment: "left", width:200},
+			{ dataField: "", caption: "대분류", alignment: "center", width: 100,
+				customizeText: function() {
+					return companyInstance.option("selectedItem").name;
+				}
+			},
+			{ dataField: "TITLE", caption: "제목", alignment: "center", width: 200},
 			{ 
 				dataField: "REQ_TIME", 
 				caption: "전송 일시", 
 				alignment: "center",
+				width: 200,
 				customizeText: function(cellInfo) {
 					return formatTimestamp(cellInfo.value);
 				}

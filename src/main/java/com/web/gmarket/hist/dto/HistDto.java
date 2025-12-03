@@ -54,4 +54,7 @@ public class HistDto {
 	
 	@JsonProperty("CORP_RESERVED2")
 	private String CORP_RESERVED2;
+	
+	@JsonProperty("TABLE_NAME")
+	private String TABLE_NAME;
 }

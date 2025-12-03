@@ -185,7 +185,7 @@ $(function () {
 	
 	//조회 요청
 	const histDataSource = new DevExpress.data.CustomStore({
-		key: "TRAN_PR",
+		key: ["TRAN_PR", "TABLE_NAME", "TRAN_PHONE", "TRAN_CALLBACK"],
 		load: (loadOptions) => {
 			const startValue = startDateInstance.option("value");
 			const endValue = endDateInstance.option("value");
@@ -263,7 +263,6 @@ $(function () {
 	
 	//조회 그리드
 	histDataGrid = $("#histGrid").dxDataGrid({
-		key: ["TRAN_PHONE", "TRAN_CALLBACK"],
 		dataSource: histDataSource,
 		loadMode: "raw", //서버사이드 처리
 		remoteOperations: {
@@ -300,12 +299,19 @@ $(function () {
 		columnResizingMode: 'widget',
 		columns: [
 			{ dataField: "TRAN_PR", caption: "NO", alignment: "center" },
+			{ dataField: "", caption: "대분류", alignment: "center"
+				, customizeText: function() {
+					return companyInstance.option("selectedItem").name;
+				} 
+			},
+			{ dataField: "TABLE_NAME", caption: "중분류", alignment: "center" },
 			{ dataField: "TRAN_PHONE", caption: "수신 번호", alignment: "center" },
 			{ dataField: "TRAN_CALLBACK", caption: "발신 번호", alignment: "center" },
 			{ 
 				dataField: "TRAN_DATE", 
 				caption: "발송 일시", 
 				alignment: "center",
+				width: 200,
 				customizeText: function(cellInfo) {
 					const value = (cellInfo.value || '').toString().trim();
 					
@@ -324,7 +330,7 @@ $(function () {
 					return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 				}
 			},
-			{ dataField: "TRAN_MSG", caption: "메시지 내용", alignment: "left", width: 450 },
+			{ dataField: "TRAN_MSG", caption: "메시지 내용", alignment: "left", width: 300 },
 			{ 
 				dataField: "TRAN_RSLT", 
 				caption: "결과", 
