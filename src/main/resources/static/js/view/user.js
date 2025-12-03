@@ -6,58 +6,54 @@ let userIdInstance;
 let currentMode = ''; // 전역 변수로 모드 추적
 let currentKey = null;
 
-let pageSize;
-const allCompanies = [{ Code: 0, Name: '옥션' }, { Code: 1, Name: 'G마켓' }, { Code: 2, Name: '스마일캐시' }];
+const companyData = [{ code: 0, name: '옥션' }, { code: 1, name: 'G마켓' }, { code: 2, name: '스마일캐시' }];
+const gradeData = [{ grade: -1, name: '전체' }];
 
 $(function() {
-
 	let companyArray;
 	
-	if (userGrade == 0) companyArray = allCompanies; // 슈퍼관리자는 모든 회사 선택 가능
-	else if (userGrade == 1) companyArray = allCompanies.filter(c => c.Code === companyCode); // 일반 관리자는 자신이 속한 회사만 선택 가능
-
-	//구분
+	if (userGrade == 0) companyArray = companyData; // 슈퍼관리자는 모든 회사 선택 가능
+	else if (userGrade == 1) companyArray = companyData.filter(c => c.code === companyCode); // 일반 관리자는 자신이 속한 회사만 선택 가능
+	
+	// 구분
 	companyInstance = $('#companyCode').dxSelectBox({
 		dataSource: companyArray,
-		displayExpr: 'Name',
-		valueExpr: 'Code',
-		value: companyCode
-		, inputAttr: { name: "companyCode" }
+		displayExpr: 'name',
+		valueExpr: 'code',
+		value: companyCode,
+		inputAttr: { name: "companyCode" }
 	}).dxSelectBox("instance");
-
-	let userGradeData = [{ Grade: -1, Name: '전체' }];
 	
-	if (userGrade == 0) userGradeData.push({ Grade: 0, Name: '슈퍼관리자' });
+	if (userGrade == 0) {
+		gradeData.push({ grade: 0, name: '슈퍼관리자' })
+	}
 	
-	userGradeData.push(
-	    { Grade: 1, Name: '관리자' },
-	    { Grade: 2, Name: '사용자' },
-	    { Grade: 3, Name: '운영자' }
+	gradeData.push(
+	    { grade: 1, name: '관리자' },
+	    { grade: 2, name: '사용자' },
+	    { grade: 3, name: '운영자' }
 	);
-
-	//사용자등급
+	
+	// 등급
 	 userGradeInstance = $('#user_grade').dxSelectBox({
-		dataSource: userGradeData,
-		displayExpr: 'Name',
-		valueExpr: 'Grade',
-		value: -1
-		, inputAttr: { name: "userGrade" }
-		// , onValueChanged: function(e) {
-		// 	dataGrid.option('editing.refreshMode', e.value);
-		// }
+		dataSource: gradeData,
+		displayExpr: 'name',
+		valueExpr: 'grade',
+		value: -1,
+		inputAttr: { name: "userGrade" }
 	}).dxSelectBox("instance");
-
-	//사용자ID
+	
+	// ID
 	userIdInstance = $('#user_id').dxTextBox({
-		placeholder: 'ID를 입력하세요.'
-		, inputAttr: { name: "userId" }
+		placeholder: 'ID를 입력하세요.',
+		inputAttr: { name: "userId" }
 	}).dxTextBox("instance");
 	
-	//조회 그리드
+	// 조회 그리드
 	dataGrid = $("#userGrid").dxDataGrid({
 		dataSource: {
+			key: ["USER_SEQ", "USER_ID"],
 			load: function(loadOptions) {
-				
 				const companyCode = companyInstance.option('value');
 				const userGrade = userGradeInstance.option('value');
 				const userId = userIdInstance.option('value');
@@ -90,15 +86,11 @@ $(function() {
 				});
 			}
 		},
-		key: "userSeq", //keyExpr
 		//행 선택 시
 		selection: {
 			mode: "multiple",
 			allowSelectAll: false, //전체선택 체크박스 방지
 		},
-		// selection: {
-		// 	mode: 'single',
-		// },
 		//행 마우스오버 시
 		hoverStateEnabled: true,
 		headerFilter: {
@@ -109,9 +101,12 @@ $(function() {
 		// 	allowDeleting: true,
 		// 	allowAdding: true
 		// },
+		loadMode: "raw", //서버사이드 처리
 		remoteOperations: {
-			paging: true //페이징 서버사이드 처리
-			, sorting: true
+			filtering: false, // searchPanel 검색
+			grouping: false, // columns 검색
+			paging: true,
+			sorting: true
 		},
 		searchPanel: {
 			visible: false,
@@ -211,8 +206,6 @@ $(function() {
 				buttons: [{
 					icon: "key",
 					onClick: function(e) {
-//						alert(e.row.data.USER_ID);
-						
 						showDialogConfirmCustom('비밀번호를 초기화하겠습니까?', function() {
 							let formData = new FormData();
 							const param = {};
@@ -277,7 +270,7 @@ $(function() {
 								text: "확인",
 								type: "default",
 								onClick: function(e) {
-									const param = { userId: rowData.userId };
+									const param = { userId: rowData.USER_ID };
 									
 									deleteAjax('/api/v1/user/delete', param, function callback(data) {
 										const code = data.code;
@@ -462,17 +455,15 @@ $(function() {
 // 등록 팝업창 및 수정 팝업창
 function openCustomModal(mode, data = {}) {
 	currentMode = mode;
-
-//	postAjax('/api/v1/user/rsa', {}, rsaCallback);
-	
+		
 	if (mode === 'edit') {
 		document.getElementById('user_detail_modal').classList.add('d-block');
 		toggleBodyClass();
-
-		currentKey = data.userSeq; // keyExpr 기준
+		
+		currentKey = data.USER_SEQ;
 		document.getElementById('user_grade_detail').value = data.USER_GRADE;
 		document.getElementById('company_code_detail').value = data.COMPANY_CODE;
-		document.getElementById('company_code_name_detail').value = allCompanies.find(c => c.Code === data.COMPANY_CODE)?.Name;
+		document.getElementById('company_code_name_detail').value = companyData.find(c => c.code === data.COMPANY_CODE)?.name;
 		document.getElementById('user_id_detail').value = data.USER_ID;
 //		document.getElementById('password_detail').value = '';
 		document.getElementById('user_name_detail').value = data.USER_NAME;
