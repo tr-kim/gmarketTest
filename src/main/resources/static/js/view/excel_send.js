@@ -119,10 +119,6 @@ $(function () {
 			updatingFiles = false;
 		},
 		onUploadStarted(e) {
-			if(userMmsUse == "N" || userMmsUse == null || userMmsUse == "") {
-				showDialogCustom("발송 권한이 없습니다.<br>관리자에게 문의하세요.");
-				return;
-			}
 			const files = e.component.option('value');
 			e.component.option("uploadCustomData", {
 				imgNumFlag: files.length,
@@ -393,7 +389,7 @@ $(function () {
 		const types = ['SMS', 'LMS', 'MMS'];
 		const classMap = ['sms', 'lms', 'mms'];
 		const byteNum = ['80', '2000', '2000'];
-		
+
 		// 기존 클래스 제거
 		classMap.forEach(cls => MSG_TYPES.classList.remove(cls));
 		
@@ -607,6 +603,22 @@ function sendMessage() {
 		});
 		return;
 	};
+
+	const msgType = document.querySelector('.msg_type').textContent.trim();
+	const uploader = $('#file-uploader').dxFileUploader('instance');
+	const files = uploader.option('value');
+	const imgCheck = document.querySelector('.img-check');
+
+	// MMS인데 이미지 없으면 경고
+	if (msgType === "MMS" && (!files || files.length === 0)) {
+	    showDialogCustom("이미지를 등록해주세요.");
+	    return; 
+	}
+	
+	if (msgType === "MMS" && ((!imgCheck) || imgCheck.textContent.trim() === "이미지 체크 필요")){
+		showDialogCustom("이미지를 체크해주세요.");
+	    return; 
+	}
 	
 	// 전송범위
 	let tranRangeStart = document.getElementById('tranRangeStart').value;

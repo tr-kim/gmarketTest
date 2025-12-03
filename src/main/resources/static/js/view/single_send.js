@@ -40,6 +40,7 @@ $(function () {
 			uploadButton.hide();
 		},
 		onValueChanged(e) {
+			handleInput();
 			// 기존 파일 초기화 후 선택한 파일로 재설정(썸네일, 파일명 리턴 등 문제)
 			if (updatingFiles) return; // 재진입 방지
 			updatingFiles = true;

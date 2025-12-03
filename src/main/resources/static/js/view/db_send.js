@@ -38,6 +38,7 @@ $(function () {
 			uploadButton.hide();
 		},
 		onValueChanged(e) {
+			handleInput();
 			// 기존 파일 초기화 후 선택한 파일로 재설정(썸네일, 파일명 리턴 등 문제)
 			if (updatingFiles) return; // 재진입 방지
 			updatingFiles = true;
@@ -135,6 +136,12 @@ $(function () {
 				fileUploader.reset();	
 				return;					
 			}
+			const msgType = document.querySelector('.msg_type').textContent.trim();
+			if(msgType !== 'MMS'){
+				showDialogCustom("MMS 발송 시에만 이미지 체크가 가능합니다.");
+				return
+			}
+			
 			if (fileUploader.option('value').length === 0) {
 				showDialogCustom('이미지 파일을 선택하세요.');
 				return;
@@ -464,6 +471,18 @@ function reservedSearch(){
 	});
 }
 
+//sms일때 제목 비활성화
+function smsNoTitle(){
+	const msgTitle = document.getElementById("msgTitle");
+	const msgType = document.querySelector('.msg_type').textContent.trim();
+	if(msgType == 'SMS'){
+		msgTitle.disabled = true; 
+    	msgTitle.placeholder = "SMS는 제목을 사용할 수 없습니다."; 
+	} else {
+		msgTitle.disabled = false;
+		msgTitle.placeholder = "제목을 입력해 주세요."; 
+	}
+}
 
 // 요청번호 지정
 function reservedDesign(btn){
@@ -479,6 +498,7 @@ function reservedDesign(btn){
 	const resultTable = row.getAttribute("data-result-table").trim();
 	
 	setMsgType(resultTable);
+	smsNoTitle();
 }
 
 // 요청번호 지정 시 문자 타입 표시
@@ -601,7 +621,7 @@ function sendMessage(){
 		 	document.getElementById("reserved4").focus();
 		 });
 		 return;
-	}
+	}	
 
 	 // MMS인데 이미지 없으면 경고
     if (msgType === "MMS" && (!files || files.length === 0)) {

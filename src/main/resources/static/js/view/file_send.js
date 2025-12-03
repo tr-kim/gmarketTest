@@ -42,6 +42,7 @@ $(function () {
 			uploadButton.hide();
 		},
 		onValueChanged(e) {
+			handleInput();
 			// 기존 파일 초기화 후 선택한 파일로 재설정(썸네일, 파일명 리턴 등 문제)
 			if (updatingFiles) return; // 재진입 방지
 			updatingFiles = true;
@@ -502,6 +503,22 @@ function sendMessage(){
 		!inputValidateRequired("sendInfo", "전송대상을 입력하세요.")
 	) {
 		return;
+	}
+	
+	const msgType = document.querySelector('.msg_type').textContent.trim();
+	const uploader = $('#file-uploader').dxFileUploader('instance');
+	const files = uploader.option('value');
+	const imgCheck = document.querySelector('.img-check');
+	
+	// MMS인데 이미지 없으면 경고
+	if (msgType === "MMS" && (!files || files.length === 0)) {
+	    showDialogCustom("이미지를 등록해주세요.");
+	    return; 
+	}
+	
+	if (msgType === "MMS" && ((!imgCheck) || imgCheck.textContent.trim() === "이미지 체크 필요")){
+		showDialogCustom("이미지를 체크해주세요.");
+	    return; 
 	}
 	
 	// 메시지 내용 전송
