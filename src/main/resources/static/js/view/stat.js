@@ -165,8 +165,6 @@ $(function() {
 		}
 	});
 	
-	console.log(tableArray[companyCode])
-
 	//중분류
 	tableInstance = $('#tableCategory').dxSelectBox({
 		dataSource: tableArray[companyCode] || [defaultOption],
