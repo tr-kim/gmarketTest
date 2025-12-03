@@ -223,10 +223,7 @@ $(function() {
 			]
 		},
 		onRowClick: function (e) {
-			document.getElementById('reset_btn').classList.add('d-none');
-			console.log(document.getElementById('reset_btn'));
-			e.cancel = true; // 기본 편집 막기
-			openCustomModal('edit', e.data); // 수정 모드
+
 		},
 		onInitNewRow(e) {
 			e.cancel = true; // 기본 추가 막기
