@@ -81,7 +81,7 @@ $(function() {
 		
 	// 서비스
 	serviceInstance = $('#serviceCategory').dxSelectBox({
-		dataSource: svcArray[1],
+		dataSource: svcArray[companyCode] || [{ name: '선택하세요' }],
 		displayExpr: 'name',
 		valueExpr: 'name',
 		name: "svcName",
