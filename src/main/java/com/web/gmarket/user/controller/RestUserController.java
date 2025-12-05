@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.web.gmarket.common.auth.dto.UserDetailsDto;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.RsaUtil;
 import com.web.gmarket.common.utils.ValidateHandingUtils;
@@ -100,6 +101,10 @@ public class RestUserController {
 		Map<String, Object> result = new HashMap<>();
 		
 		try {
+			
+			// 로그인한 사용자의 등급 저장
+			UserDetailsDto auth = (UserDetailsDto) authentication.getPrincipal();
+			userDto.setCurrentUsesrGrade(auth.getUserGrade());
 			
 			result.put(ConstantsUtils.LIST, userService.selectUserInfoList(userDto));
 			result.put(ConstantsUtils.TOTAL_COUNT, userService.selectUserInfoListCount(userDto));
