@@ -42,7 +42,7 @@ public class RestBulkHistController {
 			
 		} catch (Exception e) {
 			Map<String, Object> error = new HashMap<>();
-	        error.put("message", "대량발송 이력 조회 실패");
+	        error.put("message", "대량 발송 이력 조회 실패");
 	        error.put("error", e.getMessage());
 	        
 			return ResponseEntity

@@ -1,16 +1,14 @@
 let startDateInstance;
 let endDateInstance;
-let phoneNumInstance;
 let companyInstance;
 let tableInstance;
-let histDataGrid;
-let companyValue;
-let tableValue;
+let phoneNumInstance;
+let histGrid;
 
 $(function () {
 	const today = new Date();
 	
-	//조회 기간
+	// 조회 기간
 	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
 		value: today,
@@ -34,21 +32,27 @@ $(function () {
 	// 기본 옵션
 	const defaultOption = { code: -1, name: '선택하세요' };
 	
-	// 대분류 목록 설정
-	const companyArray = [defaultOption];
-	const companyNames = ['옥션', 'G마켓', '스마일캐시'];
+	// 대분류 옵션 생성
+	let companyArray = [defaultOption];
+	const companyList = [
+		{ code: 0, name: '옥션' },
+		{ code: 1, name: 'G마켓' },
+		{ code: 2, name: '스마일캐시' }
+	];
 	
-	companyNames.forEach((name, idx) => {
-		if (userGrade === 0 || (userGrade === 1 && companyCode === idx)) {
-			companyArray.push({ code: idx, name });
+	// userGrade 적용
+	companyList.forEach(company => {
+		if (userGrade === 0 || (userGrade === 1 && companyCode === company.code)) {
+			companyArray.push(company);
 		}
 	});
 	
-	// 중분류 목록 설정
-	const tableArray = [0, 1, 2].reduce((acc, idx) => {
-		acc[idx] = [defaultOption, { code: 0, name: '전체' }];
-		return acc;
-	}, {});
+	// 중분류 옵션 생성
+	let tableArray = {
+		0: [defaultOption, { code: 0, name: '전체' }],
+		1: [defaultOption, { code: 0, name: '전체' }],
+		2: [defaultOption, { code: 0, name: '전체' }]
+	};
 	
 	// codeList 병합
 	codeList.forEach(({ companyCode, code, name }) => {
@@ -57,7 +61,7 @@ $(function () {
 		}
 	});
 	
-	//대분류
+	// 대분류
 	companyInstance = $('#companyCode').dxSelectBox({
 		dataSource: companyArray,
 		displayExpr: 'name',
@@ -65,217 +69,124 @@ $(function () {
 		value: companyCode,
 		onValueChanged(e) {
 			const selectedCode = e.value;
-			const newData = tableArray[selectedCode] || [defaultOption];
+			
+			// 중분류 옵션 갱신
 			tableInstance.option({
-				dataSource: newData,
-				value: -1
+				dataSource: tableArray[selectedCode] || [defaultOption],
+				value: -1 // 초기화
 			});
 		}
 	}).dxSelectBox("instance");
 	
-	//중분류
+	// 중분류
 	tableInstance = $('#tableCode').dxSelectBox({
 		dataSource: tableArray[companyCode] || [defaultOption],
 		displayExpr: 'name',
 		valueExpr: 'code',
-		value: 0
+		value: 0, // 기본 전체
 	}).dxSelectBox("instance");
 	
-	//수신자 번호
+	// 수신자 번호
 	phoneNumInstance = $('#phone-num').dxTextBox({
-		placeholder: '번호를 입력하세요.'
+		placeholder: '수신 번호를 입력하세요.'
 	}).dxTextBox("instance");
 	
-	//엑셀 다운로드 버튼
-	$('#excel-btn').dxButton({
-		stylingMode: 'contained',
-		text: '엑셀 다운로드',
-		type: 'success',
-		width: 120,
-		onClick() {
-			const grid = $("#histGrid").dxDataGrid("instance");
-			exportGridToExcel(grid);
-		}
-	}).dxButton('instance');
+	// 조회 파라미터 생성 함수
+	function buildSearchParams(loadOptions = {}) {
+		const startValue = startDateInstance.option("value");
+		const endValue = endDateInstance.option("value");
+		const phoneNumValue = phoneNumInstance.option("value");
+		const companyValue = companyInstance.option("value");
+		const tableItem = tableInstance.option("selectedItem");
+		
+		return {
+			startDate: formatDate(startValue, "yyyymm"),
+			endDate: formatDate(endValue, "yyyymm"),
+			startTime: formatDate(startValue, "yyyymmdd"),
+			endTime: formatDate(endValue, "yyyymmdd"),
+			phoneNum: phoneNumValue,
+			companyCode: companyValue,
+			tableName: (tableItem.name == "전체") ? "" : tableItem.name,
+			// DevExtreme 조회 옵션
+			// filter: loadOptions.filter || [],   // searchPanel 검색
+			// group: loadOptions.group || [],     // columns 검색
+			skip: loadOptions.skip ?? 0,        // 페이지 시작 위치(offset)
+			take: loadOptions.take ?? 50,       // 페이지 크기(limit)
+			sort: loadOptions.sort || [],       // 정렬
+		};
+	}
 	
-	//조회 버튼
-	$('#search-btn').dxButton({
-		stylingMode: 'contained',
-		text: '조회',
-		type: 'default',
-		width: 60,
-		onClick() {
-			const selectedCompany = companyInstance.option("selectedItem");
-			const selectedTable = tableInstance.option("selectedItem");
-			
-			const companyCode = selectedCompany ? selectedCompany.code : -1;
-			const tableCode = selectedTable ? selectedTable.code : -1;
-			
-			if (companyCode == null || companyCode == -1) {
-				showDialogCustom("대분류를 선택하세요.");
-				return false;
-			}
-			
-			if (tableCode == null || tableCode == -1) {
-				showDialogCustom("중분류를 선택하세요.");
-				return false;
-			}
-			
-			const startValue = startDateInstance.option("value");
-			const endValue = endDateInstance.option("value");
-			
-			let startDateFormatted = "", startTimeFormatted = "";
-			let endDateFormatted = "", endTimeFormatted = "";
-			
-			// 날짜가 Date 객체인지 확인
-			if (startValue instanceof Date && !isNaN(startValue)) {
-				const yyyy = startValue.getFullYear();
-				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
-				const dd = String(startValue.getDate()).padStart(2, '0');
-				startDateFormatted = `${yyyy}${mm}`;
-				startTimeFormatted = `${yyyy}${mm}${dd}`;
-			}
-			
-			if (endValue instanceof Date && !isNaN(endValue)) {
-				const yyyy = endValue.getFullYear();
-				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
-				const dd = String(endValue.getDate()).padStart(2, '0');
-				endDateFormatted = `${yyyy}${mm}`;
-				endTimeFormatted = `${yyyy}${mm}${dd}`;
-			}
-			
-			// 조회기간 구하기
-			//const companyValue = companyInstance.option("value");
-			
-			//if(companyValue){
-				let start = new Date(
-					parseInt(startTimeFormatted.slice(0, 4)),
-					parseInt(startTimeFormatted.slice(4, 6)) - 1,
-					parseInt(startTimeFormatted.slice(6, 8))
-				);
-				
-				let end = new Date(
-					parseInt(endTimeFormatted.slice(0, 4)),
-					parseInt(endTimeFormatted.slice(4, 6)) - 1,
-					parseInt(endTimeFormatted.slice(6, 8))
-				);
-				
-				let diffMs = end - start;
-				let diffDays = diffMs / (1000 * 60 * 60 * 24);
-				
-				let errorMessage = "";
-				
-				if (diffDays < 0) {
-					errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요.</div>`;
-				} else if (diffDays > 30) {
-					errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요. (30일 이내)
-					<br><br><span class="text-black-50">현재 입력한 조회 기간 : ${Math.floor(diffDays)}일</span></div>`;
-				}
-				
-				if (errorMessage) {
-					showDialogCustom(errorMessage);
-					return;
-				}
-			//}
-			
-			//재조회
-			histDataGrid.getDataSource().reload();
+	// 조회 조건 검증 함수
+	function validateSearch() {
+		const companyCode = companyInstance.option('value');
+		const tableCode = tableInstance.option("value");
+		const startValue = startDateInstance.option("value");
+		const endValue = endDateInstance.option("value");
+		
+		const diffMs = endValue - startValue;
+		const diffDays = diffMs / (1000 * 60 * 60 * 24);
+		
+		if (companyCode === -1) {
+			showDialogCustom("대분류를 선택하세요.");
+			return false;
 		}
-	}).dxButton('instance');
-	
-	//조회 요청
-	const histDataSource = new DevExpress.data.CustomStore({
-		key: ["TRAN_PR", "TABLE_NAME", "TRAN_PHONE", "TRAN_CALLBACK"],
-		load: (loadOptions) => {
-			const startValue = startDateInstance.option("value");
-			const endValue = endDateInstance.option("value");
-			
-			let startDateFormatted = "", startTimeFormatted = "";
-			let endDateFormatted = "", endTimeFormatted = "";
-			
-			// 날짜가 Date 객체인지 확인
-			if (startValue instanceof Date && !isNaN(startValue)) {
-				const yyyy = startValue.getFullYear();
-				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
-				const dd = String(startValue.getDate()).padStart(2, '0');
-				startDateFormatted = `${yyyy}${mm}`;
-				startTimeFormatted = `${yyyy}${mm}${dd}`;
-			}
-			
-			if (endValue instanceof Date && !isNaN(endValue)) {
-				const yyyy = endValue.getFullYear();
-				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
-				const dd = String(endValue.getDate()).padStart(2, '0');
-				endDateFormatted = `${yyyy}${mm}`;
-				endTimeFormatted = `${yyyy}${mm}${dd}`;
-			}
-			
-			const phoneNumValue = phoneNumInstance.option("value");
-			const companyValue = companyInstance.option("value");
-			const tableItem = tableInstance.option("selectedItem");
-			
-			if(tableItem.code === -1) return;
-			
-			const params = {
-				startDate: startDateFormatted,
-				endDate: endDateFormatted,
-				startTime: startTimeFormatted, // startTimeFormatted + "000000",
-				endTime: endTimeFormatted, // endTimeFormatted + "235959",
-				phoneNum: phoneNumValue,
-				companyCode: companyValue,
-				tableName: (tableItem.name == "전체") ? "" : tableItem.name,
-				// DevExtreme 조회 옵션
-//				filter: loadOptions.filter || [],   // searchPanel 검색
-//				group: loadOptions.group || [],     // columns 검색
-				skip: loadOptions.skip ?? 0,        // 페이지 시작 위치(offset)
-				take: loadOptions.take ?? 50,       // 페이지 크기(limit)
-				sort: loadOptions.sort || [],       // 정렬
-			};
-			
-			return fetch('/api/v1/hist/list', {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify(params)
-			})
-			.then(response => {
-				if (!response.ok) throw new Error("서버 오류");
-				return response.json();
-			})
-			.then(data => {
-				return {
-					data: data.data,
-					totalCount: data.totalCount || 0
-				};
-			})
-			.catch(error => {
-				console.error("데이터 로드 실패:", error);
-				showDialogCustom('error');
-				
-				return {
-				 	data: [],
-				 	totalCount: 0
-				};
-			});
+		
+		if (tableCode === -1) {
+			showDialogCustom("중분류를 선택하세요.");
+			return false;
 		}
-	});
-	
-	//조회 그리드
-	histDataGrid = $("#histGrid").dxDataGrid({
-		dataSource: histDataSource,
-		loadMode: "raw", //서버사이드 처리
+		
+		if (startValue > endValue) {
+			showDialogCustom("조회 기간을 다시 입력하세요.");
+			return false;
+		}
+		
+		if (diffDays > 30) {
+			showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : ${diffDays} 일`);
+			return false;
+		}
+		
+		return true;
+	}
+
+	// 데이터 조회 함수
+	function fetchGridList(loadOptions) {
+		const param = buildSearchParams(loadOptions);
+		
+		return $.ajax({
+			url: "/api/v1/hist/list",
+			method: "POST",
+			contentType: "application/json",
+			data: JSON.stringify(param)
+		})
+		.then(result => ({
+			data: result.data,
+			totalCount: result.totalCount
+		}))
+		.catch(() => {
+			showDialogCustom("error");
+			return { data: [], totalCount: 0 };
+		});
+	}
+		
+	// 조회 그리드
+	histGrid = $("#histGrid").dxDataGrid({
+		dataSource: {
+			key: ["TRAN_PR", "TABLE_NAME", "TRAN_PHONE", "TRAN_CALLBACK"],
+			load: fetchGridList
+		},
+		loadMode: "raw", // 서버사이드 처리
 		remoteOperations: {
 			filtering: false, // searchPanel 검색
 			grouping: false, // columns 검색
 			paging: true,
 			sorting: true
 		},
-		//행 선택 시
+		// 행 선택 시
 		selection: {
 			mode: 'single',
 		},
-		//행 마우스오버 시
+		// 행 마우스오버 시
 		hoverStateEnabled: true,
 		headerFilter: {
 			visible: false
@@ -389,30 +300,62 @@ $(function () {
 			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건`);
 		}
 	}).dxDataGrid("instance");
-});
-
-// 상세 보기 모달
-function openHistMessageInquiry(data = {}) {
 	
-	document.getElementById('msg').value = data.TRAN_MSG;
+	// 조회 버튼
+	$('#search-btn').dxButton({
+		stylingMode: 'contained',
+		text: '조회',
+		type: 'default',
+		width: 60,
+		onClick() {
+			if (!validateSearch()) return;
+			
+			// dataGrid 데이터 재바인딩
+			histGrid.refresh();
+		}
+	}).dxButton('instance');
 	
-	document.getElementById('message_inquiry').classList.add('d-block');
-	toggleBodyClass();
-}
-
-//엑셀 다운로드
-function exportGridToExcel(gridInstance){
-	const workbook = new ExcelJS.Workbook();
-	const worksheet = workbook.addWorksheet('이력조회');
+	// 엑셀 버튼
+	$('#excel-btn').dxButton({
+		stylingMode: 'contained',
+		text: '엑셀 다운로드',
+		type: 'success',
+		width: 120,
+		onClick() {
+			exportGridToExcel(histGrid);
+		}
+	}).dxButton('instance');
 	
-	DevExpress.excelExporter.exportDataGrid({
-		component: gridInstance,
-		worksheet: worksheet,
-		autoFilterEnabled: true,
-	}).then(() => {
-		workbook.xlsx.writeBuffer().then((buffer) => {
-			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '이력조회.xlsx');
+	// 상세 보기 모달
+	function openHistMessageInquiry(data = {}) {
+		document.getElementById('msg').value = data.TRAN_MSG;
+		document.getElementById('message_inquiry').classList.add('d-block');
+		toggleBodyClass();
+	}
+	
+	// 엑셀 다운로드
+	function exportGridToExcel(gridInstance){
+		const startValue = startDateInstance.option("value");
+		const endValue = endDateInstance.option("value");
+		
+		// 공통 함수 사용
+		const startDateFormatted = formatDate(startValue, "yymmdd");
+		const endDateFormatted = formatDate(endValue, "yymmdd");
+		
+		// 파일명
+		const fileName = `이력조회(${startDateFormatted}~${endDateFormatted}).xlsx`;
+		
+		const workbook = new ExcelJS.Workbook();
+		const worksheet = workbook.addWorksheet('이력조회');
+		
+		DevExpress.excelExporter.exportDataGrid({
+			component: gridInstance,
+			worksheet: worksheet,
+			autoFilterEnabled: true,
+		}).then(() => {
+			workbook.xlsx.writeBuffer().then((buffer) => {
+				saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName);
+			});
 		});
-	});
-}
-
+	}
+});

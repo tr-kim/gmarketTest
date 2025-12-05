@@ -2,12 +2,12 @@ let startDateInstance;
 let endDateInstance;
 let companyInstance;
 let titleInstance;
-let bulkHistDataGrid;
+let bulkHistGrid;
 
 $(function () {
 	const today = new Date();
 	
-	//조회 기간
+	// 조회 기간
 	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
 		value: today,
@@ -31,17 +31,22 @@ $(function () {
 	// 기본 옵션
 	const defaultOption = { code: -1, name: '선택하세요' };
 	
-	// 대분류 목록 설정
-	const companyArray = [defaultOption];
-	const companyNames = ['옥션', 'G마켓', '스마일캐시'];
-	
-	companyNames.forEach((name, idx) => {
-		if (userGrade === 0 || (userGrade === 1 && companyCode === idx)) {
-			companyArray.push({ code: idx, name });
+	// 대분류 옵션 생성
+	let companyArray = [defaultOption];
+	const companyList = [
+		{ code: 0, name: '옥션' },
+		{ code: 1, name: 'G마켓' },
+		{ code: 2, name: '스마일캐시' }
+	];
+
+	// userGrade 적용
+	companyList.forEach(company => {
+		if (userGrade === 0 || (userGrade === 1 && companyCode === company.code)) {
+			companyArray.push(company);
 		}
 	});
 	
-	//대분류
+	// 대분류
 	companyInstance = $('#companyCode').dxSelectBox({
 		dataSource: companyArray,
 		displayExpr: 'name',
@@ -49,112 +54,99 @@ $(function () {
 		value: companyCode
 	}).dxSelectBox("instance");
 	
-	//제목
+	// 제목
 	titleInstance = $('#bulk-title').dxTextBox({
 		placeholder: '제목을 입력하세요.'
 	}).dxTextBox("instance");
 	
-	//엑셀 다운로드 버튼
-	$('#excel-btn').dxButton({
-		stylingMode: 'contained',
-		text: '엑셀 다운로드',
-		type: 'success',
-		width: 120,
-		onClick() {
-			const grid = $("#bulkHistGrid").dxDataGrid("instance");
-			exportGridToExcel(grid);
-		}
-	}).dxButton('instance');
+	// 조회 파라미터 생성 함수
+	function buildSearchParams(loadOptions = {}) {
+		const startValue = startDateInstance.option("value");
+		const endValue = endDateInstance.option("value");
+		const companyValue = companyInstance.option("value");
+		const titleValue = titleInstance.option("value");
+		
+		return {
+			startDate: formatDate(startValue, "yyyymm"),
+			endDate: formatDate(endValue, "yyyymm"),
+			startTime: formatDate(startValue, "yyyymmdd"),
+			endTime: formatDate(endValue, "yyyymmdd"),
+			companyCode: companyValue,
+			bulkTitle: titleValue,
+			// DevExtreme 조회 옵션
+			// filter: loadOptions.filter || [],   // searchPanel 검색
+			// group: loadOptions.group || [],     // columns 검색
+			skip: loadOptions.skip ?? 0,        // 페이지 시작 위치(offset)
+			take: loadOptions.take ?? 50,       // 페이지 크기(limit)
+			sort: loadOptions.sort || [],       // 정렬
+		};
+	}
 	
-	//조회 요청
-	const bulkHistDataSource = new DevExpress.data.CustomStore({
-		key: "B_MSG_KEY",
-        load: (loadOptions) => {
-			const startValue = startDateInstance.option("value");
-			const endValue = endDateInstance.option("value");
-			
-			let startDateFormatted = "", startTimeFormatted = "";
-			let endDateFormatted = "", endTimeFormatted = "";
-			
-			// 날짜가 Date 객체인지 확인
-			if (startValue instanceof Date && !isNaN(startValue)) {
-				const yyyy = startValue.getFullYear();
-				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
-				const dd = String(startValue.getDate()).padStart(2, '0');
-				startDateFormatted = `${yyyy}${mm}`;
-				startTimeFormatted = `${yyyy}${mm}${dd}`;
-			}
-			
-			if (endValue instanceof Date && !isNaN(endValue)) {
-				const yyyy = endValue.getFullYear();
-				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
-				const dd = String(endValue.getDate()).padStart(2, '0');
-				endDateFormatted = `${yyyy}${mm}`;
-				endTimeFormatted = `${yyyy}${mm}${dd}`;
-			}
-			
-			const titleValue = titleInstance.option("value");
-			const companyValue = companyInstance.option("value");
-			
-			const params = {
-				startDate: startDateFormatted,
-				endDate: endDateFormatted,
-				startTime: startTimeFormatted, // startTimeFormatted + "000000",
-				endTime: endTimeFormatted, // endTimeFormatted + "235959",
-				bulkTitle: titleValue,
-				companyCode: companyValue,
-				// DevExtreme 조회 옵션
-//				filter: loadOptions.filter || [],   // searchPanel 검색
-//				group: loadOptions.group || [],     // columns 검색
-				skip: loadOptions.skip ?? 0,        // 페이지 시작 위치(offset)
-				take: loadOptions.take ?? 50,       // 페이지 크기(limit)
-				sort: loadOptions.sort || [],       // 정렬
-			};
-			
-			return fetch('/api/v1/bulkHist/list', {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify(params)
-			})
-			.then(response => {
-				if (!response.ok) throw new Error("서버 오류");
-				return response.json();
-			})
-			.then(data => {
-				return {
-					data: data.data,
-					totalCount: data.totalCount
-				};
-			})
-			.catch(error => {
-				console.error("데이터 로드 실패:", error);
-				showDialogCustom('error');
-				
-				return {
-				 	data: [],
-				 	totalCount: 0
-				};
-			});
+	// 조회 조건 검증 함수
+	function validateSearch() {
+		const companyCode = companyInstance.option('value');
+		const startValue = startDateInstance.option("value");
+		const endValue = endDateInstance.option("value");
+		
+		const diffMs = endValue - startValue;
+		const diffDays = diffMs / (1000 * 60 * 60 * 24);
+		
+		if (companyCode === -1) {
+			showDialogCustom("대분류를 선택하세요.");
+			return false;
 		}
-    });
+		
+		if (startValue > endValue) {
+			showDialogCustom("조회 기간을 다시 입력하세요.");
+			return false;
+		}
+		
+		if (diffDays > 30) {
+			showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : ${diffDays} 일`);
+			return false;
+		}
+		
+		return true;
+	}
 	
-	//조회 그리드
-	bulkHistDataGrid = $("#bulkHistGrid").dxDataGrid({
-		dataSource: bulkHistDataSource,
-		loadMode: "raw", //서버사이드 처리
+	// 데이터 조회 함수
+	function fetchGridList(loadOptions) {
+		const param = buildSearchParams(loadOptions);
+		
+		return $.ajax({
+			url: "/api/v1/bulkHist/list",
+			method: "POST",
+			contentType: "application/json",
+			data: JSON.stringify(param)
+		})
+		.then(result => ({
+			data: result.data,
+			totalCount: result.totalCount
+		}))
+		.catch(() => {
+			showDialogCustom("error");
+			return { data: [], totalCount: 0 };
+		});
+	}
+	
+	// 조회 그리드
+	bulkHistGrid = $("#bulkHistGrid").dxDataGrid({
+		dataSource: {
+			key: "B_MSG_KEY",
+			load: fetchGridList
+		},
+		loadMode: "raw", // 서버사이드 처리
 		remoteOperations: {
 			filtering: false, // searchPanel 검색
 			grouping: false, // columns 검색
 			paging: true,
 			sorting: true
 		},
-		//행 선택 시
+		// 행 선택 시
 		selection: {
 			mode: 'single',
 		},
-		//행 마우스오버 시
+		// 행 마우스오버 시
 		hoverStateEnabled: true,
 		headerFilter: {
 			visible: false
@@ -188,7 +180,11 @@ $(function () {
 				caption: "전송 일시", 
 				alignment: "center",
 				customizeText: function(cellInfo) {
-					return formatTimestamp(cellInfo.value);
+					if (cellInfo && cellInfo.value) {
+						return formatTimestamp(cellInfo.value);
+					} else {
+						return '-';
+					}
 				}
 			},
 			{ dataField: "MSG", caption: "메시지 내용", alignment: "left", width: 350},
@@ -248,198 +244,131 @@ $(function () {
 	    }
 	}).dxDataGrid("instance");
 	
-	//조회 버튼
+	// 조회 버튼
 	$('#search-btn').dxButton({
 		stylingMode: 'contained',
 		text: '조회',
 		type: 'default',
 		width: 60,
 		onClick() {
-			const selectedCompany = companyInstance.option("selectedItem");
-
-			const companyCode = selectedCompany ? selectedCompany.code : -1;
-			if (companyCode == null || companyCode == -1) {
-				showDialogCustom("대분류를 선택하세요.");
-				return false;
-			}
-
-			const startValue = startDateInstance.option("value");
-			const endValue = endDateInstance.option("value");
+			if (!validateSearch()) return;
 			
-			let startDateFormatted = "", startTimeFormatted = "";
-			let endDateFormatted = "", endTimeFormatted = "";		
-			
-			// 날짜가 Date 객체인지 확인
-			if (startValue instanceof Date && !isNaN(startValue)) {
-				const yyyy = startValue.getFullYear();
-				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
-				const dd = String(startValue.getDate()).padStart(2, '0');
-				startDateFormatted = `${yyyy}${mm}`;
-				startTimeFormatted = `${yyyy}${mm}${dd}`;
-			}
-			
-			if (endValue instanceof Date && !isNaN(endValue)) {
-				const yyyy = endValue.getFullYear();
-				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
-				const dd = String(endValue.getDate()).padStart(2, '0');
-				endDateFormatted = `${yyyy}${mm}`;
-				endTimeFormatted = `${yyyy}${mm}${dd}`;
-			}
-			
-			// 조회기간 구하기
-			const companyValue = companyInstance.option("value");
-			
-			if(companyValue != 0){
-				let start = new Date(
-					parseInt(startTimeFormatted.slice(0, 4)),
-					parseInt(startTimeFormatted.slice(4, 6)) - 1,
-					parseInt(startTimeFormatted.slice(6, 8))
-				);
-				
-				let end = new Date(
-					parseInt(endTimeFormatted.slice(0, 4)),
-					parseInt(endTimeFormatted.slice(4, 6)) - 1,
-					parseInt(endTimeFormatted.slice(6, 8))
-				);
-				
-				let diffMs = end - start;
-				let diffDays = diffMs / (1000 * 60 * 60 * 24);
-				
-				let errorMessage = "";
-
-				if (diffDays < 0) {
-					errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요.</div>`;
-				} else if (diffDays > 30) {
-					errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요. (30일 이내)
-					<br><br><span class="text-black-50">현재 입력한 조회 기간 : ${Math.floor(diffDays)}일</span></div>`;
-				}
-
-				if (errorMessage) {
-					showDialogCustom(errorMessage);
-					return;
-				}
-			}
-			
-			//재조회
-			bulkHistDataGrid.getDataSource().reload();
+			// dataGrid 데이터 재바인딩
+			bulkHistGrid.refresh();
 		}
 	}).dxButton('instance');
-});
-
-
-//엑셀 다운로드
-function exportGridToExcel(gridInstance){
-	const workbook = new ExcelJS.Workbook();
-	const worksheet = workbook.addWorksheet('대량발송 이력');
 	
-	DevExpress.excelExporter.exportDataGrid({
-		component: gridInstance,
-		worksheet: worksheet,
-		autoFilterEnabled: true,
-	}).then(() => {
-		workbook.xlsx.writeBuffer().then((buffer) => {
-			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '대량발송 이력.xlsx');
+	// 엑셀 버튼
+	$('#excel-btn').dxButton({
+		stylingMode: 'contained',
+		text: '엑셀 다운로드',
+		type: 'success',
+		width: 120,
+		onClick() {
+			exportGridToExcel(bulkHistGrid);
+		}
+	}).dxButton('instance');
+	
+	// 엑셀 다운로드
+	function exportGridToExcel(gridInstance){
+		const startValue = startDateInstance.option("value");
+		const endValue = endDateInstance.option("value");
+		
+		// 공통 함수 사용
+		const startDateFormatted = formatDate(startValue, "yymmdd");
+		const endDateFormatted = formatDate(endValue, "yymmdd");
+		
+		// 파일명
+		const fileName = `대량발송이력(${startDateFormatted}~${endDateFormatted}).xlsx`;
+		
+		const workbook = new ExcelJS.Workbook();
+		const worksheet = workbook.addWorksheet('대량발송이력');
+		
+		DevExpress.excelExporter.exportDataGrid({
+			component: gridInstance,
+			worksheet: worksheet,
+			autoFilterEnabled: true,
+		}).then(() => {
+			workbook.xlsx.writeBuffer().then((buffer) => {
+				saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName);
+			});
 		});
-	});
-}
-
-function formatTimestamp(str) {
-	str = str.trim();
-	const yyyy = str.slice(0, 4);
-	const mm = str.slice(4, 6);
-	const dd = str.slice(6, 8);
-	const hh = str.slice(8, 10);
-	const mi = str.slice(10, 12);
-	const ss = str.slice(12, 14);
-	return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
-}
-
-// 상세 보기 모달
-function openBulkDetailModal(data = {}) {
-	let inTimeValue = "";
-	let reqTimeValue = "";
-	
-	if (data.IN_TIME) {
-		inTimeValue = formatTimestamp(data.IN_TIME);
+	}
+		
+	// 상세 보기 모달
+	function openBulkDetailModal(data = {}) {
+		let inTimeValue = "";
+		let reqTimeValue = "";
+		
+		if (data.IN_TIME) {
+			inTimeValue = formatTimestamp(data.IN_TIME);
+		}
+		
+		if (data.REQ_TIME) {
+			reqTimeValue = formatTimestamp(data.REQ_TIME);
+		}
+		
+		currentKey = data.B_MSG_KEY; 
+		document.getElementById('title').value = data.TITLE;
+		document.getElementById('in_time').value = inTimeValue;
+		document.getElementById('req_time').value = reqTimeValue;
+		document.getElementById('user_id').value = data.USER_ID;
+		document.getElementById('send_info').value = data.SEND_INFO;
+		document.getElementById('total').value = data.CNT;
+		document.getElementById('insert_succ').value = data.SUCC_CNT;
+		document.getElementById('insert_fail').value = data.FAIL_CNT;
+		document.getElementById('stanby').value = data.CNT_STANBY;
+		document.getElementById('tran').value = data.CNT_TRAN;
+		document.getElementById('succ_fail').value = `${data.CNT_SUCC}/${data.CNT_DUP + data.CNT_SENDFAIL}`;
+		document.getElementById('msg').value = data.MSG;
+		
+		document.getElementById('bulk_hist_modal').classList.add('d-block');
+		toggleBodyClass();
 	}
 	
-	if (data.REQ_TIME) {
-		reqTimeValue = formatTimestamp(data.REQ_TIME);
+	// txt 다운로드
+	async function bulkHistTxt(data){
+		const companyCode = companyInstance.option("value");
+		const startValue = startDateInstance.option("value");
+		const endValue = endDateInstance.option("value");
+		
+		// 공통 함수 사용
+		const startDateFormatted = formatDate(startValue, "yyyymm");
+		const endDateFormatted = formatDate(endValue, "yyyymm");
+		
+		const params = {
+			bulkMsgKey: data.B_MSG_KEY,
+			svcType: data.SVC_TYPE,
+			companyCode: companyCode,
+			startDate: startDateFormatted,
+			endDate: endDateFormatted
+		};
+		
+		try {
+	        const response = await fetch('/api/v1/bulkHist/downloadTxt', {
+	            method: "POST",
+	            headers: { "Content-Type": "application/json" },
+	            body: JSON.stringify(params)
+	        });
+			
+			if (!response.ok) throw new Error("파일 다운로드 실패");
+			
+			// Blob으로 받기
+			const blob = await response.blob();
+			
+			// 브라우저에서 다운로드 처리
+			const url = window.URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "수신번호목록.txt"; // 서버에서 설정한 파일명과 동일
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+			window.URL.revokeObjectURL(url);
+			
+	    } catch (error) {
+	        console.error("파일 다운로드 오류:", error);
+	        showDialogCustom('파일 다운로드 중 오류가 발생했습니다.');
+	    }
 	}
-	
-	currentKey = data.B_MSG_KEY; 
-	document.getElementById('title').value = data.TITLE;
-	document.getElementById('in_time').value = inTimeValue;
-	document.getElementById('req_time').value = reqTimeValue;
-	document.getElementById('user_id').value = data.USER_ID;
-	document.getElementById('send_info').value = data.SEND_INFO;
-	document.getElementById('total').value = data.CNT;
-	document.getElementById('insert_succ').value = data.SUCC_CNT;
-	document.getElementById('insert_fail').value = data.FAIL_CNT;
-	document.getElementById('stanby').value = data.CNT_STANBY;
-	document.getElementById('tran').value = data.CNT_TRAN;
-	document.getElementById('succ_fail').value = `${data.CNT_SUCC}/${data.CNT_DUP + data.CNT_SENDFAIL}`;
-	document.getElementById('msg').value = data.MSG;
-	
-	document.getElementById('bulk_hist_modal').classList.add('d-block');
-	toggleBodyClass();
-}
-
-// txt 다운로드
-async function bulkHistTxt(data){
-	const companyCode = companyInstance.option("value");
-	const startValue = startDateInstance.option("value");
-	const endValue = endDateInstance.option("value");
-	
-	let startDateFormatted = "";
-	let endDateFormatted = "";
-	
-	// 날짜가 Date 객체인지 확인
-	if (startValue instanceof Date && !isNaN(startValue)) {
-		const yyyy = startValue.getFullYear();
-		const mm = String(startValue.getMonth() + 1).padStart(2, '0');
-		startDateFormatted = `${yyyy}${mm}`;
-	}
-	
-	if (endValue instanceof Date && !isNaN(endValue)) {
-		const yyyy = endValue.getFullYear();
-		const mm = String(endValue.getMonth() + 1).padStart(2, '0');
-		endDateFormatted = `${yyyy}${mm}`;
-	}
-	
-	const params = {
-		bulkMsgKey: data.B_MSG_KEY,
-		svcType: data.SVC_TYPE,
-		companyCode: companyCode,
-		startDate: startDateFormatted,
-		endDate: endDateFormatted
-	};
-	
-	try {
-        const response = await fetch('/api/v1/bulkHist/downloadTxt', {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(params)
-        });
-		
-		if (!response.ok) throw new Error("파일 다운로드 실패");
-		
-		// Blob으로 받기
-		const blob = await response.blob();
-		
-		// 브라우저에서 다운로드 처리
-		const url = window.URL.createObjectURL(blob);
-		const a = document.createElement("a");
-		a.href = url;
-		a.download = "수신번호목록.txt"; // 서버에서 설정한 파일명과 동일
-		document.body.appendChild(a);
-		a.click();
-		a.remove();
-		window.URL.revokeObjectURL(url);
-		
-    } catch (error) {
-        console.error("파일 다운로드 오류:", error);
-        showDialogCustom('파일 다운로드 중 오류가 발생했습니다.');
-    }
-}
-
+});

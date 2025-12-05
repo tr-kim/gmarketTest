@@ -2,12 +2,12 @@ let startDateInstance;
 let endDateInstance;
 let companyInstance;
 let titleInstance;
-let waitDataGrid;
+let waitHistGrid;
 
 $(function () {
 	const today = new Date();
 	
-	//조회 기간
+	// 조회 기간
 	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
 		value: today,
@@ -17,7 +17,7 @@ $(function () {
 			minZoomLevel: "decade"
 		}
 	}).dxDateBox("instance");
-
+	
 	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
 		value: today,
@@ -31,186 +31,124 @@ $(function () {
 	// 기본 옵션
 	const defaultOption = { code: -1, name: '선택하세요' };
 	
-	// 대분류 목록 설정
-	const companyArray = [defaultOption];
-	const companyNames = ['옥션', 'G마켓', '스마일캐시'];
-	
-	companyNames.forEach((name, idx) => {
-		if (userGrade === 0 || (userGrade === 1 && companyCode === idx)) {
-			companyArray.push({ code: idx, name });
+	// 대분류 옵션 생성
+	let companyArray = [defaultOption];
+	const companyList = [
+		{ code: 0, name: '옥션' },
+		{ code: 1, name: 'G마켓' },
+		{ code: 2, name: '스마일캐시' }
+	];
+
+	// userGrade 적용
+	companyList.forEach(company => {
+		if (userGrade === 0 || (userGrade === 1 && companyCode === company.code)) {
+			companyArray.push(company);
 		}
 	});
-
-	//대분류
+	
+	// 대분류
 	companyInstance = $('#companyCode').dxSelectBox({
 		dataSource: companyArray,
 		displayExpr: 'name',
 		valueExpr: 'code',
 		value: companyCode
 	}).dxSelectBox("instance");
-
-	//제목
+	
+	// 제목
 	titleInstance = $('#wait_title').dxTextBox({
 		placeholder: '제목을 입력하세요.'
 	}).dxTextBox("instance");
 	
-	//조회 버튼
-	$('#search-btn').dxButton({
-		stylingMode: 'contained',
-		text: '조회',
-		type: 'default',
-		width: 60,
-		onClick() {
-			const selectedCompany = companyInstance.option("selectedItem");
+	// 조회 파라미터 생성 함수
+	function buildSearchParams(loadOptions = {}) {
+		const startValue = startDateInstance.option("value");
+		const endValue = endDateInstance.option("value");
+		const companyValue = companyInstance.option("value");
+		const titleValue = titleInstance.option("value");
+		
+		return {
+			startDate: formatDate(startValue, "yyyymm"),
+			endDate: formatDate(endValue, "yyyymm"),
+			startTime: formatDate(startValue, "yyyymmdd"),
+			endTime: formatDate(endValue, "yyyymmdd"),
+			companyCode: companyValue,
+			waitTitle: titleValue,
+			// DevExtreme 조회 옵션
+			// filter: loadOptions.filter || [],   // searchPanel 검색
+			// group: loadOptions.group || [],     // columns 검색
+			skip: loadOptions.skip ?? 0,        // 페이지 시작 위치(offset)
+			take: loadOptions.take ?? 50,       // 페이지 크기(limit)
+			sort: loadOptions.sort || [],       // 정렬
+		};
+	}
 
-			const companyCode = selectedCompany ? selectedCompany.code : -1;
-			if (companyCode == null || companyCode == -1) {
-				showDialogCustom("대분류를 선택하세요.");
-				return false;
-			}
-
-			const startValue = startDateInstance.option("value");
-			const endValue = endDateInstance.option("value");
-			
-			let startDateFormatted = "", startTimeFormatted = "";
-			let endDateFormatted = "", endTimeFormatted = "";
-			
-			// 날짜가 Date 객체인지 확인
-			if (startValue instanceof Date && !isNaN(startValue)) {
-				const yyyy = startValue.getFullYear();
-				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
-				const dd = String(startValue.getDate()).padStart(2, '0');
-				startDateFormatted = `${yyyy}${mm}`;
-				startTimeFormatted = `${yyyy}${mm}${dd}`;
-			}
-			
-			if (endValue instanceof Date && !isNaN(endValue)) {
-				const yyyy = endValue.getFullYear();
-				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
-				const dd = String(endValue.getDate()).padStart(2, '0');
-				endDateFormatted = `${yyyy}${mm}`;
-				endTimeFormatted = `${yyyy}${mm}${dd}`;
-			}
-			
-			// 조회기간 구하기
-			let start = new Date(
-				parseInt(startTimeFormatted.slice(0, 4)),
-				parseInt(startTimeFormatted.slice(4, 6)) - 1,
-				parseInt(startTimeFormatted.slice(6, 8))
-			);
-			
-			let end = new Date(
-				parseInt(endTimeFormatted.slice(0, 4)),
-				parseInt(endTimeFormatted.slice(4, 6)) - 1,
-				parseInt(endTimeFormatted.slice(6, 8))
-			);
-			
-			let diffMs = end - start;
-			let diffDays = diffMs / (1000 * 60 * 60 * 24);
-			
-			let errorMessage = "";
-			
-			if (diffDays < 0) {
-				errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요.</div>`;
-			} else if (diffDays > 30) {
-				errorMessage = `<div style='text-align: center;' class="pt-3">조회 기간을 다시 입력하세요. (30일 이내)
-				<br><br><span class="text-black-50">현재 입력한 조회 기간 : ${Math.floor(diffDays)}일</span></div>`;
-			}
-			
-			if (errorMessage) {
-				showDialogCustom(errorMessage);
-				return false;
-			}
-			
-			//재조회
-			waitDataGrid.getDataSource().reload();
+	// 조회 조건 검증 함수
+	function validateSearch() {
+		const companyCode = companyInstance.option('value');
+		const startValue = startDateInstance.option("value");
+		const endValue = endDateInstance.option("value");
+		
+		const diffMs = endValue - startValue;
+		const diffDays = diffMs / (1000 * 60 * 60 * 24);
+		
+		if (companyCode === -1) {
+			showDialogCustom("대분류를 선택하세요.");
+			return false;
 		}
-	}).dxButton('instance');
+		
+		if (startValue > endValue) {
+			showDialogCustom("조회 기간을 다시 입력하세요.");
+			return false;
+		}
+		
+		if (diffDays > 30) {
+			showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : ${diffDays} 일`);
+			return false;
+		}
+		
+		return true;
+	}
+
+	// 데이터 조회 함수
+	function fetchGridList(loadOptions) {
+		const param = buildSearchParams(loadOptions);
+		
+		return $.ajax({
+			url: "/api/v1/wait/list",
+			method: "POST",
+			contentType: "application/json",
+			data: JSON.stringify(param)
+		})
+		.then(result => ({
+			data: result.data,
+			totalCount: result.totalCount
+		}))
+		.catch(() => {
+			showDialogCustom("error");
+			return { data: [], totalCount: 0 };
+		});
+	}
 	
-	//조회 요청
-	const waitDataSource = new DevExpress.data.CustomStore({
-		key: "B_MSG_KEY",
-        load: (loadOptions) => {
-			const startValue = startDateInstance.option("value");
-			const endValue = endDateInstance.option("value");
-			
-			let startDateFormatted = "", startTimeFormatted = "";
-			let endDateFormatted = "", endTimeFormatted = "";
-			
-			// 날짜가 Date 객체인지 확인
-			if (startValue instanceof Date && !isNaN(startValue)) {
-				const yyyy = startValue.getFullYear();
-				const mm = String(startValue.getMonth() + 1).padStart(2, '0');
-				const dd = String(startValue.getDate()).padStart(2, '0');
-				startDateFormatted = `${yyyy}${mm}`;
-				startTimeFormatted = `${yyyy}${mm}${dd}`;
-			}
-			
-			if (endValue instanceof Date && !isNaN(endValue)) {
-				const yyyy = endValue.getFullYear();
-				const mm = String(endValue.getMonth() + 1).padStart(2, '0');
-				const dd = String(endValue.getDate()).padStart(2, '0');
-				endDateFormatted = `${yyyy}${mm}`;
-				endTimeFormatted = `${yyyy}${mm}${dd}`;
-			}
-			
-			const titleValue = titleInstance.option("value");
-			const companyValue = companyInstance.option("value");
-			
-			const params = {
-				startDate: startDateFormatted,
-				endDate: endDateFormatted,
-				startTime: startTimeFormatted, // startTimeFormatted + "000000",
-				endTime: endTimeFormatted, // endTimeFormatted + "235959",
-				waitTitle: titleValue,
-				companyCode: companyValue,
-				// DevExtreme 조회 옵션
-//				filter: loadOptions.filter || [],   // searchPanel 검색
-//				group: loadOptions.group || [],     // columns 검색
-				skip: loadOptions.skip ?? 0,        // 페이지 시작 위치(offset)
-				take: loadOptions.take ?? 50,       // 페이지 크기(limit)
-				sort: loadOptions.sort || [],       // 정렬
-			};
-			
-			return fetch('/api/v1/wait/list', {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify(params)
-			})
-			.then(response => {
-				if (!response.ok) throw new Error("서버 오류");
-				return response.json();
-			})
-			.then(data => {
-				return {
-					data: data.data,
-					totalCount: data.totalCount
-				};
-			})
-			.catch(error => {
-				console.error("데이터 로드 실패:", error);
-				showDialogCustom('error');
-				
-				return {
-					data: [],
-					totalCount: 0
-				};
-			});
-		}
-    });
-
-	//조회 그리드
-	waitDataGrid = $("#waitHistGrid").dxDataGrid({
-		dataSource: waitDataSource,
-		loadMode: "raw", //서버사이드 처리
+	// 조회 그리드
+	waitHistGrid = $("#waitHistGrid").dxDataGrid({
+		dataSource: {
+			key: "B_MSG_KEY",
+			load: fetchGridList
+		},
+		loadMode: "raw", // 서버사이드 처리
 		remoteOperations: {
 			filtering: false, // searchPanel 검색
 			grouping: false, // columns 검색
 			paging: true,
 			sorting: true
 		},
+		// 행 선택 시
+		selection: {
+			mode: "multiple",
+			allowSelectAll: false, // 전체선택 체크박스 방지
+		},
+		// 행 마우스오버 시
+		hoverStateEnabled: true,
 		headerFilter: {
 			visible: false
 		},
@@ -231,12 +169,6 @@ $(function () {
 		columnAutoWidth: true,
 		allowColumnResizing: true,
 		columnResizingMode: 'widget',
-		selection: {
-			mode: "multiple",
-			allowSelectAll: false, //전체선택 체크박스 방지
-		},
-		//행 마우스오버 시
-		hoverStateEnabled: true,
 		columns: [
 			{ type: "selection" },
 			{ dataField: "", caption: "대분류", alignment: "center",
@@ -250,7 +182,11 @@ $(function () {
 				caption: "전송 일시",
 				alignment: "center",
 				customizeText: function(cellInfo) {
-					return formatTimestamp(cellInfo.value);
+					if (cellInfo && cellInfo.value) {
+						return formatTimestamp(cellInfo.value);
+					} else {
+						return '-';
+					}
 				}
 			},
 			{ dataField: "MSG", caption: "메시지 내용", alignment: "left", width: 350 },
@@ -272,7 +208,7 @@ $(function () {
 			]
 		},
 		onRowClick: function (e) {
-			openWaitMessageInquiry(e.data);
+			openWaitMsgInquiry(e.data);
 		},
 		onContentReady: function(e) {
 			const totalCount = e.component.totalCount();
@@ -323,8 +259,8 @@ $(function () {
 							id: "del-btn"
 						},
 						onClick:function (){
-							//선택된 행 체크
-							const selectedRows = waitDataGrid.getSelectedRowsData();
+							// 선택된 행 체크
+							const selectedRows = waitHistGrid.getSelectedRowsData();
 							
 							if (selectedRows.length === 0) {
 								const message = '삭제할 메시지를 선택하세요.';
@@ -357,7 +293,7 @@ $(function () {
 											
 											if (code == 1000) {
 												showDialogCustom(result, function (){
-													waitDataGrid.getDataSource().reload(); //재조회
+													waitHistGrid.getDataSource().reload(); // 재조회
 												});
 											} else {
 												showDialogCustom(result);
@@ -389,71 +325,73 @@ $(function () {
 				toolbarItems.splice(searchIndex, 0, selectAllToggleBtn);
 			}
 		},
-		onSelectionChanged: function(e) { //원본
+		onSelectionChanged: function(e) { // 원본
 			const allowedRows = [];
-			const nowPlus30 = getAfterTime(30); //현재시간+30분
+			const nowPlus30 = getAfterTime(30); // 현재시간+30분
 			
 			for (const row of e.selectedRowsData) {
 				if (nowPlus30 < row.REQ_TIME) {
-					allowedRows.push(row.B_MSG_KEY); //dataSource key
+					allowedRows.push(row.B_MSG_KEY); // dataSource key
 				} else {
 					const message = '전송 임박 항목은 선택되지 않습니다.';
 					showDialogCustom(message);
 				}
 			}
 			
-			//허용된 행만 다시 선택 처리
+			// 허용된 행만 다시 선택 처리
 			e.component.selectRows(allowedRows, false);
 		}
 	}).dxDataGrid("instance");
+	
+	// 조회 버튼
+	$('#search-btn').dxButton({
+		stylingMode: 'contained',
+		text: '조회',
+		type: 'default',
+		width: 60,
+		onClick() {
+			if (!validateSearch()) return;
+			
+			// dataGrid 데이터 재바인딩
+			waitHistGrid.refresh();
+		}
+	}).dxButton('instance');
+	
+	// 상세 보기 모달
+	function openWaitMsgInquiry(data = {}) {
+		let inTimeValue = "";
+		let reqTimeValue = "";
+		
+		if (data.IN_TIME) {
+			inTimeValue = formatTimestamp(data.IN_TIME);
+		}
+		
+		if (data.REQ_TIME) {
+			reqTimeValue = formatTimestamp(data.REQ_TIME);
+		}
+		
+		document.getElementById('title').value = data.TITLE;
+		document.getElementById('in_time').value = inTimeValue;
+		document.getElementById('req_time').value = reqTimeValue;
+		document.getElementById('user_id').value = data.USER_ID;	
+		document.getElementById('msg').value = data.MSG;
+		
+		document.getElementById('message_inquiry').classList.add('d-block');
+		toggleBodyClass();
+	}
+	
+	// 시간 구하기
+	function getAfterTime(minute) {
+		const now = new Date();
+		now.setMinutes(now.getMinutes() + minute);
+		
+		const yyyy = now.getFullYear();
+		const MM = String(now.getMonth() + 1).padStart(2, '0');
+		const dd = String(now.getDate()).padStart(2, '0');
+		const HH = String(now.getHours()).padStart(2, '0');
+		const mm = String(now.getMinutes()).padStart(2, '0');
+		const ss = String(now.getSeconds()).padStart(2, '0');
+		
+		return `${yyyy}${MM}${dd}${HH}${mm}${ss}`;
+	}
 });
-
-//날짜 포맷팅
-function formatTimestamp(str) {
-	str = str.trim();
-	const yyyy = str.slice(0, 4);
-	const mm = str.slice(4, 6);
-	const dd = str.slice(6, 8);
-	const hh = str.slice(8, 10);
-	const mi = str.slice(10, 12);
-	const ss = str.slice(12, 14);
-	return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
-}
-
-// 상세 보기 모달
-function openWaitMessageInquiry(data = {}) {
-	let inTimeValue = "";
-	let reqTimeValue = "";
-
-	if (data.IN_TIME) {
-		inTimeValue = formatTimestamp(data.IN_TIME);
-	}
-	if (data.REQ_TIME) {
-		reqTimeValue = formatTimestamp(data.REQ_TIME);
-	}
-	
-	document.getElementById('title').value = data.TITLE;
-	document.getElementById('in_time').value = inTimeValue;
-	document.getElementById('req_time').value = reqTimeValue;
-	document.getElementById('user_id').value = data.USER_ID;	
-	document.getElementById('msg').value = data.MSG;
-	
-	document.getElementById('message_inquiry').classList.add('d-block');
-	toggleBodyClass();
-}
-
-//시간 구하기
-function getAfterTime(minute) {
-	const now = new Date();
-	now.setMinutes(now.getMinutes() + minute);
-	
-	const yyyy = now.getFullYear();
-	const MM = String(now.getMonth() + 1).padStart(2, '0');
-	const dd = String(now.getDate()).padStart(2, '0');
-	const HH = String(now.getHours()).padStart(2, '0');
-	const mm = String(now.getMinutes()).padStart(2, '0');
-	const ss = String(now.getSeconds()).padStart(2, '0');
-	
-	return `${yyyy}${MM}${dd}${HH}${mm}${ss}`;
-}
-

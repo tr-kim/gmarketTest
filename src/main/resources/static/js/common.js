@@ -466,6 +466,36 @@ function onlyNumber(element){
 	element.value = element.value.replace(/[^0-9]/g,'');
 }
 
+// 날짜 형식 포맷
+function formatDate(date, format) {
+	if (!(date instanceof Date) || isNaN(date)) return "";
+	
+	const yyyy = date.getFullYear();
+	const yy = String(yyyy).slice(-2);
+	const mm = String(date.getMonth() + 1).padStart(2, "0");
+	const dd = String(date.getDate()).padStart(2, "0");
+	
+	switch (format) {
+		case "yyyymm":  return `${yyyy}${mm}`;
+		case "yymmdd":  return `${yy}${mm}${dd}`;
+		case "yyyymmdd": return `${yyyy}${mm}${dd}`;
+		case "yyyy-mm-dd": return `${yyyy}-${mm}-${dd}`;
+		default: return `${yyyy}-${mm}-${dd}`;
+	}
+}
+
+// 날짜 시간 포맷
+function formatTimestamp(str) {
+	str = str.trim();
+	const yyyy = str.slice(0, 4);
+	const mm = str.slice(4, 6);
+	const dd = str.slice(6, 8);
+	const hh = str.slice(8, 10);
+	const mi = str.slice(10, 12);
+	const ss = str.slice(12, 14);
+	return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+}
+
 // 예약 시간 포맷 변환 yyyyMMddHHmmssSSS
 function parseReservationTime(timeString) {
     try {
