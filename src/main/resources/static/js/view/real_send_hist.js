@@ -6,6 +6,11 @@ let CHART_TIMER = null;
 const PROC_ITV_SEC = 10; // 10초(고정)
 let CHART_ITV_SEC = 10; // 10초(가변)
 
+// 실패 횟수
+const MAX_FAIL_COUNT = 3;
+let PROC_FAIL_COUNT = 0;
+let CHART_FAIL_COUNT = 0;
+
 // 회사별 코드
 const auctionCode = 0;
 const gmarketCode = 1;
@@ -262,58 +267,74 @@ $(function () {
 		
 		const tableCodeList = selectedTasks.map(({ tableCode }) => tableCode); // 테이블 코드 목록
 		
-		fn_getChartData(companyCode, tableCodeList, function(result) {
-			// 현재 날짜 생성
-			const day = new Date();
-		    const hh = String(day.getHours()).padStart(2, '0');
-			const mi = String(day.getMinutes()).padStart(2, '0');
-			const ss = String(day.getSeconds()).padStart(2, '0');
-			
-			// 데이터
-			const item = { date: `${hh}${mi}${ss}` };
-			
-			if(Array.isArray(result) && result.length > 0) {
-				result.forEach(({ tableCode, sendCnt }) => {
-					const name = (selectedTasks.find(item => item.tableCode == tableCode) || {}).svcName || '';
-					item[name] = Number(sendCnt || 0);
+		fn_getChartData(
+			companyCode,
+			tableCodeList,
+			function success(result) {
+				CHART_FAIL_COUNT = 0; // 성공 시 실패 카운트 초기화
+				
+				// 현재 날짜 생성
+				const day = new Date();
+			    const hh = String(day.getHours()).padStart(2, '0');
+				const mi = String(day.getMinutes()).padStart(2, '0');
+				const ss = String(day.getSeconds()).padStart(2, '0');
+				
+				// 데이터
+				const item = { date: `${hh}${mi}${ss}` };
+				
+				if(Array.isArray(result) && result.length > 0) {
+					result.forEach(({ tableCode, sendCnt }) => {
+						const name = (selectedTasks.find(item => item.tableCode == tableCode) || {}).svcName || '';
+						item[name] = Number(sendCnt || 0);
+					});
+				}
+				
+				// 시리즈 정의
+				const series = selectedTasks.map(task => ({
+					valueField: task.svcName,
+					name: task.svcName,
+					type: "line"
+				}));
+				
+				// 누락 필드 0으로 채움
+				series.map(s => s.valueField).forEach(field => {
+					if (item[field.trim()] === undefined || item[field.trim()] === null) item[field.trim()] = 0;
 				});
+				
+				// 차트 생성
+				const chart = $(`#${chartId}`).dxChart("instance");
+				
+				// 기존 데이터 가져오기
+				let dataSource = chart.option("dataSource") || [];
+	
+				// 데이터 개수 제한 (10개 초과 시 앞에서 제거)
+				if (dataSource.length >= 10) dataSource.shift();
+				
+				// 차트 갱신
+				chart.option("series", series);
+				chart.option("dataSource").push(item);
+				chart.refresh();
+				
+				// 시간 갱신
+				updateLastTime('#chartUpdateTime', 'time');
+			},
+			function fail(err) {
+				CHART_FAIL_COUNT++;
+				// console.error('차트 데이터 로드 실패:', err);
+				
+				if (CHART_FAIL_COUNT >= MAX_FAIL_COUNT) {
+					clearInterval(CHART_TIMER);
+					console.error('차트 자동 갱신 중지');
+					showDialogCustom('error');
+				}
 			}
-			
-			// 시리즈 정의
-			const series = selectedTasks.map(task => ({
-				valueField: task.svcName,
-				name: task.svcName,
-				type: "line"
-			}));
-			
-			// 누락 필드 0으로 채움
-			series.map(s => s.valueField).forEach(field => {
-				if (item[field.trim()] === undefined || item[field.trim()] === null) item[field.trim()] = 0;
-			});
-			
-			// 차트 생성
-			const chart = $(`#${chartId}`).dxChart("instance");
-			
-			// 기존 데이터 가져오기
-			let dataSource = chart.option("dataSource") || [];
-
-			// 데이터 개수 제한 (10개 초과 시 앞에서 제거)
-			if (dataSource.length >= 10) dataSource.shift();
-			
-			// 차트 갱신
-			chart.option("series", series);
-			chart.option("dataSource").push(item);
-			chart.refresh();
-			
-			// 시간 갱신
-			updateLastTime('#chartUpdateTime', 'time');
-		});
+		);
 	}
 	
 	// 전체 차트 갱신
 	function fetchChartData() {
-		updateChartData(gmarketCode, "gmarketChart", gmarketTasks, 'manageListGmarket');
 		updateChartData(auctionCode, "auctionChart", auctionTasks, 'manageListAuction');
+		updateChartData(gmarketCode, "gmarketChart", gmarketTasks, 'manageListGmarket');
 		updateChartData(smilecashCode, "smilecashChart", smilecashTasks, 'manageListSmilecash');
 	}
 	
@@ -420,7 +441,7 @@ $(function () {
 	});
 	
 	// 차트 데이터 가져오기
-	function fn_getChartData(code, list, successCallbock) {
+	function fn_getChartData(code, list, successCallbock, errorCallback) {
 		const formData = new FormData();
 		formData.append("companyCode", code);
 		formData.append("codeList", list);
@@ -432,11 +453,14 @@ $(function () {
 			processData: false,
 			contentType: false,
 			success: function(data) {
-				if (typeof successCallbock === 'function') successCallbock(data);
+				if (typeof successCallbock === 'function') {
+					successCallbock(data);
+				}
 			},
 			error: function(xhr, status, error) {
-				console.error("차트 데이터 요청 실패:", xhr, status, error); // 기본 에러 처리
-				showDialogCustom('error');
+				if (typeof errorCallback === 'function') {
+					errorCallback({ xhr, status, error });
+				}
 			}
 		});
 	}
@@ -597,7 +621,11 @@ $(function () {
 			if (!res.ok) throw new Error(res.status);
 			
 			const data = await res.json();
-			if(data.length == 0 || !data) throw new Error('데이터가 존재하지 않습니다. : ' + tabParam);
+			if (!data || data.length === 0) {
+				throw new Error('데이터가 존재하지 않습니다. : ' + tabParam);
+			}
+			
+			PROC_FAIL_COUNT = 0; // 성공 시 실패 카운트 초기화
 			
 			// 데이터 렌더링
 			if (viewParam === 'detail') renderProcStatusDetail(data, tabParam);
@@ -607,7 +635,14 @@ $(function () {
 			updateLastTime('#procUpdateTime', 'full');
 			
 		} catch (err) {
-			console.error('프로세스 데이터 로드 실패:', err);
+			PROC_FAIL_COUNT++;
+			// console.error('프로세스 데이터 로드 실패:', err);
+			
+			if (PROC_FAIL_COUNT >= MAX_FAIL_COUNT) {
+				clearInterval(PROC_TIMER);
+				console.error('프로세스 자동 갱신 중지');
+				showDialogCustom('error');
+			}
 		}
 	}
 	
