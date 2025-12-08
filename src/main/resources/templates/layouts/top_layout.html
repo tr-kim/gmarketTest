@@ -145,6 +145,20 @@
 		let userMmsUse = /*[[${#authentication.principal.mmsYn}]]*/ 'N';
 		
 		const passwordReset = /*[[${#authentication.principal.passwordResetYn}]]*/ 'N';
+		
+		$(function () {
+			// 비밀번호 초기화 여부
+			const alreadyShown = sessionStorage.getItem('passwordResetDialogShown');
+			if(passwordReset === 'Y' && !alreadyShown) {
+				showDialogCustom(
+					'초기화된 비밀번호입니다.<br/>새 비밀번호 변경해주세요.',
+					function() {
+						sessionStorage.setItem('passwordResetDialogShown', 'Y');
+					}
+				);
+			}
+		});
+		
 	</script>
 	<script>
 		<!-- 한국어 적용(ko-KR) -->

@@ -5,17 +5,6 @@ let PROGRESS_BAR_STATUS;
 
 window.addEventListener('load', function() {
 	
-	// 비밀번호 초기화 여부
-	const alreadyShown = sessionStorage.getItem('passwordResetDialogShown');
-	if(passwordReset === 'Y' && !alreadyShown) {
-		showDialogCustom(
-			'초기화된 비밀번호입니다.<br/>새 비밀번호 변경해주세요.',
-			function() {
-				sessionStorage.setItem('passwordResetDialogShown', 'Y');
-			}
-		);
-	}
-	
 	//상단메뉴일때
 	if (document.querySelector('header')) {
 		//메뉴 클릭
@@ -552,4 +541,29 @@ function toggleBodyClass() {
   } else {
     $('body').removeClass('on');
   }
+}
+
+// 쿠키 저장
+function setCookie(name, value) {
+    const date = new Date();
+    date.setTime(date.getTime() + (3650 * 24 * 60 * 60 * 1000)); // 유효기간 10년
+	
+    const expires = "; expires=" + date.toUTCString();
+    document.cookie = name + "=" + encodeURIComponent(JSON.stringify(value)) + expires + "; path=/";
+}
+
+// 쿠키 가져오기
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const cookies = document.cookie.split(';');
+    for(let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.indexOf(nameEQ) === 0) return JSON.parse(decodeURIComponent(cookie.substring(nameEQ.length)));
+    }
+    return null;
+}
+
+// 쿠키 삭제
+function removeCookie(name) {
+	document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
 }

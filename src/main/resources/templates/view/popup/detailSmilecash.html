@@ -206,17 +206,6 @@
 			}
 		}).dxChart("instance");
 	}
-	
-	// 쿠키 가져오기
-	function getCookie(name) {
-	    const nameEQ = name + "=";
-	    const cookies = document.cookie.split(';');
-	    for(let c of cookies) {
-	        c = c.trim();
-	        if (c.indexOf(nameEQ) === 0) return JSON.parse(decodeURIComponent(c.substring(nameEQ.length)));
-	    }
-	    return null;
-	}
 </script>
 </body>
 </html>
