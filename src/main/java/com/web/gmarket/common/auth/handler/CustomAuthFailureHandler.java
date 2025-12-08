@@ -29,9 +29,7 @@ public class CustomAuthFailureHandler implements AuthenticationFailureHandler {
 		
 		HttpSession session = request.getSession();
 		
-		if(ConstantsUtils.NOT_USER.equals(message)) {								// 계정 삭제 여부
-			session.setAttribute(ConstantsUtils.NOT_USER, true);
-		} else if(ConstantsUtils.NOT_USE.equals(message)) {							// 계정 사용 여부
+		if(ConstantsUtils.NOT_USE.equals(message)) {								// 계정 사용 여부
 			session.setAttribute(ConstantsUtils.NOT_USE, true);
 		} else if(ConstantsUtils.PASSWORD_NOT_MATCH.equals(message)) {				// 비밀번호 불일치
 			session.setAttribute(ConstantsUtils.PASSWORD_NOT_MATCH, true);

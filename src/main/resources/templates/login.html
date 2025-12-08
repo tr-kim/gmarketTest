@@ -43,12 +43,11 @@
 			<div class="write_wrap mt-2">
 				<div class="d-flex flex-column my-3">
 					<label for="userId" class="font-weight-500">ID</label>
-					<input class="py-2" type="text" name="userId" id="userId" value="super" placeholder="아이디를 입력해 주세요.">
+					<input class="py-2" type="text" name="userId" id="userId" value="super" placeholder="아이디를 입력해 주세요." maxlength="20">
 				</div>
 				<div class="d-flex flex-column mt-3 mb-2">
 					<label for="password" class="font-weight-500">Password</label>
-					<input class="py-2" type="password" name="userPwd" id="password" value="dinnovan1234"
-						placeholder="비밀번호를 입력해 주세요.">
+					<input class="py-2" type="password" name="userPwd" id="password" value="dinnovan1234" placeholder="비밀번호를 입력해 주세요." maxlength="20">
 				</div>				
 				<div id="saveIdWrap" class="d-flex justify-content-end mb-4">
 					<div class="form-check">
@@ -80,11 +79,6 @@
 	<th:block th:if="${NOT_USE}">
 		<script>
 			alert("현재 계정이 잠겨있습니다. 관리자에게 문의하세요.");
-		</script>
-	</th:block>
-	<th:block th:if="${NOT_USER}">
-		<script>
-			alert("현재 계정을 찾을 수 없습니다. 관리자에게 문의하세요.");
 		</script>
 	</th:block>
 	<th:block th:if="${PASSWORD_NOT_MATCH}">

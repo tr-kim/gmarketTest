@@ -46,11 +46,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		// Spring Security - UserDetailsService를 통해 DB에서 아이디로 사용자 조회
 		UserDetailsDto userDetailsDto = (UserDetailsDto) userDetailsService.loadUserByUsername(userId);
 
-		if (userDetailsDto == null || ConstantsUtils.FLAG_Y.equals(userDetailsDto.getDelFlag())) { // 사용자 존재 여부 또는 계정 삭제 여부
-			throw new UsernameNotFoundException(ConstantsUtils.NOT_USER);
-		} else if (ConstantsUtils.FLAG_N.equals(userDetailsDto.getUseYn())) { // 계정 사용 여부
+		if (userDetailsDto == null || ConstantsUtils.FLAG_Y.equals(userDetailsDto.getDelFlag())) { 			// 올바르지 않은 사용자 정보
+			throw new UsernameNotFoundException(ConstantsUtils.USER_INFO_INCORRECT);
+		} else if (ConstantsUtils.FLAG_N.equals(userDetailsDto.getUseYn())) { 								// 계정 사용 여부
 			throw new DisabledException(ConstantsUtils.NOT_USE);
-		} else if (!(passwordEncoder.matches(userPw, userDetailsDto.getUserPwd()))) { // 비밀번호 불일치
+		} else if (!(passwordEncoder.matches(userPw, userDetailsDto.getUserPwd()))) { 						// 비밀번호 불일치
 			throw new BadCredentialsException(ConstantsUtils.PASSWORD_NOT_MATCH);
 		}
 		

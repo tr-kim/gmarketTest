@@ -27,13 +27,7 @@ public class LoginErrorHelper {
 			model.addAttribute(ConstantsUtils.NOT_USE, true);
 			session.removeAttribute(ConstantsUtils.NOT_USE);
 		}
-
-		Boolean notUser = (Boolean) session.getAttribute(ConstantsUtils.NOT_USER);
-		if (Boolean.TRUE.equals(notUser)) {
-			model.addAttribute(ConstantsUtils.NOT_USER, true);
-			session.removeAttribute(ConstantsUtils.NOT_USER);
-		}
-
+		
 		Boolean notMatch = (Boolean) session.getAttribute(ConstantsUtils.PASSWORD_NOT_MATCH);
 		if (Boolean.TRUE.equals(notMatch)) {
 			model.addAttribute(ConstantsUtils.PASSWORD_NOT_MATCH, true);
