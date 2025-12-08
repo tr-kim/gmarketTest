@@ -323,9 +323,13 @@ $(function () {
 				// console.error('차트 데이터 로드 실패:', err);
 				
 				if (CHART_FAIL_COUNT >= MAX_FAIL_COUNT) {
-					clearInterval(CHART_TIMER);
-					console.error('차트 자동 갱신 중지');
-					showDialogCustom('error');
+					if (CHART_TIMER) {
+						clearInterval(CHART_TIMER);
+						CHART_TIMER = null;
+						
+						console.error('차트 자동 갱신 중지');
+						showDialogCustom('error');
+					}
 				}
 			}
 		);
@@ -441,7 +445,7 @@ $(function () {
 	});
 	
 	// 차트 데이터 가져오기
-	function fn_getChartData(code, list, successCallbock, errorCallback) {
+	function fn_getChartData(code, list, successCallback, errorCallback) {
 		const formData = new FormData();
 		formData.append("companyCode", code);
 		formData.append("codeList", list);
@@ -453,8 +457,8 @@ $(function () {
 			processData: false,
 			contentType: false,
 			success: function(data) {
-				if (typeof successCallbock === 'function') {
-					successCallbock(data);
+				if (typeof successCallback === 'function') {
+					successCallback(data);
 				}
 			},
 			error: function(xhr, status, error) {
@@ -639,9 +643,13 @@ $(function () {
 			// console.error('프로세스 데이터 로드 실패:', err);
 			
 			if (PROC_FAIL_COUNT >= MAX_FAIL_COUNT) {
-				clearInterval(PROC_TIMER);
-				console.error('프로세스 자동 갱신 중지');
-				showDialogCustom('error');
+				if (PROC_TIMER) {
+					clearInterval(PROC_TIMER);
+					PROC_TIMER = null;
+					
+					console.error('프로세스 자동 갱신 중지');
+					showDialogCustom('error');
+				}
 			}
 		}
 	}
