@@ -468,6 +468,13 @@ function onlyNumber(element){
 
 // 날짜 형식 포맷
 function formatDate(date, format) {
+	if (!date) return "";
+	
+	// 문자열이면 Date로 변환
+	if (typeof date === "string") {
+		date = new Date(date);
+	}
+	
 	if (!(date instanceof Date) || isNaN(date)) return "";
 	
 	const yyyy = date.getFullYear();
@@ -476,6 +483,7 @@ function formatDate(date, format) {
 	const dd = String(date.getDate()).padStart(2, "0");
 	
 	switch (format) {
+		case "yyyy":  return `${yyyy}`;
 		case "yyyymm":  return `${yyyy}${mm}`;
 		case "yymmdd":  return `${yy}${mm}${dd}`;
 		case "yyyymmdd": return `${yyyy}${mm}${dd}`;

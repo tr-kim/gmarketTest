@@ -113,8 +113,8 @@
 	  	WHERE <![CDATA[ RESULT_DATE >= #{startDate} AND RESULT_DATE <= #{endDate} ]]>
 	  	GROUP BY RESULT_DATE, TABLE_CODE
 	  	<!-- DevExtreme 정렬 처리 -->
-	  	<choose>
-	  		<when test="sort != null and sort.size() > 0">
+		<choose>
+			<when test="sort != null and sort.size() > 0">
 				ORDER BY
 			<foreach collection="sort" item="s" separator=",">
 				${s.selector}
@@ -123,12 +123,12 @@
 					<otherwise>ASC</otherwise>
 				</choose>
 			</foreach>
-	  		</when>
-	  		<otherwise>
-	  			ORDER BY RESULT_DATE DESC
-	  		</otherwise>
-	  	</choose>
-	  	OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
+			</when>
+			<otherwise>
+				ORDER BY RESULT_DATE DESC, TABLE_CODE
+			</otherwise>
+		</choose>
+		OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 	</select>
 	
 	<select id="selectGmarketStatListCount" resultType="int" parameterType="com.web.gmarket.stat.dto.StatDto">
@@ -210,8 +210,8 @@
 		  	GROUP BY RESULT_DATE, TABLE_CODE, TABLE_NAME
 		) T1
 	  	<!-- DevExtreme 정렬 처리 -->
-	  	<choose>
-	  		<when test="sort != null and sort.size() > 0">
+		<choose>
+			<when test="sort != null and sort.size() > 0">
 				ORDER BY
 			<foreach collection="sort" item="s" separator=",">
 				${s.selector}
@@ -220,12 +220,12 @@
 					<otherwise>ASC</otherwise>
 				</choose>
 			</foreach>
-	  		</when>
-	  		<otherwise>
-	  			ORDER BY RESULT_DATE DESC
-	  		</otherwise>
-	  	</choose>
-	  	OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
+			</when>
+			<otherwise>
+				ORDER BY RESULT_DATE DESC, TABLE_CODE
+			</otherwise>
+		</choose>
+		OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 	</select>
 	
 </mapper>

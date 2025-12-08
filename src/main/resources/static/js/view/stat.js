@@ -1,35 +1,27 @@
-let dataGrid;
-let companyInstance;
-let companyValue;
-let tableInstance;
-let tableValue;
+let checkedRadio;
 let startDateInstance;
 let endDateInstance;
 let startHourInstance;
 let endHourInstance;
-let checkedRadio;
-const period = 30;	// 최대 검색 기간
+let companyInstance;
+let tableInstance;
+let statGrid;
 
 $(function() {
-	
-	// 일주일 기본값 설정
+	/* ================================
+	   구분, 조회기간 설정
+	================================ */
 	const today = new Date();
 	
-	const startYear = today.getFullYear(); 
-	const startMonth = `${String(today.getMonth() + 1).padStart(2, '0')}`; 
-	const startDay = `${String(today.getDate()).padStart(2, '0')}`;
+	// 공통 날짜
+	const year  = today.getFullYear();
+	const month = String(today.getMonth() + 1).padStart(2, '0');
+	const day   = String(today.getDate()).padStart(2, '0');
 	
-	const endYear = today.getFullYear(); 
-	const endMonth = `${String(today.getMonth() + 1).padStart(2, '0')}`; 
-	const endDay = `${String(today.getDate()).padStart(2, '0')}`; 
-
-	//라디오
-	const radios = document.querySelectorAll('input[name="timeType"]');
-	
-	// 시작일
+	// 날짜 DateBox
 	startDateInstance = $("#startDate").dxDateBox({
 		type: "date",
-	    name: "startDate",
+		value: today,
 		displayFormat: "yyyy-MM-dd",
 		pickerType: "calendar",
 		calendarOptions: {
@@ -37,10 +29,9 @@ $(function() {
 		}
 	}).dxDateBox("instance");
 	
-	// 종료일
 	endDateInstance = $("#endDate").dxDateBox({
 		type: "date",
-	    name: "endDate",
+	    value: today,
 		displayFormat: "yyyy-MM-dd",
 		pickerType: "calendar",
 		calendarOptions: {
@@ -48,115 +39,136 @@ $(function() {
 		}
 	}).dxDateBox("instance");
 	
-	radios.forEach(radio => {
+	// 시간 DateBox
+	function initHourBoxes() {
+		startHourInstance = $("#startHour").dxDateBox({
+			type: 'time',
+			value: new Date(2025, 0, 1, 0, 0), // type이 time이면 날짜는 아무거나 넣어도 상관없음
+			displayFormat: "HH시",
+			pickerType: "list",
+			interval: 60, // 분 선택 없애기 (1시간 단위)
+			width: 135,
+			visible: true
+		}).dxDateBox("instance");
+		
+		endHourInstance = $("#endHour").dxDateBox({
+			type: 'time',
+			value: new Date(2025, 0, 1, 23, 0), // type이 time이면 날짜는 아무거나 넣어도 상관없음
+			displayFormat: "HH시",
+			pickerType: "list",
+			interval: 60, // 분 선택 없애기 (1시간 단위)
+			width: 135,
+			visible: true
+		}).dxDateBox("instance");
+	}
+	
+	// 시간 DateBox 숨김
+	function hideHourBoxes() {
+		if (!startHourInstance || !endHourInstance) return;
+		
+		startHourInstance.option({ value: "", visible: false });
+		endHourInstance.option({ value: "", visible: false });
+	}
+	
+	// 타입별 설정 핸들러
+	const timeTypeHandlers = {
+		"1": () => { // 시간
+			startDateInstance.option({
+				value: `${year}-${month}-${day}`,
+				displayFormat: "yyyy-MM-dd"
+			});
+			
+			endDateInstance.option({
+				value: `${year}-${month}-${day}`,
+				displayFormat: "yyyy-MM-dd"
+			});
+			
+			initHourBoxes();
+		},
+		
+		"2": () => { // 일
+			startDateInstance.option({
+				value: `${year}-${month}-${day}`,
+				displayFormat: "yyyy-MM-dd"
+			});
+			
+			endDateInstance.option({
+				value: `${year}-${month}-${day}`,
+				displayFormat: "yyyy-MM-dd"
+			});
+			
+			hideHourBoxes();
+		},
+		
+		"3": () => { // 월
+			startDateInstance.option({
+				value: new Date(year, month - 1, 1),
+				displayFormat: "yyyy-MM"
+			});
+			
+			endDateInstance.option({
+				value: new Date(year, month - 1, 1),
+				displayFormat: "yyyy-MM"
+			});
+			
+			hideHourBoxes();
+		},
+		
+		"4": () => { // 년
+			startDateInstance.option({
+				value: new Date(year, 0, 1),
+				displayFormat: "yyyy"
+			});
+			
+			endDateInstance.option({
+				value: new Date(year, 0, 1),
+				displayFormat: "yyyy"
+			});
+			
+			hideHourBoxes();
+		}
+	};
+	
+	// 라디오 이벤트 등록
+	document.querySelectorAll('input[name="timeType"]').forEach(radio => {
 		radio.addEventListener('change', function() {
-			//시간
-			if (this.value == "1") {
-				
-				// 시작일
-				startDateInstance.option("value", `${startYear}-${startMonth}-${startDay}`);
-				startDateInstance.option("displayFormat", "yyyy-MM-dd");
-				
-				// 종료일	
-				endDateInstance.option("value", `${endYear}-${endMonth}-${endDay}`);
-				endDateInstance.option("displayFormat", "yyyy-MM-dd");
-				
-				// 시작 시간
-				startHourInstance = $("#startHour")	.dxDateBox({
-					type: 'time',
-					name: "startHour",
-					value: new Date(2025, 0, 1, 0, 0, 0),	// type이 time이면 날짜는 아무거나 넣어도 상관없음
-					displayFormat: "HH시",
-					pickerType: "list",
-					interval: 60,			// 분 선택 없애기 (1시간 단위)
-					width: 135,
-				}).dxDateBox("instance");
-				
-				// 종료 시간
-				endHourInstance = $("#endHour")	.dxDateBox({
-					type: 'time',
-					name: "endHour",
-					value: new Date(2025, 0, 1, 23, 0, 0),	// type이 time이면 날짜는 아무거나 넣어도 상관없음
-					displayFormat: "HH시",
-					pickerType: "list",
-					interval: 60,			// 분 선택 없애기 (1시간 단위)
-					width: 135,
-				}).dxDateBox("instance");
-				
-				startHourInstance.option("visible", true);
-				endHourInstance.option("visible", true);
-			
-			} else if (this.value == "2") {
-				
-				// 시작일
-				startDateInstance.option("value", `${startYear}-${startMonth}-${startDay}`);
-				startDateInstance.option("displayFormat", "yyyy-MM-dd");
-			
-				// 종료일
-				endDateInstance.option("value", `${endYear}-${endMonth}-${endDay}`);
-				endDateInstance.option("displayFormat", "yyyy-MM-dd");
-				
-				// 숨김 처리
-				if(startHourInstance && endHourInstance) {
-					startHourInstance.option("value", "");
-					endHourInstance.option("value", "");
-					
-					startHourInstance.option("visible", false);
-					endHourInstance.option("visible", false);
-				}
-				
-			} else if (this.value == "3") {
-				
-				// 시작일
-				startDateInstance.option("value", new Date(startYear, startMonth - 1, 1));
-				startDateInstance.option("displayFormat", "yyyy-MM");
-				
-				// 종료일	
-				endDateInstance.option("value", new Date(endYear, endMonth - 1, 1));
-				endDateInstance.option("displayFormat", "yyyy-MM");
-				
-				// 숨김 처리
-				if(startHourInstance && endHourInstance) {
-					startHourInstance.option("value", "");
-					endHourInstance.option("value", "");
-					
-					startHourInstance.option("visible", false);
-					endHourInstance.option("visible", false);
-				}
-				
-			} else if (this.value == "4") {
-				
-				// 시작일
-				startDateInstance.option("value", new Date(startYear, 0, 1));
-				startDateInstance.option("displayFormat", "yyyy");
-				
-				// 종료일
-				endDateInstance.option("value", new Date(endYear, 0, 1));
-				endDateInstance.option("displayFormat", "yyyy");
-				
-				// 숨김 처리
-				if(startHourInstance && endHourInstance) {
-					startHourInstance.option("value", "");
-					endHourInstance.option("value", "");
-					
-					startHourInstance.option("visible", false);
-					endHourInstance.option("visible", false);
-				}
-			}
-		})
+			const handler = timeTypeHandlers[this.value];
+			if (handler) handler();
+		});
 	});
-
-	checkedRadio = document.querySelector('input[name="timeType"]:checked');
+	
+	// 페이지 로드 시 체크된 라디오 강제 실행
+	const checkedRadio = document.querySelector('input[name="timeType"]:checked');
 	if (checkedRadio) checkedRadio.dispatchEvent(new Event('change'));
 	
+	
+	/* ================================
+	   대분류, 중분류 설정
+	================================ */
 	// 기본 옵션
 	const defaultOption = { code: -1, name: '선택하세요' };
 	
-	// 중분류 목록 설정
-	const tableArray = [0, 1, 2].reduce((acc, idx) => {
-		acc[idx] = [defaultOption, { code: 0, name: '전체' }];
-		return acc;
-	}, {});
+	// 대분류 옵션 생성
+	let companyArray = [defaultOption];
+	const companyList = [
+		{ code: 0, name: '옥션' },
+		{ code: 1, name: 'G마켓' },
+		{ code: 2, name: '스마일캐시' }
+	];
+	
+	// userGrade 적용
+	companyList.forEach(company => {
+		if (userGrade === 0 || (userGrade === 1 && companyCode === company.code)) {
+			companyArray.push(company);
+		}
+	});
+	
+	// 중분류 옵션 생성
+	let tableArray = {
+		0: [defaultOption, { code: 0, name: '전체' }],
+		1: [defaultOption, { code: 0, name: '전체' }],
+		2: [defaultOption, { code: 0, name: '전체' }]
+	};
 	
 	// codeList 병합
 	codeList.forEach(({ companyCode, code, name }) => {
@@ -165,108 +177,246 @@ $(function() {
 		}
 	});
 	
-	//중분류
-	tableInstance = $('#tableCategory').dxSelectBox({
-		dataSource: tableArray[companyCode] || [defaultOption],
-		displayExpr: 'name',
-		valueExpr: 'code',
-		value: 0,
-		name: "tableCode",
-		onValueChanged: function(e) {
-			
-			// select text 가져오기
-			tableValue = e.component.option("displayValue");
-		}
-	}).dxSelectBox("instance");
-	
-	// 계정 구분에 따른 option 설정
-	let companyArray = [{ code: -1, name: '선택하세요' }];
-	
-	const companyList = [
-	    { code: 0, name: '옥션' },
-	    { code: 1, name: 'G마켓' },
-	    { code: 2, name: '스마일캐시' }
-	];
-	
-	companyList.forEach(company => {
-	    if (userGrade === 0 || (userGrade === 1 && companyCode === company.code)) companyArray.push(company);
-	});
-	
-	//대분류
-	companyInstance = $('#companyCategory').dxSelectBox({
+	// 대분류
+	companyInstance = $('#companyCode').dxSelectBox({
 		dataSource: companyArray,
 		displayExpr: 'name',
 		valueExpr: 'code',
 		value: companyCode,
-		name: "companyCode",
-		onValueChanged: function(e) {
-			//중분류 업데이트
-			companyValue = e.value;
-			tableInstance.option('dataSource', tableArray[companyValue] || [defaultOption]);
-			tableInstance.option('value', -1); // 기본값 다시 설정
+		onValueChanged(e) {
+			const selectedCode = e.value;
 			
+			// 중분류 옵션 갱신
+			tableInstance.option({
+				dataSource: tableArray[selectedCode] || [defaultOption],
+				value: -1 // 초기화
+			});
 		}
 	}).dxSelectBox("instance");
-
-	//조회 그리드
-	dataGrid = $("#statGrid").dxDataGrid({
-		dataSource: {
-			load: function(loadOptions) {
+	
+	// 중분류
+	tableInstance = $('#tableCode').dxSelectBox({
+		dataSource: tableArray[companyCode] || [defaultOption],
+		displayExpr: 'name',
+		valueExpr: 'code',
+		value: 0, // 기본 전체
+	}).dxSelectBox("instance");
+	
+	
+	/* ================================
+	   조회 그리드 설정
+	================================ */
+	// 조회 파라미터 생성 함수
+	function buildSearchParams(loadOptions = {}) {
+		const companyCode = companyInstance.option("value");
+		const tableCode = tableInstance.option('value');
+		const timeType = document.querySelector('input[name="timeType"]:checked').value;
+		const startDate = startDateInstance.option("value");
+		const endDate = endDateInstance.option("value");
+		
+		let params = {
+			companyCode: companyCode,
+			tableCode: tableCode,
+			timeType: timeType,
+			// DevExtreme 조회 옵션
+			// filter: loadOptions.filter || [],   // searchPanel 검색
+			// group: loadOptions.group || [],     // columns 검색
+			skip: loadOptions.skip ?? 0,        // 페이지 시작 위치(offset)
+			take: loadOptions.take ?? 50,       // 페이지 크기(limit)
+			// sort: loadOptions.sort || [],       // G마켓만 TABLE_NAME 정렬 가능. 옥션은 SQLServerException 발생하여 false로 변경.
+		};
+		
+		switch (timeType) {
+			case "1": { // 시간
+				const startHour = String(startHourInstance.option("value").getHours()).padStart(2, "0");
+				const endHour = String(endHourInstance.option("value").getHours()).padStart(2, "0");
 				
-				const companyCode = companyInstance.option('value');
-				const tableCode = tableInstance.option('value');
-				const timeType = checkedRadio.value;
-				const startDate = startDateInstance.option("value");
-				const endDate = endDateInstance.option("value");
-				
-				const param = {
-					companyCode: companyCode
-					, tableCode: tableCode
-					, timeType: timeType
-					, startDate: startDate
-					, endDate: endDate
-					, skip: loadOptions.skip || 0
-					, take: loadOptions.take || 50
-					// , sort: loadOptions.sort || []
-				};
-				
-				// 구분값이 시간일 경우
-				if(timeType === "1") {
-					param.startHour = String(startHourInstance.option("value").getHours()).padStart(2, "0");
-					param.endHour = String( endHourInstance.option("value").getHours()).padStart(2, "0");
-				}
-				
-				return $.ajax({
-					url: "/api/v1/stat/list",
-					type: "POST",
-					contentType: "application/json",
-					data: JSON.stringify(param),
-				}).then(function(result) {
-					return {
-						data: result.list || [],
-						totalCount: result.totalCount || 0
-					};
-				}).catch(function() {
-					showDialogCustom("error");
-					return {
-						data: [],
-						totalCount: 0
-					};
-				});
+				params.startDate = startDate;
+				params.endDate = endDate;
+				params.startHour = startHour;
+				params.endHour = endHour;
+				break;
 			}
+			
+			case "2": { // 일
+				params.startDate = startDate;
+				params.endDate = endDate;
+				break;
+			}
+			
+			case "3": { // 월
+				const sm = String(startDate.getMonth() + 1).padStart(2, "0");
+				const em = String(endDate.getMonth() + 1).padStart(2, "0");
+				
+				params.startDate = `${startDate.getFullYear()}-${sm}`;
+				params.endDate = `${endDate.getFullYear()}-${em}`;
+				break;
+			}
+			
+			case "4": { // 년
+				params.startDate = startDate.getFullYear();
+				params.endDate = endDate.getFullYear();
+				break;
+			}
+			
+			default:
+				console.error("Invalid timeType:", timeType);
+				return {};
+		}
+		
+		return params;
+	}
+	
+	// 조회 조건 검증 함수
+	function validateSearch() {
+		const companyCode = companyInstance.option("value");
+		const tableCode = tableInstance.option('value');
+		const timeType = document.querySelector('input[name="timeType"]:checked').value;
+		
+		const startDate = startDateInstance.option("value");
+		const endDate = endDateInstance.option("value");
+		
+		if (companyCode === -1) {
+			showDialogCustom("대분류를 선택하세요.");
+			return false;
+		}
+		
+		if (tableCode === -1) {
+			showDialogCustom("중분류를 선택하세요.");
+			return false;
+		}
+		
+		// 시간
+		if (timeType === "1") {
+			const startHour = startHourInstance.option("value").getHours();
+			const endHour = endHourInstance.option("value").getHours();
+			
+			const s = new Date(startDate);
+			s.setHours(startHour);
+			
+			const e = new Date(endDate);
+			e.setHours(endHour);
+			
+			if (s > e) {
+				showDialogCustom("조회 기간을 다시 입력하세요.");
+				return false;
+			}
+			
+			const diffDays = (e - s) / (1000 * 60 * 60 * 24);
+			if (diffDays > 30) {
+				//showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)</br>현재 입력한 조회 기간 : ${diffDays} 일`);
+				showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)</br>현재 입력한 조회 기간 : ${diffDays.toFixed(2)} 일`);
+				return false;
+			}
+			
+			return true;
+		}
+		
+		// 일
+		if (timeType === "2") {
+			const s = new Date(startDate);
+			const e = new Date(endDate);
+			
+			if (s > e) {
+				showDialogCustom("조회 기간을 다시 입력하세요.");
+				return false;
+			}
+			
+			const diffDays = (e - s) / (1000 * 60 * 60 * 24);
+			
+			if (diffDays > 30) {
+				showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)</br>현재 입력한 조회 기간 : ${diffDays} 일`);
+				return false;
+			}
+			
+			return true;
+		}
+		
+		// 월
+		if (timeType === "3") {
+			const sm = startDate.getMonth() + 1;
+			const em = endDate.getMonth() + 1;
+			
+			const sy = startDate.getFullYear();
+			const ey = endDate.getFullYear();
+			
+			const diffMonths = (ey - sy) * 12 + (em - sm);
+			
+			if (diffMonths < 0) {
+				showDialogCustom("조회 기간을 다시 입력하세요.");
+				return false;
+			}
+			
+			if (diffMonths > 1) {
+				showDialogCustom(`조회 기간을 다시 입력하세요.(1달 이내)</br>현재 입력한 조회 기간 : ${diffMonths} 달`);
+				return false;
+			}
+			
+			return true;
+		}
+		
+		// 년
+		if (timeType === "4") {
+			const startYear = startDate.getFullYear();
+			const endYear = endDate.getFullYear();
+			
+			const diffYears = endYear - startYear;
+			
+			if (diffYears < 0) {
+				showDialogCustom("조회 기간을 다시 입력하세요.");
+				return false;
+			}
+			
+			if (diffYears > 1) {
+				showDialogCustom(`조회 기간을 다시 입력하세요.(1년 이내)</br>현재 입력한 조회 기간 : ${diffYears} 년`);
+				return false;
+			}
+			
+			return true;
+		}
+		
+		showDialogCustom("조회 유형을 확인하세요.");
+		return false;
+	}
+	
+	// 데이터 조회 함수
+	function fetchGridList(loadOptions) {
+		const param = buildSearchParams(loadOptions);
+		
+		return $.ajax({
+			url: "/api/v1/stat/list",
+			method: "POST",
+			contentType: "application/json",
+			data: JSON.stringify(param)
+		})
+		.then(result => ({
+			data: result.list || [],
+			totalCount: result.totalCount || 0
+		}))
+		.catch(() => {
+			showDialogCustom("error");
+			return { data: [], totalCount: 0 };
+		});
+	}
+	
+	// 조회 그리드
+	statGrid = $("#statGrid").dxDataGrid({
+		dataSource: {
+			key: "",
+			load: fetchGridList
 		},
-		loadMode: "raw", //서버사이드 처리
+		loadMode: "raw", // 서버사이드 처리
 		remoteOperations: {
 			filtering: false, // searchPanel 검색
 			grouping: false, // columns 검색
 			paging: true,
 			sorting: false // G마켓만 TABLE_NAME 정렬 가능. 옥션은 SQLServerException 발생하여 false로 변경.
 		},
-		//행 선택 시
+		// 행 선택 시
 		selection: {
 			mode: 'single',
 		},
-		//행 마우스오버 시
+		// 행 마우스오버 시
 		hoverStateEnabled: true,
 		headerFilter: {
 			visible: false
@@ -294,7 +444,11 @@ $(function() {
 				caption: "시간/일자", 
 				alignment: "center",
 				customizeText: function(cellInfo) {
-					return formatTimestamp(cellInfo.value);
+					if (cellInfo && cellInfo.value) {
+						return parseDateString(cellInfo.value);
+					} else {
+						return '-';
+					}
 				}
 			},
 			{
@@ -333,207 +487,123 @@ $(function() {
 	    onContentReady(e) {
 			const totalCount = e.component.totalCount();
 			$("#totalCount").text(`총 ${totalCount.toLocaleString()}건`);
-			
-			tableValue = (tableValue == "선택하세요" || tableValue === undefined) ? "" : tableValue;
 	    }
 	}).dxDataGrid("instance");
-});
-
-//날짜 포맷팅
-function formatTimestamp(str) {
-    if (!str) return "";
-    str = String(str).trim();
-
-    const len = str.length;
-    const yyyy = str.slice(0, 4);
-    const mm = str.slice(4, 6);
-    const dd = str.slice(6, 8);
-    const hh = str.slice(8, 10);
-
-    switch (len) {
-        case 4: 
-            return yyyy;
-
-        case 6: 
-            return `${yyyy}-${mm}`;
-
-        case 8: 
-            return `${yyyy}-${mm}-${dd}`;
-
-        case 10: 
-            return `${yyyy}-${mm}-${dd} ${hh}:00`;
-
-        default:
-            return str; 
-    }
-}
-
-// 실패 상세 보기 모달
-function openStatFailDetail(data = {}) {
-	document.getElementById('fail00').value = data.FAIL_00;
-	document.getElementById('fail01').value = data.FAIL_01;
-	document.getElementById('fail02').value = data.FAIL_02;
-	document.getElementById('fail03').value = data.FAIL_03;
-	document.getElementById('fail04').value = data.FAIL_04;
-	document.getElementById('fail05').value = data.FAIL_05;
-	document.getElementById('fail06').value = data.FAIL_06;
-	document.getElementById('fail07').value = data.FAIL_07;
-	document.getElementById('fail08').value = data.FAIL_08;
-	document.getElementById('fail09').value = data.FAIL_09;
 	
-	document.getElementById('stat_modal').classList.add('d-block');
-	toggleBodyClass();
-}
-
-// 검색
-$('#search-btn').dxButton({
-	stylingMode: 'contained',
-	text: '조회',
-	type: 'default',
-	width: 60,
-	onClick() {
-		const companyCode = companyInstance.option('value');
-		const tableCode = tableInstance.option('value');
+	// 조회 버튼
+	$('#search-btn').dxButton({
+		stylingMode: 'contained',
+		text: '조회',
+		type: 'default',
+		width: 60,
+		onClick() {
+			if (!validateSearch()) return;
+			
+			// dataGrid 데이터 재바인딩
+			statGrid.refresh();
+		}
+	}).dxButton('instance');
+	
+	// 엑셀 버튼
+	$('#excel-btn').dxButton({
+		stylingMode: 'contained',
+		text: '엑셀 다운로드',
+		type: 'success',
+		width: 120,
+		onClick() {
+			exportGridToExcel(statGrid);
+		},
+	}).dxButton('instance');
+	
+	// 엑셀 다운로드
+	function exportGridToExcel(gridInstance) {
 		const timeType = document.querySelector('input[name="timeType"]:checked').value;
 		const startDate = startDateInstance.option("value");
 		const endDate = endDateInstance.option("value");
 		
-		let searchStartDate, searchEndDate;
+		let startDateFormatted = "";
+		let endDateFormatted = "";
 		
-		if(companyCode == -1 || companyCode < 0) { showDialogCustom("대분류를 선택하세요."); return false; }
-		if(tableCode == -1 || tableCode < 0) { showDialogCustom("중분류를 선택하세요."); return false; }
-		
-		if(timeType === "1") {
+		// 타입별 날짜 포맷
+		switch (timeType) {
+			case "1": // 시간
+			case "2": // 일
+				startDateFormatted = formatDate(startDate, "yymmdd");
+				endDateFormatted = formatDate(endDate, "yymmdd");
+				break;
 			
-			const startHour = String(startHourInstance.option("value").getHours()).padStart(2, "0");
-			const endHour = String( endHourInstance.option("value").getHours()).padStart(2, "0");
-			const tempStartDate = new Date(`${startDate}T${startHour}:00:00`);
-			const tempEndDate = new Date(`${endDate}T${endHour}:00:00`);
-			const diffMs = tempEndDate - tempStartDate;
-			const diffDays = diffMs / (1000 * 60 * 60 * 24);
+			case "3": // 월
+				startDateFormatted = formatDate(startDate, "yyyymm");
+				endDateFormatted = formatDate(endDate, "yyyymm");
+				break;
 			
-			if(tempStartDate > tempEndDate) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
-			if(diffDays > period) { showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : ${diffDays} 일`); return false; }
-			
-			searchStartDate = startDate;
-			searchEndDate = endDate;
-			
-		} else if(timeType === "2") {
-			
-			const tempStartDate = new Date(`${startDate}`);
-			const tempEndDate = new Date(`${endDate}`);
-			const diffMs = tempEndDate - tempStartDate;
-			const diffDays = diffMs / (1000 * 60 * 60 * 24);
-			
-			if(tempStartDate > tempEndDate) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
-			if(diffDays > period) { showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : ${diffDays} 일`); return false; }
-			
-			searchStartDate = startDate;
-			searchEndDate = endDate;
-			
-		} else if(timeType === "3") {
-			
-			const startMonth = String(startDate.getMonth() + 1).padStart(2, '0');
-			const endMonth = String(endDate.getMonth() + 1).padStart(2, '0');
-			const diffMs = endMonth - startMonth;
-			
-			if(startMonth > endMonth) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
-			if(diffMs > 1) { showDialogCustom(`조회 기간을 다시 입력하세요.(1달 이내)\n\n현재 입력한 조회 기간 : ${diffMs} 달`); return false; }
-			
-			searchStartDate = `${startDate.getFullYear()}-${startMonth}`;
-			searchEndDate = `${endDate.getFullYear()}-${endMonth}`;
-			
-		} else if(timeType === "4") {
-			
-			const startYear = startDate.getFullYear();
-			const endYear = endDate.getFullYear();
-			const diffMs = endYear - startYear;
-						
-			if(startYear > endYear) { showDialogCustom("조회 기간을 다시 입력하세요."); return false; }
-			if(diffMs > 1) { showDialogCustom(`조회 기간을 다시 입력하세요.(1년 이내)\n\n현재 입력한 조회 기간 : ${diffMs} 년`); return false; }
-			
-			searchStartDate = startYear;
-			searchEndDate = endYear;
-		} else {
-			console.log('timeType:', timeType, ', type:', typeof timeType);
-			return false;
+			case "4": // 년
+				startDateFormatted = formatDate(startDate, "yyyy");
+				endDateFormatted = formatDate(endDate, "yyyy");
+				break;
 		}
 		
-		const dataSource = new DevExpress.data.DataSource({
-			load: function(loadOptions) {
-				
-				const param = {
-					companyCode: companyCode
-					, tableCode: tableCode
-					, timeType: timeType
-					, startDate: searchStartDate
-					, endDate: searchEndDate
-					, skip: loadOptions.skip || 0
-					, take: loadOptions.take || 50
-					// , sort: loadOptions.sort || []
-				};
-				
-				// 구분값이 시간일 경우
-				if(timeType === "1") {
-					param.startHour = String(startHourInstance.option("value").getHours()).padStart(2, "0");
-					param.endHour = String( endHourInstance.option("value").getHours()).padStart(2, "0");
-				}
-				
-				return $.ajax({
-					url: "/api/v1/stat/list",
-					type: "POST",
-					contentType: "application/json",
-					data: JSON.stringify(param),
-				}).then(function(result) {
-					return {
-						data: result.list || [],
-						totalCount: result.totalCount || 0
-					};
-				}).catch(function() {
-					showDialogCustom("error");
-					return {
-						data: [],
-						totalCount: 0
-					};
-				});
-			}
-		});
+		// 파일명
+		const fileName = `정산통계조회(${startDateFormatted}~${endDateFormatted}).xlsx`;
 		
-		//재조회
-		dataGrid.option("dataSource", dataSource);
-		dataGrid.refresh(); 
-	}
-}).dxButton('instance');
-
-//엑셀 다운로드 버튼
-const excelBtn = $('#excel-btn').dxButton({
-	stylingMode: 'contained',
-	text: '엑셀 다운로드',
-	type: 'success',
-	width: 120,
-	onClick() {
-		const grid = $("#statGrid").dxDataGrid("instance");
-		exportGridToExcel(grid);
-	},
-}).dxButton('instance');
-
-//엑셀 다운로드
-function exportGridToExcel(gridInstance) {
-	const workbook = new ExcelJS.Workbook();
-	const worksheet = workbook.addWorksheet('정산_통계 조회');
-
-	DevExpress.excelExporter.exportDataGrid({
-		component: gridInstance,
-		worksheet: worksheet,
-		autoFilterEnabled: true,
-	}).then(() => {
-		workbook.xlsx.writeBuffer().then((buffer) => {
-			saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '정산_통계 조회.xlsx');
+		const workbook = new ExcelJS.Workbook();
+		const worksheet = workbook.addWorksheet('정산통계조회');
+		
+		DevExpress.excelExporter.exportDataGrid({
+			component: gridInstance,
+			worksheet: worksheet,
+			autoFilterEnabled: true,
+		}).then(() => {
+			workbook.xlsx.writeBuffer().then((buffer) => {
+				saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName);
+			});
 		});
-	});
-}
+	}
+	
+	// 날짜 포맷팅
+	function parseDateString(str) {
+	    if (!str) return "";
+	    str = String(str).trim();
+		
+	    const len = str.length;
+	    const yyyy = str.slice(0, 4);
+	    const mm = str.slice(4, 6);
+	    const dd = str.slice(6, 8);
+	    const hh = str.slice(8, 10);
+		
+	    switch (len) {
+	        case 4: 
+	            return yyyy;
+	        case 6: 
+	            return `${yyyy}-${mm}`;
+	        case 8: 
+	            return `${yyyy}-${mm}-${dd}`;
+	        case 10: 
+	            return `${yyyy}-${mm}-${dd} ${hh}:00`;
+	        default:
+	            return str; 
+	    }
+	}
+	
+	// 실패 상세 보기 모달
+	function openStatFailDetail(data = {}) {
+		document.getElementById('fail00').value = data.FAIL_00;
+		document.getElementById('fail01').value = data.FAIL_01;
+		document.getElementById('fail02').value = data.FAIL_02;
+		document.getElementById('fail03').value = data.FAIL_03;
+		document.getElementById('fail04').value = data.FAIL_04;
+		document.getElementById('fail05').value = data.FAIL_05;
+		document.getElementById('fail06').value = data.FAIL_06;
+		document.getElementById('fail07').value = data.FAIL_07;
+		document.getElementById('fail08').value = data.FAIL_08;
+		document.getElementById('fail09').value = data.FAIL_09;
+		
+		document.getElementById('stat_modal').classList.add('d-block');
+		toggleBodyClass();
+	}
+});
 
-//라디오 버튼클릭시 초기화
+// 라디오 버튼 클릭 시 초기화
 function recreateDateBox(selector, options) {
 	const $el = $(selector);
 	if ($el.data("dxDateBox")) {
@@ -541,5 +611,4 @@ function recreateDateBox(selector, options) {
 		$el.empty(); //DOM 비우기
 	}
 	$el.dxDateBox(options); //새로 생성
-}
-
+};

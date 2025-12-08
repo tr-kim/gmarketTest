@@ -102,7 +102,7 @@ $(function () {
 		}
 		
 		if (diffDays > 30) {
-			showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)\n\n현재 입력한 조회 기간 : ${diffDays} 일`);
+			showDialogCustom(`조회 기간을 다시 입력하세요.(30일 이내)</br>현재 입력한 조회 기간 : ${diffDays} 일`);
 			return false;
 		}
 		
