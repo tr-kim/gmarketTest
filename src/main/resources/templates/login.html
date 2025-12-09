@@ -73,17 +73,17 @@
 
 	<th:block th:if="${DUPLICATE_LOGIN}">
 		<script>
-			alert("다른 기기에서 로그인되어 현재 로그인이 종료되었습니다.");
+			alert("다른 기기에서 로그인되어 로그인이 종료되었습니다.");
 		</script>
 	</th:block>
 	<th:block th:if="${NOT_USE}">
 		<script>
-			alert("현재 계정이 잠겨있습니다. 관리자에게 문의하세요.");
+			alert("미사용 계정입니다. 관리자에게 문의하세요.");
 		</script>
 	</th:block>
 	<th:block th:if="${PASSWORD_NOT_MATCH}">
 		<script>
-			alert("비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
+			alert("비밀번호가 일치하지 않습니다.");
 		</script>
 	</th:block>
 	<th:block th:if="${USER_ID_EMPTY}">
@@ -123,15 +123,17 @@
 			else removeCookie('saveId');
 			
 			if (userId == null || userId == "") {
-				alert("사용자 아이디를 입력하세요.");
+				alert("아이디를 입력하세요.");
+				$("#userId").focus();
 				return;
 			}
-
+			
 			if (password == null || password == "") {
 				alert("비밀번호를 입력하세요.");
+				$("#password").focus();
 				return;
 			}
-
+			
 			// RSA 암호 코드
 			const publicKeyModulus = $("#publicKeyModulus").val();
 			const publicKeyExponent = $("#publicKeyExponent").val();
