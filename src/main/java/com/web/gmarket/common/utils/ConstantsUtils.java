@@ -75,6 +75,7 @@ public class ConstantsUtils {
 	public static final String FILE_SEND = "fileSend";
 	public static final String DB_SEND = "dbSend";
 	public static final String ALARM = "alarm";
+	public static final String SERVICE = "service";
 	
 	public static final String APPLICATION_JSON = "application/json";
 	public static final String AUTHORIZATION = "Authorization";
