@@ -56,7 +56,8 @@ $(function () {
 	
 	// 제목
 	titleInstance = $('#bulk-title').dxTextBox({
-		placeholder: '제목을 입력하세요.'
+		placeholder: '제목을 입력하세요.',
+		maxLength: 60
 	}).dxTextBox("instance");
 	
 	// 조회 파라미터 생성 함수

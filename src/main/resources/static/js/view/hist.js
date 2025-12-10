@@ -88,7 +88,12 @@ $(function () {
 	
 	// 수신자 번호
 	phoneNumInstance = $('#phone-num').dxTextBox({
-		placeholder: '수신 번호를 입력하세요.'
+		placeholder: '수신 번호를 입력하세요.',
+		maxLength: 16,
+		onInput: function(e) {
+			onlyNumber(e.event.target);  
+        	e.component.option("value", e.event.target.value); 
+		}
 	}).dxTextBox("instance");
 	
 	// 조회 파라미터 생성 함수
