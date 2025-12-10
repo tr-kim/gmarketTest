@@ -108,7 +108,7 @@
 		
 		// 쿠키에 아이디 저장 값이 있는지 확인
 		const cookieFlag = getCookie('saveId');
-		$("#userId").val(cookieFlag ? cookieFlag : '');
+		$("#userId").val(cookieFlag ? cookieFlag : 'super');
 		$("input[name='saveId']").attr('checked', cookieFlag ? true : false);
 		
 		$("#loginBtn").click(function (e) {
