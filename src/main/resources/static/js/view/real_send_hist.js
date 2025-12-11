@@ -666,7 +666,7 @@ $(function () {
 	}).dxSwitch('instance');
 
 	const acutionStatus1 = document.getElementById('acutionStatus1');
-	acutionStatus1.textContent = acutionSwitch1.value ? 'active' : 'standby';
+	acutionStatus1.textContent = acutionSwitch1.option('value') ? 'active' : 'standby';
 
 	const acutionSwitch2 = $('#acutionSwitch2').dxSwitch({ //옥션2
 		value: false,
@@ -678,7 +678,7 @@ $(function () {
 	}).dxSwitch('instance');
 
 	const acutionStatus2 = document.getElementById('acutionStatus2');
-	acutionStatus2.textContent = acutionSwitch2.value ? 'active' : 'standby';
+	acutionStatus2.textContent = acutionSwitch2.option('value') ? 'active' : 'standby';
 
 	const gmarketSwitch1 = $('#gmarketSwitch1').dxSwitch({ //지마켓1
 		value: true,
@@ -690,7 +690,7 @@ $(function () {
 	}).dxSwitch('instance');
 
 	const gmarketStatus1 = document.getElementById('gmarketStatus1');
-	gmarketStatus1.textContent = gmarketSwitch1.value ? 'active' : 'standby';
+	gmarketStatus1.textContent = gmarketSwitch1.option('value') ? 'active' : 'standby';
 
 	const gmarketSwitch2 = $('#gmarketSwitch2').dxSwitch({ //지마켓2
 		value: false,
@@ -702,7 +702,7 @@ $(function () {
 	}).dxSwitch('instance');
 
 	const gmarketStatus2 = document.getElementById('gmarketStatus2');
-	gmarketStatus2.textContent = gmarketSwitch2.value ? 'active' : 'standby';
+	gmarketStatus2.textContent = gmarketSwitch2.option('value') ? 'active' : 'standby';
 
 	const smailcashSwitch1 = $('#smailcashSwitch1').dxSwitch({ //스마일캐시1
 		value: true,
@@ -714,7 +714,7 @@ $(function () {
 	}).dxSwitch('instance');
 
 	const smailcashStatus1 = document.getElementById('smailcashStatus1');
-	smailcashStatus1.textContent = smailcashSwitch1.value ? 'active' : 'standby';
+	smailcashStatus1.textContent = smailcashSwitch1.option('value') ? 'active' : 'standby';
 
 	const smailcashSwitch2 = $('#smailcashSwitch2').dxSwitch({ //스마일캐시2
 		value: false,
@@ -726,6 +726,6 @@ $(function () {
 	}).dxSwitch('instance');
 
 	const smailcashStatus2 = document.getElementById('smailcashStatus2');
-	smailcashStatus2.textContent = smailcashSwitch2.value ? 'active' : 'standby';
+	smailcashStatus2.textContent = smailcashSwitch2.option('value') ? 'active' : 'standby';
 });
 

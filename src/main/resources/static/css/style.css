@@ -1029,6 +1029,9 @@ aside .psw_chg_btn:hover{
     opacity: 0.5;
 }
 /* service_mgmt.html */
+#service_mgmt {
+    height: calc(100vh - 190px);
+}
 #service_mgmt .dx-treelist-header-panel {
     padding: 0;
 }
