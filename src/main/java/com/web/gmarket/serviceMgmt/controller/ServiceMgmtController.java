@@ -27,11 +27,11 @@ public class ServiceMgmtController {
 		
 		List<ServiceInfoDto> auctionList = mapper.selectServiceGroupList(ConstantsUtils.AUCTION_CODE);
 		List<ServiceInfoDto> gmarketList = mapper.selectServiceGroupList(ConstantsUtils.GMARKET_CODE);
-		List<ServiceInfoDto> smileList = mapper.selectServiceGroupList(ConstantsUtils.SMILE_CASH_CODE);
+		List<ServiceInfoDto> smileCashList = mapper.selectServiceGroupList(ConstantsUtils.SMILE_CASH_CODE);
 		
 		model.addAttribute("auctionList", auctionList);
 		model.addAttribute("gmarketList", gmarketList);
-		model.addAttribute("smileList", smileList);
+		model.addAttribute("smileCashList", smileCashList);
 		
 		model.addAttribute(ConstantsUtils.LAYOUT, "/layouts/top_layout");
 		model.addAttribute(ConstantsUtils.ACTIVE, ConstantsUtils.SERVICE);
@@ -46,11 +46,11 @@ public class ServiceMgmtController {
 		
 		List<ServiceInfoDto> auctionList = mapper.selectServiceGroupList(ConstantsUtils.AUCTION_CODE);
 		List<ServiceInfoDto> gmarketList = mapper.selectServiceGroupList(ConstantsUtils.GMARKET_CODE);
-		List<ServiceInfoDto> smileList = mapper.selectServiceGroupList(ConstantsUtils.SMILE_CASH_CODE);
+		List<ServiceInfoDto> smileCashList = mapper.selectServiceGroupList(ConstantsUtils.SMILE_CASH_CODE);
 		
 		model.addAttribute("auctionList", auctionList);
 		model.addAttribute("gmarketList", gmarketList);
-		model.addAttribute("smileList", smileList);
+		model.addAttribute("smileCashList", smileCashList);
 		
 		model.addAttribute(ConstantsUtils.LAYOUT, "/layouts/left_layout");
 		model.addAttribute(ConstantsUtils.ACTIVE, ConstantsUtils.SERVICE);
