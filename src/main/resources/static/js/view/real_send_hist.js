@@ -29,6 +29,9 @@ let CURRENT_TAB = {
 	detail: 'active'
 };
 
+// 스위치 인스턴스
+let acutionSwitch1Instance;
+let acutionSwitch2Instance;
 
 $(function () {
 	// 서비스 목록
@@ -651,5 +654,78 @@ $(function () {
 	
 	// 프로세스 인터벌 시작
 	startProcAutoRefresh();
+
+	// 요약 탭 스위치
+	const acutionSwitch1 = $('#acutionSwitch1').dxSwitch({ //옥션1
+		value: true,
+		onValueChanged(data) {
+			acutionSwitch2.option('value', !data.value);
+			const acutionStatus1 = document.getElementById('acutionStatus1');
+			acutionStatus1.textContent = data.value ? 'active' : 'standby';
+		},
+	}).dxSwitch('instance');
+
+	const acutionStatus1 = document.getElementById('acutionStatus1');
+	acutionStatus1.textContent = acutionSwitch1.value ? 'active' : 'standby';
+
+	const acutionSwitch2 = $('#acutionSwitch2').dxSwitch({ //옥션2
+		value: false,
+		onValueChanged(data) {
+			acutionSwitch1.option('value', !data.value);
+			const acutionStatus2 = document.getElementById('acutionStatus2');
+			acutionStatus2.textContent = data.value ? 'active' : 'standby';
+		},
+	}).dxSwitch('instance');
+
+	const acutionStatus2 = document.getElementById('acutionStatus2');
+	acutionStatus2.textContent = acutionSwitch2.value ? 'active' : 'standby';
+
+	const gmarketSwitch1 = $('#gmarketSwitch1').dxSwitch({ //지마켓1
+		value: true,
+		onValueChanged(data) {
+			gmarketSwitch2.option('value', !data.value);
+			const gmarketStatus1 = document.getElementById('gmarketStatus1');
+			gmarketStatus1.textContent = data.value ? 'active' : 'standby';
+		},
+	}).dxSwitch('instance');
+
+	const gmarketStatus1 = document.getElementById('gmarketStatus1');
+	gmarketStatus1.textContent = gmarketSwitch1.value ? 'active' : 'standby';
+
+	const gmarketSwitch2 = $('#gmarketSwitch2').dxSwitch({ //지마켓2
+		value: false,
+		onValueChanged(data) {
+			gmarketSwitch1.option('value', !data.value);
+			const gmarketStatus2 = document.getElementById('gmarketStatus2');
+			gmarketStatus2.textContent = data.value ? 'active' : 'standby';
+		},
+	}).dxSwitch('instance');
+
+	const gmarketStatus2 = document.getElementById('gmarketStatus2');
+	gmarketStatus2.textContent = gmarketSwitch2.value ? 'active' : 'standby';
+
+	const smailcashSwitch1 = $('#smailcashSwitch1').dxSwitch({ //스마일캐시1
+		value: true,
+		onValueChanged(data) {
+			smailcashSwitch2.option('value', !data.value);
+			const smailcashStatus1 = document.getElementById('smailcashStatus1');
+			smailcashStatus1.textContent = data.value ? 'active' : 'standby';
+		},
+	}).dxSwitch('instance');
+
+	const smailcashStatus1 = document.getElementById('smailcashStatus1');
+	smailcashStatus1.textContent = smailcashSwitch1.value ? 'active' : 'standby';
+
+	const smailcashSwitch2 = $('#smailcashSwitch2').dxSwitch({ //스마일캐시2
+		value: false,
+		onValueChanged(data) {
+			smailcashSwitch1.option('value', !data.value);
+			const smailcashStatus2 = document.getElementById('smailcashStatus2');
+			smailcashStatus2.textContent = data.value ? 'active' : 'standby';
+		},
+	}).dxSwitch('instance');
+
+	const smailcashStatus2 = document.getElementById('smailcashStatus2');
+	smailcashStatus2.textContent = smailcashSwitch2.value ? 'active' : 'standby';
 });
 
