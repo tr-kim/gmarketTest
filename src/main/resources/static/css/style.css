@@ -1028,3 +1028,10 @@ aside .psw_chg_btn:hover{
     font-weight: 100;
     opacity: 0.5;
 }
+/* service_mgmt.html */
+#service_mgmt .dx-treelist-header-panel {
+    padding: 0;
+}
+#service_mgmt .dx-treelist .dx-row>td {
+    padding: 9px 16px;
+}

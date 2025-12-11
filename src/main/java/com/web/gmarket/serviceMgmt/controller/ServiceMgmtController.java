@@ -28,7 +28,7 @@ public class ServiceMgmtController {
 	@GetMapping("/service/left")
 	public String left(Model model) {
 		
-		model.addAttribute(ConstantsUtils.LAYOUT, "/layouts/top_layout");
+		model.addAttribute(ConstantsUtils.LAYOUT, "/layouts/left_layout");
 		model.addAttribute(ConstantsUtils.ACTIVE, ConstantsUtils.SERVICE);
 		
 		return "view/service_mgmt";

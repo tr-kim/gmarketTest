@@ -103,7 +103,7 @@
 				</li>
 				<li th:classappend="${active == 'service' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN')">
 					<a th:href="@{/view/service}">
-						<i class="bi bi-people me-2"></i>서비스 관리
+						<i class="bi bi-check2-square me-2"></i>서비스 관리
 					</a>
 				</li>
                 <li th:classappend="${active == 'stat' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPER', 'ROLE_ADMIN')">
