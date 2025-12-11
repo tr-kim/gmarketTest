@@ -14,4 +14,20 @@
 		ORDER BY COMPANY_CODE, SORT_NUM, SVC_NAME
 	</select>
 	
+	<select id="selectServiceGroupList" resultType="com.web.gmarket.common.dto.ServiceInfoDto">
+		/*
+			ServiceInfoMapper.selectServiceGroupList
+		*/
+			SELECT
+				COMPANY_CODE,
+				SVC_NAME
+			FROM T_SERVICE_INFO
+			WHERE COMPANY_CODE = #{companyCode}
+			GROUP BY
+				COMPANY_CODE,
+				SVC_NAME
+			ORDER BY
+				SVC_NAME
+	</select>
+	
 </mapper>

@@ -16,4 +16,12 @@ public interface ServiceInfoMapper {
 	 * @return
 	 */
 	public List<ServiceInfoDto> selectServiceNameList();
+	
+	/**
+	 * 서비스명 목록 조회(GROUP BY)
+	 * 
+	 * @param companyCode
+	 * @return
+	 */
+	public List<ServiceInfoDto> selectServiceGroupList(int companyCode);
 }
