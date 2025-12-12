@@ -29,10 +29,6 @@ let CURRENT_TAB = {
 	detail: 'active'
 };
 
-// 스위치 인스턴스
-let acutionSwitch1Instance;
-let acutionSwitch2Instance;
-
 $(function () {
 	// 서비스 목록
 	if (Array.isArray(nameList) && nameList.length > 0) {
@@ -45,6 +41,7 @@ $(function () {
 	} else {
 		console.log("서비스명이 존재하지 않습니다.");
 	}
+	
 	
 	// 위젯 선언================================================================================================================
 	// =======================================================================================================================
@@ -237,23 +234,6 @@ $(function () {
 	
 	// 함수 선언================================================================================================================
 	// =======================================================================================================================
-	// 공통 시간 포맷 함수
-	function formatDateTime(type, date = new Date()) {
-		const yyyy = date.getFullYear();
-		const MM = String(date.getMonth() + 1).padStart(2, '0');
-		const dd = String(date.getDate()).padStart(2, '0');
-		const hh = String(date.getHours()).padStart(2, '0');
-		const mm = String(date.getMinutes()).padStart(2, '0');
-		const ss = String(date.getSeconds()).padStart(2, '0');
-		
-		return type === 'time' ? `${hh}:${mm}:${ss}` : `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
-	}
-	
-	// 갱신 시간 표시
-	function updateLastTime(targetId, type) {
-		$(targetId).text(`최종 업데이트 ${formatDateTime(type)}`);
-	}
-	
 	// 차트 데이터 갱신
 	function updateChartData(companyCode, chartId, taskList, cookieId) {
 		const cookieValue = getCookie(cookieId); // 쿠키에 있는 값 가져오기
@@ -319,7 +299,7 @@ $(function () {
 				chart.refresh();
 				
 				// 시간 갱신
-				updateLastTime('#chartUpdateTime', 'time');
+				$('#chartUpdateTime').text("최종 업데이트 " + formatDate(new Date(), "hh:mi:ss"));
 			},
 			function fail(err) {
 				CHART_FAIL_COUNT++;
@@ -619,7 +599,7 @@ $(function () {
 			else renderProcStatusSummary(data, tabParam);
 			
 			// 시간 갱신
-			updateLastTime('#procUpdateTime', 'full');
+			$('#procUpdateTime').text("최종 업데이트 " + formatDate(new Date(), "yyyy-mm-dd hh:mi:ss"));
 			
 		} catch (err) {
 			PROC_FAIL_COUNT++;
@@ -647,6 +627,7 @@ $(function () {
 		}, PROC_ITV_SEC * 1000);
 	}
 	
+	
 	// 인입 시작================================================================================================================
 	// =======================================================================================================================
 	// 차트 인터벌 시작
@@ -654,9 +635,12 @@ $(function () {
 	
 	// 프로세스 인터벌 시작
 	startProcAutoRefresh();
-
-	// 요약 탭 스위치
-	const acutionSwitch1 = $('#acutionSwitch1').dxSwitch({ //옥션1
+	
+	
+	// 1번 수동 절체=============================================================================================================
+	// =======================================================================================================================
+	// 옥션
+	const acutionSwitch1 = $('#acutionSwitch1').dxSwitch({
 		value: true,
 		onValueChanged(data) {
 			acutionSwitch2.option('value', !data.value);
@@ -667,20 +651,9 @@ $(function () {
 
 	const acutionStatus1 = document.getElementById('acutionStatus1');
 	acutionStatus1.textContent = acutionSwitch1.option('value') ? 'active' : 'standby';
-
-	const acutionSwitch2 = $('#acutionSwitch2').dxSwitch({ //옥션2
-		value: false,
-		onValueChanged(data) {
-			acutionSwitch1.option('value', !data.value);
-			const acutionStatus2 = document.getElementById('acutionStatus2');
-			acutionStatus2.textContent = data.value ? 'active' : 'standby';
-		},
-	}).dxSwitch('instance');
-
-	const acutionStatus2 = document.getElementById('acutionStatus2');
-	acutionStatus2.textContent = acutionSwitch2.option('value') ? 'active' : 'standby';
-
-	const gmarketSwitch1 = $('#gmarketSwitch1').dxSwitch({ //지마켓1
+	
+	// G마켓
+	const gmarketSwitch1 = $('#gmarketSwitch1').dxSwitch({
 		value: true,
 		onValueChanged(data) {
 			gmarketSwitch2.option('value', !data.value);
@@ -691,20 +664,9 @@ $(function () {
 
 	const gmarketStatus1 = document.getElementById('gmarketStatus1');
 	gmarketStatus1.textContent = gmarketSwitch1.option('value') ? 'active' : 'standby';
-
-	const gmarketSwitch2 = $('#gmarketSwitch2').dxSwitch({ //지마켓2
-		value: false,
-		onValueChanged(data) {
-			gmarketSwitch1.option('value', !data.value);
-			const gmarketStatus2 = document.getElementById('gmarketStatus2');
-			gmarketStatus2.textContent = data.value ? 'active' : 'standby';
-		},
-	}).dxSwitch('instance');
-
-	const gmarketStatus2 = document.getElementById('gmarketStatus2');
-	gmarketStatus2.textContent = gmarketSwitch2.option('value') ? 'active' : 'standby';
-
-	const smailcashSwitch1 = $('#smailcashSwitch1').dxSwitch({ //스마일캐시1
+	
+	// 스마일캐시
+	const smailcashSwitch1 = $('#smailcashSwitch1').dxSwitch({
 		value: true,
 		onValueChanged(data) {
 			smailcashSwitch2.option('value', !data.value);
@@ -715,8 +677,38 @@ $(function () {
 
 	const smailcashStatus1 = document.getElementById('smailcashStatus1');
 	smailcashStatus1.textContent = smailcashSwitch1.option('value') ? 'active' : 'standby';
+	
+	
+	// 2번 수동 절체=============================================================================================================
+	// =======================================================================================================================
+	// 옥션
+	const acutionSwitch2 = $('#acutionSwitch2').dxSwitch({
+		value: false,
+		onValueChanged(data) {
+			acutionSwitch1.option('value', !data.value);
+			const acutionStatus2 = document.getElementById('acutionStatus2');
+			acutionStatus2.textContent = data.value ? 'active' : 'standby';
+		},
+	}).dxSwitch('instance');
 
-	const smailcashSwitch2 = $('#smailcashSwitch2').dxSwitch({ //스마일캐시2
+	const acutionStatus2 = document.getElementById('acutionStatus2');
+	acutionStatus2.textContent = acutionSwitch2.option('value') ? 'active' : 'standby';
+	
+	// G마켓
+	const gmarketSwitch2 = $('#gmarketSwitch2').dxSwitch({
+		value: false,
+		onValueChanged(data) {
+			gmarketSwitch1.option('value', !data.value);
+			const gmarketStatus2 = document.getElementById('gmarketStatus2');
+			gmarketStatus2.textContent = data.value ? 'active' : 'standby';
+		},
+	}).dxSwitch('instance');
+
+	const gmarketStatus2 = document.getElementById('gmarketStatus2');
+	gmarketStatus2.textContent = gmarketSwitch2.option('value') ? 'active' : 'standby';
+	
+	// 스마일캐시
+	const smailcashSwitch2 = $('#smailcashSwitch2').dxSwitch({
 		value: false,
 		onValueChanged(data) {
 			smailcashSwitch1.option('value', !data.value);

@@ -470,6 +470,9 @@ function formatDate(date, format) {
 	const yy = String(yyyy).slice(-2);
 	const mm = String(date.getMonth() + 1).padStart(2, "0");
 	const dd = String(date.getDate()).padStart(2, "0");
+	const hh = String(date.getHours()).padStart(2, '0');
+	const mi = String(date.getMinutes()).padStart(2, '0');
+	const ss = String(date.getSeconds()).padStart(2, '0');
 	
 	switch (format) {
 		case "yyyy":  return `${yyyy}`;
@@ -477,6 +480,8 @@ function formatDate(date, format) {
 		case "yymmdd":  return `${yy}${mm}${dd}`;
 		case "yyyymmdd": return `${yyyy}${mm}${dd}`;
 		case "yyyy-mm-dd": return `${yyyy}-${mm}-${dd}`;
+		case "yyyy-mm-dd hh:mi:ss": return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+		case "hh:mi:ss":  return `${hh}:${mi}:${ss}`;
 		default: return `${yyyy}-${mm}-${dd}`;
 	}
 }
