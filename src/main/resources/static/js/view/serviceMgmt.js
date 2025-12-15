@@ -11,6 +11,7 @@ $(function() {
 		},
 		showColumnHeaders: false,
 		showSelectionControls: true,
+		hoverStateEnabled: true,
 		columnChooser: {
 			enabled: false
 		},
@@ -72,6 +73,7 @@ $(function() {
 		},
 		showColumnHeaders: false,
 		showSelectionControls: true,
+		hoverStateEnabled: true,
 		columnChooser: {
 			enabled: false
 		},
@@ -133,6 +135,7 @@ $(function() {
 		},
 		showColumnHeaders: false,
 		showSelectionControls: true,
+		hoverStateEnabled: true,
 		columnChooser: {
 			enabled: false
 		},
