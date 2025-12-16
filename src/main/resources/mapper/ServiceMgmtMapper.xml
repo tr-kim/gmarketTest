@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.web.gmarket.serviceMgmt.mapper.ServiceMgmtMapper">
+
+	<resultMap id="ServiceMgmtResultMap" type="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
+		<result property="SERVER_NAME" column="SERVER_NAME" />
+		<result property="SERVICE_NAME" column="SERVICE_NAME" />
+		<result property="CHECK_BIT" column="CHECK_BIT" />
+	</resultMap>
+
+	<select id="selectServiceList" resultMap="ServiceMgmtResultMap" parameterType="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
+		SELECT
+			SERVICE_NAME
+			, CHECK_BIT
+		FROM T_SERVICE_MONITOR
+		WHERE SERVER_ID IN (#{companyCode1}, #{companyCode2})
+		GROUP BY
+			SERVICE_NAME
+			, CHECK_BIT
+		ORDER BY
+			SERVICE_NAME
+	</select>
+
+	<update id="updateServiceCheckBit" parameterType="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
+		UPDATE T_SERVICE_MONITOR SET
+		CHECK_BIT = #{checkBit}
+		WHERE SERVER_ID IN (#{companyCode1}, #{companyCode2})
+			AND SERVICE_NAME = #{serviceName};
+	</update>
+</mapper>

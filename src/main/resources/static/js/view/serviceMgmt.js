@@ -1,193 +1,281 @@
 $(function() {
+	// 공통 데이터 조회 함수
+	function getInitialData(companyCode) {
+		return fetchGridList(companyCode).then(data => {
+			
+			const gridData = data.data || data;
+			
+			const initialSelectedKeys = gridData
+				.filter(item => item.CHECK_BIT === 'T')
+				.map(item => item.SERVICE_NAME);
+				
+			return {
+				gridData: gridData,
+				selectedKeys: initialSelectedKeys 
+			};
+		});
+	}
 	// 옥션
-	$('#serviceListAuction').dxTreeList({
-		dataSource: auctionList,
-		keyExpr: 'svcName',
-		selection: {
-			mode: 'multiple'
-		},
-		headerFilter: {
-			visible: false
-		},
-		showColumnHeaders: false,
-		showSelectionControls: true,
-		hoverStateEnabled: true,
-		columnChooser: {
-			enabled: false
-		},
-		toolbar: {
-			items: [
-				{
-					location: "before",
-					template: function() {
-						return $("<span>")
-							.text("옥션")
-							.css({
-								"font-size": "16px",
-								"font-weight": "600",
-								"padding-left": "5px",
-							});
-					}
-				},
-				{
-					location: 'after',
-					widget: 'dxButton',
-					type: 'default',
-					options: {
-						stylingMode: 'contained',
+	getInitialData('AU').then(({ gridData, selectedKeys }) => {
+		$('#serviceListAuction').dxTreeList({
+			dataSource: new DevExpress.data.ArrayStore({
+				key: "SERVICE_NAME",
+				data: gridData 
+			}),
+			keyExpr: 'SERVICE_NAME',
+			selectedRowKeys: selectedKeys,
+			selection: {
+				mode: 'multiple'
+			},
+			headerFilter: {
+				visible: false
+			},
+			showColumnHeaders: false,
+			showSelectionControls: true,
+			hoverStateEnabled: true,
+			columnChooser: {
+				enabled: false
+			},
+			toolbar: {
+				items: [
+					{
+						location: "before",
+						template: function() {
+							return $("<span>")
+								.text("옥션")
+								.css({
+									"font-size": "16px",
+									"font-weight": "600",
+									"padding-left": "5px",
+								});
+						}
+					},
+					{
+						location: 'after',
+						widget: 'dxButton',
 						type: 'default',
-						text: '저장',
-						onClick: function(e) {
-							saveService('#serviceListAuction');
+						options: {
+							stylingMode: 'contained',
+							type: 'default',
+							text: '저장',
+							onClick: function(e) {
+								saveService('#serviceListAuction', 'AU');
+							}
 						}
 					}
-				}
-			]
-		},
-		columns: [
-			{ dataField: 'svcName' }
-		],
-		onRowClick: function(e) {
-			if (e.rowType === 'data') {
-				var component = e.component;
-				var key = e.key;
-				
-				if (component.isRowSelected(key)) {
-					component.deselectRows([key]);
-				} else {
-					component.selectRows([key], true);
+				]
+			},
+			columns: [
+				{ dataField: 'SERVICE_NAME' }
+			],
+			onRowClick: function(e) {
+				if (e.rowType === 'data') {
+					var component = e.component;
+					var key = e.key;
+					
+					if (component.isRowSelected(key)) {
+						component.deselectRows([key]);
+					} else {
+						component.selectRows([key], true);
+					}
 				}
 			}
-		}
-	}).dxTreeList('instance');
+		}).dxTreeList('instance');
+	});
+
 	
 	// G마켓
-	$('#serviceListGmarket').dxTreeList({
-		dataSource: gmarketList,
-		keyExpr: 'svcName',
-		selection: {
-			mode: 'multiple'
-		},
-		headerFilter: {
-			visible: false
-		},
-		showColumnHeaders: false,
-		showSelectionControls: true,
-		hoverStateEnabled: true,
-		columnChooser: {
-			enabled: false
-		},
-		toolbar: {
-			items: [
-				{
-					location: "before",
-					template: function() {
-						return $("<span>")
-							.text("G마켓")
-							.css({
-								"font-size": "16px",
-								"font-weight": "600",
-								"padding-left": "5px",
-							});
-					}
-				},
-				{
-					location: 'after',
-					widget: 'dxButton',
-					type: 'default',
-					options: {
-						stylingMode: 'contained',
+	getInitialData('GM').then(({ gridData, selectedKeys }) => {
+		$('#serviceListGmarket').dxTreeList({
+			dataSource: new DevExpress.data.ArrayStore({
+				key: "SERVICE_NAME",
+				data: gridData 
+			}),
+			keyExpr: 'SERVICE_NAME',
+			selectedRowKeys: selectedKeys,
+			selection: {
+				mode: 'multiple'
+			},
+			headerFilter: {
+				visible: false
+			},
+			showColumnHeaders: false,
+			showSelectionControls: true,
+			hoverStateEnabled: true,
+			columnChooser: {
+				enabled: false
+			},
+			toolbar: {
+				items: [
+					{
+						location: "before",
+						template: function() {
+							return $("<span>")
+								.text("G마켓")
+								.css({
+									"font-size": "16px",
+									"font-weight": "600",
+									"padding-left": "5px",
+								});
+						}
+					},
+					{
+						location: 'after',
+						widget: 'dxButton',
 						type: 'default',
-						text: '저장',
-						onClick() {
-							saveService('#serviceListGmarket');
+						options: {
+							stylingMode: 'contained',
+							type: 'default',
+							text: '저장',
+							onClick() {
+								saveService('#serviceListGmarket', 'GM');
+							}
 						}
 					}
-				}
-			]
-		},
-		columns: [
-			{ dataField: 'svcName' }
-		],
-		onRowClick: function(e) {
-			if (e.rowType === 'data') {
-				var component = e.component;
-				var key = e.key;
-				
-				if (component.isRowSelected(key)) {
-					component.deselectRows([key]);
-				} else {
-					component.selectRows([key], true);
+				]
+			},
+			columns: [
+				{ dataField: 'SERVICE_NAME' }
+			],
+			onRowClick: function(e) {
+				if (e.rowType === 'data') {
+					var component = e.component;
+					var key = e.key;
+					
+					if (component.isRowSelected(key)) {
+						component.deselectRows([key]);
+					} else {
+						component.selectRows([key], true);
+					}
 				}
 			}
-		}
-	}).dxTreeList('instance');
+		}).dxTreeList('instance');
+	});
 	
 	// 스마일캐시
-	$('#serviceListSmilecash').dxTreeList({
-		dataSource: smileCashList,
-		keyExpr: 'svcName',
-		selection: {
-			mode: 'multiple'
-		},
-		headerFilter: {
-			visible: false
-		},
-		showColumnHeaders: false,
-		showSelectionControls: true,
-		hoverStateEnabled: true,
-		columnChooser: {
-			enabled: false
-		},
-		toolbar: {
-			items: [
-				{
-					location: "before",
-					template: function() {
-						return $("<span>")
-							.text("스마일캐시")
-							.css({
-								"font-size": "16px",
-								"font-weight": "600",
-								"padding-left": "5px",
-							});
-					}
-				},
-				{
-					location: 'after',
-					widget: 'dxButton',
-					type: 'default',
-					options: {
-						stylingMode: 'contained',
+	getInitialData('SC').then(({ gridData, selectedKeys }) => {
+		$('#serviceListSmilecash').dxTreeList({
+			dataSource: new DevExpress.data.ArrayStore({
+				key: "SERVICE_NAME",
+				data: gridData 
+			}),
+			keyExpr: 'SERVICE_NAME',
+			selectedRowKeys: selectedKeys,
+			selection: {
+				mode: 'multiple'
+			},
+			headerFilter: {
+				visible: false
+			},
+			showColumnHeaders: false,
+			showSelectionControls: true,
+			hoverStateEnabled: true,
+			columnChooser: {
+				enabled: false
+			},
+			toolbar: {
+				items: [
+					{
+						location: "before",
+						template: function() {
+							return $("<span>")
+								.text("스마일캐시")
+								.css({
+									"font-size": "16px",
+									"font-weight": "600",
+									"padding-left": "5px",
+								});
+						}
+					},
+					{
+						location: 'after',
+						widget: 'dxButton',
 						type: 'default',
-						text: '저장',
-						onClick() {
-							saveService('#serviceListSmilecash');
+						options: {
+							stylingMode: 'contained',
+							type: 'default',
+							text: '저장',
+							onClick() {
+								saveService('#serviceListSmilecash', 'SC');
+							}
 						}
 					}
-				}
-			]
-		},
-		columns: [
-			{ dataField: 'svcName' }
-		],
-		onRowClick: function(e) {
-			if (e.rowType === 'data') {
-				var component = e.component;
-				var key = e.key;
-				
-				if (component.isRowSelected(key)) {
-					component.deselectRows([key]);
-				} else {
-					component.selectRows([key], true);
+				]
+			},
+			columns: [
+				{ dataField: 'SERVICE_NAME' }
+			],
+			onRowClick: function(e) {
+				if (e.rowType === 'data') {
+					var component = e.component;
+					var key = e.key;
+					
+					if (component.isRowSelected(key)) {
+						component.deselectRows([key]);
+					} else {
+						component.selectRows([key], true);
+					}
 				}
 			}
-		}
-	}).dxTreeList('instance');
+		}).dxTreeList('instance');
+	});
+
 	
-	function saveService(service) {
-		let treeList = $(service).dxTreeList('instance');
+	function saveService(service, companyCode) {
+
+		const selectedRows = $(service).dxTreeList('instance').getSelectedRowsData();
+
+		console.log(selectedRows);
+		// const serviceList = selectedRows.map(row => ({
+		// 	serviceName: row.SERVICE_NAME,
+		// 	checkBit: 'T'
+		// }));
+
+		const param = {
+			companyCode1: `${companyCode}01`,
+			companyCode2: `${companyCode}02`,
+			serviceList: serviceList
+		};
 		
-		console.log(treeList.getSelectedRowKeys());
+		return $.ajax({
+			url: "/api/v1/service/update",
+			method: "POST",
+			contentType: "application/json",
+			data: JSON.stringify(param)
+		})
+		.then(result => ({
+			data: result.data,
+			totalCount: result.totalCount
+		}))
+		.catch(() => {
+			showDialogCustom("error");
+			return { data: [], totalCount: 0 };
+		});
+
 	}
+
+	// 데이터 조회 함수
+	function fetchGridList(companyCode) {
+
+		const param = {
+			companyCode1: `${companyCode}01`,
+			companyCode2: `${companyCode}02`,
+		};
+		
+		return $.ajax({
+			url: "/api/v1/service/list",
+			method: "POST",
+			contentType: "application/json",
+			data: JSON.stringify(param)
+		})
+		.then(result => ({
+			data: result.data,
+			totalCount: result.totalCount
+		}))
+		.catch(() => {
+			showDialogCustom("error");
+			return { data: [], totalCount: 0 };
+		});
+	}
+
 })

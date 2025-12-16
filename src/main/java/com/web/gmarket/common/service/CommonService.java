@@ -19,6 +19,7 @@ import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.vo.FtpDto;
 import com.web.gmarket.hist.mapper.HistMapper;
 import com.web.gmarket.real.mapper.RealMapper;
+import com.web.gmarket.serviceMgmt.mapper.ServiceMgmtMapper;
 import com.web.gmarket.stat.mapper.StatCodeMapper;
 import com.web.gmarket.stat.mapper.StatMapper;
 import com.web.gmarket.user.mapper.UserMapper;
@@ -85,6 +86,10 @@ public class CommonService {
     
     public ServiceInfoMapper getServiceInfoMapper() {
         return dynamicDataSourceService.getMapper(ConstantsUtils.DB_GMARKET, ServiceInfoMapper.class);
+    }
+    
+    public ServiceMgmtMapper getServiceMgmtMapper() {
+        return dynamicDataSourceService.getMapper(ConstantsUtils.DB_GMARKET, ServiceMgmtMapper.class);
     }
     
     public FTPClient createConnection(Integer code, String type) throws IOException {
