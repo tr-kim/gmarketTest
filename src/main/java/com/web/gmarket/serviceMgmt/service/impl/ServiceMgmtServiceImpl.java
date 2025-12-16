@@ -10,17 +10,26 @@ import com.web.gmarket.serviceMgmt.service.ServiceMgmtService;
 
 @Service
 public class ServiceMgmtServiceImpl implements ServiceMgmtService {
-	private final CommonService commonService;
 
-	public ServiceMgmtServiceImpl(CommonService commonService) {
-		this.commonService = commonService;
-	}
+    private final CommonService commonService;
 
-	@Override
-	public List<ServiceMgmtDto> getServiceMgmtList(ServiceMgmtDto serviceMgmtDto) {
-		
-		return commonService.getServiceMgmtMapper().selectServiceList(serviceMgmtDto);
-	}
+    public ServiceMgmtServiceImpl(CommonService commonService) {
+        this.commonService = commonService;
+    }
 
-	
+    @Override
+    public List<ServiceMgmtDto> getServiceMgmtList(ServiceMgmtDto serviceMgmtDto) {
+        return commonService.getServiceMgmtMapper()
+                            .selectServiceList(serviceMgmtDto);
+    }
+
+    @Override
+    public void updateServiceCheckBit(List<ServiceMgmtDto> list) {
+
+        for (ServiceMgmtDto dto : list) {
+            commonService.getServiceMgmtMapper()
+                         .updateServiceCheckBit(dto);
+        }
+    }
 }
+

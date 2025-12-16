@@ -45,11 +45,11 @@ public class RestServiceMgmtController {
 		}
 	}
 
-	// @PutMapping("/update")
-	// public ResponseEntity<?> updateCheckBitlist(@RequestBody List<ServiceMgmtDto> list) {
+	@PutMapping("/update")
+	public ResponseEntity<?> updateCheckBitlist(@RequestBody List<ServiceMgmtDto> list) {
 
-	// 	serviceMgmtService.updateServiceCheckBit(list);
+		serviceMgmtService.updateServiceCheckBit(list);
 
-	// 	return ResponseEntity.ok(Map.of("message", "서비스 관리 수정 성공"));
-	// }
+		return ResponseEntity.ok(Map.of("message", "서비스 관리 수정 성공"));
+	}
 }

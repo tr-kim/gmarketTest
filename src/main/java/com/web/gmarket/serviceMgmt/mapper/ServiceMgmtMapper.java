@@ -10,4 +10,6 @@ import com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto;
 public interface ServiceMgmtMapper {
 	
     List<ServiceMgmtDto> selectServiceList(ServiceMgmtDto serviceMgmtDto);
+
+    void updateServiceCheckBit(ServiceMgmtDto serviceMgmtDto);
 }

@@ -223,30 +223,36 @@ $(function() {
 	
 	function saveService(service, companyCode) {
 
-		const selectedRows = $(service).dxTreeList('instance').getSelectedRowsData();
-
+		const instante = $(service).dxTreeList('instance');
+		const selectedRows = instante.getSelectedRowsData();
 		console.log(selectedRows);
-		// const serviceList = selectedRows.map(row => ({
-		// 	serviceName: row.SERVICE_NAME,
-		// 	checkBit: 'T'
-		// }));
-
-		const param = {
+		
+		const param = selectedRows.map(row => ({
 			companyCode1: `${companyCode}01`,
 			companyCode2: `${companyCode}02`,
-			serviceList: serviceList
-		};
+			serviceName: row.SERVICE_NAME,
+			checkBit: 'T'
+		}));
 		
 		return $.ajax({
 			url: "/api/v1/service/update",
-			method: "POST",
+			method: "PUT",
 			contentType: "application/json",
 			data: JSON.stringify(param)
 		})
-		.then(result => ({
-			data: result.data,
-			totalCount: result.totalCount
-		}))
+		.then(() => {
+			return getInitialData(companyCode);
+		})
+		.then(data => {
+			const gridData = data.gridData || data;
+
+			const selectedKeys = gridData
+				.filter(item => item.CHECK_BIT === 'T')
+				.map(item => item.SERVICE_NAME);
+
+			instante.option('dataSource', gridData);
+			instante.option('selectedRowKeys', selectedKeys);
+		})
 		.catch(() => {
 			showDialogCustom("error");
 			return { data: [], totalCount: 0 };

@@ -7,5 +7,7 @@ import com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto;
 public interface ServiceMgmtService {
 
     List<ServiceMgmtDto> getServiceMgmtList(ServiceMgmtDto serviceMgmtDto);
+
+    void updateServiceCheckBit(List<ServiceMgmtDto> list);
 	
 }
