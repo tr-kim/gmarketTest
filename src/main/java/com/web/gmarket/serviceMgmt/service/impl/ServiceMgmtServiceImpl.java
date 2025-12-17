@@ -24,17 +24,17 @@ public class ServiceMgmtServiceImpl implements ServiceMgmtService {
     }
 
     @Override
-    public void updateServiceCheckBit(List<ServiceMgmtDto> list) {
+    public void updateTrueCheckBit(List<ServiceMgmtDto> list) {
 
 		commonService.getServiceMgmtMapper()
-		.allFalseServiceCheckBit(
+		.updateFalseCheckBit(
 			list.get(0).getCompanyCode1(),
 			list.get(0).getCompanyCode2()
 		);
 
         for (ServiceMgmtDto dto : list) {
             commonService.getServiceMgmtMapper()
-                         .updateServiceCheckBit(dto);
+                         .updateTrueCheckBit(dto);
         }
     }
 }

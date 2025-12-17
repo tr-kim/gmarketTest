@@ -12,9 +12,9 @@ public interface ServiceMgmtMapper {
 	
     List<ServiceMgmtDto> selectServiceList(ServiceMgmtDto serviceMgmtDto);
 
-    void updateServiceCheckBit(ServiceMgmtDto serviceMgmtDto);
+    void updateTrueCheckBit(ServiceMgmtDto serviceMgmtDto);
 
-    void allFalseServiceCheckBit(
+    void updateFalseCheckBit(
         @Param("companyCode1") String companyCode1,
         @Param("companyCode2") String companyCode2
     );

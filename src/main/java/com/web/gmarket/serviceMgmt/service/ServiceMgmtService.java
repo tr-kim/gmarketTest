@@ -8,6 +8,6 @@ public interface ServiceMgmtService {
 
     List<ServiceMgmtDto> getServiceMgmtList(ServiceMgmtDto serviceMgmtDto);
 
-    void updateServiceCheckBit(List<ServiceMgmtDto> list);
+    void updateTrueCheckBit(List<ServiceMgmtDto> list);
 	
 }

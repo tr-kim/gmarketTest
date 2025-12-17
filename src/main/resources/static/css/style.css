@@ -1036,5 +1036,6 @@ aside .psw_chg_btn:hover{
     padding: 0;
 }
 #service_mgmt .dx-treelist .dx-row>td {
-    padding: 9px 16px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }

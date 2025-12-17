@@ -22,19 +22,15 @@ $(function() {
 				key: "SERVICE_NAME",
 				data: gridData 
 			}),
-			keyExpr: 'SERVICE_NAME',
-			selectedRowKeys: selectedKeys,
+			keyExpr: 'SERVICE_NAME',			
 			selection: {
 				mode: 'multiple'
 			},
-			headerFilter: {
-				visible: false
-			},
-			showColumnHeaders: false,
-			showSelectionControls: true,
+			selectedRowKeys: selectedKeys,
+			columnAutoWidth: true,
 			hoverStateEnabled: true,
 			columnChooser: {
-				enabled: false
+				enabled: false,
 			},
 			toolbar: {
 				items: [
@@ -66,7 +62,7 @@ $(function() {
 				]
 			},
 			columns: [
-				{ dataField: 'SERVICE_NAME' }
+				{ dataField: 'SERVICE_NAME', caption: '전체 선택'}
 			],
 			onRowClick: function(e) {
 				if (e.rowType === 'data') {
@@ -91,19 +87,15 @@ $(function() {
 				key: "SERVICE_NAME",
 				data: gridData 
 			}),
-			keyExpr: 'SERVICE_NAME',
-			selectedRowKeys: selectedKeys,
+			keyExpr: 'SERVICE_NAME',			
 			selection: {
 				mode: 'multiple'
 			},
-			headerFilter: {
-				visible: false
-			},
-			showColumnHeaders: false,
-			showSelectionControls: true,
+			selectedRowKeys: selectedKeys,
+			columnAutoWidth: true,
 			hoverStateEnabled: true,
 			columnChooser: {
-				enabled: false
+				enabled: false,
 			},
 			toolbar: {
 				items: [
@@ -135,7 +127,7 @@ $(function() {
 				]
 			},
 			columns: [
-				{ dataField: 'SERVICE_NAME' }
+				{ dataField: 'SERVICE_NAME', caption: '전체 선택'}
 			],
 			onRowClick: function(e) {
 				if (e.rowType === 'data') {
@@ -159,19 +151,15 @@ $(function() {
 				key: "SERVICE_NAME",
 				data: gridData 
 			}),
-			keyExpr: 'SERVICE_NAME',
-			selectedRowKeys: selectedKeys,
+			keyExpr: 'SERVICE_NAME',			
 			selection: {
 				mode: 'multiple'
 			},
-			headerFilter: {
-				visible: false
-			},
-			showColumnHeaders: false,
-			showSelectionControls: true,
+			selectedRowKeys: selectedKeys,
+			columnAutoWidth: true,
 			hoverStateEnabled: true,
 			columnChooser: {
-				enabled: false
+				enabled: false,
 			},
 			toolbar: {
 				items: [
@@ -203,7 +191,7 @@ $(function() {
 				]
 			},
 			columns: [
-				{ dataField: 'SERVICE_NAME' }
+				{ dataField: 'SERVICE_NAME', caption: '전체 선택'}
 			],
 			onRowClick: function(e) {
 				if (e.rowType === 'data') {
@@ -223,8 +211,8 @@ $(function() {
 	
 	function saveService(service, companyCode) {
 
-		const instante = $(service).dxTreeList('instance');
-		const selectedRows = instante.getSelectedRowsData();
+		const instance = $(service).dxTreeList('instance');
+		const selectedRows = instance.getSelectedRowsData();
 		console.log(selectedRows);
 		
 		const param = selectedRows.map(row => ({
@@ -250,8 +238,8 @@ $(function() {
 				.filter(item => item.CHECK_BIT === 'T')
 				.map(item => item.SERVICE_NAME);
 
-			instante.option('dataSource', gridData);
-			instante.option('selectedRowKeys', selectedKeys);
+			instance.option('dataSource', gridData);
+			instance.option('selectedRowKeys', selectedKeys);
 		})
 		.catch(() => {
 			showDialogCustom("error");
