@@ -23,6 +23,12 @@
 			SERVICE_NAME
 	</select>
 
+	<update id="allFalseServiceCheckBit" parameterType="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
+		UPDATE T_SERVICE_MONITOR SET
+			CHECK_BIT = 'F'
+		WHERE SERVER_ID IN (#{companyCode1}, #{companyCode2});
+	</update>
+
 	<update id="updateServiceCheckBit" parameterType="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
 		UPDATE T_SERVICE_MONITOR SET
 		CHECK_BIT = #{checkBit}
