@@ -13,12 +13,16 @@ import com.web.gmarket.common.service.CommonService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.DBUtils;
 import com.web.gmarket.real.dto.RealDto;
+import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
+import com.web.gmarket.real.mapper.RealMapper;
 import com.web.gmarket.real.service.RealService;
 import com.web.gmarket.stat.dto.StatCodeDto;
 import com.web.gmarket.stat.service.StatCodeService;
 
 @Service
 public class RealServiceImpl implements RealService {
+
+	private final RealMapper realMapper;
 
 	@Autowired
 	private CommonService commonService;
@@ -90,4 +94,18 @@ public class RealServiceImpl implements RealService {
 		
 		return new ArrayList<>();
 	}
+
+	@Override
+	public List<ServiceStatusFailoverDto> selectServerStatusList(ServiceStatusFailoverDto serviceStatusFailoverDto) {
+		return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectServerStatusList();
+	}
+
+	public RealServiceImpl(RealMapper realMapper) {
+        this.realMapper = realMapper;
+    }
+
+    @Override
+    public void updateServerFlag(ServiceStatusFailoverDto dto) {
+        realMapper.updateServerFlag(dto);
+    }
 }

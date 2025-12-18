@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.web.gmarket.real.dto.RealDto;
 import com.web.gmarket.real.dto.ServiceStatusDetailDto;
 import com.web.gmarket.real.dto.ServiceStatusSummaryDto;
+import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
 
 @Mapper
 public interface RealMapper {
@@ -49,5 +50,20 @@ public interface RealMapper {
 	 * @return
 	 */
 	public List<ServiceStatusDetailDto> selectRealHistServiceStatusDetailList();
+
+	/**
+	 * 서버 상태 목록 조회
+	 * 
+	 * @return
+	 */
+	public List<ServiceStatusFailoverDto> selectServerStatusList();
+
+	/**
+	 * 수동 절체 FLAG 업데이트
+	 * 
+	 * @return
+	 */
+	public void updateServerFlag(ServiceStatusFailoverDto dto);
+
 
 }

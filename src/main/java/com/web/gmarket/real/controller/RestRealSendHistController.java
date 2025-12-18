@@ -1,13 +1,18 @@
 package com.web.gmarket.real.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.real.dto.RealDto;
+import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
 import com.web.gmarket.real.service.RealService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -120,4 +126,41 @@ public class RestRealSendHistController {
 		}
 		
 	}
+
+	/**
+	 * 서버 상태 목록 조회(요약)
+	 * 
+	 * 
+	 */
+	@GetMapping("/serverStatusList")
+	public ResponseEntity<?> selectServerStatusList() {
+		try {
+			List<ServiceStatusFailoverDto> result = realService.selectServerStatusList(null);
+
+    		return ResponseEntity.ok(Map.of("data", result));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+	        Map<String, Object> error = new HashMap<>();
+	        error.put(ConstantsUtils.MESSAGE, "서버 상태 목록 조회 실패");
+	        error.put(ConstantsUtils.ERROR, e.getMessage());
+	        
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+		}	
+	}
+
+	/**
+	 * 수동 절체 FLAG 업데이트
+	 * 
+	 * 
+	 */
+	@PutMapping("/flagUpdate")
+	public ResponseEntity<?> updateServerFlag(@RequestBody ServiceStatusFailoverDto dto) {
+
+		realService.updateServerFlag(dto);
+
+		return ResponseEntity.ok(Map.of("message", "서버 플래그 수정 성공"));
+	}
+
+
 }

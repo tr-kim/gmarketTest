@@ -3,6 +3,12 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.web.gmarket.real.mapper.RealMapper">
+
+	<resultMap id="RealMapperMap" type="com.web.gmarket.real.dto.ServiceStatusFailoverDto">
+		<result property="SERVER_ID" column="SERVER_ID" />
+		<result property="SERVER_STAT" column="SERVER_STAT" />
+		<result property="MANUAL_FLAG" column="MANUAL_FLAG" />
+	</resultMap>
 	
 	<select id="selectRealHistTotalList" resultType="com.web.gmarket.real.dto.RealDto">
 		<choose>
@@ -189,4 +195,23 @@
 		ORDER BY COMPANY_CODE
 	</select>
 	
+	<select id="selectServerStatusList" resultMap="RealMapperMap" resultType="com.web.gmarket.real.dto.ServiceStatusFailoverDto">
+		/*
+			RealMapper.selectServerStatusList 서버 상태 목록 조회
+		*/
+		SELECT
+			SERVER_ID
+			, SERVER_STAT
+			, MANUAL_FLAG
+		FROM T_SERVER_STATUS
+	</select>
+
+	<update id="updateServerFlag" parameterType="com.web.gmarket.real.dto.ServiceStatusFailoverDto">
+		/*
+			RealMapper.updateServerFlag 수동 절체 FLAG 업데이트
+		*/
+		UPDATE T_SERVER_STATUS SET
+			MANUAL_FLAG = #{flag}
+		WHERE SERVER_ID IN (#{companyCode1}, #{companyCode2})
+	</update>
 </mapper>

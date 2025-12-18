@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.web.gmarket.real.dto.RealDto;
+import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
 
 public interface RealService {
 
@@ -14,4 +15,9 @@ public interface RealService {
 	public List<RealDto> selectRealHistTableList(int companyCode, List<Integer> codeList);
 	
 	public List<?> selectProcStatusList(String view, String tab);
+
+	public List<ServiceStatusFailoverDto> selectServerStatusList(ServiceStatusFailoverDto serviceStatusFailoverDto);
+
+	public void updateServerFlag(ServiceStatusFailoverDto dto);
+
 }
