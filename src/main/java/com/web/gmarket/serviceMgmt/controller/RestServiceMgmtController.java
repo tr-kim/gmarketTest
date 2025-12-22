@@ -20,13 +20,13 @@ import com.web.gmarket.serviceMgmt.service.ServiceMgmtService;
 public class RestServiceMgmtController {
 	
 	private final ServiceMgmtService serviceMgmtService;
-
+	
 	public RestServiceMgmtController(ServiceMgmtService serviceMgmtService) {
 		this.serviceMgmtService = serviceMgmtService;
 	}
-
+	
 	@PostMapping("/list")
-	public ResponseEntity<?> getCheckBitlist(@RequestBody ServiceMgmtDto serviceMgmtDto) {
+	public ResponseEntity<?> getCheckBitList(@RequestBody ServiceMgmtDto serviceMgmtDto) {
 		try {
 			List<ServiceMgmtDto> result = serviceMgmtService.getServiceMgmtList(serviceMgmtDto);
 			
@@ -44,12 +44,12 @@ public class RestServiceMgmtController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
 		}
 	}
-
+	
 	@PutMapping("/update")
-	public ResponseEntity<?> updateCheckBitlist(@RequestBody List<ServiceMgmtDto> list) {
-
-		serviceMgmtService.updateTrueCheckBit(list);
-
+	public ResponseEntity<?> updateCheckBitList(@RequestBody List<ServiceMgmtDto> list) {
+		// 전체 false 후 선택 대상만 true
+		serviceMgmtService.updateServiceMgmt(list);
+		
 		return ResponseEntity.ok(Map.of("message", "서비스 관리 수정 성공"));
 	}
 }

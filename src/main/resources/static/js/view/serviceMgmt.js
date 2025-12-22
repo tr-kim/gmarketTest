@@ -15,6 +15,7 @@ $(function() {
 			};
 		});
 	}
+	
 	// 옥션
 	getInitialData('AU').then(({ gridData, selectedKeys }) => {
 		$('#serviceListAuction').dxTreeList({
@@ -78,7 +79,6 @@ $(function() {
 			}
 		}).dxTreeList('instance');
 	});
-
 	
 	// G마켓
 	getInitialData('GM').then(({ gridData, selectedKeys }) => {
@@ -207,13 +207,11 @@ $(function() {
 			}
 		}).dxTreeList('instance');
 	});
-
 	
+	// 서비스 저장 함수
 	function saveService(service, companyCode) {
-
 		const instance = $(service).dxTreeList('instance');
 		const selectedRows = instance.getSelectedRowsData();
-		console.log(selectedRows);
 		
 		const param = selectedRows.map(row => ({
 			companyCode1: `${companyCode}01`,
@@ -233,24 +231,22 @@ $(function() {
 		})
 		.then(data => {
 			const gridData = data.gridData || data;
-
+			
 			const selectedKeys = gridData
 				.filter(item => item.CHECK_BIT === 'T')
 				.map(item => item.SERVICE_NAME);
-
+				
 			instance.option('dataSource', gridData);
 			instance.option('selectedRowKeys', selectedKeys);
 		})
 		.catch(() => {
 			showDialogCustom("error");
-			return { data: [], totalCount: 0 };
+			return { data: [] };
 		});
-
 	}
-
-	// 데이터 조회 함수
+	
+	// 서비스 조회 함수
 	function fetchGridList(companyCode) {
-
 		const param = {
 			companyCode1: `${companyCode}01`,
 			companyCode2: `${companyCode}02`,
@@ -263,13 +259,12 @@ $(function() {
 			data: JSON.stringify(param)
 		})
 		.then(result => ({
-			data: result.data,
-			totalCount: result.totalCount
+			data: result.data
 		}))
 		.catch(() => {
 			showDialogCustom("error");
-			return { data: [], totalCount: 0 };
+			return { data: [] };
 		});
 	}
-
+	
 })

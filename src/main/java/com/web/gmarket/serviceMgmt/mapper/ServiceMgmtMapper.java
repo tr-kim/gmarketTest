@@ -10,12 +10,12 @@ import com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto;
 @Mapper
 public interface ServiceMgmtMapper {
 	
-    List<ServiceMgmtDto> selectServiceList(ServiceMgmtDto serviceMgmtDto);
-
-    void updateTrueCheckBit(ServiceMgmtDto serviceMgmtDto);
-
-    void updateFalseCheckBit(
-        @Param("companyCode1") String companyCode1,
-        @Param("companyCode2") String companyCode2
-    );
+	List<ServiceMgmtDto> selectServiceList(ServiceMgmtDto serviceMgmtDto);
+	
+	void updateFalseCheckBit(
+		@Param("companyCode1") String companyCode1,
+		@Param("companyCode2") String companyCode2
+	);
+	
+	void updateTrueCheckBit(ServiceMgmtDto serviceMgmtDto);
 }

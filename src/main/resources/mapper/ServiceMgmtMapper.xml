@@ -9,7 +9,7 @@
 		<result property="SERVICE_NAME" column="SERVICE_NAME" />
 		<result property="CHECK_BIT" column="CHECK_BIT" />
 	</resultMap>
-
+	
 	<select id="selectServiceList" resultMap="ServiceMgmtResultMap" parameterType="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
 		SELECT
 			SERVICE_NAME
@@ -22,17 +22,18 @@
 		ORDER BY
 			SERVICE_NAME
 	</select>
-
+	
 	<update id="updateFalseCheckBit" parameterType="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
 		UPDATE T_SERVICE_MONITOR SET
 			CHECK_BIT = 'F'
 		WHERE SERVER_ID IN (#{companyCode1}, #{companyCode2});
 	</update>
-
+	
 	<update id="updateTrueCheckBit" parameterType="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
 		UPDATE T_SERVICE_MONITOR SET
 		CHECK_BIT = 'T'
 		WHERE SERVER_ID IN (#{companyCode1}, #{companyCode2})
 			AND SERVICE_NAME = #{serviceName};
 	</update>
+	
 </mapper>
