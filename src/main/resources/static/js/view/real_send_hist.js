@@ -646,17 +646,22 @@ $(function () {
 			method: "GET"
 		})
 		.then(res => {
+
+			console.log('스위치 조회 :', res);
+
 			const switchMap = {
-				AU01: '#acutionSwitch1',
-				AU02: '#acutionSwitch2',
-				GM01: '#gmarketSwitch1',
-				GM02: '#gmarketSwitch2',
-				SC01: '#smailcashSwitch1',
-				SC02: '#smailcashSwitch2'
+				'0_1': '#acutionSwitch1',
+				'0_2': '#acutionSwitch2',
+				'1_1': '#gmarketSwitch1',
+				'1_2': '#gmarketSwitch2',
+				'2_1': '#smailcashSwitch1',
+				'2_2': '#smailcashSwitch2'
 			};
 
 			res.data.forEach(row => {
-				const switchSelector = switchMap[row.SERVER_ID];
+				const key = `${row.COMPANY_CODE}_${row.SERVER_ID}`;
+    			const switchSelector = switchMap[key];
+
 				if (!switchSelector) return;
 
 				const instance = $(switchSelector).dxSwitch('instance');
@@ -684,21 +689,23 @@ $(function () {
 			console.log('1분마다 되는지 확인용 :', res);
 
 			const serverStatMap = {
-				AU01: 'acutionStatus1',
-				AU02: 'acutionStatus2',
-				GM01: 'gmarketStatus1',
-				GM02: 'gmarketStatus2',
-				SC01: 'smailcashStatus1',
-				SC02: 'smailcashStatus2'
+				'0_1': 'acutionStatus1',
+				'0_2': 'acutionStatus2',
+				'1_1': 'gmarketStatus1',
+				'1_2': 'gmarketStatus2',
+				'2_1': 'smailcashStatus1',
+				'2_2': 'smailcashStatus2'
 			};
 
 			res.data.forEach(row => {
-				const switchSelector = serverStatMap[row.SERVER_ID];
+				const key = `${row.COMPANY_CODE}_${row.SERVER_ID}`;
+    			const switchSelector = serverStatMap[key];
+
 				if (!switchSelector) return;
 
 				const status = document.getElementById(switchSelector);
 				if (!status) return;
-
+				
 				if(row.SERVER_STAT === 'A') {
 					status.textContent = 'active';
 				} else if(row.SERVER_STAT === 'S') {
@@ -708,6 +715,7 @@ $(function () {
 				}
 
 			});
+
 		})
 		.catch(() => {
 			showDialogCustom("error");
@@ -738,7 +746,8 @@ $(function () {
 		value: false,
 		onValueChanged(data) {
 			acutionSwitch2.option('value', data.value);
-			updateServerFlag('#acutionSwitch1', 'AU');
+			console.log(data);
+			updateServerFlag( 0, 1);
 		},
 	}).dxSwitch('instance');
 	
@@ -747,7 +756,7 @@ $(function () {
 		value: false,
 		onValueChanged(data) {
 			gmarketSwitch2.option('value', data.value);
-			updateServerFlag('#gmarketSwitch1', 'GM');
+			updateServerFlag( 1, 1);
 		},
 	}).dxSwitch('instance');
 	
@@ -756,7 +765,7 @@ $(function () {
 		value: false,
 		onValueChanged(data) {
 			smailcashSwitch2.option('value', data.value);
-			updateServerFlag('#smailcashSwitch1', 'SC');
+			updateServerFlag( 2, 1);
 		},
 	}).dxSwitch('instance');	
 	
@@ -767,7 +776,7 @@ $(function () {
 		value: false,
 		onValueChanged(data) {
 			acutionSwitch1.option('value', data.value);
-			updateServerFlag('#acutionSwitch2', 'AU');
+			updateServerFlag( 0, 2);
 		},
 	}).dxSwitch('instance');
 	
@@ -776,7 +785,7 @@ $(function () {
 		value: false,
 		onValueChanged(data) {
 			gmarketSwitch1.option('value', data.value);
-			updateServerFlag('#gmarketSwitch2', 'GM');
+			updateServerFlag( 1, 2);
 		},
 	}).dxSwitch('instance');
 	
@@ -785,13 +794,34 @@ $(function () {
 		value: false,
 		onValueChanged(data) {
 			smailcashSwitch1.option('value', data.value);
-			updateServerFlag('#smailcashSwitch2', 'SC');
+			updateServerFlag( 2, 2);
 		},
 	}).dxSwitch('instance');
 
 	//수동 절체 FLAG 업데이트
-	function updateServerFlag(switchName, companyCode) {
-		const value = $(switchName).dxSwitch('instance').option('value');
+	function updateServerFlag(companyCode, serverId) {
+
+		const switchMap = {
+			'0_1': '#acutionSwitch1',
+			'0_2': '#acutionSwitch2',
+			'1_1': '#gmarketSwitch1',
+			'1_2': '#gmarketSwitch2',
+			'2_1': '#smailcashSwitch1',
+			'2_2': '#smailcashSwitch2'
+		};
+
+		const key = `${companyCode}_${serverId}`;
+		const switchName = switchMap[key];
+
+		if (!switchName) {
+			console.log('스위치 매핑 없음:', key);
+			return;
+		}
+
+		const instance = $(switchName).dxSwitch('instance');
+		if (!instance) return;
+
+		const value = instance.option('value');
 
 		let flag;
 
@@ -802,8 +832,8 @@ $(function () {
 		}
 
 		const param = {
-			companyCode1: `${companyCode}01`,
-			companyCode2: `${companyCode}02`,
+			companyCode: companyCode,
+			serverId: serverId,
 			flag: flag
 		}
 

@@ -13,8 +13,11 @@ import lombok.Setter;
 public class ServiceStatusFailoverDto {
 
 	private String flag;
-	private String companyCode1;
-	private String companyCode2;
+	private String companyCode;
+	private String serverId;
+
+	@JsonProperty("COMPANY_CODE")
+	private String COMPANY_CODE;
 
 	@JsonProperty("SERVER_ID")
 	private String SERVER_ID;
