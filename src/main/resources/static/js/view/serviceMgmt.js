@@ -212,24 +212,24 @@ $(function() {
 	function saveService(service, companyCode) {
 		const instance = $(service).dxTreeList('instance');
 		const selectedRows = instance.getSelectedRowsData();
-		const allRows = instance.getDataSource().items();
-
+		
 		let param;
-
-		if(selectedRows.length === 0){
-			param = allRows.map(row => ({
+		
+		if (selectedRows.length === 0) {
+			// 전체 F
+			param = [{
 				companyCode1: `${companyCode}01`,
 				companyCode2: `${companyCode}02`,
-				serviceName: row.SERVICE_NAME,
-			}));
+			}];
 		} else {
+			// 선택 대상만 T
 			param = selectedRows.map(row => ({
 				companyCode1: `${companyCode}01`,
 				companyCode2: `${companyCode}02`,
 				serviceName: row.SERVICE_NAME,
 			}));
 		}
-
+		
 		return $.ajax({
 			url: "/api/v1/service/update",
 			method: "PUT",
@@ -237,18 +237,9 @@ $(function() {
 			data: JSON.stringify(param)
 		})
 		.then(() => {
-			return getInitialData(companyCode);
+			return getInitialData(companyCode); // 재조회
 		})
 		.then(data => {
-			const gridData = data.gridData || data;
-			
-			const selectedKeys = gridData
-				.filter(item => item.CHECK_BIT === 'T')
-				.map(item => item.SERVICE_NAME);
-				
-			instance.option('dataSource', gridData);
-			instance.option('selectedRowKeys', selectedKeys);
-
 			showDialogCustom("저장되었습니다.");
 		})
 		.catch(() => {
