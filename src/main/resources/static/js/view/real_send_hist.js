@@ -743,7 +743,7 @@ $(function () {
 				}
 			};
 
-			res.data.forEach(row => {
+			res.forEach(row => {
 				const key = `${row.COMPANY_CODE}_${row.SERVER_ID}`;
 				const config = serverConfigMap[key];
 				if (!config) return;

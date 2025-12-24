@@ -93,7 +93,7 @@ public class RealServiceImpl implements RealService {
 	}
 
 	@Override
-	public List<ServiceStatusFailoverDto> selectServerStatusList(ServiceStatusFailoverDto serviceStatusFailoverDto) {
+	public List<?> selectServerStatusList() {
 		return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectServerStatusList();
 	}
 
@@ -103,20 +103,15 @@ public class RealServiceImpl implements RealService {
 		Map<String, Object> result = new HashMap<>();
 
 		// 프로세스 다운(비정상) 카운트 조회
-		int downCount = commonService
-				.getRealMapper(ConstantsUtils.DB_GMARKET)
-				.selectDownCount(dto);
+		int downCount = commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectDownCount(dto);
 
+		// 조회 결과가 있으면 절체 차단
 		if (downCount == 0) {
-			// 성공 케이스
-			commonService
-					.getRealMapper(ConstantsUtils.DB_GMARKET)
-					.updateServerFlag(dto);
+			commonService.getRealMapper(ConstantsUtils.DB_GMARKET).updateServerFlag(dto);
 
 			result.put("success", true);
 			result.put("message", "수동 절체 성공");
 		} else {
-			// 실패 케이스
 			result.put("success", false);
 			result.put("message", "수동 절체 실패");
 		}

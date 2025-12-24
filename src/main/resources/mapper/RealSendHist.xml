@@ -216,12 +216,12 @@
 					SELECT 1
 					FROM T_SERVER_STATUS me
 					JOIN T_SERVER_STATUS other
-					ON me.COMPANY_CODE = other.COMPANY_CODE
-					AND me.SERVER_ID <![CDATA[ <> ]]> other.SERVER_ID
+						ON me.COMPANY_CODE = other.COMPANY_CODE
+						AND me.SERVER_ID <![CDATA[ <> ]]> other.SERVER_ID
 					WHERE me.COMPANY_CODE = #{companyCode}
-					AND me.SERVER_ID  = #{serverId}
-					AND me.SERVER_STAT = 'A'
-					AND other.SERVER_STAT = 'D'
+						AND me.SERVER_ID  = #{serverId}
+						AND me.SERVER_STAT = 'A'
+						AND other.SERVER_STAT = 'D'
 				)
 				THEN 1
 				ELSE 0

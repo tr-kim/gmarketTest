@@ -16,7 +16,7 @@ public interface RealService {
 	
 	public List<?> selectProcStatusList(String view, String tab);
 
-	public List<ServiceStatusFailoverDto> selectServerStatusList(ServiceStatusFailoverDto serviceStatusFailoverDto);
+	public List<?> selectServerStatusList();
 
 	public Map<String, Object> updateServerFlag(ServiceStatusFailoverDto dto);
 	
