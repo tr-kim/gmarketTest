@@ -18,6 +18,6 @@ public interface RealService {
 
 	public List<ServiceStatusFailoverDto> selectServerStatusList(ServiceStatusFailoverDto serviceStatusFailoverDto);
 
-	public void updateServerFlag(ServiceStatusFailoverDto dto);
-
+	public Map<String, Object> updateServerFlag(ServiceStatusFailoverDto dto);
+	
 }

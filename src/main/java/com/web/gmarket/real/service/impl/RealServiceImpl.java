@@ -14,15 +14,12 @@ import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.DBUtils;
 import com.web.gmarket.real.dto.RealDto;
 import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
-import com.web.gmarket.real.mapper.RealMapper;
 import com.web.gmarket.real.service.RealService;
 import com.web.gmarket.stat.dto.StatCodeDto;
 import com.web.gmarket.stat.service.StatCodeService;
 
 @Service
 public class RealServiceImpl implements RealService {
-
-	private final RealMapper realMapper;
 
 	@Autowired
 	private CommonService commonService;
@@ -100,12 +97,30 @@ public class RealServiceImpl implements RealService {
 		return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectServerStatusList();
 	}
 
-	public RealServiceImpl(RealMapper realMapper) {
-        this.realMapper = realMapper;
-    }
-
     @Override
-    public void updateServerFlag(ServiceStatusFailoverDto dto) {
-        realMapper.updateServerFlag(dto);
-    }
+	public Map<String, Object> updateServerFlag(ServiceStatusFailoverDto dto) {
+
+		Map<String, Object> result = new HashMap<>();
+
+		// 프로세스 다운(비정상) 카운트 조회
+		int downCount = commonService
+				.getRealMapper(ConstantsUtils.DB_GMARKET)
+				.selectDownCount(dto);
+
+		if (downCount == 0) {
+			// 성공 케이스
+			commonService
+					.getRealMapper(ConstantsUtils.DB_GMARKET)
+					.updateServerFlag(dto);
+
+			result.put("success", true);
+			result.put("message", "수동 절체 성공");
+		} else {
+			// 실패 케이스
+			result.put("success", false);
+			result.put("message", "수동 절체 실패");
+		}
+
+		return result;
+	}
 }

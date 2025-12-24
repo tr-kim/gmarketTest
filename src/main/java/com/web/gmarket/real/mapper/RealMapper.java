@@ -59,11 +59,17 @@ public interface RealMapper {
 	public List<ServiceStatusFailoverDto> selectServerStatusList();
 
 	/**
+	 * 프로세스 다운 상태 여부 조회
+	 *
+	 * @return
+	 */
+	int selectDownCount(ServiceStatusFailoverDto dto);
+
+	/**
 	 * 수동 절체 FLAG 업데이트
 	 * 
 	 * @return
 	 */
 	public void updateServerFlag(ServiceStatusFailoverDto dto);
-
-
+	
 }

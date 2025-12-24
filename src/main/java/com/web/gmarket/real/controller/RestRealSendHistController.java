@@ -155,12 +155,12 @@ public class RestRealSendHistController {
 	 * 
 	 */
 	@PutMapping("/flagUpdate")
-	public ResponseEntity<?> updateServerFlag(@RequestBody ServiceStatusFailoverDto dto) {
+	public ResponseEntity<Map<String, Object>> updateServerFlag(
+        @RequestBody ServiceStatusFailoverDto dto) {
 
-		realService.updateServerFlag(dto);
+		Map<String, Object> result = realService.updateServerFlag(dto);
 
-		return ResponseEntity.ok(Map.of("message", "서버 플래그 수정 성공"));
+		return ResponseEntity.ok(result);
 	}
-
 
 }

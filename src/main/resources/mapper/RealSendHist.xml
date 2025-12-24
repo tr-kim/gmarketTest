@@ -3,14 +3,12 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.web.gmarket.real.mapper.RealMapper">
-
 	<resultMap id="RealMapperMap" type="com.web.gmarket.real.dto.ServiceStatusFailoverDto">
 		<result property="COMPANY_CODE" column="COMPANY_CODE" />
 		<result property="SERVER_ID" column="SERVER_ID" />
 		<result property="SERVER_STAT" column="SERVER_STAT" />
 		<result property="MANUAL_FLAG" column="MANUAL_FLAG" />
 	</resultMap>
-	
 	<select id="selectRealHistTotalList" resultType="com.web.gmarket.real.dto.RealDto">
 		<choose>
 			<when test = "alarmFlag != null and alarmFlag == 1">
@@ -208,6 +206,28 @@
 		FROM T_SERVER_STATUS
 	</select>
 
+	<select id="selectDownCount" resultType="int">
+		/*
+			RealMapper.selectDownCount 프로세스 다운 상태 조회
+		*/
+		SELECT
+			CASE
+				WHEN EXISTS (
+					SELECT 1
+					FROM T_SERVER_STATUS me
+					JOIN T_SERVER_STATUS other
+					ON me.COMPANY_CODE = other.COMPANY_CODE
+					AND me.SERVER_ID <![CDATA[ <> ]]> other.SERVER_ID
+					WHERE me.COMPANY_CODE = #{companyCode}
+					AND me.SERVER_ID  = #{serverId}
+					AND me.SERVER_STAT = 'A'
+					AND other.SERVER_STAT = 'D'
+				)
+				THEN 1
+				ELSE 0
+			END AS DOWN_CNT
+	</select>
+
 	<update id="updateServerFlag" parameterType="com.web.gmarket.real.dto.ServiceStatusFailoverDto">
 		/*
 			RealMapper.updateServerFlag 수동 절체 FLAG 업데이트
@@ -215,7 +235,6 @@
 		UPDATE T_SERVER_STATUS SET
 			MANUAL_FLAG = #{flag}
 		WHERE COMPANY_CODE = #{companyCode}
-			AND SERVER_ID = #{serverId}
-		
 	</update>
+
 </mapper>

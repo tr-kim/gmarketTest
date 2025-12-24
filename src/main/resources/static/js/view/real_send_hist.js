@@ -1,11 +1,12 @@
 // 타이머
 let PROC_TIMER = null;
 let CHART_TIMER = null;
+let STATUS_TIMER = null;
 
 // 인터벌
 const PROC_ITV_SEC = 10; // 10초(고정)
-const PROC_ITV_MIN = 60;  // 1분
 let CHART_ITV_SEC = 10; // 10초(가변)
+const STATUS_ITV_SEC = 60;  // 1분(고정)
 
 // 실패 횟수
 const MAX_FAIL_COUNT = 3;
@@ -628,144 +629,40 @@ $(function () {
 		}, PROC_ITV_SEC * 1000);
 	}
 	
-	
-	// 인입 시작================================================================================================================
-	// =======================================================================================================================
-	// 차트 인터벌 시작
-	startChartAutoRefresh();
-	
-	// 프로세스 인터벌 시작
-	startProcAutoRefresh();
-	
-	// 서버 상태 목록 조회
-	// 스위치 목록 조회
-	function selectServerSwitchList(){
 
-		return $.ajax({
-			url: "/api/v1/real/serverStatusList",
-			method: "GET"
-		})
-		.then(res => {
-
-			console.log('스위치 조회 :', res);
-
-			const switchMap = {
-				'0_1': '#acutionSwitch1',
-				'0_2': '#acutionSwitch2',
-				'1_1': '#gmarketSwitch1',
-				'1_2': '#gmarketSwitch2',
-				'2_1': '#smailcashSwitch1',
-				'2_2': '#smailcashSwitch2'
-			};
-
-			res.data.forEach(row => {
-				const key = `${row.COMPANY_CODE}_${row.SERVER_ID}`;
-    			const switchSelector = switchMap[key];
-
-				if (!switchSelector) return;
-
-				const instance = $(switchSelector).dxSwitch('instance');
-				if (!instance) return;
-
-				instance.option('value', row.MANUAL_FLAG === 'ON');
-
-			});
-		})
-		.catch(() => {
-			showDialogCustom("error");
-			return { data: [], totalCount: 0 };
-		});
-	}
-
-	// 서버 상태 목록 조회
-	function selectServerStatusList() {
-
-		return $.ajax({
-			url: "/api/v1/real/serverStatusList",
-			method: "GET"
-		})
-		.then(res => {
-
-			console.log('1분마다 되는지 확인용 :', res);
-
-			const serverStatMap = {
-				'0_1': 'acutionStatus1',
-				'0_2': 'acutionStatus2',
-				'1_1': 'gmarketStatus1',
-				'1_2': 'gmarketStatus2',
-				'2_1': 'smailcashStatus1',
-				'2_2': 'smailcashStatus2'
-			};
-
-			res.data.forEach(row => {
-				const key = `${row.COMPANY_CODE}_${row.SERVER_ID}`;
-    			const switchSelector = serverStatMap[key];
-
-				if (!switchSelector) return;
-
-				const status = document.getElementById(switchSelector);
-				if (!status) return;
-				
-				if(row.SERVER_STAT === 'A') {
-					status.textContent = 'active';
-				} else if(row.SERVER_STAT === 'S') {
-					status.textContent = 'standby';
-				} else {
-					status.textContent = 'shutdown';
-				}
-
-			});
-
-		})
-		.catch(() => {
-			showDialogCustom("error");
-			return { data: [], totalCount: 0 };
-		});		
-	}
-	
-	function startStatusAutoRefresh() {
-		if (PROC_TIMER) clearInterval(PROC_TIMER);
-
-		selectServerStatusList();// 즉시 1회 실행
-
-		PROC_TIMER = setInterval(() => {
-			selectServerStatusList();
-		}, PROC_ITV_MIN * 1000); // 1분마다 실행
-	}
-
-	// 초기 스위치 목록 조회
-	selectServerSwitchList();
-	// 서버 상태 목록 조회 인터벌 시작
-	startStatusAutoRefresh();
-
-
+	// 서버 상태 관리============================================================================================================
 	// 1번 수동 절체=============================================================================================================
 	// =======================================================================================================================
 	// 옥션
 	const acutionSwitch1 = $('#acutionSwitch1').dxSwitch({
-		value: false,
 		onValueChanged(data) {
-			acutionSwitch2.option('value', data.value);
-			console.log(data);
-			updateServerFlag( 0, 1);
+			// 최초 인입 시 무시, 실제 클릭 시 동작
+			if (!data.event) return;
+
+			console.log('옥션1번 스위치 변경 :', data);
+			updateServerFlag( 0, 1, data);
 		},
 	}).dxSwitch('instance');
 	
 	// G마켓
 	const gmarketSwitch1 = $('#gmarketSwitch1').dxSwitch({
-		value: false,
 		onValueChanged(data) {
-			gmarketSwitch2.option('value', data.value);
-			updateServerFlag( 1, 1);
+			// 최초 인입 시 무시, 실제 클릭 시 동작
+			if (!data.event) return;
+
+			console.log('G마켓1번 스위치 변경 :', data);
+			updateServerFlag( 1, 1, data);
 		},
 	}).dxSwitch('instance');
 	
 	// 스마일캐시
 	const smailcashSwitch1 = $('#smailcashSwitch1').dxSwitch({
-		value: false,
 		onValueChanged(data) {
-			smailcashSwitch2.option('value', data.value);
-			updateServerFlag( 2, 1);
+			// 최초 인입 시 무시, 실제 클릭 시 동작
+			if (!data.event) return;
+
+			console.log('스마일캐시1번 스위치 변경 :', data);
+			updateServerFlag( 2, 1, data);
 		},
 	}).dxSwitch('instance');	
 	
@@ -773,34 +670,110 @@ $(function () {
 	// =======================================================================================================================
 	// 옥션
 	const acutionSwitch2 = $('#acutionSwitch2').dxSwitch({
-		value: false,
 		onValueChanged(data) {
-			acutionSwitch1.option('value', data.value);
-			updateServerFlag( 0, 2);
+			// 최초 인입 시 무시, 실제 클릭 시 동작
+			if (!data.event) return;
+
+			console.log('옥션2번 스위치 변경 :', data);
+			updateServerFlag( 0, 2, data);
 		},
 	}).dxSwitch('instance');
 	
 	// G마켓
 	const gmarketSwitch2 = $('#gmarketSwitch2').dxSwitch({
-		value: false,
 		onValueChanged(data) {
-			gmarketSwitch1.option('value', data.value);
-			updateServerFlag( 1, 2);
+			// 최초 인입 시 무시, 실제 클릭 시 동작
+			if (!data.event) return;
+
+			console.log('G마켓2번 스위치 변경 :', data);
+			updateServerFlag( 1, 2, data);
 		},
 	}).dxSwitch('instance');
 	
 	// 스마일캐시
 	const smailcashSwitch2 = $('#smailcashSwitch2').dxSwitch({
-		value: false,
 		onValueChanged(data) {
-			smailcashSwitch1.option('value', data.value);
-			updateServerFlag( 2, 2);
+			// 최초 인입 시 무시, 실제 클릭 시 동작
+			if (!data.event) return;
+
+			console.log('스마일캐시2번 스위치 변경 :', data);
+			updateServerFlag( 2, 2, data);
 		},
 	}).dxSwitch('instance');
 
-	//수동 절체 FLAG 업데이트
-	function updateServerFlag(companyCode, serverId) {
+	// 서버 상태 데이터 조회
+	function fetchStatusData() {
+		return $.ajax({
+			url: "/api/v1/real/serverStatusList",
+			method: "GET"
+		})
+		.then(res => {
+			// 서버 상태 텍스트 매핑
+			const serverStatText = {
+				'A': 'active',
+				'S': 'standby',
+				'D': 'shutdown'
+			};
 
+			// 상태 / 스위치 매핑
+			const serverConfigMap = {
+				'0_1': {
+					statusId: 'acutionStatus1',
+					switchId: '#acutionSwitch1'
+				},
+				'0_2': {
+					statusId: 'acutionStatus2',
+					switchId: '#acutionSwitch2'
+				},
+				'1_1': {
+					statusId: 'gmarketStatus1',
+					switchId: '#gmarketSwitch1'
+				},
+				'1_2': {
+					statusId: 'gmarketStatus2',
+					switchId: '#gmarketSwitch2'
+				},
+				'2_1': {
+					statusId: 'smailcashStatus1',
+					switchId: '#smailcashSwitch1'
+				},
+				'2_2': {
+					statusId: 'smailcashStatus2',
+					switchId: '#smailcashSwitch2'
+				}
+			};
+
+			res.data.forEach(row => {
+				const key = `${row.COMPANY_CODE}_${row.SERVER_ID}`;
+				const config = serverConfigMap[key];
+				if (!config) return;
+
+				// 서버 상태 텍스트 바인딩
+				if (config.statusId) {
+					const statusEl = document.getElementById(config.statusId);
+					if (statusEl) {
+						statusEl.textContent = serverStatText[row.SERVER_STAT] || 'shutdown';
+					}
+				}
+
+				// 수동 절체 스위치 바인딩
+				if (config.switchId) {
+					const instance = $(config.switchId).dxSwitch('instance');
+					if (instance) {
+						instance.option('value', row.MANUAL_FLAG === 'ON');
+					}
+				}
+			});
+		})
+		.catch(() => {
+			//showDialogCustom("error");
+			showDialogCustom("서버 상태 조회 실패");
+			return { data: [] };
+		});
+	}
+
+	//수동 절체 FLAG 업데이트
+	function updateServerFlag(companyCode, serverId, data) {
 		const switchMap = {
 			'0_1': '#acutionSwitch1',
 			'0_2': '#acutionSwitch2',
@@ -818,18 +791,22 @@ $(function () {
 			return;
 		}
 
+		const pairMap = {
+			'0_1': () => acutionSwitch2.option('value', data.value),
+			'0_2': () => acutionSwitch1.option('value', data.value),
+			'1_1': () => gmarketSwitch2.option('value', data.value),
+			'1_2': () => gmarketSwitch1.option('value', data.value),
+			'2_1': () => smailcashSwitch2.option('value', data.value),
+			'2_2': () => smailcashSwitch1.option('value', data.value),
+		};
+		pairMap[key]?.();
+
 		const instance = $(switchName).dxSwitch('instance');
 		if (!instance) return;
 
-		const value = instance.option('value');
+		const beforeValue = instance.option('value');
 
-		let flag;
-
-		if( value === true ) {
-			flag = 'ON';
-		} else {
-			flag = 'OFF';
-		}
+    	const flag = beforeValue ? 'ON' : 'OFF';
 
 		const param = {
 			companyCode: companyCode,
@@ -843,16 +820,43 @@ $(function () {
 			contentType: "application/json",
 			data: JSON.stringify(param)
 		})
-		.then(() => {
-			return selectServerSwitchList();
+		.then(response => {
+			// console.log(response);
+
+			if (!response.success) {
+				showDialogCustom(response.message);
+				//return;
+			}
+
+			return fetchStatusData(); // 재조회
 		})
 		.catch(() => {
 			showDialogCustom("error");
 			return { data: [], totalCount: 0 };
-		});
-
-
+		})
 	}
 	
+	// 서버 상태 타이머 재시작
+	function startStatusAutoRefresh() {
+		if (STATUS_TIMER) clearInterval(STATUS_TIMER);
+
+		fetchStatusData();// 즉시 1회 실행
+		STATUS_TIMER = setInterval(() => {
+			fetchStatusData();
+		}, STATUS_ITV_SEC * 1000); // 1분마다 실행
+	}
+
+	
+	// 인입 시작================================================================================================================
+	// =======================================================================================================================
+	// 차트 인터벌 시작
+	startChartAutoRefresh();
+	
+	// 프로세스 인터벌 시작
+	startProcAutoRefresh();
+	
+	// 서버 상태 인터벌 시작
+	startStatusAutoRefresh();
+
 });
 
