@@ -25,20 +25,20 @@
 			COMPANY_CODE,
 			SVC_NAME
 		ORDER BY
-			SVC_NAME;
+			SVC_NAME
 	</select>
 	
 	<update id="updateFalseCheckBit" parameterType="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
 		UPDATE T_PROC_STATUS_NEW SET
 			CHECK_BIT = 'F'
-		WHERE COMPANY_CODE = #{companyCode};
+		WHERE COMPANY_CODE = #{companyCode}
 	</update>
 	
 	<update id="updateTrueCheckBit" parameterType="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
 		UPDATE T_PROC_STATUS_NEW SET
 			CHECK_BIT = 'T'
 		WHERE COMPANY_CODE = #{companyCode}
-			AND SVC_NAME = #{svcName};
+			AND SVC_NAME = #{svcName}
 	</update>
 	
 </mapper>
