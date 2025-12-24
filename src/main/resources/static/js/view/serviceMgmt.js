@@ -7,7 +7,7 @@ $(function() {
 			
 			const initialSelectedKeys = gridData
 				.filter(item => item.CHECK_BIT === 'T')
-				.map(item => item.SERVICE_NAME);
+				.map(item => item.SVC_NAME);
 				
 			return {
 				gridData: gridData,
@@ -17,13 +17,13 @@ $(function() {
 	}
 	
 	// 옥션
-	getInitialData('AU').then(({ gridData, selectedKeys }) => {
+	getInitialData(0).then(({ gridData, selectedKeys }) => {
 		$('#serviceListAuction').dxTreeList({
 			dataSource: new DevExpress.data.ArrayStore({
-				key: "SERVICE_NAME",
+				key: "SVC_NAME",
 				data: gridData 
 			}),
-			keyExpr: 'SERVICE_NAME',			
+			keyExpr: 'SVC_NAME',			
 			selection: {
 				mode: 'multiple'
 			},
@@ -56,14 +56,14 @@ $(function() {
 							type: 'default',
 							text: '저장',
 							onClick: function(e) {
-								saveService('#serviceListAuction', 'AU');
+								saveService('#serviceListAuction', 0 );
 							}
 						}
 					}
 				]
 			},
 			columns: [
-				{ dataField: 'SERVICE_NAME', caption: '전체 선택'}
+				{ dataField: 'SVC_NAME', caption: '전체 선택'}
 			],
 			onRowClick: function(e) {
 				if (e.rowType === 'data') {
@@ -81,13 +81,13 @@ $(function() {
 	});
 	
 	// G마켓
-	getInitialData('GM').then(({ gridData, selectedKeys }) => {
+	getInitialData(1).then(({ gridData, selectedKeys }) => {
 		$('#serviceListGmarket').dxTreeList({
 			dataSource: new DevExpress.data.ArrayStore({
-				key: "SERVICE_NAME",
+				key: "SVC_NAME",
 				data: gridData 
 			}),
-			keyExpr: 'SERVICE_NAME',			
+			keyExpr: 'SVC_NAME',			
 			selection: {
 				mode: 'multiple'
 			},
@@ -120,14 +120,14 @@ $(function() {
 							type: 'default',
 							text: '저장',
 							onClick() {
-								saveService('#serviceListGmarket', 'GM');
+								saveService('#serviceListGmarket', 1 );
 							}
 						}
 					}
 				]
 			},
 			columns: [
-				{ dataField: 'SERVICE_NAME', caption: '전체 선택'}
+				{ dataField: 'SVC_NAME', caption: '전체 선택'}
 			],
 			onRowClick: function(e) {
 				if (e.rowType === 'data') {
@@ -145,13 +145,13 @@ $(function() {
 	});
 	
 	// 스마일캐시
-	getInitialData('SC').then(({ gridData, selectedKeys }) => {
+	getInitialData(2).then(({ gridData, selectedKeys }) => {
 		$('#serviceListSmilecash').dxTreeList({
 			dataSource: new DevExpress.data.ArrayStore({
-				key: "SERVICE_NAME",
+				key: "SVC_NAME",
 				data: gridData 
 			}),
-			keyExpr: 'SERVICE_NAME',			
+			keyExpr: 'SVC_NAME',			
 			selection: {
 				mode: 'multiple'
 			},
@@ -184,14 +184,14 @@ $(function() {
 							type: 'default',
 							text: '저장',
 							onClick() {
-								saveService('#serviceListSmilecash', 'SC');
+								saveService('#serviceListSmilecash', 2 );
 							}
 						}
 					}
 				]
 			},
 			columns: [
-				{ dataField: 'SERVICE_NAME', caption: '전체 선택'}
+				{ dataField: 'SVC_NAME', caption: '전체 선택'}
 			],
 			onRowClick: function(e) {
 				if (e.rowType === 'data') {
@@ -218,15 +218,13 @@ $(function() {
 		if (selectedRows.length === 0) {
 			// 전체 F
 			param = [{
-				companyCode1: `${companyCode}01`,
-				companyCode2: `${companyCode}02`,
+				companyCode: companyCode
 			}];
 		} else {
 			// 선택 대상만 T
 			param = selectedRows.map(row => ({
-				companyCode1: `${companyCode}01`,
-				companyCode2: `${companyCode}02`,
-				serviceName: row.SERVICE_NAME,
+				companyCode: companyCode,
+				svcName: row.SVC_NAME,
 			}));
 		}
 		
@@ -251,8 +249,7 @@ $(function() {
 	// 서비스 조회 함수
 	function fetchGridList(companyCode) {
 		const param = {
-			companyCode1: `${companyCode}01`,
-			companyCode2: `${companyCode}02`,
+			companyCode: companyCode
 		};
 		
 		return $.ajax({

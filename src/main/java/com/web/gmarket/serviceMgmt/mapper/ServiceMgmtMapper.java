@@ -13,8 +13,7 @@ public interface ServiceMgmtMapper {
 	List<ServiceMgmtDto> selectServiceList(ServiceMgmtDto serviceMgmtDto);
 	
 	void updateFalseCheckBit(
-		@Param("companyCode1") String companyCode1,
-		@Param("companyCode2") String companyCode2
+		@Param("companyCode") String companyCode
 	);
 	
 	void updateTrueCheckBit(ServiceMgmtDto serviceMgmtDto);

@@ -28,8 +28,7 @@ public class ServiceMgmtServiceImpl implements ServiceMgmtService {
 	public void updateServiceMgmt(List<ServiceMgmtDto> list) {
 		// 전체 false
 		commonService.getServiceMgmtMapper().updateFalseCheckBit(
-			list.get(0).getCompanyCode1(),
-			list.get(0).getCompanyCode2()
+			list.get(0).getCompanyCode()
 		);
 		
 		// 선택 대상만 true

@@ -5,35 +5,40 @@
 <mapper namespace="com.web.gmarket.serviceMgmt.mapper.ServiceMgmtMapper">
 
 	<resultMap id="ServiceMgmtResultMap" type="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
-		<result property="SERVER_NAME" column="SERVER_NAME" />
-		<result property="SERVICE_NAME" column="SERVICE_NAME" />
+		<result property="COMPANY_CODE" column="COMPANY_CODE" />
+		<result property="SVC_NAME" column="SVC_NAME" />
 		<result property="CHECK_BIT" column="CHECK_BIT" />
 	</resultMap>
 	
 	<select id="selectServiceList" resultMap="ServiceMgmtResultMap" parameterType="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
 		SELECT
-			SERVICE_NAME
-			, CHECK_BIT
-		FROM T_SERVICE_MONITOR
-		WHERE SERVER_ID IN (#{companyCode1}, #{companyCode2})
+			COMPANY_CODE,
+			SVC_NAME,
+			CASE
+				WHEN MIN(CASE WHEN CHECK_BIT = 'T' THEN 1 ELSE 0 END) = 1
+					THEN 'T'
+				ELSE 'F'
+			END AS CHECK_BIT
+		FROM T_PROC_STATUS_NEW
+		WHERE COMPANY_CODE = #{companyCode}
 		GROUP BY
-			SERVICE_NAME
-			, CHECK_BIT
+			COMPANY_CODE,
+			SVC_NAME
 		ORDER BY
-			SERVICE_NAME
+			SVC_NAME;
 	</select>
 	
 	<update id="updateFalseCheckBit" parameterType="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
-		UPDATE T_SERVICE_MONITOR SET
+		UPDATE T_PROC_STATUS_NEW SET
 			CHECK_BIT = 'F'
-		WHERE SERVER_ID IN (#{companyCode1}, #{companyCode2});
+		WHERE COMPANY_CODE = #{companyCode};
 	</update>
 	
 	<update id="updateTrueCheckBit" parameterType="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
-		UPDATE T_SERVICE_MONITOR SET
-		CHECK_BIT = 'T'
-		WHERE SERVER_ID IN (#{companyCode1}, #{companyCode2})
-			AND SERVICE_NAME = #{serviceName};
+		UPDATE T_PROC_STATUS_NEW SET
+			CHECK_BIT = 'T'
+		WHERE COMPANY_CODE = #{companyCode}
+			AND SVC_NAME = #{svcName};
 	</update>
 	
 </mapper>

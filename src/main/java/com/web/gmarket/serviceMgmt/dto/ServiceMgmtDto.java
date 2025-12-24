@@ -12,17 +12,15 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class ServiceMgmtDto {
 	//조회 조건
-	private String companyCode1;
-	private String companyCode2;
-	private String serviceName;
-	private String checkBit;
+	private String companyCode;
+	private String svcName;
 	
 	//조회 옵션
-	@JsonProperty("SERVER_NAME")
-	private String SERVER_NAME;
+	@JsonProperty("COMPANY_CODE")
+	private String COMPANY_CODE;
 	
-	@JsonProperty("SERVICE_NAME")
-	private String SERVICE_NAME;
+	@JsonProperty("SVC_NAME")
+	private String SVC_NAME;
 	
 	@JsonProperty("CHECK_BIT")
 	private String CHECK_BIT;
