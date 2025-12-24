@@ -99,21 +99,30 @@ public class RealServiceImpl implements RealService {
 
     @Override
 	public Map<String, Object> updateServerFlag(ServiceStatusFailoverDto dto) {
-
+		
+    	// A,S / S,A -> 정상
+		// A,D / D,A -> 수동 절체 대상
+		// S,D / D,S -> 고려 대상 아님
+		
+		// 1번(A), 2번(D) 일때
+		// 1번에서 버튼을 누르면 2번이 D인지 체크. D일때 절체 차단.
+		// 2번에서 버튼을 누르면 절체 되어야 함.
+		
+		// 1번(D), 2번(A) 일때
+		// 2번에서 버튼을 누르면 1번이 D인지 체크. D일때 절체 차단.
+		// 1번에서 버튼을 누르면 절체 되어야 함.
+    	
 		Map<String, Object> result = new HashMap<>();
-
+		
 		// 프로세스 다운(비정상) 카운트 조회
 		int downCount = commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectDownCount(dto);
 
 		// 조회 결과가 있으면 절체 차단
 		if (downCount == 0) {
 			commonService.getRealMapper(ConstantsUtils.DB_GMARKET).updateServerFlag(dto);
-
 			result.put("success", true);
-			result.put("message", "수동 절체 성공");
 		} else {
 			result.put("success", false);
-			result.put("message", "수동 절체 실패");
 		}
 
 		return result;

@@ -824,7 +824,7 @@ $(function () {
 			// console.log(response);
 
 			if (!response.success) {
-				showDialogCustom(response.message);
+				showDialogCustom("상대 서버가 Shutdown 상태이므로<br>수동 절체를 수행할 수 없습니다.");
 				//return;
 			}
 
