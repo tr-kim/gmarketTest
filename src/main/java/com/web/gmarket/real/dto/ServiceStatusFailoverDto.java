@@ -12,10 +12,10 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class ServiceStatusFailoverDto {
 
-	private String flag;
 	private String companyCode;
 	private String serverId;
-
+	private String flag;
+	
 	@JsonProperty("COMPANY_CODE")
 	private String COMPANY_CODE;
 

@@ -89,7 +89,10 @@ public class RestRealSendHistController {
 	 */
 	@ResponseBody
 	@PostMapping("/tableList")
-	public ResponseEntity<?> tableList(Authentication authentication,  @RequestParam(name="companyCode", defaultValue = "0") int companyCode, @RequestParam(name="codeList") List<Integer> codeList) {
+	public ResponseEntity<?> tableList(
+			Authentication authentication,
+			@RequestParam(name="companyCode", defaultValue = "0") int companyCode,
+			@RequestParam(name="codeList") List<Integer> codeList) {
 		
 		try {
 			
@@ -105,7 +108,8 @@ public class RestRealSendHistController {
 	
 	/**
 	 * 프로세스 상태
-	 * 
+	 * @param view
+	 * @param tab
 	 * @return
 	 */
 	@ResponseBody
@@ -126,37 +130,35 @@ public class RestRealSendHistController {
 		}
 		
 	}
-
+	
 	/**
-	 * 서버 상태 목록 조회(요약)
+	 * 서버 상태 목록 조회
 	 * 
-	 * 
+	 * @return
 	 */
 	@GetMapping("/serverStatusList")
-	public ResponseEntity<?> selectServerStatusList() {
+	public ResponseEntity<?> serverStatusList(
+			Authentication authentication) {
 		try {
-			List<ServiceStatusFailoverDto> result = realService.selectServerStatusList(null);
-
-    		return ResponseEntity.ok(Map.of("data", result));
 			
+			return new ResponseEntity<>(realService.selectServerStatusList(), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-	        Map<String, Object> error = new HashMap<>();
-	        error.put(ConstantsUtils.MESSAGE, "서버 상태 목록 조회 실패");
-	        error.put(ConstantsUtils.ERROR, e.getMessage());
-	        
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+			log.error(e.getLocalizedMessage());
+			
+			return new ResponseEntity<>(new ServiceStatusFailoverDto(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}	
 	}
-
+	
 	/**
 	 * 수동 절체 FLAG 업데이트
 	 * 
-	 * 
+	 * @return
 	 */
 	@PutMapping("/flagUpdate")
-	public ResponseEntity<Map<String, Object>> updateServerFlag(
-        @RequestBody ServiceStatusFailoverDto dto) {
+	public ResponseEntity<Map<String, Object>> flagUpdate(
+			Authentication authentication,
+			@RequestBody ServiceStatusFailoverDto dto) {
 
 		Map<String, Object> result = realService.updateServerFlag(dto);
 

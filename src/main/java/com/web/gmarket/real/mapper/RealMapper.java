@@ -59,7 +59,7 @@ public interface RealMapper {
 	public List<ServiceStatusFailoverDto> selectServerStatusList();
 
 	/**
-	 * 프로세스 다운 상태 여부 조회
+	 * 프로세스 다운 상태 조회
 	 *
 	 * @return
 	 */

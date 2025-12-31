@@ -56,7 +56,7 @@ $(function() {
 							type: 'default',
 							text: '저장',
 							onClick: function(e) {
-								saveService('#serviceListAuction', 0 );
+								saveService('#serviceListAuction', 0);
 							}
 						}
 					}
@@ -120,7 +120,7 @@ $(function() {
 							type: 'default',
 							text: '저장',
 							onClick() {
-								saveService('#serviceListGmarket', 1 );
+								saveService('#serviceListGmarket', 1);
 							}
 						}
 					}
@@ -184,7 +184,7 @@ $(function() {
 							type: 'default',
 							text: '저장',
 							onClick() {
-								saveService('#serviceListSmilecash', 2 );
+								saveService('#serviceListSmilecash', 2);
 							}
 						}
 					}
