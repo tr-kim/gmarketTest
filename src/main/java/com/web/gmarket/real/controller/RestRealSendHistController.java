@@ -117,7 +117,7 @@ public class RestRealSendHistController {
 	public ResponseEntity<?> procStatusList(
 			Authentication authentication,
 			@RequestParam(name="view", defaultValue = "summary") String view,
-			@RequestParam(name="tab", defaultValue = "active") String tab) {
+			@RequestParam(name="tab", defaultValue = "1") int tab) {
 		
 		try {
 			

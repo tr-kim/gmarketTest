@@ -25,10 +25,10 @@ const companyTaskMap = { 0: auctionTasks, 1: gmarketTasks, 2: smilecashTasks };
 // 뷰 전환: 요약(summary), 상세(detail)
 let CURRENT_VIEW = 'summary';
 
-// 탭 전환: 운영(active), DR(standby)
+// 탭 전환: 1번서버(1), 2번서버(2)
 let CURRENT_TAB = {
-	summary: 'active',
-	detail: 'active'
+	summary: '1',
+	detail: '1'
 };
 
 $(function () {
@@ -82,7 +82,7 @@ $(function () {
 			summeryBtns.forEach(b => b.querySelector("button").classList.remove('active'));
 			btn.querySelector("button").classList.add('active');
 			
-			CURRENT_TAB.summary = isDr ? 'standby' : 'active';
+			CURRENT_TAB.summary = isDr ? '2' : '1';
 			
 			// 전환 시 재조회
 			startProcAutoRefresh();
@@ -105,7 +105,7 @@ $(function () {
 			detailBtns.forEach(b => b.querySelector("button").classList.remove('active'));
 			btn.querySelector("button").classList.add('active');
 			
-			CURRENT_TAB.detail = isDr ? 'standby' : 'active';
+			CURRENT_TAB.detail = isDr ? '2' : '1';
 			
 			// 전환 시 재조회
 			startProcAutoRefresh();
@@ -498,79 +498,83 @@ $(function () {
 		    obj[serviceName].push(filteredItem);
   		});
 		
-		// 운영: active, DR: standby 추후 변경 예정
-		if(tab == 'active') {
-			const active = document.getElementById("detail-active");
-			
-			active.querySelectorAll('tr.pro > td').forEach(item => {
-				const dataId = item.getAttribute('data-id');
-				const result = obj[dataId];
-				
-				// dataId 확인 및 값 확인
-				if (!dataId || !result) return;
-				
-				const spans = item.querySelectorAll('span');
-				
-				// 헬퍼 함수: 색상 초기화
-				spans.forEach(el => el.classList.remove('red', 'green', 'gray'));
-				
-				// 헬퍼 함수: 상태별 클래스 반환
-				const getClass = (update, status) => update == 0 ? 'gray' : status == 1 ? 'green' : 'red';
-				
-				// 추후 변경 예정
-				// STATP, MEMMON
-				if (dataId.includes('SAP') || dataId.includes('MON')) {
-					spans[0].classList.add(getClass(result[0].procUpdate, result[0].procSts));
-				} else {
-					result.forEach((r, i) => {
-					  spans[i * 2].classList.add(getClass(r.dbUpdate, r.dbSts));
-					  spans[i * 2 + 1].classList.add(getClass(r.procUpdate, r.procSts));
-					});
-				}
-			});
-		} else if(tab == 'standby') {
-			
+		let focus = "";
+		
+		// 1번서버(1), 2번서버(2)
+		if(tab == '1') {
+			focus = document.getElementById("detail-active");
+		} else if(tab == '2') {
+			focus = document.getElementById("detail-standby");
 		}
+		
+		focus.querySelectorAll('tr.pro > td').forEach(item => {
+			const dataId = item.getAttribute('data-id');
+			const result = obj[dataId];
+			
+			// dataId 확인 및 값 확인
+			if (!dataId || !result) return;
+			
+			const spans = item.querySelectorAll('span');
+			
+			// 헬퍼 함수: 색상 초기화
+			spans.forEach(el => el.classList.remove('red', 'green', 'gray'));
+			
+			// 헬퍼 함수: 상태별 클래스 반환
+			const getClass = (update, status) => update == 0 ? 'gray' : status == 1 ? 'green' : 'red';
+			
+			// 추후 변경 예정
+			// STATP, MEMMON
+			if (dataId.includes('SAP') || dataId.includes('MON')) {
+				spans[0].classList.add(getClass(result[0].procUpdate, result[0].procSts));
+			} else {
+				result.forEach((r, i) => {
+				  spans[i * 2].classList.add(getClass(r.dbUpdate, r.dbSts));
+				  spans[i * 2 + 1].classList.add(getClass(r.procUpdate, r.procSts));
+				});
+			}
+		});
 	}
 
 	// 요약뷰 렌더링
 	function renderProcStatusSummary(datas, tab) {
-		// 운영: active, DR: standby 추후 변경 예정
-		if(tab == 'active') {
-			const active = document.getElementById("summery-active");
-			const tds = active.querySelectorAll('tr > td');
-			const typeMap = { DBP: 'db', IFP: 'ifp', SAP: 'sap', MON: 'mon' };
-			const statusMap = { NL: 'NormalCount', DW: 'DownCount', UNK: 'UnknownCount' };
-			
-			// dbNormalCount, dbDownCount, dbUnknownCount		DBP
-			// ifpNormalCount, ifpDownCount, ifpUnknownCount	IFP
-			// sapNormalCount, sapDownCount, sapUnknownCount	STATP
-			// monNormalCount, monDownCount, monUnknownCount	MEMMON
-
-			// 데이터 구조 변경
-			// [{}, {}, {}] => AU: {}, GM: {}, SC: {}
-			const dataMap = {};
-			datas.forEach(d => {
-			    const prefix = d.companyCode === auctionCode ? 'AU' : d.companyCode === gmarketCode ? 'GM' : 'SC';
-			    dataMap[prefix] = d;
-			});
-			
-			tds.forEach(td => {
-			    const dataId = td.getAttribute('data-id');
-			    if (!dataId) return;
-
-			    const [prefix, type, status] = dataId.split('_');
-			    const data = dataMap[prefix];
-			    if (!data) return;
-				
-			    const typeKey = typeMap[type];
-			    const statusKey = statusMap[status];
-			    if (typeKey && statusKey) td.textContent = data[typeKey + statusKey];
-			});
-			
-		} else if(tab == 'standby') {
-			
+		let focus = "";
+		
+		// 1번서버(1), 2번서버(2)
+		if(tab == '1') {
+			focus = document.getElementById("summery-active");
+		} else if(tab == '2') {
+			focus = document.getElementById("summery-standby");
 		}
+		
+		const tds = focus.querySelectorAll('tr > td');
+		const typeMap = { DBP: 'db', IFP: 'ifp', SAP: 'sap', MON: 'mon' };
+		const statusMap = { NL: 'NormalCount', DW: 'DownCount', UNK: 'UnknownCount' };
+		
+		// dbNormalCount, dbDownCount, dbUnknownCount		DBP
+		// ifpNormalCount, ifpDownCount, ifpUnknownCount	IFP
+		// sapNormalCount, sapDownCount, sapUnknownCount	STATP
+		// monNormalCount, monDownCount, monUnknownCount	MEMMON
+		
+		// 데이터 구조 변경
+		// [{}, {}, {}] => AU: {}, GM: {}, SC: {}
+		const dataMap = {};
+		datas.forEach(d => {
+		    const prefix = d.companyCode === auctionCode ? 'AU' : d.companyCode === gmarketCode ? 'GM' : 'SC';
+		    dataMap[prefix] = d;
+		});
+		
+		tds.forEach(td => {
+		    const dataId = td.getAttribute('data-id');
+		    if (!dataId) return;
+
+		    const [prefix, type, status] = dataId.split('_');
+		    const data = dataMap[prefix];
+		    if (!data) return;
+			
+		    const typeKey = typeMap[type];
+		    const statusKey = statusMap[status];
+		    if (typeKey && statusKey) td.textContent = data[typeKey + statusKey];
+		});
 	}
 	
 	// 프로세스 데이터 조회

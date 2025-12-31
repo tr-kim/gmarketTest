@@ -14,7 +14,7 @@ public interface RealService {
 	
 	public List<RealDto> selectRealHistTableList(int companyCode, List<Integer> codeList);
 	
-	public List<?> selectProcStatusList(String view, String tab);
+	public List<?> selectProcStatusList(String view, int tab);
 
 	public List<?> selectServerStatusList();
 

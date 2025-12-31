@@ -42,14 +42,14 @@ public interface RealMapper {
 	 * 
 	 * @return
 	 */
-	public List<ServiceStatusSummaryDto> selectRealHistServiceStatusSummaryList();
+	public List<ServiceStatusSummaryDto> selectRealHistServiceStatusSummaryList(@Param(value = "tab") int tab);
 	
 	/**
 	 * 서비스 / 프로세스 상세
 	 * 
 	 * @return
 	 */
-	public List<ServiceStatusDetailDto> selectRealHistServiceStatusDetailList();
+	public List<ServiceStatusDetailDto> selectRealHistServiceStatusDetailList(@Param(value = "tab") int tab);
 
 	/**
 	 * 서버 상태 목록 조회

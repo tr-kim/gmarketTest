@@ -69,24 +69,24 @@ public class RealServiceImpl implements RealService {
 	}
 	
 	@Override
-	public List<?> selectProcStatusList(String view, String tab) {
+	public List<?> selectProcStatusList(String view, int tab) {
 		
 		// TODO tab에 따라 데이터 변경
 		if(ConstantsUtils.SUMMARY.equals(view)) {
 //			
-//			List<ServiceStatusSummaryDto> auctionList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusSummaryList();
-//			List<ServiceStatusSummaryDto> gmarketList = commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusSummaryList();
-//			List<ServiceStatusSummaryDto> smailcashList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusSummaryList();	// 확인 필요
+//			List<ServiceStatusSummaryDto> auctionList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusSummaryList(tab);
+//			List<ServiceStatusSummaryDto> gmarketList = commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusSummaryList(tab);
+//			List<ServiceStatusSummaryDto> smailcashList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusSummaryList(tab);	// 확인 필요
 			
-			return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusSummaryList();
+			return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusSummaryList(tab);
 			
 		} else if(ConstantsUtils.DETAIL.equals(view)) {
 			
-//			List<ServiceStatusDetailDto> auctionList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusDetailList();
-//			List<ServiceStatusDetailDto> gmarketList = commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusDetailList();
-//			List<ServiceStatusDetailDto> smailcashList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusDetailList();	// 확인 필요
+//			List<ServiceStatusDetailDto> auctionList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusDetailList(tab);
+//			List<ServiceStatusDetailDto> gmarketList = commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusDetailList(tab);
+//			List<ServiceStatusDetailDto> smailcashList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusDetailList(tab);	// 확인 필요
 			
-			return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusDetailList();
+			return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusDetailList(tab);
 		}
 		
 		return new ArrayList<>();
