@@ -16,11 +16,11 @@ let CHART_FAIL_COUNT = 0;
 // 회사별 코드
 const auctionCode = 0;
 const gmarketCode = 1;
-const smilecashCode = 2;
+//const smilecashCode = 2;
 
 // 회사별 서비스 목록
-const auctionTasks = [], gmarketTasks = [], smilecashTasks = [];
-const companyTaskMap = { 0: auctionTasks, 1: gmarketTasks, 2: smilecashTasks };
+const auctionTasks = [], gmarketTasks = []; //smilecashTasks = []
+const companyTaskMap = { 0: auctionTasks, 1: gmarketTasks }; //2: smilecashTasks
 
 // 뷰 전환: 요약(summary), 상세(detail)
 let CURRENT_VIEW = 'summary';
@@ -170,7 +170,7 @@ $(function () {
 	
 	makeChart('gmarketChart');
 	makeChart('auctionChart');
-	makeChart('smilecashChart');
+	//makeChart('smilecashChart');
 	
 	// 차트 갱신 주기
 	const chartTimes = ['10초', '20초', '30초'];
@@ -203,13 +203,13 @@ $(function () {
 	
 	makeDetailButton('#gmarketDetail', 'gmarket', 'detailGmarket');
 	makeDetailButton('#auctionDetail', 'auction', 'detailAuction');
-	makeDetailButton('#smilecashDetail', 'smilecash', 'detailSmilecash');
+	//makeDetailButton('#smilecashDetail', 'smilecash', 'detailSmilecash');
 	
 	// 차트 관리 버튼
 	const taskMap = {
 		manageListGmarket: gmarketTasks,
 		manageListAuction: auctionTasks,
-		manageListSmilecash: smilecashTasks,
+		//manageListSmilecash: smilecashTasks,
 	};
 	
 	function makeManageButton(id, name) {
@@ -231,7 +231,7 @@ $(function () {
 	
 	makeManageButton('#gmarketManage', 'manageListGmarket');
 	makeManageButton('#auctionManage', 'manageListAuction');
-	makeManageButton('#smilecashManage', 'manageListSmilecash');
+	//makeManageButton('#smilecashManage', 'manageListSmilecash');
 	
 	
 	// 함수 선언================================================================================================================
@@ -324,7 +324,7 @@ $(function () {
 	function fetchChartData() {
 		updateChartData(auctionCode, "auctionChart", auctionTasks, 'manageListAuction');
 		updateChartData(gmarketCode, "gmarketChart", gmarketTasks, 'manageListGmarket');
-		updateChartData(smilecashCode, "smilecashChart", smilecashTasks, 'manageListSmilecash');
+		//updateChartData(smilecashCode, "smilecashChart", smilecashTasks, 'manageListSmilecash');
 	}
 	
 	// 차트 타이머 재시작
@@ -417,7 +417,7 @@ $(function () {
 		const chartMap = {
 		    manageListGmarket: { code: gmarketCode, chartId: 'gmarketChart' },
 		    manageListAuction: { code: auctionCode, chartId: 'auctionChart' },
-		    manageListSmilecash: { code: smilecashCode, chartId: 'smilecashChart' }
+		    //manageListSmilecash: { code: smilecashCode, chartId: 'smilecashChart' }
 		};
 		
 		if (chartMap[id]) {
@@ -660,17 +660,15 @@ $(function () {
 	}).dxSwitch('instance');
 	
 	// 스마일캐시
-	/*
-	const smailcashSwitch1 = $('#smailcashSwitch1').dxSwitch({
-		onValueChanged(data) {
-			// 최초 인입 시 무시, 실제 클릭 시 동작
-			if (!data.event) return;
-
-			console.log('스마일캐시1번 스위치 변경 :', data);
-			updateServerFlag( 2, 1, data);
-		},
-	}).dxSwitch('instance');	
-	*/
+	//const smilecashSwitch1 = $('#smilecashSwitch1').dxSwitch({
+	//	onValueChanged(data) {
+	//		// 최초 인입 시 무시, 실제 클릭 시 동작
+	//		if (!data.event) return;
+	//
+	//		console.log('스마일캐시1번 스위치 변경 :', data);
+	//		updateServerFlag( 2, 1, data);
+	//	},
+	//}).dxSwitch('instance');	
 	
 	// 2번 수동 절체=============================================================================================================
 	// =======================================================================================================================
@@ -697,18 +695,16 @@ $(function () {
 	}).dxSwitch('instance');
 	
 	// 스마일캐시
-	/*
-	const smailcashSwitch2 = $('#smailcashSwitch2').dxSwitch({
-		onValueChanged(data) {
-			// 최초 인입 시 무시, 실제 클릭 시 동작
-			if (!data.event) return;
-
-			console.log('스마일캐시2번 스위치 변경 :', data);
-			updateServerFlag( 2, 2, data);
-		},
-	}).dxSwitch('instance');
-	*/
-
+	//const smilecashSwitch2 = $('#smilecashSwitch2').dxSwitch({
+	//	onValueChanged(data) {
+	//		// 최초 인입 시 무시, 실제 클릭 시 동작
+	//		if (!data.event) return;
+	//
+	//		console.log('스마일캐시2번 스위치 변경 :', data);
+	//		updateServerFlag( 2, 2, data);
+	//	},
+	//}).dxSwitch('instance');
+	
 	// 서버 상태 데이터 조회
 	function fetchStatusData() {
 		return $.ajax({
@@ -741,14 +737,14 @@ $(function () {
 					statusId: 'gmarketStatus2',
 					switchId: '#gmarketSwitch2'
 				},
-				'2_1': {
-					statusId: 'smailcashStatus1',
-					switchId: '#smailcashSwitch1'
-				},
-				'2_2': {
-					statusId: 'smailcashStatus2',
-					switchId: '#smailcashSwitch2'
-				}
+				//'2_1': {
+				//	statusId: 'smilecashStatus1',
+				//	switchId: '#smilecashSwitch1'
+				//},
+				//'2_2': {
+				//	statusId: 'smilecashStatus2',
+				//	switchId: '#smilecashSwitch2'
+				//}
 			};
 
 			res.forEach(row => {
@@ -787,8 +783,8 @@ $(function () {
 			'0_2': '#acutionSwitch2',
 			'1_1': '#gmarketSwitch1',
 			'1_2': '#gmarketSwitch2',
-			'2_1': '#smailcashSwitch1',
-			'2_2': '#smailcashSwitch2'
+			//'2_1': '#smilecashSwitch1',
+			//'2_2': '#smilecashSwitch2'
 		};
 
 		const key = `${companyCode}_${serverId}`;
@@ -804,8 +800,8 @@ $(function () {
 			'0_2': () => acutionSwitch1.option('value', data.value),
 			'1_1': () => gmarketSwitch2.option('value', data.value),
 			'1_2': () => gmarketSwitch1.option('value', data.value),
-			'2_1': () => smailcashSwitch2.option('value', data.value),
-			'2_2': () => smailcashSwitch1.option('value', data.value),
+			//'2_1': () => smilecashSwitch2.option('value', data.value),
+			//'2_2': () => smilecashSwitch1.option('value', data.value),
 		};
 		pairMap[key]?.();
 

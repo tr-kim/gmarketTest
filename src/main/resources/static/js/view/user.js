@@ -6,7 +6,7 @@ let userGrid;
 let currentMode = ''; // 전역 변수로 모드 추적
 let currentKey = null;
 
-const companyData = [{ code: 0, name: '옥션' }, { code: 1, name: 'G마켓' }];
+const companyData = [{ code: 0, name: '옥션' }, { code: 1, name: 'G마켓' }, /*{ code: 2, name: '스마일캐시' }*/];
 const gradeData = [{ grade: -1, name: '전체' }];
 
 $(function() {

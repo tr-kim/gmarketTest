@@ -76,7 +76,7 @@ public class RealServiceImpl implements RealService {
 //			
 //			List<ServiceStatusSummaryDto> auctionList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusSummaryList(tab);
 //			List<ServiceStatusSummaryDto> gmarketList = commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusSummaryList(tab);
-//			List<ServiceStatusSummaryDto> smailcashList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusSummaryList(tab);	// 확인 필요
+//			List<ServiceStatusSummaryDto> smilecashList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusSummaryList(tab);	// 확인 필요
 			
 			return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusSummaryList(tab);
 			
@@ -84,7 +84,7 @@ public class RealServiceImpl implements RealService {
 			
 //			List<ServiceStatusDetailDto> auctionList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusDetailList(tab);
 //			List<ServiceStatusDetailDto> gmarketList = commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusDetailList(tab);
-//			List<ServiceStatusDetailDto> smailcashList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusDetailList(tab);	// 확인 필요
+//			List<ServiceStatusDetailDto> smilecashList = commonService.getRealMapper(ConstantsUtils.DB_AUCTION).selectRealHistServiceStatusDetailList(tab);	// 확인 필요
 			
 			return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectRealHistServiceStatusDetailList(tab);
 		}

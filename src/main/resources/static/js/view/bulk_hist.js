@@ -35,7 +35,8 @@ $(function () {
 	let companyArray = [defaultOption];
 	const companyList = [
 		{ code: 0, name: '옥션' },
-		{ code: 1, name: 'G마켓' }
+		{ code: 1, name: 'G마켓' },
+		// { code: 2, name: '스마일캐시' }
 	];
 
 	// userGrade 적용
