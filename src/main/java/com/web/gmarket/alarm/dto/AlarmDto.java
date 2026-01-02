@@ -27,6 +27,10 @@ public class AlarmDto implements Serializable {
 	@JsonProperty("COMPANY_CODE")
 	private Integer COMPANY_CODE;
 	
+	// 서버 아이디
+	@JsonProperty("SERVER_ID")
+	private Integer SERVER_ID;
+
 	// 서비스명
 	@JsonProperty("SVC_NAME")
 	private String SVC_NAME;

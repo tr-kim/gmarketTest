@@ -6,6 +6,7 @@
 
 	<resultMap id="AlarmResultMap" type="com.web.gmarket.alarm.dto.AlarmDto">
 		<result property="ALM_SEQ" column="ALM_SEQ" />
+		<result property="SERVER_ID" column="SERVER_ID" />
 		<result property="COMPANY_CODE" column="COMPANY_CODE" />
 		<result property="SVC_NAME" column="SVC_NAME" />
 		<result property="PROC_NAME" column="PROC_NAME" />

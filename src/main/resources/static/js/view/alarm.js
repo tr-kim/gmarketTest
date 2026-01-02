@@ -78,14 +78,14 @@ $(function() {
 		}
 	}).dxSelectBox("instance");
 
-	// 구분 옵션
+	// 서버 옵션
 	const serverIdList = [
 		{ code: -1, name: '전체' },
 		{ code: 1, name: '1번' },
 		{ code: 2, name: '2번' }
 	];
 
-	// 구분
+	// 서버
 	serverIdInstance = $('#serverIdCategory').dxSelectBox({
 		dataSource: serverIdList,
 		displayExpr: 'name',
@@ -226,6 +226,18 @@ $(function() {
 						case 0: return "옥션";
 						case 1: return "G마켓";
 						// case 2: return "스마일캐시";
+						default: return "-";
+					}
+				}
+			},
+			{
+				dataField: "SERVER_ID",
+				caption: "서버",
+				alignment: "center",
+				customizeText: function(cellInfo) {
+					switch (cellInfo.value) {
+						case 1: return "1번";
+						case 2: return "2번";
 						default: return "-";
 					}
 				}
