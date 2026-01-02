@@ -19,7 +19,7 @@
 					THEN 'T'
 				ELSE 'F'
 			END AS CHECK_BIT
-		FROM T_PROC_STATUS_NEW
+		FROM T_PROC_STATUS
 		WHERE COMPANY_CODE = #{companyCode}
 		GROUP BY
 			COMPANY_CODE,
@@ -29,13 +29,13 @@
 	</select>
 	
 	<update id="updateFalseCheckBit" parameterType="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
-		UPDATE T_PROC_STATUS_NEW SET
+		UPDATE T_PROC_STATUS SET
 			CHECK_BIT = 'F'
 		WHERE COMPANY_CODE = #{companyCode}
 	</update>
 	
 	<update id="updateTrueCheckBit" parameterType="com.web.gmarket.serviceMgmt.dto.ServiceMgmtDto">
-		UPDATE T_PROC_STATUS_NEW SET
+		UPDATE T_PROC_STATUS SET
 			CHECK_BIT = 'T'
 		WHERE COMPANY_CODE = #{companyCode}
 			AND SVC_NAME = #{svcName}
