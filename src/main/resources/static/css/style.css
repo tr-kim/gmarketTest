@@ -510,17 +510,18 @@ aside .psw_chg_btn:hover{
     border-top: 1px solid #fff;
 }
 .row-real table th:first-child,
-.row-real table td[rowspan="6"],
-.row-real table td[rowspan="2"]{
+.row-real table td[rowspan="6"]{
     border-left: 1px solid #fff;
 }
-.row-real table td[rowspan="2"],
 .row-real table tr:last-child td{
     border-bottom: 1px solid #fff;
 }
 .row-real table th:last-child,
 .row-real table td:last-child{
     border-right: 1px solid #fff;
+}
+.row-real .border-bottom-white{
+    border-bottom: 1px solid #fff;
 }
 .col-real .processFileStat{
     background-color: #ffffff;

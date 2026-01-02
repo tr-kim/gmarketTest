@@ -660,6 +660,7 @@ $(function () {
 	}).dxSwitch('instance');
 	
 	// 스마일캐시
+	/*
 	const smailcashSwitch1 = $('#smailcashSwitch1').dxSwitch({
 		onValueChanged(data) {
 			// 최초 인입 시 무시, 실제 클릭 시 동작
@@ -669,6 +670,7 @@ $(function () {
 			updateServerFlag( 2, 1, data);
 		},
 	}).dxSwitch('instance');	
+	*/
 	
 	// 2번 수동 절체=============================================================================================================
 	// =======================================================================================================================
@@ -695,6 +697,7 @@ $(function () {
 	}).dxSwitch('instance');
 	
 	// 스마일캐시
+	/*
 	const smailcashSwitch2 = $('#smailcashSwitch2').dxSwitch({
 		onValueChanged(data) {
 			// 최초 인입 시 무시, 실제 클릭 시 동작
@@ -704,6 +707,7 @@ $(function () {
 			updateServerFlag( 2, 2, data);
 		},
 	}).dxSwitch('instance');
+	*/
 
 	// 서버 상태 데이터 조회
 	function fetchStatusData() {
