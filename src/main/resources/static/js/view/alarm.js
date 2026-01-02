@@ -36,7 +36,7 @@ $(function() {
 	const companyList = [
 		{ code: 0, name: '옥션' },
 		{ code: 1, name: 'G마켓' },
-		{ code: 2, name: '스마일캐시' }
+		// { code: 2, name: '스마일캐시' }
 	];
 	
 	// userGrade 적용
@@ -207,7 +207,7 @@ $(function() {
 					switch (cellInfo.value) {
 						case 0: return "옥션";
 						case 1: return "G마켓";
-						case 2: return "스마일캐시";
+						// case 2: return "스마일캐시";
 						default: return "-";
 					}
 				}

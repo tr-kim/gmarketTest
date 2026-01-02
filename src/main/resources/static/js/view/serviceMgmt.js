@@ -145,7 +145,7 @@ $(function() {
 	});
 	
 	// 스마일캐시
-	getInitialData(2).then(({ gridData, selectedKeys }) => {
+	/*getInitialData(2).then(({ gridData, selectedKeys }) => {
 		$('#serviceListSmilecash').dxTreeList({
 			dataSource: new DevExpress.data.ArrayStore({
 				key: "SVC_NAME",
@@ -206,7 +206,7 @@ $(function() {
 				}
 			}
 		}).dxTreeList('instance');
-	});
+	});*/
 	
 	// 서비스 저장 함수
 	function saveService(service, companyCode) {
