@@ -1,6 +1,7 @@
 let startDateInstance;
 let endDateInstance;
 let companyInstance;
+let serverIdInstance;
 let serviceInstance;
 let alarmGrid;
 
@@ -76,6 +77,21 @@ $(function() {
 			});
 		}
 	}).dxSelectBox("instance");
+
+	// 구분 옵션
+	const serverIdList = [
+		{ code: -1, name: '전체' },
+		{ code: 1, name: '1번' },
+		{ code: 2, name: '2번' }
+	];
+
+	// 구분
+	serverIdInstance = $('#serverIdCategory').dxSelectBox({
+		dataSource: serverIdList,
+		displayExpr: 'name',
+		valueExpr: 'code',
+		value: -1,
+	}).dxSelectBox("instance");
 	
 	// 서비스
 	serviceInstance = $('#serviceCategory').dxSelectBox({
@@ -91,11 +107,13 @@ $(function() {
 		const endValue = endDateInstance.option("value");
 		const companyValue = companyInstance.option('value');
 		const serviceItem = serviceInstance.option("selectedItem");
+		const serverId = serverIdInstance.option("value");
 		
 		return {
 			startDate: formatDate(startValue, "yyyy-mm-dd"),
 			endDate: formatDate(endValue, "yyyy-mm-dd"),
 			companyCode: companyValue,
+			serverId: serverId,
 			svcName: (serviceItem.name === "전체") ? "" : serviceItem.name,
 			// DevExtreme 조회 옵션
 			// filter: loadOptions.filter || [],   // searchPanel 검색

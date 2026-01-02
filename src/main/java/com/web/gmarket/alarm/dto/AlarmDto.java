@@ -69,6 +69,9 @@ public class AlarmDto implements Serializable {
 	
 	// 회사코드 - 0: 옥션, 1: G마켓, 2: 스마일캐시
 	private Integer companyCode = 0;
+
+	// 서버 아이디
+	private Integer serverId;
 	
 	// 서비스명
 	private String svcName;

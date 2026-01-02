@@ -289,7 +289,7 @@ aside .psw_chg_btn:hover{
 }
 /* alarm.html */
 #alarmGrid .dx-bordered-bottom-view {
-    height: calc(100vh - 510px);
+    height: calc(100vh - 550px);
 }
 /* real_send_hist.html */
 #real_send_hist .content {
