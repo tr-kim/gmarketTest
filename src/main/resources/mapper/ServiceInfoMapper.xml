@@ -8,26 +8,20 @@
 		/*
 			ServiceInfoMapper.selectServiceNameList
 		*/
-		SELECT DISTINCT SVC_NAME, COMPANY_CODE, TABLE_CODE, SORT_NUM
+		SELECT
+		    COMPANY_CODE,
+		    SVC_NAME,
+		    TABLE_CODE
 		FROM T_SERVICE_INFO
-		WHERE TABLE_CODE <![CDATA[ <> ]]> 0 AND TABLE_CODE <![CDATA[ <> ]]>-1 
-		ORDER BY COMPANY_CODE, SORT_NUM, SVC_NAME
+		WHERE TABLE_CODE <![CDATA[ <> ]]> 0
+		  AND TABLE_CODE <![CDATA[ <> ]]> -1
+		GROUP BY
+		    COMPANY_CODE,
+		    SVC_NAME,
+		    TABLE_CODE
+		ORDER BY
+		    COMPANY_CODE,
+		    SVC_NAME
 	</select>
-	
-	<select id="selectServiceGroupList" resultType="com.web.gmarket.common.dto.ServiceInfoDto">
-		/*
-			ServiceInfoMapper.selectServiceGroupList
-		*/
-			SELECT
-				COMPANY_CODE,
-				SVC_NAME
-			FROM T_SERVICE_INFO
-			WHERE COMPANY_CODE = #{companyCode}
-			GROUP BY
-				COMPANY_CODE,
-				SVC_NAME
-			ORDER BY
-				SVC_NAME
-	</select>
-	
+			
 </mapper>
