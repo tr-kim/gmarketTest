@@ -51,9 +51,9 @@ $(function() {
 	let svcArray = {
 		0: [defaultOption, { code: 0, name: '전체' }],
 		1: [defaultOption, { code: 0, name: '전체' }],
-		2: [defaultOption, { code: 0, name: '전체' }]
+		// 2: [defaultOption, { code: 0, name: '전체' }]
 	};
-	
+
 	// nameList 병합
 	nameList.forEach(({ companyCode, code, name }) => {
 		if (svcArray[companyCode]) {

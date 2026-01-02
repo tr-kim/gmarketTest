@@ -29,6 +29,7 @@ public class AlarmController {
 			    .map(dto -> {
 			    	LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			        map.put("companyCode", dto.getCompanyCode());
+					map.put("code", dto.getSvcName());
 			        map.put("name", dto.getSvcName());
 			        return map;
 			    })
@@ -49,6 +50,7 @@ public class AlarmController {
 			    .map(dto -> {
 			    	LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			        map.put("companyCode", dto.getCompanyCode());
+					map.put("code", dto.getSvcName());
 			        map.put("name", dto.getSvcName());
 			        return map;
 			    })
