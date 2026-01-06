@@ -1,7 +1,7 @@
 // 타이머
-let PROC_TIMER = null;
-let CHART_TIMER = null;
-let STATUS_TIMER = null;
+let PROC_TIMER = null; // 프로세스 상태
+let CHART_TIMER = null; // 발송량 차트
+let STATUS_TIMER = null; // 서버 상태
 
 // 인터벌
 const PROC_ITV_SEC = 10; // 10초(고정)
@@ -12,6 +12,7 @@ const STATUS_ITV_SEC = 60;  // 1분(고정)
 const MAX_FAIL_COUNT = 3;
 let PROC_FAIL_COUNT = 0;
 let CHART_FAIL_COUNT = 0;
+let STATUS_FAIL_COUNT = 0;
 
 // 회사별 코드
 const auctionCode = 0;
@@ -712,6 +713,8 @@ $(function () {
 			method: "GET"
 		})
 		.then(res => {
+			STATUS_FAIL_COUNT = 0; // 성공 시 실패 카운트 초기화
+			
 			// 서버 상태 텍스트 매핑
 			const serverStatText = {
 				'A': 'active',
@@ -770,9 +773,18 @@ $(function () {
 			});
 		})
 		.catch(() => {
-			//showDialogCustom("error");
-			showDialogCustom("서버 상태 조회 실패");
-			return { data: [] };
+			STATUS_FAIL_COUNT++;
+			// console.error('서버 상태 조회 실패:', err);
+			
+			if (STATUS_FAIL_COUNT >= MAX_FAIL_COUNT) {
+				if (STATUS_TIMER) {
+					clearInterval(STATUS_TIMER);
+					STATUS_TIMER = null;
+					
+					console.error('서버 상태 갱신 중지');
+					showDialogCustom('error');
+				}
+			}
 		});
 	}
 
@@ -789,12 +801,6 @@ $(function () {
 
 		const key = `${companyCode}_${serverId}`;
 		const switchName = switchMap[key];
-
-		if (!switchName) {
-			console.log('스위치 매핑 없음:', key);
-			return;
-		}
-
 		const pairMap = {
 			'0_1': () => acutionSwitch2.option('value', data.value),
 			'0_2': () => acutionSwitch1.option('value', data.value),
@@ -836,7 +842,7 @@ $(function () {
 		})
 		.catch(() => {
 			showDialogCustom("error");
-			return { data: [], totalCount: 0 };
+			return { data: [] };
 		})
 	}
 	
@@ -849,7 +855,7 @@ $(function () {
 			fetchStatusData();
 		}, STATUS_ITV_SEC * 1000); // 1분마다 실행
 	}
-
+	
 	
 	// 인입 시작================================================================================================================
 	// =======================================================================================================================
