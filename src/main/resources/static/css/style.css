@@ -1040,3 +1040,12 @@ aside .psw_chg_btn:hover{
     padding-top: 10px;
     padding-bottom: 10px;
 }
+/* realCompletion.html */
+span.realIcon {
+    color: #fff;
+    width: 23px;
+    display: inline-block;
+    text-align: center;
+    margin-right: 10px;
+    border-radius: 3px;
+}

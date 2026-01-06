@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="realCompletion">
+	<div class="modal-bg realCompletion">
+		<div class="modal-wrap">
+			<div class="modal-hd">
+				<span class="font-sz-16 font-weight-600">발송량 상세 보기</span>
+				<button type="button" class="close_btn" id="close_btn"  onclick="closeModal('realCompletion')">
+					<i class="bi bi-x-lg"></i>
+					<span class="visually-hidden">닫기</span>
+				</button>
+			</div>
+			<div class="modal-con position-relative">
+				<div class="row justify-content-between">
+					<!-- 옥션 -->
+					<div class="col-5">
+						<p class="font-weight-600 font-sz-16 mb-4"><span class="realIcon sub-bg">A</span>옥션</p>
+						<div class="d-flex mb-3">
+							<label class="col-form-label col-6" for="aucAll">총 발송량</label>
+							<div class="col-6">
+								<input type="text" readonly class="form-control" id="aucAll">
+							</div>
+						</div>	
+						<div class="d-flex mb-3">
+							<label class="col-form-label col-6" for="aucSend">전송</label>
+							<div class="col-6">
+								<input type="text" readonly class="form-control" id="aucSend">
+							</div>
+						</div>		
+						<div class="d-flex mb-3">
+							<label class="col-form-label col-6" for="aucSuccess">성공</label>
+							<div class="col-6">
+								<input type="text" readonly class="form-control" id="aucSuccess">
+							</div>
+						</div>		
+						<div class="d-flex mb-3">
+							<label class="col-form-label col-6" for="aucFail">실패</label>
+							<div class="col-6">
+								<input type="text" readonly class="form-control" id="aucFail">
+							</div>
+						</div>		
+						<div class="d-flex">
+							<label class="col-form-label col-6" for="aucCompletion">완료율</label>
+							<div class="col-6">
+								<input type="text" readonly class="form-control" id="aucCompletion">
+							</div>
+						</div>							
+					</div>
+					<!-- G마켓 -->
+					<div class="col-5">
+						<p class="font-weight-600 font-sz-16 mb-4"><span class="realIcon main-bg">G</span>G마켓</p>
+						<div class="d-flex mb-3">
+							<label class="col-form-label col-6" for="gmAll">총 발송량</label>
+							<div class="col-6">
+								<input type="text" readonly class="form-control" id="gmAll">
+							</div>
+						</div>	
+						<div class="d-flex mb-3">
+							<label class="col-form-label col-6" for="gmSend">전송</label>
+							<div class="col-6">
+								<input type="text" readonly class="form-control" id="gmSend">
+							</div>
+						</div>		
+						<div class="d-flex mb-3">
+							<label class="col-form-label col-6" for="gmSuccess">성공</label>
+							<div class="col-6">
+								<input type="text" readonly class="form-control" id="gmSuccess">
+							</div>
+						</div>		
+						<div class="d-flex mb-3">
+							<label class="col-form-label col-6" for="gmFail">실패</label>
+							<div class="col-6">
+								<input type="text" readonly class="form-control" id="gmFail">
+							</div>
+						</div>		
+						<div class="d-flex">
+							<label class="col-form-label col-6" for="gmCompletion">완료율</label>
+							<div class="col-6">
+								<input type="text" readonly class="form-control" id="gmCompletion">
+							</div>
+						</div>							
+					</div>
+					<!-- card 
+					<div class="col-6">
+						<div class="card">
+							<div class="card-body">
+								<p class="font-weight-600">옥션</p>
+								<div class="d-flex mb-3">
+									<label class="col-form-label col-6" for="aucAll">총 발송량</label>
+									<div class="col-6">
+										<input type="text" readonly class="form-control" id="aucAll">
+									</div>
+								</div>	
+								<div class="d-flex mb-3">
+									<label class="col-form-label col-6" for="aucSend">전송</label>
+									<div class="col-6">
+										<input type="text" readonly class="form-control" id="aucSend">
+									</div>
+								</div>		
+								<div class="d-flex mb-3">
+									<label class="col-form-label col-6" for="aucSuccess">성공</label>
+									<div class="col-6">
+										<input type="text" readonly class="form-control" id="aucSuccess">
+									</div>
+								</div>		
+								<div class="d-flex mb-3">
+									<label class="col-form-label col-6" for="aucFail">실패</label>
+									<div class="col-6">
+										<input type="text" readonly class="form-control" id="aucFail">
+									</div>
+								</div>		
+								<div class="d-flex">
+									<label class="col-form-label col-6" for="aucCompletion">완료율</label>
+									<div class="col-6">
+										<input type="text" readonly class="form-control" id="aucCompletion">
+									</div>
+								</div>		
+							</div>
+						</div>
+					</div>
+					<div class="col-6">
+						<div class="card">
+							<div class="card-header font-weight-600">
+								G마켓
+							</div>
+							<div class="card-body">
+								<div class="d-flex mb-3">
+									<label class="col-form-label col-6" for="gmAll">총 발송량</label>
+									<div class="col-6">
+										<input type="text" readonly class="form-control" id="gmAll">
+									</div>
+								</div>	
+								<div class="d-flex mb-3">
+									<label class="col-form-label col-6" for="gmSend">전송</label>
+									<div class="col-6">
+										<input type="text" readonly class="form-control" id="gmSend">
+									</div>
+								</div>		
+								<div class="d-flex mb-3">
+									<label class="col-form-label col-6" for="gmSuccess">성공</label>
+									<div class="col-6">
+										<input type="text" readonly class="form-control" id="gmSuccess">
+									</div>
+								</div>		
+								<div class="d-flex mb-3">
+									<label class="col-form-label col-6" for="gmFail">실패</label>
+									<div class="col-6">
+										<input type="text" readonly class="form-control" id="gmFail">
+									</div>
+								</div>		
+								<div class="d-flex">
+									<label class="col-form-label col-6" for="gmCompletion">완료율</label>
+									<div class="col-6">
+										<input type="text" readonly class="form-control" id="gmCompletion">
+									</div>
+								</div>	
+							</div>
+						</div>
+					</div>	
+					-->	
+				</div>
+			</div>
+		</div>
+	</div>
+</th:block>
+
+</html>

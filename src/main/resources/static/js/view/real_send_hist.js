@@ -868,5 +868,11 @@ $(function () {
 	// 서버 상태 인터벌 시작
 	startStatusAutoRefresh();
 
+	// 총 발송량 모달
+	$('#completion').click(function(){		
+		$('.realCompletion').addClass('d-block');
+		toggleBodyClass();
+	})
+
 });
 
