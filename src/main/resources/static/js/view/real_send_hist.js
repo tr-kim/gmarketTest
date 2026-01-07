@@ -2,6 +2,8 @@
 let PROC_TIMER = null; // 프로세스 상태
 let CHART_TIMER = null; // 발송량 차트
 let STATUS_TIMER = null; // 서버 상태
+let PROC_SUM_TIMER = null; // 프로세스 합계
+let CHART_SUM_TIMER = null; // 발송량 합계
 
 // 인터벌
 const PROC_ITV_SEC = 10; // 10초(고정)
@@ -13,6 +15,8 @@ const MAX_FAIL_COUNT = 3;
 let PROC_FAIL_COUNT = 0;
 let CHART_FAIL_COUNT = 0;
 let STATUS_FAIL_COUNT = 0;
+let PROC_SUM_FAIL_COUNT = 0;
+let CHART_SUM_FAIL_COUNT = 0;
 
 // 회사별 코드
 const auctionCode = 0;
@@ -183,6 +187,7 @@ $(function () {
 			// 선택한 값에서 숫자만 추출 (10, 20, 30)
 			CHART_ITV_SEC = parseInt(e.value);
 			startChartAutoRefresh();
+			startChartSumAutoRefresh();
 		}
 	}).dxRadioGroup("instance");
 	
@@ -873,6 +878,44 @@ $(function () {
 		$('.realCompletion').addClass('d-block');
 		toggleBodyClass();
 	})
+
+	// 전체 프로세스 합계 갱신
+	let i = 1;
+	function fetchProcSumtData() {			
+		console.log("프로세스 합계 타이머: " + i++)
+	}
+
+	// 프로세스 합계 타이머 재시작
+	function startProcSumAutoRefresh() {
+		if (PROC_SUM_TIMER) clearInterval(PROC_SUM_TIMER);
+
+		fetchProcSumtData(); // 즉시 1회 실행
+		PROC_SUM_TIMER = setInterval(() => {
+			fetchProcSumtData();
+		}, PROC_ITV_SEC * 1000);
+	}
+
+	// 전체 발송량 합계 갱신
+	let j = 1;
+	function fetchChartSumtData() {			
+		console.log("발송량 합계 타이머: " + j++)
+	}
+
+	// 발송량 합계 타이머 재시작
+	function startChartSumAutoRefresh() {
+		if (CHART_SUM_TIMER) clearInterval(CHART_SUM_TIMER);
+
+		fetchChartSumtData(); // 즉시 1회 실행
+		CHART_SUM_TIMER = setInterval(() => {
+			fetchChartSumtData();
+		}, CHART_ITV_SEC * 1000);
+	}
+
+	// 프로세스 합계 인터벌 시작
+	startProcSumAutoRefresh();
+
+	// 발송량 합계 인터벌 시작
+	startChartSumAutoRefresh();
 
 });
 
