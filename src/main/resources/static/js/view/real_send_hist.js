@@ -762,7 +762,7 @@ $(function () {
 			};
 
 			res.forEach(row => {
-				const key = `${row.COMPANY_CODE}_${row.SERVER_ID}`;
+				const key = `${row.companyCode}_${row.serverId}`;
 				const config = serverConfigMap[key];
 				if (!config) return;
 
@@ -770,7 +770,7 @@ $(function () {
 				if (config.statusId) {
 					const statusEl = document.getElementById(config.statusId);
 					if (statusEl) {
-						statusEl.textContent = serverStatText[row.SERVER_STAT] || 'shutdown';
+						statusEl.textContent = serverStatText[row.serverStat] || 'shutdown';
 					}
 				}
 
@@ -778,7 +778,7 @@ $(function () {
 				if (config.switchId) {
 					const instance = $(config.switchId).dxSwitch('instance');
 					if (instance) {
-						instance.option('value', row.MANUAL_FLAG === 'ON');
+						instance.option('value', row.manualFlag === 'ON');
 					}
 				}
 			});
@@ -827,12 +827,12 @@ $(function () {
 
 		const beforeValue = instance.option('value');
 
-    	const flag = beforeValue ? 'ON' : 'OFF';
+    	const manualFlag = beforeValue ? 'ON' : 'OFF';
 
 		const param = {
 			companyCode: companyCode,
 			serverId: serverId,
-			flag: flag
+			manualFlag: manualFlag
 		}
 
 		return $.ajax({
