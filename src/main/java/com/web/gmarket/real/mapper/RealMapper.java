@@ -79,5 +79,12 @@ public interface RealMapper {
 	 * @return
 	 */
 	public List<SummaryProcCountDto> selectSummaryProcCount();
+
+	/**
+	 * 서비스 상태별 서비스명 조회
+	 * 
+	 * @return
+	 */
+	public List<SummaryProcCountDto> selectSummaryProcName();
 	
 }

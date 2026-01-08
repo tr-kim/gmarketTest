@@ -118,7 +118,7 @@ $(function () {
 	});
 	
 	// 상단 팝오버
-	function makePopover(id, targetId) {
+	function makePopover(id, targetId, status) {
 		$(id).dxPopover({
 			target: targetId,
 			showEvent: 'dxclick',
@@ -129,13 +129,14 @@ $(function () {
 			onShowing(e) {
 				const w = $(targetId).outerWidth();
 				e.component.option('width', w);
+				procStatusList(status);
 			}
 		}).dxPopover("instance");
 	}
 	
-	makePopover('#downList', '#down');
-	makePopover('#issueList', '#issue');
-	makePopover('#delayList', '#delay');
+	makePopover('#downList', '#down', 'DOWN');
+	makePopover('#issueList', '#issue', 'ISSUE');
+	makePopover('#delayList', '#delay', 'DELAY');
 	
 	// 상단 총 발송량
 	$('#completion').click(function(){
@@ -344,9 +345,9 @@ $(function () {
 		if (CHART_TIMER) clearInterval(CHART_TIMER);
 
 		fetchChartData(); // 즉시 1회 실행
-		CHART_TIMER = setInterval(() => {
-			fetchChartData();
-		}, CHART_ITV_SEC * 1000);
+		// CHART_TIMER = setInterval(() => {
+		// 	fetchChartData();
+		// }, CHART_ITV_SEC * 1000);
 	}
 	
 	// 차트 상세 팝업
@@ -640,9 +641,9 @@ $(function () {
 		if (PROC_TIMER) clearInterval(PROC_TIMER);
 
 		fetchProcStatusData(CURRENT_VIEW, CURRENT_TAB[CURRENT_VIEW]); // 즉시 1회 실행
-		PROC_TIMER = setInterval(() => {
-			fetchProcStatusData(CURRENT_VIEW, CURRENT_TAB[CURRENT_VIEW]);
-		}, PROC_ITV_SEC * 1000);
+		// PROC_TIMER = setInterval(() => {
+		// 	fetchProcStatusData(CURRENT_VIEW, CURRENT_TAB[CURRENT_VIEW]);
+		// }, PROC_ITV_SEC * 1000);
 	}
 	
 	
@@ -862,9 +863,9 @@ $(function () {
 		if (STATUS_TIMER) clearInterval(STATUS_TIMER);
 
 		fetchStatusData();// 즉시 1회 실행
-		STATUS_TIMER = setInterval(() => {
-			fetchStatusData();
-		}, STATUS_ITV_SEC * 1000); // 1분마다 실행
+		// STATUS_TIMER = setInterval(() => {
+		// 	fetchStatusData();
+		// }, STATUS_ITV_SEC * 1000); // 1분마다 실행
 	}
 	
 	
@@ -908,9 +909,30 @@ $(function () {
 		if (PROC_SUM_TIMER) clearInterval(PROC_SUM_TIMER);
 
 		fetchProcSumtData(); // 즉시 1회 실행
-		PROC_SUM_TIMER = setInterval(() => {
-			fetchProcSumtData();
-		}, PROC_ITV_SEC * 1000);
+		// PROC_SUM_TIMER = setInterval(() => {
+		// 	fetchProcSumtData();
+		// }, PROC_ITV_SEC * 1000);
+	}
+
+	// 서비스 상태별 서비스명 조회
+	function procStatusList(status) {
+		const param = {
+			status : status
+		}
+
+		return $.ajax({
+			url: "/api/v1/real/procStatusList",
+			method: "PUT",
+			contentType: "application/json",
+			data: JSON.stringify(param)
+		})
+		.then(response => {
+			// console.log(response);
+		})
+		.catch(() => {
+			showDialogCustom("error");
+			return { data: [] };
+		})
 	}
 
 	// 전체 발송량 합계 갱신
@@ -923,9 +945,9 @@ $(function () {
 		if (CHART_SUM_TIMER) clearInterval(CHART_SUM_TIMER);
 
 		fetchChartSumtData(); // 즉시 1회 실행
-		CHART_SUM_TIMER = setInterval(() => {
-			fetchChartSumtData();
-		}, CHART_ITV_SEC * 1000);
+		// CHART_SUM_TIMER = setInterval(() => {
+		// 	fetchChartSumtData();
+		// }, CHART_ITV_SEC * 1000);
 	}
 	
 	

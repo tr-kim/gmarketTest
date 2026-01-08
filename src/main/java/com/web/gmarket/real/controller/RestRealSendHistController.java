@@ -184,5 +184,22 @@ public class RestRealSendHistController {
 		}	
 	}
 	
-
+	/**
+	 * 서비스 상태별 서비스명 조회
+	 * 
+	 * @return
+	 */
+	@PutMapping("/procStatusList")
+	public ResponseEntity<?> procStatusList(
+			Authentication authentication) {
+		try {
+			
+			return new ResponseEntity<>(realService.selectSummaryProcName(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getLocalizedMessage());
+			
+			return new ResponseEntity<>(new SummaryProcCountDto(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}	
+	}
 }
