@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.web.gmarket.real.dto.RealDto;
 import com.web.gmarket.real.dto.ServiceStatusDetailDto;
 import com.web.gmarket.real.dto.ServiceStatusSummaryDto;
+import com.web.gmarket.real.dto.SummaryProcCountDto;
 import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
 
 @Mapper
@@ -71,5 +72,12 @@ public interface RealMapper {
 	 * @return
 	 */
 	public void updateServerFlag(ServiceStatusFailoverDto dto);
+
+	/**
+	 * 서비스 상태별 카운트 조회
+	 * 
+	 * @return
+	 */
+	public List<SummaryProcCountDto> selectSummaryProcCount();
 	
 }

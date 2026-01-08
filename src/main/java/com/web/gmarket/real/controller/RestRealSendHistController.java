@@ -1,7 +1,6 @@
 package com.web.gmarket.real.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.real.dto.RealDto;
 import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
+import com.web.gmarket.real.dto.SummaryProcCountDto;
 import com.web.gmarket.real.service.RealService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -164,5 +164,25 @@ public class RestRealSendHistController {
 
 		return ResponseEntity.ok(result);
 	}
+
+	/**
+	 * 서비스 상태별 카운트 조회
+	 * 
+	 * @return
+	 */
+	@GetMapping("/procSumList")
+	public ResponseEntity<?> selectSummaryProcCount(
+			Authentication authentication) {
+		try {
+			
+			return new ResponseEntity<>(realService.selectSummaryProcCount(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getLocalizedMessage());
+			
+			return new ResponseEntity<>(new SummaryProcCountDto(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}	
+	}
+	
 
 }

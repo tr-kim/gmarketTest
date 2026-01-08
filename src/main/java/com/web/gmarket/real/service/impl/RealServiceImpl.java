@@ -127,4 +127,9 @@ public class RealServiceImpl implements RealService {
 
 		return result;
 	}
+
+	@Override
+	public List<?> selectSummaryProcCount() {
+		return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectSummaryProcCount();
+	}
 }

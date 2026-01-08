@@ -18,6 +18,8 @@ public interface RealService {
 
 	public List<?> selectServerStatusList();
 
+	public List<?> selectSummaryProcCount();
+
 	public Map<String, Object> updateServerFlag(ServiceStatusFailoverDto dto);
 	
 }

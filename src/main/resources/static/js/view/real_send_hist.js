@@ -135,7 +135,7 @@ $(function () {
 	
 	makePopover('#downList', '#down');
 	makePopover('#issueList', '#issue');
-	makePopover('#delrayList', '#delray');
+	makePopover('#delayList', '#delay');
 	
 	// 상단 총 발송량
 	$('#completion').click(function(){
@@ -872,7 +872,35 @@ $(function () {
 	// =======================================================================================================================
 	// 전체 프로세스 합계 갱신
 	function fetchProcSumtData() {			
-		console.log("프로세스 합계 호출")
+		return $.ajax({
+			url: "/api/v1/real/procSumList",
+			method: "GET"
+		})
+		.then(res => {
+			PROC_SUM_FAIL_COUNT = 0; // 성공 시 실패 카운트 초기화
+			
+			const row = res[0];
+			if (!row) return;
+
+			$('#total .count').text(row.totalCount);
+			$('#normal .count').text(row.normalCount);
+			$('#down .count').text(row.downCount);
+			$('#issue .count').text(row.issueCount);
+			$('#delay .count').text(row.delayCount);
+		})
+		.catch(() => {
+			PROC_SUM_FAIL_COUNT++;
+			
+			if (PROC_SUM_FAIL_COUNT >= MAX_FAIL_COUNT) {
+				if (PROC_SUM_TIMER) {
+					clearInterval(PROC_SUM_TIMER);
+					PROC_SUM_TIMER = null;
+					
+					console.error('서버 상태 갱신 중지');
+					showDialogCustom('error');
+				}
+			}
+		});
 	}
 
 	// 프로세스 합계 타이머 재시작
