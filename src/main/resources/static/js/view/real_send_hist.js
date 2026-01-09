@@ -127,9 +127,11 @@ $(function () {
 				class: "dxPopover"
 			},
 			onShown(e) {
+				// 상태별 서비스명 조회
 				summaryProcName(status);
+				
 				const w = $(targetId).outerWidth();
-				e.component.option('width', w);				
+				e.component.option('width', w);
 			}
 		}).dxPopover("instance");
 	}
@@ -345,9 +347,9 @@ $(function () {
 		if (CHART_TIMER) clearInterval(CHART_TIMER);
 
 		fetchChartData(); // 즉시 1회 실행
-		// CHART_TIMER = setInterval(() => {
-		// 	fetchChartData();
-		// }, CHART_ITV_SEC * 1000);
+		CHART_TIMER = setInterval(() => {
+			fetchChartData();
+		}, CHART_ITV_SEC * 1000);
 	}
 	
 	// 차트 상세 팝업
@@ -641,9 +643,9 @@ $(function () {
 		if (PROC_TIMER) clearInterval(PROC_TIMER);
 
 		fetchProcStatusData(CURRENT_VIEW, CURRENT_TAB[CURRENT_VIEW]); // 즉시 1회 실행
-		// PROC_TIMER = setInterval(() => {
-		// 	fetchProcStatusData(CURRENT_VIEW, CURRENT_TAB[CURRENT_VIEW]);
-		// }, PROC_ITV_SEC * 1000);
+		PROC_TIMER = setInterval(() => {
+			fetchProcStatusData(CURRENT_VIEW, CURRENT_TAB[CURRENT_VIEW]);
+		}, PROC_ITV_SEC * 1000);
 	}
 	
 	
@@ -722,7 +724,7 @@ $(function () {
 	function fetchStatusData() {
 		return $.ajax({
 			url: "/api/v1/real/serverStatusList",
-			method: "GET"
+			method: "POST"
 		})
 		.then(res => {
 			STATUS_FAIL_COUNT = 0; // 성공 시 실패 카운트 초기화
@@ -863,26 +865,61 @@ $(function () {
 		if (STATUS_TIMER) clearInterval(STATUS_TIMER);
 
 		fetchStatusData();// 즉시 1회 실행
-		// STATUS_TIMER = setInterval(() => {
-		// 	fetchStatusData();
-		// }, STATUS_ITV_SEC * 1000); // 1분마다 실행
+		STATUS_TIMER = setInterval(() => {
+			fetchStatusData();
+		}, STATUS_ITV_SEC * 1000); // 1분마다 실행
 	}
 	
 	
 	// 상단 Summary=============================================================================================================
 	// =======================================================================================================================
-	// 전체 프로세스 합계 갱신
-	function fetchProcSumtData() {			
+	// Summary 프로세스 상태별 서비스명 조회
+	function summaryProcName(status) {
+		const param = {
+			status : status
+		}
+		
+		return $.ajax({
+			url: "/api/v1/real/summaryProcName",
+			method: "POST",
+			contentType: "application/json",
+			data: JSON.stringify(param)
+		})
+		.then(response => {
+			const map = {
+				DOWN:  "#downListUl",
+				ISSUE: "#issueListUl",
+				DELAY: "#delayListUl"
+			};
+			
+			const ul = document.querySelector(map[status]);
+			if (!ul) return;
+			ul.innerHTML = "";
+			
+			response.forEach(({ svcName }) => {
+				const li = document.createElement("li");
+				li.textContent = svcName;
+				ul.appendChild(li);
+			});
+		})
+		.catch(() => {
+			showDialogCustom("error");
+			return { data: [] };
+		})
+	}
+	
+	// Summary 프로세스 상태별 카운트 조회
+	function fetchProcSumtData() {
 		return $.ajax({
 			url: "/api/v1/real/summaryProcCount",
-			method: "GET"
+			method: "POST"
 		})
 		.then(res => {
 			PROC_SUM_FAIL_COUNT = 0; // 성공 시 실패 카운트 초기화
 			
 			const row = res[0];
 			if (!row) return;
-
+			
 			$('#total .count').text(row.totalCount);
 			$('#normal .count').text(row.normalCount);
 			$('#down .count').text(row.downCount);
@@ -897,76 +934,36 @@ $(function () {
 					clearInterval(PROC_SUM_TIMER);
 					PROC_SUM_TIMER = null;
 					
-					console.error('서버 상태 갱신 중지');
+					console.error('상태별 카운트 갱신 중지');
 					showDialogCustom('error');
 				}
 			}
 		});
 	}
-
-	// 프로세스 합계 타이머 재시작
+	
+	// Summary 프로세스 상태별 카운트 타이머 재시작
 	function startProcSumAutoRefresh() {
 		if (PROC_SUM_TIMER) clearInterval(PROC_SUM_TIMER);
-
+		
 		fetchProcSumtData(); // 즉시 1회 실행
-		// PROC_SUM_TIMER = setInterval(() => {
-		// 	fetchProcSumtData();
-		// }, PROC_ITV_SEC * 1000);
+		PROC_SUM_TIMER = setInterval(() => {
+			fetchProcSumtData();
+		}, PROC_ITV_SEC * 1000);
 	}
-
-	// 서비스 상태별 서비스명 조회
-	function summaryProcName(status) {
-		const param = {
-			status : status
-		}
-
-		return $.ajax({
-			url: "/api/v1/real/summaryProcName",
-			method: "PUT",
-			contentType: "application/json",
-			data: JSON.stringify(param)
-		})
-		.then(response => {
 	
-			const map = {
-				DOWN:  "#downListUl",
-				ISSUE: "#issueListUl",
-				DELAY: "#delayListUl"
-			};			
-
-			const ul = document.querySelector(map[status]);
-
-			if (!ul) return;
-
-			ul.innerHTML = "";
-
-			response.forEach(({ svcName }) => {				
-				
-				const li = document.createElement("li");
-				li.textContent = svcName;
-				ul.appendChild(li);
-			});
-			
-		})
-		.catch(() => {
-			showDialogCustom("error");
-			return { data: [] };
-		})
+	// Summary 발송량 합계 조회
+	function fetchChartSumtData() {
+		console.log("발송량 합계 조회")
 	}
-
-	// 전체 발송량 합계 갱신
-	function fetchChartSumtData() {			
-		console.log("발송량 합계 호출")
-	}
-
-	// 발송량 합계 타이머 재시작
+	
+	// Summary 발송량 합계 타이머 재시작
 	function startChartSumAutoRefresh() {
 		if (CHART_SUM_TIMER) clearInterval(CHART_SUM_TIMER);
-
+		
 		fetchChartSumtData(); // 즉시 1회 실행
-		// CHART_SUM_TIMER = setInterval(() => {
-		// 	fetchChartSumtData();
-		// }, CHART_ITV_SEC * 1000);
+		CHART_SUM_TIMER = setInterval(() => {
+			fetchChartSumtData();
+		}, CHART_ITV_SEC * 1000);
 	}
 	
 	
@@ -981,10 +978,10 @@ $(function () {
 	// 서버 상태 인터벌 시작
 	startStatusAutoRefresh();
 	
-	// 프로세스 합계 인터벌 시작
+	// Summary 프로세스 상태별 카운트 인터벌 시작
 	startProcSumAutoRefresh();
 	
-	// 발송량 합계 인터벌 시작
+	// Summary 발송량 합계 인터벌 시작
 	startChartSumAutoRefresh();
 
 });

@@ -9,9 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class SummaryProcCountDto {
-	// 상태
-	private String status;
-
 	// 전체
 	private int totalCount;
 	

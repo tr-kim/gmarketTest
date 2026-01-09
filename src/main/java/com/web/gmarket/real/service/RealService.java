@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.web.gmarket.real.dto.RealDto;
 import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
-import com.web.gmarket.real.dto.SummaryProcCountDto;
+import com.web.gmarket.real.dto.SummaryProcNameDto;
 
 public interface RealService {
 
@@ -16,12 +16,12 @@ public interface RealService {
 	public List<RealDto> selectRealHistTableList(int companyCode, List<Integer> codeList);
 	
 	public List<?> selectProcStatusList(String view, int tab);
-
+	
 	public List<?> selectServerStatusList();
-
+	
 	public Map<String, Object> updateServerFlag(ServiceStatusFailoverDto dto);
 	
 	public List<?> selectSummaryProcCount();
-
-	public List<SummaryProcCountDto> selectSummaryProcName(String status);
+	
+	public List<SummaryProcNameDto> selectSummaryProcName(String status);
 }

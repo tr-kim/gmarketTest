@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +20,7 @@ import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.real.dto.RealDto;
 import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
 import com.web.gmarket.real.dto.SummaryProcCountDto;
+import com.web.gmarket.real.dto.SummaryProcNameDto;
 import com.web.gmarket.real.service.RealService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +80,7 @@ public class RestRealSendHistController {
 	}
 	
 	/**
-	 * 테이블별 현황
+	 * 테이블별 현황 - 발송량 통계, 발송량 상세
 	 * 
 	 * @param authentication
 	 * @param companyCode
@@ -136,7 +136,8 @@ public class RestRealSendHistController {
 	 * 
 	 * @return
 	 */
-	@GetMapping("/serverStatusList")
+	@ResponseBody
+	@PostMapping("/serverStatusList")
 	public ResponseEntity<?> serverStatusList(
 			Authentication authentication) {
 		try {
@@ -155,6 +156,7 @@ public class RestRealSendHistController {
 	 * 
 	 * @return
 	 */
+	@ResponseBody
 	@PutMapping("/flagUpdate")
 	public ResponseEntity<Map<String, Object>> flagUpdate(
 			Authentication authentication,
@@ -170,7 +172,8 @@ public class RestRealSendHistController {
 	 * 
 	 * @return
 	 */
-	@GetMapping("/summaryProcCount")
+	@ResponseBody
+	@PostMapping("/summaryProcCount")
 	public ResponseEntity<?> summaryProcCount(
 			Authentication authentication) {
 		try {
@@ -181,26 +184,28 @@ public class RestRealSendHistController {
 			log.error(e.getLocalizedMessage());
 			
 			return new ResponseEntity<>(new SummaryProcCountDto(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}	
+		}
 	}
 	
 	/**
 	 * 서비스 상태별 서비스명 조회
+	 * @param status: NORMAL: 정상, DOWN: 다운, ISSUE: 이슈, DELAY: 지연
 	 * 
 	 * @return
 	 */
-	@PutMapping("/summaryProcName")
+	@ResponseBody
+	@PostMapping("/summaryProcName")
 	public ResponseEntity<?> summaryProcName(
-			@RequestBody SummaryProcCountDto param,
-			Authentication authentication) {
+			Authentication authentication,
+			@RequestBody SummaryProcNameDto dto) {
 		try {
 			
-			return new ResponseEntity<>(realService.selectSummaryProcName(param.getStatus()), HttpStatus.OK);
+			return new ResponseEntity<>(realService.selectSummaryProcName(dto.getStatus()), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(e.getLocalizedMessage());
 			
-			return new ResponseEntity<>(new SummaryProcCountDto(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}	
+			return new ResponseEntity<>(new SummaryProcNameDto(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 }

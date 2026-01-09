@@ -9,6 +9,7 @@ import com.web.gmarket.real.dto.RealDto;
 import com.web.gmarket.real.dto.ServiceStatusDetailDto;
 import com.web.gmarket.real.dto.ServiceStatusSummaryDto;
 import com.web.gmarket.real.dto.SummaryProcCountDto;
+import com.web.gmarket.real.dto.SummaryProcNameDto;
 import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
 
 @Mapper
@@ -85,6 +86,6 @@ public interface RealMapper {
 	 * 
 	 * @return
 	 */
-	public List<SummaryProcCountDto> selectSummaryProcName(@Param("status") String status);
+	public List<SummaryProcNameDto> selectSummaryProcName(@Param("status") String status);
 	
 }

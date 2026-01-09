@@ -260,7 +260,8 @@
 	<select id="selectSummaryProcCount" resultType="com.web.gmarket.real.dto.SummaryProcCountDto">
 		/*
 			RealMapper.selectSummaryProcCount 서비스 상태별 카운트 조회
-			전체: 118 (옥션 56 + G마켓 62) => Active 서버 기준 (COMPANY_CODE, SVC_NAME, PROC_NAME) 총 개수
+			전체: 118 (옥션 56 + G마켓 62) 스마일캐시 8 제외
+			Active 서버 기준 (COMPANY_CODE, SVC_NAME, PROC_NAME) 총 개수
 		*/
 		<include refid="summaryStatusCte"/>
 		SELECT
