@@ -170,8 +170,8 @@ public class RestRealSendHistController {
 	 * 
 	 * @return
 	 */
-	@GetMapping("/procSumList")
-	public ResponseEntity<?> selectSummaryProcCount(
+	@GetMapping("/summaryProcCount")
+	public ResponseEntity<?> summaryProcCount(
 			Authentication authentication) {
 		try {
 			
@@ -189,12 +189,13 @@ public class RestRealSendHistController {
 	 * 
 	 * @return
 	 */
-	@PutMapping("/procStatusList")
-	public ResponseEntity<?> procStatusList(
+	@PutMapping("/summaryProcName")
+	public ResponseEntity<?> summaryProcName(
+			@RequestBody SummaryProcCountDto param,
 			Authentication authentication) {
 		try {
 			
-			return new ResponseEntity<>(realService.selectSummaryProcName(), HttpStatus.OK);
+			return new ResponseEntity<>(realService.selectSummaryProcName(param.getStatus()), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(e.getLocalizedMessage());

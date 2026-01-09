@@ -126,10 +126,10 @@ $(function () {
 			wrapperAttr: {
 				class: "dxPopover"
 			},
-			onShowing(e) {
+			onShown(e) {
+				summaryProcName(status);
 				const w = $(targetId).outerWidth();
-				e.component.option('width', w);
-				procStatusList(status);
+				e.component.option('width', w);				
 			}
 		}).dxPopover("instance");
 	}
@@ -874,7 +874,7 @@ $(function () {
 	// 전체 프로세스 합계 갱신
 	function fetchProcSumtData() {			
 		return $.ajax({
-			url: "/api/v1/real/procSumList",
+			url: "/api/v1/real/summaryProcCount",
 			method: "GET"
 		})
 		.then(res => {
@@ -915,19 +915,38 @@ $(function () {
 	}
 
 	// 서비스 상태별 서비스명 조회
-	function procStatusList(status) {
+	function summaryProcName(status) {
 		const param = {
 			status : status
 		}
 
 		return $.ajax({
-			url: "/api/v1/real/procStatusList",
+			url: "/api/v1/real/summaryProcName",
 			method: "PUT",
 			contentType: "application/json",
 			data: JSON.stringify(param)
 		})
 		.then(response => {
-			// console.log(response);
+	
+			const map = {
+				DOWN:  "#downListUl",
+				ISSUE: "#issueListUl",
+				DELAY: "#delayListUl"
+			};			
+
+			const ul = document.querySelector(map[status]);
+
+			if (!ul) return;
+
+			ul.innerHTML = "";
+
+			response.forEach(({ svcName }) => {				
+				
+				const li = document.createElement("li");
+				li.textContent = svcName;
+				ul.appendChild(li);
+			});
+			
 		})
 		.catch(() => {
 			showDialogCustom("error");

@@ -85,6 +85,6 @@ public interface RealMapper {
 	 * 
 	 * @return
 	 */
-	public List<SummaryProcCountDto> selectSummaryProcName();
+	public List<SummaryProcCountDto> selectSummaryProcName(@Param("status") String status);
 	
 }

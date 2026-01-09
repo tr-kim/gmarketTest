@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.web.gmarket.real.dto.RealDto;
 import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
+import com.web.gmarket.real.dto.SummaryProcCountDto;
 
 public interface RealService {
 
@@ -22,5 +23,5 @@ public interface RealService {
 	
 	public List<?> selectSummaryProcCount();
 
-	public List<?> selectSummaryProcName();
+	public List<SummaryProcCountDto> selectSummaryProcName(String status);
 }
