@@ -412,13 +412,15 @@ aside .psw_chg_btn:hover{
     font-weight: 500;
 }
 .statColor.red{
-    background-color: red;
+    background-color: #dc3545;
 }
 .statColor.green{
     background-color: green;
+    /* background-color: #198754; */
 }
 .statColor.gray{
     background-color: #999;
+    /* background-color: #6c757d; */
 }
 .row-real table td,
 .row-real table th{
