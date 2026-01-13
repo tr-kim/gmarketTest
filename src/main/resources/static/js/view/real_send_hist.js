@@ -487,7 +487,8 @@ $(function () {
 		    const base = {
 				procChk: item.swDownChk,
 		      	procSts: item.swDownSts,
-		      	procUpdate: item.swUpdateDateSts
+		      	procDelay: item.swUpdateDelay,
+				procDown: item.swUpdateDown
 		    };
 
 		    // procType 별로 다른 필드 추가
@@ -496,14 +497,16 @@ $(function () {
 				filteredItem = {
 					dbChk: item.dbSeshChk,
 		        	dbSts: item.dbSeshSts,
-					dbUpdate: item.dbUpdateDateSts,
+					dbDelay: item.dbUpdateDelay,
+					dbDown: item.dbUpdateDown,
 		        	...base
 		      };
 		    } else if (procType === "IFP") {
 				filteredItem = {
 					dbChk: item.ktSeshChk,
 		        	dbSts: item.ktSeshSts,
-		        	dbUpdate: item.ktUpdateDateSts,
+		        	dbDelay: item.ktUpdateDelay,
+					dbDown: item.ktUpdateDown,
 		        	...base
 		      };
 		    } else {
@@ -535,16 +538,21 @@ $(function () {
 			spans.forEach(el => el.classList.remove('red', 'green', 'gray'));
 			
 			// 헬퍼 함수: 상태별 클래스 반환
-			const getClass = (update, status) => update == 0 ? 'gray' : status == 1 ? 'green' : 'red';
+			const getClass = (status, delay, down) => {
+				if (down == 1) return 'gray';       // DOWN (5분 이상)
+				if (delay == 1) return 'red';       // DELAY (1~4분)
+				if (status == 0) return 'red';      // ISSUE
+				return 'green';                     // NORMAL
+			};
 			
 			// 추후 변경 예정
 			// STATP, MEMMON
 			if (dataId.includes('SAP') || dataId.includes('MON')) {
-				spans[0].classList.add(getClass(result[0].procUpdate, result[0].procSts));
+				spans[0].classList.add(getClass(result[0].procSts, result[0].procDelay, result[0].procDown));
 			} else {
 				result.forEach((r, i) => {
-				  spans[i * 2].classList.add(getClass(r.dbUpdate, r.dbSts));
-				  spans[i * 2 + 1].classList.add(getClass(r.procUpdate, r.procSts));
+				  spans[i * 2].classList.add(getClass(r.dbSts, r.dbDelay, r.dbDown));
+				  spans[i * 2 + 1].classList.add(getClass(r.procSts, r.procDelay, r.procDown));
 				});
 			}
 		});
@@ -563,12 +571,12 @@ $(function () {
 		
 		const tds = focus.querySelectorAll('tr > td');
 		const typeMap = { DBP: 'db', IFP: 'ifp', SAP: 'sap', MON: 'mon' };
-		const statusMap = { NL: 'NormalCount', DW: 'DownCount', UNK: 'UnknownCount' };
+		const statusMap = { NL: 'NormalCount', WR: 'WarnCount', DW: 'DownCount' };
 		
-		// dbNormalCount, dbDownCount, dbUnknownCount		DBP
-		// ifpNormalCount, ifpDownCount, ifpUnknownCount	IFP
-		// sapNormalCount, sapDownCount, sapUnknownCount	STATP
-		// monNormalCount, monDownCount, monUnknownCount	MEMMON
+		// dbNormalCount, dbWarnCount, dbDownCount		DBP
+		// ifpNormalCount, ifpWarnCount, ifpDownCount	IFP
+		// sapNormalCount, sapWarnCount, sapDownCount	STATP
+		// monNormalCount, monWarnCount, monDownCount	MEMMON
 		
 		// 데이터 구조 변경
 		// [{}, {}, {}] => AU: {}, GM: {}, SC: {}

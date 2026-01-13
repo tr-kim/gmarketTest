@@ -24,13 +24,16 @@ public class ServiceStatusDetailDto {
 	
 	private Integer dbSeshChk;				// DB 세션 단절
 	private Integer dbSeshSts;				// DB 세션 상태
-	private Integer dbUpdateDateSts;			// 날짜 업데이트 상태
+	private Integer dbUpdateDelay;			// 1~4분 미갱신
+	private Integer dbUpdateDown;			// 5분 이상 미갱신
 	
 	private Integer ktSeshChk;				// KT 세션 단절
 	private Integer ktSeshSts;				// KT 세션 상태
-	private Integer ktUpdateDateSts;			// 날짜 업데이트 상태
+	private Integer ktUpdateDelay;			// 1~4분 미갱신
+	private Integer ktUpdateDown;			// 5분 이상 미갱신
 	
 	private Integer swDownChk;				// S/W down
 	private Integer swDownSts;				// S/W down 상태
-	private Integer swUpdateDateSts;			// 날짜 업데이트 상태
+	private Integer swUpdateDelay;			// 1~4분 미갱신
+	private Integer swUpdateDown;			// 5분 이상 미갱신
 }
