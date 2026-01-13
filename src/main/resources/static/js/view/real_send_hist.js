@@ -126,6 +126,7 @@ $(function () {
 			wrapperAttr: {
 				class: "dxPopover"
 			},
+			maxHeight:500,
 			onShown(e) {
 				// 상태별 서비스명 조회
 				summaryProcName(status);

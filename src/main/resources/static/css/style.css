@@ -553,10 +553,6 @@ aside .psw_chg_btn:hover{
 .dxPopover .dx-popup-content{
     padding: 0;
 }
-.dxPopover ul {
-    max-height: 800px;
-    overflow-y: auto;
-}
 .dxPopover ul li{
     padding: .5rem 1rem;
     border-bottom: 1px solid #dee2e6;
