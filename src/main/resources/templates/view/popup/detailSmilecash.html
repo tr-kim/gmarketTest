@@ -192,7 +192,10 @@
 			    argumentType: 'string', // 날짜/숫자 그대로 표시
 			    label: {
 			        customizeText(arg) {
-			            return arg.value; // 마지막 2자리(HH)만
+						const v = arg.valueText; // HHmmss
+						if (!v || v.length !== 6) return v;
+						
+						return `${v.substring(0,2)}:${v.substring(2,4)}:${v.substring(4,6)}`;
 			        }
 			    }
 			},
