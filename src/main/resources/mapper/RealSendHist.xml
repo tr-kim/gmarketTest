@@ -292,6 +292,7 @@
 	<select id="selectRealHistServiceStatusDetailList" resultType="com.web.gmarket.real.dto.ServiceStatusDetailDto">
 		/*
 			RealMapper.selectRealHistServiceStatusDetailList 서비스 / 프로세스 상세
+			STATUS: NORMAL / DELAY / ISSUE / DOWN (Summary 기준 통일)
 		*/
 		SELECT 
 			COMPANY_CODE
@@ -431,6 +432,81 @@
 		ORDER BY
 			COMPANY_CODE,
 			SVC_NAME
+	</select>
+	
+	<select id="selectTrafficSummary" resultType="com.web.gmarket.real.dto.TrafficSummaryDto">
+		/*
+			RealMapper.selectTrafficSummary 총 발송량 조회
+		*/
+		SELECT
+			SUM(T.SEND_CNT) AS ALL_SEND_CNT,
+			SUM(T.SUCC_CNT) AS ALL_SUCC_CNT,
+			SUM(T.FAIL_CNT) AS ALL_FAIL_CNT,
+			CASE 
+				WHEN SUM(T.SEND_CNT) = 0 THEN 0
+				ELSE ROUND(
+					(SUM(T.SUCC_CNT) * 100.0) / SUM(T.SEND_CNT),
+					2
+				)
+			END AS ALL_COMPLETE_RATE
+		FROM T_MSG_TRAFFIC T
+		WHERE T.IN_TIME <![CDATA[ >= ]]> CONVERT(date, GETDATE())
+			AND T.IN_TIME <![CDATA[ < ]]> DATEADD(day, 1, CONVERT(date, GETDATE()))
+	</select>
+	
+	<select id="selectTrafficDetail" resultType="com.web.gmarket.real.dto.TrafficDetailDto">
+		/*
+			RealMapper.selectTrafficDetail 발송량 상세 조회
+		*/
+		SELECT
+			-- 옥션(AU)
+			SUM(CASE WHEN L.COMPANY_CODE = 0 THEN T.SEND_CNT ELSE 0 END) AS AU_SEND_CNT,
+			SUM(CASE WHEN L.COMPANY_CODE = 0 THEN T.SUCC_CNT ELSE 0 END) AS AU_SUCC_CNT,
+			SUM(CASE WHEN L.COMPANY_CODE = 0 THEN T.FAIL_CNT ELSE 0 END) AS AU_FAIL_CNT,
+			CASE
+				WHEN SUM(CASE WHEN L.COMPANY_CODE = 0 THEN T.SEND_CNT ELSE 0 END) = 0 THEN 0
+				ELSE ROUND(
+					SUM(CASE WHEN L.COMPANY_CODE = 0 THEN T.SUCC_CNT ELSE 0 END) * 100.0 /
+					SUM(CASE WHEN L.COMPANY_CODE = 0 THEN T.SEND_CNT ELSE 0 END),
+					2
+				)
+			END AS AU_COMPLETE_RATE,
+			
+			-- G마켓(GM)
+			SUM(CASE WHEN L.COMPANY_CODE = 1 THEN T.SEND_CNT ELSE 0 END) AS GM_SEND_CNT,
+			SUM(CASE WHEN L.COMPANY_CODE = 1 THEN T.SUCC_CNT ELSE 0 END) AS GM_SUCC_CNT,
+			SUM(CASE WHEN L.COMPANY_CODE = 1 THEN T.FAIL_CNT ELSE 0 END) AS GM_FAIL_CNT,
+			CASE
+				WHEN SUM(CASE WHEN L.COMPANY_CODE = 1 THEN T.SEND_CNT ELSE 0 END) = 0 THEN 0
+				ELSE ROUND(
+					SUM(CASE WHEN L.COMPANY_CODE = 1 THEN T.SUCC_CNT ELSE 0 END) * 100.0 /
+					SUM(CASE WHEN L.COMPANY_CODE = 1 THEN T.SEND_CNT ELSE 0 END),
+					2
+				)
+			END AS GM_COMPLETE_RATE,
+			
+			-- 스마일캐시(SC)
+			SUM(CASE WHEN L.COMPANY_CODE = 2 THEN T.SEND_CNT ELSE 0 END) AS SC_SEND_CNT,
+			SUM(CASE WHEN L.COMPANY_CODE = 2 THEN T.SUCC_CNT ELSE 0 END) AS SC_SUCC_CNT,
+			SUM(CASE WHEN L.COMPANY_CODE = 2 THEN T.FAIL_CNT ELSE 0 END) AS SC_FAIL_CNT,
+			CASE
+				WHEN SUM(CASE WHEN L.COMPANY_CODE = 2 THEN T.SEND_CNT ELSE 0 END) = 0 THEN 0
+				ELSE ROUND(
+					SUM(CASE WHEN L.COMPANY_CODE = 2 THEN T.SUCC_CNT ELSE 0 END) * 100.0 /
+					SUM(CASE WHEN L.COMPANY_CODE = 2 THEN T.SEND_CNT ELSE 0 END),
+					2
+				)
+			END AS SC_COMPLETE_RATE
+			
+		FROM T_MSG_TRAFFIC T
+		JOIN T_TCODE_LIST L
+			ON T.TABLE_CODE = L.TABLE_CODE
+		AND L.DEL_FLAG = 'N'
+		AND L.USE_YN = 'Y'
+		
+		WHERE T.IN_TIME <![CDATA[ >= ]]> CONVERT(date, GETDATE())
+			AND T.IN_TIME <![CDATA[ < ]]> DATEADD(day, 1, CONVERT(date, GETDATE()))
+			AND L.COMPANY_CODE IN (0, 1, 2)
 	</select>
 	
 	<select id="selectServerStatusList" resultType="com.web.gmarket.real.dto.ServiceStatusFailoverDto">
