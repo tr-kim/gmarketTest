@@ -6,6 +6,8 @@ import java.util.Map;
 import com.web.gmarket.real.dto.RealDto;
 import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
 import com.web.gmarket.real.dto.SummaryProcNameDto;
+import com.web.gmarket.real.dto.TrafficDetailDto;
+import com.web.gmarket.real.dto.TrafficSummaryDto;
 
 public interface RealService {
 
@@ -24,4 +26,8 @@ public interface RealService {
 	public List<?> selectSummaryProcCount();
 	
 	public List<SummaryProcNameDto> selectSummaryProcName(String status);
+
+	public List<TrafficSummaryDto> selectTrafficSummary();
+
+	public List<TrafficDetailDto> selectTrafficDetail();
 }

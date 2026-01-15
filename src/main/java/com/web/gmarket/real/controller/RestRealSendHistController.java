@@ -21,6 +21,8 @@ import com.web.gmarket.real.dto.RealDto;
 import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
 import com.web.gmarket.real.dto.SummaryProcCountDto;
 import com.web.gmarket.real.dto.SummaryProcNameDto;
+import com.web.gmarket.real.dto.TrafficDetailDto;
+import com.web.gmarket.real.dto.TrafficSummaryDto;
 import com.web.gmarket.real.service.RealService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -206,6 +208,46 @@ public class RestRealSendHistController {
 			log.error(e.getLocalizedMessage());
 			
 			return new ResponseEntity<>(new SummaryProcNameDto(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * 총 발송량 조회
+	 * 
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping("/trafficSummary")
+	public ResponseEntity<?> trafficSummary(
+		Authentication authentication) {
+		try {
+
+			return new ResponseEntity<>(realService.selectTrafficSummary(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getLocalizedMessage());
+
+			return new ResponseEntity<>(new TrafficSummaryDto(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * 발송량 상세 조회
+	 * 
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping("/trafficDetail")
+	public ResponseEntity<?> trafficDetail(
+		Authentication authentication) {
+		try {
+
+			return new ResponseEntity<>(realService.selectTrafficDetail(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getLocalizedMessage());
+
+			return new ResponseEntity<>(new TrafficDetailDto(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }

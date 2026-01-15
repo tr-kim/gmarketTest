@@ -15,6 +15,8 @@ import com.web.gmarket.common.utils.DBUtils;
 import com.web.gmarket.real.dto.RealDto;
 import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
 import com.web.gmarket.real.dto.SummaryProcNameDto;
+import com.web.gmarket.real.dto.TrafficDetailDto;
+import com.web.gmarket.real.dto.TrafficSummaryDto;
 import com.web.gmarket.real.service.RealService;
 import com.web.gmarket.stat.dto.StatCodeDto;
 import com.web.gmarket.stat.service.StatCodeService;
@@ -138,4 +140,14 @@ public class RealServiceImpl implements RealService {
 	public List<SummaryProcNameDto> selectSummaryProcName(String status) {
 		return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectSummaryProcName(status);
 	}
+
+	@Override
+	public List<TrafficSummaryDto> selectTrafficSummary() {
+		return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectTrafficSummary();
+	}
+
+	@Override
+	public List<TrafficDetailDto> selectTrafficDetail() {
+		return commonService.getRealMapper(ConstantsUtils.DB_GMARKET).selectTrafficDetail();
+	}	
 }

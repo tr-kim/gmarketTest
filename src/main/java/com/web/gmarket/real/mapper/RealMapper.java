@@ -10,6 +10,8 @@ import com.web.gmarket.real.dto.ServiceStatusDetailDto;
 import com.web.gmarket.real.dto.ServiceStatusSummaryDto;
 import com.web.gmarket.real.dto.SummaryProcCountDto;
 import com.web.gmarket.real.dto.SummaryProcNameDto;
+import com.web.gmarket.real.dto.TrafficDetailDto;
+import com.web.gmarket.real.dto.TrafficSummaryDto;
 import com.web.gmarket.real.dto.ServiceStatusFailoverDto;
 
 @Mapper
@@ -87,5 +89,18 @@ public interface RealMapper {
 	 * @return
 	 */
 	public List<SummaryProcNameDto> selectSummaryProcName(@Param("status") String status);
-	
+
+	/**
+	 * 총 발송량 조회
+	 * 
+	 * @return
+	 */
+	public List<TrafficSummaryDto> selectTrafficSummary();
+
+	/**
+	 * 발송량 상세 조회
+	 * 
+	 * @return
+	 */
+	public List<TrafficDetailDto> selectTrafficDetail();
 }

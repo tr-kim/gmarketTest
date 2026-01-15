@@ -144,8 +144,38 @@ $(function () {
 	// 상단 총 발송량
 	$('#completion').click(function(){
 		$('.realCompletion').addClass('d-block');
+		trafficDetail();
 		toggleBodyClass();
 	});
+
+	//발송량 상세 조회
+	function trafficDetail() {
+		return $.ajax({
+			url: "/api/v1/real/trafficDetail",
+			method: "POST"
+		})
+		.then(res => {
+			
+			const row = res[0];
+			if (!row) return;
+
+			// 옥션
+			$('#aucSend').val(row.auSendCnt.toLocaleString()); // 전송
+			$('#aucSuccess').val(row.auSuccCnt.toLocaleString()); // 성공
+			$('#aucFail').val(row.auFailCnt.toLocaleString()); // 실패
+			$('#aucCompletion').val(row.auCompleteRate.toLocaleString()); // 완료율
+
+			// G마켓
+			$('#gmSend').val(row.gmSendCnt.toLocaleString()); // 전송
+			$('#gmSuccess').val(row.gmSuccCnt.toLocaleString()); // 성공
+			$('#gmFail').val(row.gmFailCnt.toLocaleString()); // 실패
+			$('#gmCompletion').val(row.gmCompleteRate.toLocaleString()); // 완료율
+
+		})
+		.catch(() => {	
+			showDialogCustom('error');
+		});
+	}
 	
 	// 발송량 차트
 	function makeChart(chartId) {
@@ -965,7 +995,36 @@ $(function () {
 	
 	// Summary 발송량 합계 조회
 	function fetchChartSumtData() {
-		console.log("발송량 합계 조회")
+		return $.ajax({
+			url: "/api/v1/real/trafficSummary",
+			method: "POST"
+		})
+		.then(res => {
+			CHART_SUM_FAIL_COUNT = 0; // 성공 시 실패 카운트 초기화
+			
+			const row = res[0];
+			if (!row) return;
+
+			const allSendCnt = row.allSendCnt.toLocaleString();
+
+			$('#totalSend').text(allSendCnt); //총 전송
+			$('#completion .count').text(row.allCompleteRate); //총 완료율
+
+		})
+		.catch(() => {						
+			CHART_SUM_FAIL_COUNT++;
+			// console.error('서버 상태 조회 실패:', err);
+			
+			if (CHART_SUM_FAIL_COUNT >= MAX_FAIL_COUNT) {
+				if (CHART_SUM_TIMER) {
+					clearInterval(CHART_SUM_TIMER);
+					CHART_SUM_TIMER = null;
+					
+					console.error('총 발송량 갱신 중지');
+					showDialogCustom('error');
+				}
+			}
+		});
 	}
 	
 	// Summary 발송량 합계 타이머 재시작
