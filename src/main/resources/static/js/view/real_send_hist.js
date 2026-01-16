@@ -147,30 +147,28 @@ $(function () {
 		trafficDetail();
 		toggleBodyClass();
 	});
-
-	//발송량 상세 조회
+	
+	// 발송량 상세 조회
 	function trafficDetail() {
 		return $.ajax({
 			url: "/api/v1/real/trafficDetail",
 			method: "POST"
 		})
 		.then(res => {
-			
 			const row = res[0];
 			if (!row) return;
-
+			
 			// 옥션
 			$('#aucSend').val(row.auSendCnt.toLocaleString()); // 전송
 			$('#aucSuccess').val(row.auSuccCnt.toLocaleString()); // 성공
 			$('#aucFail').val(row.auFailCnt.toLocaleString()); // 실패
 			$('#aucCompletion').val(row.auCompleteRate.toLocaleString()); // 완료율
-
+			
 			// G마켓
 			$('#gmSend').val(row.gmSendCnt.toLocaleString()); // 전송
 			$('#gmSuccess').val(row.gmSuccCnt.toLocaleString()); // 성공
 			$('#gmFail').val(row.gmFailCnt.toLocaleString()); // 실패
 			$('#gmCompletion').val(row.gmCompleteRate.toLocaleString()); // 완료율
-
 		})
 		.catch(() => {	
 			showDialogCustom('error');
@@ -1004,16 +1002,14 @@ $(function () {
 			
 			const row = res[0];
 			if (!row) return;
-
+			
 			const allSendCnt = row.allSendCnt.toLocaleString();
-
+			
 			$('#totalSend').text(allSendCnt); //총 전송
 			$('#completion .count').text(row.allCompleteRate); //총 완료율
-
 		})
-		.catch(() => {						
+		.catch(() => {
 			CHART_SUM_FAIL_COUNT++;
-			// console.error('서버 상태 조회 실패:', err);
 			
 			if (CHART_SUM_FAIL_COUNT >= MAX_FAIL_COUNT) {
 				if (CHART_SUM_TIMER) {
