@@ -20,5 +20,5 @@ public class TrafficSummaryDto {
 	private Integer allFailCnt;
 	
 	// 총 완료율(%)
-	private Integer allCompleteRate;
+	private Double allCompleteRate;
 }

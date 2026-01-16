@@ -20,7 +20,7 @@ public class TrafficDetailDto {
 	private Integer auFailCnt;
 	
 	// 완료율(%)
-	private Integer auCompleteRate;
+	private Double auCompleteRate;
 	
 	// 전송
 	private Integer gmSendCnt; // G마켓
@@ -32,7 +32,7 @@ public class TrafficDetailDto {
 	private Integer gmFailCnt;
 	
 	// 완료율(%)
-	private Integer gmCompleteRate;
+	private Double gmCompleteRate;
 	
 	// 전송
 	private Integer scSendCnt; // 스마일캐시
@@ -44,5 +44,5 @@ public class TrafficDetailDto {
 	private Integer scFailCnt;
 	
 	// 완료율(%)
-	private Integer scCompleteRate;
+	private Double scCompleteRate;
 }
