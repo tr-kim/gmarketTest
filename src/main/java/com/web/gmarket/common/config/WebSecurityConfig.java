@@ -2,6 +2,8 @@ package com.web.gmarket.common.config;
 
 
 
+import java.util.List;
+
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.web.gmarket.common.auth.filter.CustomAuthenticationFilter;
 import com.web.gmarket.common.auth.handler.CustomAuthFailureHandler;
@@ -56,23 +61,27 @@ public class WebSecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)                                       										// CSRF 보호 비활성화 운영일 경우 홣성화 ignoringRequestMatchers("/api/v1/**")
-                .cors(AbstractHttpConfigurer::disable)																				// CORS 비홣성화
-                .authorizeHttpRequests(auth -> 
-                	auth.requestMatchers("/login", "/login1", "/login2", "/login3", "/error/**", "/login-process", "/files/download/**").permitAll()
-                		.requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico", "/assets/**", "/webfonts/**").permitAll()
-                		.requestMatchers("/index").authenticated()  																// 로그인만 하면 접근 가능
-                		.requestMatchers("/view/hist").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
-                		.requestMatchers("/view/singleSend").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
-                		.requestMatchers("/view/excelSend").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
-                		.requestMatchers("/view/fileSend").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
-                		.requestMatchers("/view/dbSend").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
-                		.requestMatchers("/view/bulkHist").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
-                		.requestMatchers("/view/wait").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
-                		.requestMatchers("/view/real").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_OPERATOR")
-                		.requestMatchers("/view/stat").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN")
-                		.requestMatchers("/view/user").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN")
-                        .anyRequest().authenticated())
+				.csrf(AbstractHttpConfigurer::disable)                                       										// CSRF 보호 비활성화 운영일 경우 활성화 ignoringRequestMatchers("/api/v1/**")
+				// .cors(AbstractHttpConfigurer::disable)																			// CORS 비활성화
+				// Cross-Origin Resource Sharing (CORS) React 5173으로 부터 오는 모든 요청 허용
+				.cors(cors -> {})																									// CORS 활성화
+				.authorizeHttpRequests(auth -> 
+					auth
+						.requestMatchers("/api/v1/**").permitAll()																	// React 테스트용 API 오픈
+						.requestMatchers("/login", "/login1", "/login2", "/login3", "/error/**", "/login-process", "/files/download/**").permitAll()
+						.requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico", "/assets/**", "/webfonts/**").permitAll()
+						.requestMatchers("/index").authenticated()  																// 로그인만 하면 접근 가능
+						.requestMatchers("/view/hist").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
+						.requestMatchers("/view/singleSend").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
+						.requestMatchers("/view/excelSend").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
+						.requestMatchers("/view/fileSend").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
+						.requestMatchers("/view/dbSend").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
+						.requestMatchers("/view/bulkHist").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
+						.requestMatchers("/view/wait").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_USER")
+						.requestMatchers("/view/real").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN", "ROLE_OPERATOR")
+						.requestMatchers("/view/stat").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN")
+						.requestMatchers("/view/user").hasAnyAuthority("ROLE_SUPER", "ROLE_ADMIN")
+						.anyRequest().authenticated())
                 		.exceptionHandling(exception -> exception
                 				.authenticationEntryPoint((request, response, authException) -> {									// 인증 없이 요청이 들어오면 이동
                 				    // String uri = request.getRequestURI();
@@ -90,11 +99,11 @@ public class WebSecurityConfig {
             				.sessionFixation(sessionFixation -> sessionFixation
             		                .migrateSession() 																				// 세션 고정 공격(Session Fixation Attack) 방지
             		        )													
-            		        //.maximumSessions(1)																						// 세션 갯수 설정 최대 1명
-            		        // .maxSessionsPreventsLogin(true)																		// 새 로그인 거부 (기존 세션 유지)
+            		        //.maximumSessions(1)																					// 세션 갯수 설정 최대 1명
+            		        //.maxSessionsPreventsLogin(true)																		// 새 로그인 거부 (기존 세션 유지)
             		        //.maxSessionsPreventsLogin(false)																		// 새 로그인 가능 (기존 세션 삭제)
-            		        //.expiredSessionStrategy(customSessionExpiredStrategy())													// Spring Security에서 세션이 만료되었을 때 사용자 정의 동작을 실행할 수 있도록 해주는 전략 클래스
-            		        //.sessionRegistry(sessionRegistry())																		// 세션 레지스트리 설정
+            		        //.expiredSessionStrategy(customSessionExpiredStrategy())												// Spring Security에서 세션이 만료되었을 때 사용자 정의 동작을 실행할 수 있도록 해주는 전략 클래스
+            		        //.sessionRegistry(sessionRegistry())																	// 세션 레지스트리 설정
             		    )
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)      					// 사용자 인증(커스텀 필터)
 //                .formLogin((formLogin) ->																							// 필터 사용 시 중복 요청으로 인해 주석 처리
@@ -220,5 +229,23 @@ public class WebSecurityConfig {
     @Bean
     CustomSessionExpiredStrategy customSessionExpiredStrategy() {
         return new CustomSessionExpiredStrategy();
+    }
+    
+    /**
+     * 13. Cross-Origin Resource Sharing (CORS) React 5173으로 부터 오는 모든 요청 허용
+     *
+     * @return CorsConfigurationSource
+     */
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+      CorsConfiguration config = new CorsConfiguration();
+      config.setAllowedOrigins(List.of("http://localhost:5173"));
+      config.setAllowedMethods(List.of("GET","POST","PUT","DELETE"));
+      config.setAllowCredentials(true);
+      config.addAllowedHeader("*");
+      
+      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+      source.registerCorsConfiguration("/**", config);
+      return source;
     }
 }
