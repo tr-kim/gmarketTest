@@ -1,0 +1,87 @@
+// header
+header{
+    border-bottom: 1px solid #ddd;
+    padding: 2px 0;
+    background: #fff;
+    position: relative;
+    .logo{
+       img{
+         width: 80px;
+       }
+    }
+    .user_profile {
+        max-height: 50px;
+        padding: 14px 0;
+        color: #666;
+        .user_img {
+            width: 32px;
+            height: 32px;
+            border-radius: 3px;
+            background-color: #888;
+            overflow: hidden;
+            img{
+                width: 100%;
+            }
+        }
+        .user_nm {
+            line-height: 1.2;
+        }
+        .user_grade {
+            font-size: 13px;
+            line-height: 1.2;
+            text-align: start;
+        }
+    }
+    .gnb{
+        li{
+            max-height: 50px;
+            position: relative;
+            .menuhover{
+                padding: 14px;
+                vertical-align: middle;
+                border-radius: 5px;
+                color: #666;
+                transition: .2s background-color, .2s color;
+                display: inline-block;
+            }
+            ul{
+                // display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: #ffffff;
+                width: 100%;
+                box-shadow: 0 0 5px #00000020;
+                z-index: 100000;
+                li{
+                    padding: 7px 2px;
+                    width: 100%;
+                    text-align: center;
+                    a{
+                        padding: 7px;
+                        display: block;
+                        width: 100%;
+                        &:hover{
+                            background-color: #f0f0f0;
+                            color: #333;
+                        }
+                    }
+                }
+            }
+            &.active::before{                
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                background: #0abb26;
+                top: 100%;
+            }            
+        }
+        > li:hover{
+            > .menuhover{
+                background-color: #f9fafb;
+                color: #333;
+            }
+        }
+    }    
+}
