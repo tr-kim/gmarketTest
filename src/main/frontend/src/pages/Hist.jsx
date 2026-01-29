@@ -125,115 +125,140 @@ export default function Hist() {
   // Render
   // --------------------
   return (
-    <div>
+    <div className='container pb-3'>
+      <p className="font-sz-20 font-weight-600 pt-3 text-666">이력 조회</p>
       {/* 조회 조건 */}
-      <div className="search-area">
-        <DateBox value={startDate} onValueChanged={e => setStartDate(e.value)} />
-        <DateBox value={endDate} onValueChanged={e => setEndDate(e.value)} />
-
-        <SelectBox
-          dataSource={companyOptions}
-          displayExpr="name"
-          valueExpr="code"
-          value={company}
-          onValueChanged={e => {
-            setCompany(e.value);
-            setTable(-1);
-          }}
-        />
-
-        <SelectBox
-          dataSource={tableOptions[company]}
-          displayExpr="name"
-          valueExpr="code"
-          value={table}
-          onValueChanged={e => setTable(e.value)}
-        />
-
-        <TextBox
-          value={phoneNum}
-          placeholder="수신 번호"
-          onValueChanged={e => setPhoneNum(e.value)}
-        />
-
-        <Button
-          text="조회"
-		  onClick={onSearch}
-        />
+      <div className="content mx-0 mb-2 search-area">
+        <div className="row d-flex mb-2">
+          <div className="col-6 d-flex align-items-center">  
+            <div className="col-3">조회 기간</div>
+            <div className="col d-flex align-items-center">
+              <DateBox value={startDate} onValueChanged={e => setStartDate(e.value)} className='flex-fill'/>            
+              <span className='px-1 flex-fill text-center'>~</span>            
+              <DateBox value={endDate} onValueChanged={e => setEndDate(e.value)} className='flex-fill'/>  
+            </div>                                 
+          </div>
+          <div className="col-6 d-flex align-items-center">
+            <div className="col-3">대분류</div>
+            <div className="col">
+              <SelectBox
+                dataSource={companyOptions}
+                displayExpr="name"
+                valueExpr="code"
+                value={company}
+                onValueChanged={e => {
+                  setCompany(e.value);
+                  setTable(-1);
+                }}
+              />
+            </div>
+          </div>        
+        </div>
+        <div className="row d-flex mb-2">
+          <div className="col-6 d-flex align-items-center">  
+            <div className="col-3">수신 번호</div>
+            <div className="col">
+              <TextBox
+                value={phoneNum}
+                placeholder="수신 번호"
+                onValueChanged={e => setPhoneNum(e.value)}
+              />
+            </div>            
+          </div>
+          <div className="col-6 d-flex align-items-center">  
+            <div className="col-3">중분류</div>
+            <div className="col">
+              <SelectBox
+                dataSource={tableOptions[company]}
+                displayExpr="name"
+                valueExpr="code"
+                value={table}
+                onValueChanged={e => setTable(e.value)}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="col-12 d-flex justify-content-end">
+           <Button
+            text="조회"
+            onClick={onSearch}
+          />
+        </div>
       </div>
-
       {/* 조회 그리드 */}
-	  <DataGrid
-	    ref={gridRef}
-	    dataSource={store}
-	    remoteOperations={{ paging: true, sorting: true }}
-	    paging={{ pageSize: 50 }}
-	    pager={{
-	      visible: true,
-	      showInfo: true,
-	      showNavigationButtons: true,
-	      showPageSizeSelector: true,
-	      allowedPageSizes: [50, 100, 200]
-	    }}
-	    selection={{ mode: 'single' }}
-	    hoverStateEnabled
-	    headerFilter={{ visible: false }}
-	    searchPanel={{ visible: false, width: 300 }}
-	    columnAutoWidth
-	    allowColumnResizing
-	    columnResizingMode="widget"
-	    //onRowClick={e => {
-        //  openHistMessageInquiry(e.data);
-		//}}
-	    onContentReady={e => {
-          setTotalCount(e.component.totalCount());
-	    }}
-	  >
-	  
-	    <Toolbar>
-	      <Item location="before">
-	        <div style={{ fontSize: '17px', color: '#333', padding: '0 5px' }}>
-	          총 {totalCount.toLocaleString()}건
-	        </div>
-	      </Item>
-	      <Item name="searchPanel" />
-	    </Toolbar>
-		
-        <Column dataField="TRAN_PR" caption="NO" alignment="center" />
-		<Column
-		  caption="대분류"
-		  alignment="center"
-		  customizeText={() =>
-		    companyOptions.find(c => c.code === searchCond?.company)?.name
-		  }
-		/>
-        <Column dataField="TABLE_NAME" caption="중분류" alignment="center" />
-		<Column dataField="TRAN_PHONE" caption="수신 번호" alignment="center" />
-		<Column dataField="TRAN_CALLBACK" caption="발신 번호" alignment="center" />
-		<Column
-		  dataField="TRAN_DATE"
-		  caption="발송 일시"
-		  alignment="center"
-		  customizeText={e => formatTranDate(e.value)}
-		/>
-		<Column
-		  dataField="TRAN_MSG"
-		  caption="메시지 내용"
-		  alignment="left"
-		  width={350}
-		/>
-		<Column
-		  dataField="TRAN_RSLT"
-		  caption="결과"
-		  alignment="center"
-		  customizeText={e => switchTranRslt(e.value)}
-		/>
-		<Column
-		  dataField="CORP_RESERVED2"
-		  caption="Flow #"
-		  alignment="center"
-		/>
-      </DataGrid>
+      <div className="content">
+        <DataGrid
+        ref={gridRef}
+        dataSource={store}
+        remoteOperations={{ paging: true, sorting: true }}
+        paging={{ pageSize: 50 }}
+        pager={{
+          visible: true,
+          showInfo: true,
+          showNavigationButtons: true,
+          showPageSizeSelector: true,
+          allowedPageSizes: [50, 100, 200]
+        }}
+        selection={{ mode: 'single' }}
+        hoverStateEnabled
+        headerFilter={{ visible: false }}
+        searchPanel={{ visible: false, width: 300 }}
+        columnAutoWidth
+        allowColumnResizing
+        columnResizingMode="widget"
+        //onRowClick={e => {
+          //  openHistMessageInquiry(e.data);
+      //}}
+        onContentReady={e => {
+            setTotalCount(e.component.totalCount());
+        }}
+      >
+      
+        <Toolbar>
+          <Item location="before">
+            <div style={{ fontSize: '17px', color: '#333', padding: '0 5px' }}>
+              총 {totalCount.toLocaleString()}건
+            </div>
+          </Item>
+          <Item name="searchPanel" />
+        </Toolbar>
+      
+          <Column dataField="TRAN_PR" caption="NO" alignment="center" />
+      <Column
+        caption="대분류"
+        alignment="center"
+        customizeText={() =>
+          companyOptions.find(c => c.code === searchCond?.company)?.name
+        }
+      />
+          <Column dataField="TABLE_NAME" caption="중분류" alignment="center" />
+      <Column dataField="TRAN_PHONE" caption="수신 번호" alignment="center" />
+      <Column dataField="TRAN_CALLBACK" caption="발신 번호" alignment="center" />
+      <Column
+        dataField="TRAN_DATE"
+        caption="발송 일시"
+        alignment="center"
+        customizeText={e => formatTranDate(e.value)}
+      />
+      <Column
+        dataField="TRAN_MSG"
+        caption="메시지 내용"
+        alignment="left"
+        width={350}
+      />
+      <Column
+        dataField="TRAN_RSLT"
+        caption="결과"
+        alignment="center"
+        customizeText={e => switchTranRslt(e.value)}
+      />
+      <Column
+        dataField="CORP_RESERVED2"
+        caption="Flow #"
+        alignment="center"
+      />
+        </DataGrid>
+      </div>
     </div>
   );
 }

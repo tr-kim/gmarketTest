@@ -5,7 +5,7 @@ export default function MainLayout() {
   return (
     <div className="layout">
       <Header />
-      <main className="content">
+      <main>
         <Outlet />
       </main>
     </div>
