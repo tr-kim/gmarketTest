@@ -81,7 +81,10 @@ export default function Header() {
         <div className="container d-flex justify-content-between align-items-center">
           <ul className="gnb d-flex justify-content-between align-items-center">
             {menus.map(menu => (
-              <li key={menu.path} className={menu.hasSub ? 'sendmenu' : ''} ref={menuRef}>
+              <li 
+              key={menu.path} 
+              className={`${menu.hasSub ? 'sendmenu' : ''} ${location.pathname === menu.path && menu.path === '/hist' ? 'active' : ''}`}
+              ref={menuRef}>
                 {menu.hasSub ? (
                   <>
                     <button
