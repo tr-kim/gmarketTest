@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
 // styles
-import 'devextreme/dist/css/dx.light.css';
+import 'devextreme/dist/css/dx.fluent.blue.light.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
 import './scss/common.scss';
