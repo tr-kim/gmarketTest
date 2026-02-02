@@ -30,7 +30,7 @@ function App() {
           <Route path="/real" element={<Real />} />
           <Route path="/service" element={<Service />} />
           <Route path="/stat" element={<Stat />} />
-		  <Route path="/alarm" element={<Alarm />} />
+		      <Route path="/alarm" element={<Alarm />} />
           <Route path="/user" element={<User />} />
         </Route>
       </Routes>

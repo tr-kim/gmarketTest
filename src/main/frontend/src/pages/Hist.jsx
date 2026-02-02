@@ -8,6 +8,7 @@ import DateBox from 'devextreme-react/date-box';
 import SelectBox from 'devextreme-react/select-box';
 import TextBox from 'devextreme-react/text-box';
 import Button from 'devextreme-react/button';
+import HistMessage from "../components/modal/HistMessage";
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -33,6 +34,8 @@ export default function Hist() {
   const [table, setTable] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [searchCond, setSearchCond] = useState(null); // 조회 조건용
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
 
   // --------------------
   // SelectBox 옵션 구성
@@ -125,7 +128,7 @@ export default function Hist() {
   // Render
   // --------------------
   return (
-    <div className='container pb-3'>
+    <div id='histGrid' className='container pb-3'>
       <p className="font-sz-20 font-weight-600 pt-3 text-666">이력 조회</p>
       {/* 조회 조건 */}
       <div className="content mx-0 mb-2 search-area">
@@ -133,9 +136,19 @@ export default function Hist() {
           <div className="col-6 d-flex align-items-center">  
             <div className="col-3">조회 기간</div>
             <div className="col d-flex align-items-center">
-              <DateBox value={startDate} onValueChanged={e => setStartDate(e.value)} className='flex-fill'/>            
+              <DateBox 
+                value={startDate} 
+                displayFormat='yyyy-MM-dd'
+                onValueChanged={e => setStartDate(e.value)} 
+                className='flex-fill'
+              />            
               <span className='px-1 flex-fill text-center'>~</span>            
-              <DateBox value={endDate} onValueChanged={e => setEndDate(e.value)} className='flex-fill'/>  
+              <DateBox 
+                value={endDate} 
+                displayFormat='yyyy-MM-dd'
+                onValueChanged={e => setEndDate(e.value)} 
+                className='flex-fill'
+              />  
             </div>                                 
           </div>
           <div className="col-6 d-flex align-items-center">
@@ -160,7 +173,8 @@ export default function Hist() {
             <div className="col">
               <TextBox
                 value={phoneNum}
-                placeholder="수신 번호"
+                placeholder="수신 번호를 입력하세요."
+                maxLength={16}
                 onValueChanged={e => setPhoneNum(e.value)}
               />
             </div>            
@@ -178,86 +192,111 @@ export default function Hist() {
             </div>
           </div>
         </div>
-        <div className="col-12 d-flex justify-content-end">
-           <Button
-            text="조회"
-            onClick={onSearch}
-          />
+        <div className="row d-flex">
+          <div className="col-6"></div>
+          <div className="col-6 d-flex">
+            <div className="col-3"></div>
+            <div className="col-9 d-flex justify-content-between">
+              <div style={{ color: '#e70808' }}>※ 전체 조회는 조회 기간의 시작 달만 조회</div>
+              <div className="d-flex">
+                <Button
+                  text="엑셀 다운로드"
+                  type="success"
+                  width={120}
+                  onClick={() => {}}
+                />
+                <Button
+                  text="조회"
+                  type="default"
+                  width={60}
+                  onClick={onSearch}
+                  className="ms-2"
+                />
+              </div>              
+            </div>
+          </div>
         </div>
       </div>
       {/* 조회 그리드 */}
       <div className="content">
         <DataGrid
-        ref={gridRef}
-        dataSource={store}
-        remoteOperations={{ paging: true, sorting: true }}
-        paging={{ pageSize: 50 }}
-        pager={{
-          visible: true,
-          showInfo: true,
-          showNavigationButtons: true,
-          showPageSizeSelector: true,
-          allowedPageSizes: [50, 100, 200]
-        }}
-        selection={{ mode: 'single' }}
-        hoverStateEnabled
-        headerFilter={{ visible: false }}
-        searchPanel={{ visible: false, width: 300 }}
-        columnAutoWidth
-        allowColumnResizing
-        columnResizingMode="widget"
-        //onRowClick={e => {
-          //  openHistMessageInquiry(e.data);
-      //}}
-        onContentReady={e => {
-            setTotalCount(e.component.totalCount());
-        }}
-      >
-      
-        <Toolbar>
-          <Item location="before">
-            <div style={{ fontSize: '17px', color: '#333', padding: '0 5px' }}>
-              총 {totalCount.toLocaleString()}건
-            </div>
-          </Item>
-          <Item name="searchPanel" />
-        </Toolbar>
-      
+          ref={gridRef}
+          dataSource={store}
+          remoteOperations={{ paging: true, sorting: true }}
+          paging={{ pageSize: 50 }}
+          pager={{
+            visible: true,
+            showInfo: true,
+            showNavigationButtons: true,
+            showPageSizeSelector: true,
+            allowedPageSizes: [50, 100, 200]
+          }}
+          selection={{ mode: 'single' }}
+          hoverStateEnabled
+          headerFilter={{ visible: false }}
+          searchPanel={{ visible: false, width: 300 }}
+          columnAutoWidth
+          allowColumnResizing
+          columnResizingMode="widget"
+          onRowClick={e => {
+            setSelectedRow(e.data);
+            setIsModalOpen(true);
+          }}
+          onContentReady={e => {
+              setTotalCount(e.component.totalCount());
+          }}
+        >
+        
+          <Toolbar>
+            <Item location="before">
+              <div style={{ fontSize: '17px', color: '#333', padding: '0 5px' }}>
+                총 {totalCount.toLocaleString()}건
+              </div>
+            </Item>
+            <Item name="searchPanel" />
+          </Toolbar>
+        
           <Column dataField="TRAN_PR" caption="NO" alignment="center" />
-      <Column
-        caption="대분류"
-        alignment="center"
-        customizeText={() =>
-          companyOptions.find(c => c.code === searchCond?.company)?.name
-        }
-      />
+          <Column
+            caption="대분류"
+            alignment="center"
+            customizeText={() =>
+              companyOptions.find(c => c.code === searchCond?.company)?.name
+            }
+          />
           <Column dataField="TABLE_NAME" caption="중분류" alignment="center" />
-      <Column dataField="TRAN_PHONE" caption="수신 번호" alignment="center" />
-      <Column dataField="TRAN_CALLBACK" caption="발신 번호" alignment="center" />
-      <Column
-        dataField="TRAN_DATE"
-        caption="발송 일시"
-        alignment="center"
-        customizeText={e => formatTranDate(e.value)}
-      />
-      <Column
-        dataField="TRAN_MSG"
-        caption="메시지 내용"
-        alignment="left"
-        width={350}
-      />
-      <Column
-        dataField="TRAN_RSLT"
-        caption="결과"
-        alignment="center"
-        customizeText={e => switchTranRslt(e.value)}
-      />
-      <Column
-        dataField="CORP_RESERVED2"
-        caption="Flow #"
-        alignment="center"
-      />
+          <Column dataField="TRAN_PHONE" caption="수신 번호" alignment="center" />
+          <Column dataField="TRAN_CALLBACK" caption="발신 번호" alignment="center" />
+          <Column
+            dataField="TRAN_DATE"
+            caption="발송 일시"
+            alignment="center"
+            customizeText={e => formatTranDate(e.value)}
+          />
+          <Column
+            dataField="TRAN_MSG"
+            caption="메시지 내용"
+            alignment="left"
+            width={350}
+          />
+          <Column
+            dataField="TRAN_RSLT"
+            caption="결과"
+            alignment="center"
+            customizeText={e => switchTranRslt(e.value)}
+          />
+          <Column
+            dataField="CORP_RESERVED2"
+            caption="Flow #"
+            alignment="center"
+          />
         </DataGrid>
+        {isModalOpen && (
+          <HistMessage
+            data={selectedRow}
+            onClose={() => setIsModalOpen(false)}
+          />
+        )}
       </div>
     </div>
   );

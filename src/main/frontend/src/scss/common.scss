@@ -64,6 +64,23 @@ button{border: none; background-color: transparent;}
 .font-sz-24{
     font-size: 1.5rem !important;
 }
+.dx-calendar-body {
+    thead {
+        th{
+            text-align: center;
+        }
+    }
+}
+.dx-texteditor.dx-editor-outlined.dx-state-hover{
+    border-color: #e0e0e0;
+}
+.dx-texteditor.dx-editor-outlined{
+    border-color: #e0e0e0;
+}
+.dx-texteditor-input {
+    font-size: 1rem !important;
+    min-height: 38px !important;
+}
 @media (min-width: 1400px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
         max-width: 1400px;
