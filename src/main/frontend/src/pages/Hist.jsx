@@ -9,6 +9,9 @@ import SelectBox from 'devextreme-react/select-box';
 import TextBox from 'devextreme-react/text-box';
 import Button from 'devextreme-react/button';
 import HistMessage from "../components/modal/HistMessage";
+import ExcelJS from "exceljs";
+import { saveAs } from 'file-saver';
+import { exportDataGrid } from 'devextreme/excel_exporter';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -36,6 +39,8 @@ export default function Hist() {
   const [searchCond, setSearchCond] = useState(null); // 조회 조건용
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [gridInstance, setGridInstance] = useState(null);
+
 
   // --------------------
   // SelectBox 옵션 구성
@@ -91,7 +96,6 @@ export default function Hist() {
       sort: loadOptions.sort ?? [] // 정렬
     };
   };
-  
   const onSearch = () => {
     setSearchCond({
       startDate,
@@ -124,6 +128,25 @@ export default function Hist() {
     }
   });
   
+  // --------------------
+  // Excel Download
+  // --------------------
+  const onExportExcel = async () => {
+    if (!gridInstance) return;
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('이력');
+
+    await exportDataGrid({
+      component: gridInstance,  
+      worksheet,
+      autoFilterEnabled: true
+    });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), '이력 조회.xlsx');
+  };
+
   // --------------------
   // Render
   // --------------------
@@ -203,7 +226,7 @@ export default function Hist() {
                   text="엑셀 다운로드"
                   type="success"
                   width={120}
-                  onClick={() => {}}
+                  onClick={onExportExcel}
                 />
                 <Button
                   text="조회"
@@ -244,6 +267,9 @@ export default function Hist() {
           }}
           onContentReady={e => {
               setTotalCount(e.component.totalCount());
+          }}
+          onInitialized={(e) => {
+            setGridInstance(e.component);
           }}
         >
         
