@@ -1,18 +1,18 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainLayout from './components/layout/MainLayout';
 
-import Hist from './pages/Hist';
-import SingleSend from './pages/SingleSend';
-import ExcelSend from './pages/ExcelSend'; 
-import FileSend from './pages/FileSend';
-import DbSend from './pages/DbSend';
-import BulkHist from './pages/BulkHist';
-import Wait from './pages/Wait';
-import Real from './pages/Real';
-import Service from './pages/Service';
-import Stat from './pages/Stat';
-import Alarm from './pages/Alarm';
-import User from './pages/User';
+import Hist from './pages/Hist/Hist';
+import SingleSend from './pages/SingleSend/SingleSend';
+import ExcelSend from './pages/ExcelSend/ExcelSend'; 
+import FileSend from './pages/FileSend/FileSend';
+import DbSend from './pages/DbSend/DbSend';
+import BulkHist from './pages/BulkHist/BulkHist';
+import Wait from './pages/Wait/Wait';
+import Real from './pages/Real/Real';
+import Service from './pages/Service/Service';
+import Stat from './pages/Stat/Stat';
+import Alarm from './pages/Alarm/Alarm';
+import User from './pages/User/User';
 
 function App() {
   return (
@@ -30,7 +30,7 @@ function App() {
           <Route path="/real" element={<Real />} />
           <Route path="/service" element={<Service />} />
           <Route path="/stat" element={<Stat />} />
-		      <Route path="/alarm" element={<Alarm />} />
+		  <Route path="/alarm" element={<Alarm />} />
           <Route path="/user" element={<User />} />
         </Route>
       </Routes>

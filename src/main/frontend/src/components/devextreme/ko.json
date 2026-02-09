@@ -1,21 +1,21 @@
 {
     "ko": {
-        "Yes": "Yes",
-        "No": "No",
+        "Yes": "확인",
+        "No": "취소",
         "Cancel": "Cancel",
         "CheckState": "Check state",
         "Close": "Close",
         "Clear": "Clear",
         "Done": "Done",
-        "Loading": "Loading...",
-        "Select": "Select...",
+        "Loading": "조회 중입니다.",
+        "Select": "선택하세요.",
         "Search": "Search",
         "Back": "Back",
-        "OK": "OK",
+        "OK": "확인",
         "Today": "Today",
         "Yesterday": "Yesterday",
 
-        "dxCollectionWidget-noDataText": "No data to display",
+        "dxCollectionWidget-noDataText": "표시할 데이터가 없습니다.",
 
         "dxDropDownEditor-selectLabel": "Select",
 
@@ -46,7 +46,7 @@
         "dxList-refreshingText": "Refreshing...",
         "dxList-pageLoadingText": "Loading...",
         "dxList-nextButtonText": "More",
-        "dxList-selectAll": "Select All",
+        "dxList-selectAll": "전체 선택",
         "dxList-listAriaLabel": "Items",
         "dxList-listAriaLabel-deletable": "Deletable items",
         "dxListEditDecorator-delete": "Delete",
@@ -65,7 +65,7 @@
         "dxDateBox-simulatedDataPickerTitleTime": "Select time",
         "dxDateBox-simulatedDataPickerTitleDate": "Select date",
         "dxDateBox-simulatedDataPickerTitleDateTime": "Select date and time",
-        "dxDateBox-validation-datetime": "Value must be a date or time",
+        "dxDateBox-validation-datetime": "날짜를 형식에 맞게 입력해 주세요.",
 
         "dxDateRangeBox-invalidStartDateMessage": "Start value must be a date",
         "dxDateRangeBox-invalidEndDateMessage": "End value must be a date",
@@ -74,7 +74,7 @@
         "dxDateRangeBox-startDateLabel": "Start Date",
         "dxDateRangeBox-endDateLabel": "End Date",
 
-        "dxFileUploader-selectFile": "Select a file",
+        "dxFileUploader-selectFile": "이미지를 드래그&드롭하거나 클릭해 주세요.",
         "dxFileUploader-dropFile": "or Drop a file here",
         "dxFileUploader-bytes": "bytes",
         "dxFileUploader-kb": "KB",
