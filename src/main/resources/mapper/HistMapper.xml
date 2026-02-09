@@ -13,6 +13,7 @@
 		<result property="TRAN_RSLT" column="TRAN_RSLT" />
 		<result property="TRAN_MSG" column="TRAN_MSG" />
 		<result property="CORP_RESERVED2" column="CORP_RESERVED2" />
+		<result property="COMPANY_CODE" column="COMPANY_CODE" />
 		<result property="TABLE_NAME" column="TABLE_NAME" />
 	</resultMap>
 	
@@ -33,6 +34,7 @@
 						TRAN_RSLT,
 						TRAN_MSG,
 						CORP_RESERVED2,
+						#{companyCode} AS COMPANY_CODE,
 						CASE
 					        WHEN RIGHT(#{tableName}, 7) LIKE '_[0-9][0-9][0-9][0-9][0-9][0-9]'
 					        THEN LEFT(#{tableName}, LEN(#{tableName}) - 7)

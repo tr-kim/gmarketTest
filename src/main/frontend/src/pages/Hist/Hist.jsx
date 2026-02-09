@@ -269,6 +269,7 @@ export default function Hist() {
           totalCount={totalCount}
           setTotalCount={setTotalCount}
           onRowClick={openHistMessageInquiry}
+          companyOptions={companyOptions}
         />
       )}
 
