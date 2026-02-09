@@ -162,59 +162,104 @@ export default function Hist() {
    * Render
    * -------------------- */
   return (
-    <div className="container pb-3">
-      <p className="font-sz-20 font-weight-600 pt-3">이력 조회</p>
+    <div id='histGrid' className="container pb-3">
+      <p className="font-sz-20 font-weight-600 pt-3 text-666">이력 조회</p>
 
       {/* 조회 조건 */}
-      <div className="search-area mb-2">
-        <DateBox
-          value={form.startDate}
-          displayFormat="yyyy-MM-dd"
-          onValueChanged={(e) =>
-            setForm((prev) => ({ ...prev, startDate: e.value }))
-          }
-        />
-        <DateBox
-          value={form.endDate}
-          displayFormat="yyyy-MM-dd"
-          onValueChanged={(e) =>
-            setForm((prev) => ({ ...prev, endDate: e.value }))
-          }
-        />
-
-        <SelectBox
-          dataSource={companyOptions}
-          valueExpr="code"
-          displayExpr="name"
-          value={form.company}
-          onValueChanged={(e) =>
-            setForm((prev) => ({
-              ...prev,
-              company: e.value,
-              table: -1,
-            }))
-          }
-        />
-
-        <SelectBox
-          dataSource={tableOptions[form.company]}
-          valueExpr="code"
-          displayExpr="name"
-          value={form.table}
-          onValueChanged={(e) =>
-            setForm((prev) => ({ ...prev, table: e.value }))
-          }
-        />
-
-        <TextBox
-          value={form.phoneNum}
-          placeholder="수신 번호"
-          onValueChanged={(e) =>
-            setForm((prev) => ({ ...prev, phoneNum: e.value }))
-          }
-        />
-
-        <Button text="조회" type="default" onClick={onSearch} />
+      <div className="content mx-0 mb-2 search-area">
+        <div className="row d-flex mb-2">
+          <div className="col-6 d-flex align-items-center">  
+            <div className="col-3">조회 기간</div>
+            <div className="col d-flex align-items-center">
+              <DateBox
+                value={form.startDate}
+                displayFormat="yyyy-MM-dd"
+                onValueChanged={(e) =>
+                  setForm((prev) => ({ ...prev, startDate: e.value }))
+                }
+              />        
+              <span className='px-1 flex-fill text-center'>~</span>            
+              <DateBox
+                value={form.endDate}
+                displayFormat="yyyy-MM-dd"
+                onValueChanged={(e) =>
+                  setForm((prev) => ({ ...prev, endDate: e.value }))
+                }
+              />  
+            </div>                                 
+          </div>
+          <div className="col-6 d-flex align-items-center">
+            <div className="col-3">대분류</div>
+            <div className="col">
+              <SelectBox
+                dataSource={companyOptions}
+                valueExpr="code"
+                displayExpr="name"
+                value={form.company}
+                onValueChanged={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    company: e.value,
+                    table: -1,
+                  }))
+                }
+              />
+            </div>
+          </div>        
+        </div>
+        <div className="row d-flex mb-2">
+          <div className="col-6 d-flex align-items-center">  
+            <div className="col-3">수신 번호</div>
+            <div className="col">
+              <TextBox
+                value={form.phoneNum}
+                placeholder="수신 번호를 입력하세요."
+                maxLength={16}
+                onValueChanged={(e) =>
+                  setForm((prev) => ({ ...prev, phoneNum: e.value }))
+                }
+              />
+            </div>            
+          </div>
+          <div className="col-6 d-flex align-items-center">  
+            <div className="col-3">중분류</div>
+            <div className="col">
+              <SelectBox
+                dataSource={tableOptions[form.company]}
+                valueExpr="code"
+                displayExpr="name"
+                value={form.table}
+                onValueChanged={(e) =>
+                  setForm((prev) => ({ ...prev, table: e.value }))
+                }
+              />
+            </div>
+          </div>
+        </div>
+        <div className="row d-flex">
+          <div className="col-6"></div>
+          <div className="col-6 d-flex">
+            <div className="col-3"></div>
+            <div className="col-9 d-flex justify-content-between">
+              <div style={{ color: '#e70808' }}>※ 전체 조회는 조회 기간의 시작 달만 조회</div>
+              <div className="d-flex">
+                <Button
+                  text="엑셀 다운로드"
+                  type="success"
+                  width={120}
+                  // onClick={onExportExcel}
+                />
+                <Button
+                  text="조회"
+                  type="default"
+                  width={60}
+                  onClick={onSearch}
+                  className="ms-2"
+                />
+              </div>              
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* 그리드 (조회 후에만 렌더링) */}
