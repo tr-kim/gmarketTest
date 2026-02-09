@@ -5,6 +5,9 @@ import SelectBox from 'devextreme-react/select-box';
 import TextBox from 'devextreme-react/text-box';
 import Button from 'devextreme-react/button';
 import CustomStore from 'devextreme/data/custom_store';
+import ExcelJS from "exceljs";
+import { saveAs } from 'file-saver';
+import { exportDataGrid } from 'devextreme/excel_exporter';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
@@ -151,7 +154,27 @@ export default function Hist() {
     setStore(createStore({ ...form }));
   };
   
-  
+  // --------------------
+  // Excel Download
+  // --------------------
+  const [gridInstance, setGridInstance] = useState(null);
+
+  const onExportExcel = async () => {
+    if (!gridInstance) return;
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('이력 조회');
+
+    await exportDataGrid({
+      component: gridInstance,
+      worksheet,
+      autoFilterEnabled: true,
+    });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), '이력 조회.xlsx');
+  };
+
   useEffect(() => {
 	// 최초 진입 시 초기 조건으로 조회
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -247,7 +270,7 @@ export default function Hist() {
                   text="엑셀 다운로드"
                   type="success"
                   width={120}
-                  // onClick={onExportExcel}
+                  onClick={onExportExcel}
                 />
                 <Button
                   text="조회"
@@ -270,6 +293,7 @@ export default function Hist() {
           setTotalCount={setTotalCount}
           onRowClick={openHistMessageInquiry}
           companyOptions={companyOptions}
+          onGridReady={setGridInstance}
         />
       )}
 

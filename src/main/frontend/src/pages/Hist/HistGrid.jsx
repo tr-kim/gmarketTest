@@ -4,7 +4,7 @@ import { switchTranRslt } from '@/utils/histTran';
 import { formatTranDate } from '@/utils/dateFormat';
 
 const HistGrid = React.memo(
-  ({ store, totalCount, onRowClick, setTotalCount, companyOptions }) => {
+  ({ store, totalCount, onRowClick, setTotalCount, companyOptions, onGridReady }) => {
     return (
       <div className="content">
         <DataGrid
@@ -28,6 +28,9 @@ const HistGrid = React.memo(
           onRowClick={onRowClick}
           onContentReady={(e) => {
             setTotalCount(e.component.totalCount());
+          }}
+          onInitialized={(e) => {
+            onGridReady?.(e.component);
           }}
         >
           <Toolbar>
