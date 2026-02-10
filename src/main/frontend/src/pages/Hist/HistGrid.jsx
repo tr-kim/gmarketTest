@@ -30,7 +30,7 @@ const HistGrid = React.memo(
             setTotalCount(e.component.totalCount());
           }}
           onInitialized={(e) => {
-            onGridReady?.(e.component);
+            if (onGridReady) onGridReady(e.component);
           }}
         >
           <Toolbar>

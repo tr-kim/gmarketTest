@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 
 import DateBox from 'devextreme-react/date-box';
 import SelectBox from 'devextreme-react/select-box';
@@ -55,7 +55,24 @@ export default function Hist() {
    * -------------------- */
   const defaultOption = { code: -1, name: '선택하세요' };
 
-  const companyOptions = [
+  /*const companyOptions = [
+    defaultOption,
+    ...(userGrade === 0
+      ? [
+          { code: 0, name: '옥션' },
+          { code: 1, name: 'G마켓' },
+        ]
+      : [
+          {
+            code: companyCode,
+            name: companyCode === 0 ? '옥션' : 'G마켓',
+          },
+        ]),
+  ];*/
+  // useMemo 미사용 시 : 매번 배열을 새로 생성 (주소값 바뀜) -> 데이터가 변한줄 알고 재조회
+  // useMemo 사용 시 : 기존 배열을 재사용 (주소값 유지) -> 그대로
+  const companyOptions = useMemo(() => {
+  return [
     defaultOption,
     ...(userGrade === 0
       ? [
@@ -69,11 +86,17 @@ export default function Hist() {
           },
         ]),
   ];
+}, [userGrade, companyCode]);
 
-  const tableOptions = {
+  // const tableOptions = {
+  //   0: [defaultOption, { code: 0, name: '전체' }],
+  //   1: [defaultOption, { code: 0, name: '전체' }],
+  // };
+
+  const tableOptions = useMemo(() => ({
     0: [defaultOption, { code: 0, name: '전체' }],
     1: [defaultOption, { code: 0, name: '전체' }],
-  };
+  }), []);
 
   codeList.forEach(({ companyCode, code, name }) => {
     tableOptions[companyCode]?.push({ code, name });
@@ -159,11 +182,15 @@ export default function Hist() {
   // --------------------
   const [gridInstance, setGridInstance] = useState(null);
 
+  const handleGridReady = useCallback((instance) => {
+    setGridInstance(instance);
+  }, []);
+
   const onExportExcel = async () => {
     if (!gridInstance) return;
 
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('이력 조회');
+    const worksheet = workbook.addWorksheet('이력');
 
     await exportDataGrid({
       component: gridInstance,
@@ -174,13 +201,15 @@ export default function Hist() {
     const buffer = await workbook.xlsx.writeBuffer();
     saveAs(new Blob([buffer]), '이력 조회.xlsx');
   };
+  
+  
 
   useEffect(() => {
 	// 최초 진입 시 초기 조건으로 조회
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setStore(createStore(form));
   }, []);
-  
+
   /* --------------------
    * Render
    * -------------------- */
@@ -293,7 +322,7 @@ export default function Hist() {
           setTotalCount={setTotalCount}
           onRowClick={openHistMessageInquiry}
           companyOptions={companyOptions}
-          onGridReady={setGridInstance}
+          onGridReady={handleGridReady}
         />
       )}
 
