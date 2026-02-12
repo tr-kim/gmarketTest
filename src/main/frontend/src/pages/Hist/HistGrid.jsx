@@ -9,6 +9,7 @@ const HistGrid = React.memo(
       <div className="content">
         <DataGrid
           dataSource={store}
+          cacheEnabled={true}
           remoteOperations={{ paging: true, sorting: true }}
           paging={{ pageSize: 50 }}
           pager={{
@@ -27,10 +28,13 @@ const HistGrid = React.memo(
           columnResizingMode="widget"
           onRowClick={onRowClick}
           onContentReady={(e) => {
-            setTotalCount(e.component.totalCount());
+            const newCount = e.component.totalCount();
+            if (newCount > 0 && totalCount !== newCount) {
+              setTotalCount(newCount);
+            }
           }}
-          onInitialized={(e) => {
-            if (onGridReady) onGridReady(e.component);
+          onInitialized={(e) => {            
+            onGridReady?.(e.component);
           }}
         >
           <Toolbar>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import DateBox from 'devextreme-react/date-box';
 import SelectBox from 'devextreme-react/select-box';
@@ -144,6 +144,18 @@ export default function Hist() {
   const createStore = (cond) =>
     new CustomStore({
       load: (loadOptions) => {
+
+        // 엑셀 내보내기 중일 때는 서버 호출을 원천 차단
+        if (isExporting.current) {
+          
+          const currentData = gridRef.current?.getDataSource().items() || [];
+          
+          return Promise.resolve({
+            data: currentData,
+            totalCount: totalCount
+          });
+        }
+
         const tableItem = tableOptions[cond.company]?.find(
           (t) => t.code === cond.table
         );
@@ -180,29 +192,54 @@ export default function Hist() {
   // --------------------
   // Excel Download
   // --------------------
-  const [gridInstance, setGridInstance] = useState(null);
+  const gridRef = useRef(null); // 그리드 담는 통
+  const isExporting = useRef(false); // 엑셀 중인지 체크하는 잠금 장치
+  const memoizedStore = useMemo(() => store, [store]); // 엑셀 클릭 시 리렌더링 방어
 
-  const handleGridReady = useCallback((instance) => {
-    setGridInstance(instance);
+  /*const handleGridReady = useCallback((instance) => {
+    gridRef.current = instance; 
   }, []);
 
   const onExportExcel = async () => {
-    if (!gridInstance) return;
+  
+    if (!gridRef.current) return;
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('이력');
 
     await exportDataGrid({
-      component: gridInstance,
+      component: gridRef.current, 
+      worksheet,
+      autoFilterEnabled: true,
+    });
+    
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), '이력 조회.xlsx');
+  }; */
+
+  const handleGridReady = useCallback((instance) => {
+    gridRef.current = instance; // 여기에 저장만 합니다.
+  }, []);
+
+  const onExportExcel = async () => {
+    if (!gridRef.current) return;
+
+    isExporting.current = true; 
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('이력');
+
+    await exportDataGrid({
+      component: gridRef.current,
       worksheet,
       autoFilterEnabled: true,
     });
 
     const buffer = await workbook.xlsx.writeBuffer();
     saveAs(new Blob([buffer]), '이력 조회.xlsx');
+
+    isExporting.current = false;
   };
-  
-  
 
   useEffect(() => {
 	// 최초 진입 시 초기 조건으로 조회
@@ -299,6 +336,7 @@ export default function Hist() {
                   text="엑셀 다운로드"
                   type="success"
                   width={120}
+                  useSubmitBehavior={false}
                   onClick={onExportExcel}
                 />
                 <Button
@@ -317,7 +355,7 @@ export default function Hist() {
       {/* 그리드 (조회 후에만 렌더링) */}
       {store && (
         <HistGrid
-          store={store}
+          store={memoizedStore}
           totalCount={totalCount}
           setTotalCount={setTotalCount}
           onRowClick={openHistMessageInquiry}
