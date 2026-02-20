@@ -156,7 +156,7 @@ export default function Hist() {
    * Render
    * -------------------- */
   return (
-    <div className="container pb-3">
+    <div id='histGrid' className="container pb-3">
       <p className="font-sz-20 font-weight-600 pt-3 text-666">
         이력 조회
       </p>

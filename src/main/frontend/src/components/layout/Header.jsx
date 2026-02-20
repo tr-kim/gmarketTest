@@ -67,7 +67,7 @@ export default function Header() {
               </div>
               <div className="ms-2">
                   <div className="user_nm font-weight-500">
-                    <span>슈퍼관리자</span>
+                    <span>슈퍼관리자</span>&nbsp;
                     (<span>super</span>)
                   </div>
                   <div className="user_grade">
@@ -119,6 +119,7 @@ export default function Header() {
               </li>
             ))}
           </ul>
+          <button className="text-666 px-0"><i className="bi bi-box-arrow-right me-2"></i>로그아웃</button>
         </div>
       </header>
     </>    

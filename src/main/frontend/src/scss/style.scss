@@ -154,4 +154,10 @@ header{
         }
     }
 }
+// alarm
+#alarmGrid {
+    .dx-bordered-bottom-view {
+        height: calc(100vh - 560px);
+    }
+}
 
