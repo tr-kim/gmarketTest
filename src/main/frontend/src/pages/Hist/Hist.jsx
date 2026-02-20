@@ -1,18 +1,16 @@
-import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import DateBox from 'devextreme-react/date-box';
 import SelectBox from 'devextreme-react/select-box';
 import TextBox from 'devextreme-react/text-box';
 import Button from 'devextreme-react/button';
 import CustomStore from 'devextreme/data/custom_store';
-import ExcelJS from "exceljs";
-import { saveAs } from 'file-saver';
-import { exportDataGrid } from 'devextreme/excel_exporter';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-import HistGrid from "./HistGrid";
-import HistMessage from "./HistMessage";
+import HistGrid from './HistGrid';
+import HistMessage from './HistMessage';
+import { useHistStore } from './useHistStore';
 
 // --------------------
 // 임시 전역 데이터
@@ -39,40 +37,16 @@ export default function Hist() {
   });
 
   /* --------------------
-   * 조회 결과 state
+   * Zustand actions
    * -------------------- */
-  const [store, setStore] = useState(null);
-  const [totalCount, setTotalCount] = useState(0);
-
-  /* --------------------
-   * 메시지 팝업 state
-   * -------------------- */
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
+  const setGridStore = useHistStore((s) => s.setGridStore);
 
   /* --------------------
    * 옵션 데이터
    * -------------------- */
   const defaultOption = { code: -1, name: '선택하세요' };
 
-  /*const companyOptions = [
-    defaultOption,
-    ...(userGrade === 0
-      ? [
-          { code: 0, name: '옥션' },
-          { code: 1, name: 'G마켓' },
-        ]
-      : [
-          {
-            code: companyCode,
-            name: companyCode === 0 ? '옥션' : 'G마켓',
-          },
-        ]),
-  ];*/
-  // useMemo 미사용 시 : 매번 배열을 새로 생성 (주소값 바뀜) -> 데이터가 변한줄 알고 재조회
-  // useMemo 사용 시 : 기존 배열을 재사용 (주소값 유지) -> 그대로
-  const companyOptions = useMemo(() => {
-  return [
+  const companyOptions = [
     defaultOption,
     ...(userGrade === 0
       ? [
@@ -86,36 +60,15 @@ export default function Hist() {
           },
         ]),
   ];
-}, [userGrade, companyCode]);
 
-  // const tableOptions = {
-  //   0: [defaultOption, { code: 0, name: '전체' }],
-  //   1: [defaultOption, { code: 0, name: '전체' }],
-  // };
-
-  const tableOptions = useMemo(() => ({
+  const tableOptions = {
     0: [defaultOption, { code: 0, name: '전체' }],
     1: [defaultOption, { code: 0, name: '전체' }],
-  }), []);
+  };
 
   codeList.forEach(({ companyCode, code, name }) => {
     tableOptions[companyCode]?.push({ code, name });
   });
-
-  /* --------------------
-   * 메시지 팝업 제어
-   * -------------------- */
-  const openHistMessageInquiry = useCallback((e) => {
-    if (!e?.data) return;
-
-    setModalMessage(e.data.TRAN_MSG ?? '');
-    setIsModalOpen(true);
-  }, []);
-
-  const closeHistMessageInquiry = useCallback(() => {
-    setIsModalOpen(false);
-    setModalMessage('');
-  }, []);
 
   /* --------------------
    * 조회 검증
@@ -127,35 +80,27 @@ export default function Hist() {
       alert('대분류를 선택하세요.');
       return false;
     }
+
     if (table === -1) {
       alert('중분류를 선택하세요.');
       return false;
     }
+
     if (startDate > endDate) {
       alert('조회 기간을 다시 입력하세요.');
       return false;
     }
+
     return true;
   };
 
   /* --------------------
-   * 조회 버튼 클릭
+   * CustomStore 생성
    * -------------------- */
   const createStore = (cond) =>
     new CustomStore({
+      key: 'TRAN_PR',
       load: (loadOptions) => {
-
-        // 엑셀 내보내기 중일 때는 서버 호출을 원천 차단
-        if (isExporting.current) {
-          
-          const currentData = gridRef.current?.getDataSource().items() || [];
-          
-          return Promise.resolve({
-            data: currentData,
-            totalCount: totalCount
-          });
-        }
-
         const tableItem = tableOptions[cond.company]?.find(
           (t) => t.code === cond.table
         );
@@ -164,14 +109,17 @@ export default function Hist() {
           .post('/api/v1/hist/list', {
             phoneNum: cond.phoneNum,
             companyCode: cond.company,
-            tableName:
-              tableItem?.name === '전체' ? '' : tableItem?.name,
+            tableName: tableItem?.name === '전체' ? '' : tableItem?.name,
 
+            // Java YearMonth
             startDate: dayjs(cond.startDate).format('YYYYMM'),
             endDate: dayjs(cond.endDate).format('YYYYMM'),
+
+            // Java LocalDate
             startTime: dayjs(cond.startDate).format('YYYYMMDD'),
             endTime: dayjs(cond.endDate).format('YYYYMMDD'),
 
+            // DevExtreme Options
             skip: loadOptions.skip ?? 0,
             take: loadOptions.take ?? 50,
             sort: loadOptions.sort || [],
@@ -182,101 +130,61 @@ export default function Hist() {
           }));
       },
     });
-	
+
+  /* --------------------
+   * 페이지 최초 진입 시 조회
+   * -------------------- */
+  useEffect(() => {
+    if (!validateSearch(form)) return;
+    setGridStore(createStore({ ...form }));
+  }, []);
+
+  /* --------------------
+   * 조회 버튼
+   * -------------------- */
   const onSearch = () => {
     if (!validateSearch(form)) return;
-
-    setStore(createStore({ ...form }));
-  };
-  
-  // --------------------
-  // Excel Download
-  // --------------------
-  const gridRef = useRef(null); // 그리드 담는 통
-  const isExporting = useRef(false); // 엑셀 중인지 체크하는 잠금 장치
-  const memoizedStore = useMemo(() => store, [store]); // 엑셀 클릭 시 리렌더링 방어
-
-  /*const handleGridReady = useCallback((instance) => {
-    gridRef.current = instance; 
-  }, []);
-
-  const onExportExcel = async () => {
-  
-    if (!gridRef.current) return;
-
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('이력');
-
-    await exportDataGrid({
-      component: gridRef.current, 
-      worksheet,
-      autoFilterEnabled: true,
-    });
-    
-    const buffer = await workbook.xlsx.writeBuffer();
-    saveAs(new Blob([buffer]), '이력 조회.xlsx');
-  }; */
-
-  const handleGridReady = useCallback((instance) => {
-    gridRef.current = instance; // 여기에 저장만 합니다.
-  }, []);
-
-  const onExportExcel = async () => {
-    if (!gridRef.current) return;
-
-    isExporting.current = true; 
-
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('이력');
-
-    await exportDataGrid({
-      component: gridRef.current,
-      worksheet,
-      autoFilterEnabled: true,
-    });
-
-    const buffer = await workbook.xlsx.writeBuffer();
-    saveAs(new Blob([buffer]), '이력 조회.xlsx');
-
-    isExporting.current = false;
+    setGridStore(createStore({ ...form }));
   };
 
-  useEffect(() => {
-	// 최초 진입 시 초기 조건으로 조회
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setStore(createStore(form));
-  }, []);
+  /* --------------------
+   * 엑셀 다운로드 버튼
+   * -------------------- */
+  const onExportExcel = () => {};
 
   /* --------------------
    * Render
    * -------------------- */
   return (
-    <div id='histGrid' className="container pb-3">
-      <p className="font-sz-20 font-weight-600 pt-3 text-666">이력 조회</p>
+    <div className="container pb-3">
+      <p className="font-sz-20 font-weight-600 pt-3 text-666">
+        이력 조회
+      </p>
 
       {/* 조회 조건 */}
       <div className="content mx-0 mb-2 search-area">
         <div className="row d-flex mb-2">
-          <div className="col-6 d-flex align-items-center">  
+          <div className="col-6 d-flex align-items-center">
             <div className="col-3">조회 기간</div>
             <div className="col d-flex align-items-center">
               <DateBox
                 value={form.startDate}
                 displayFormat="yyyy-MM-dd"
                 onValueChanged={(e) =>
-                  setForm((prev) => ({ ...prev, startDate: e.value }))
+                  setForm((p) => ({ ...p, startDate: e.value }))
                 }
-              />        
-              <span className='px-1 flex-fill text-center'>~</span>            
+              />
+              <span className="px-1 flex-fill text-center">~</span>
               <DateBox
                 value={form.endDate}
                 displayFormat="yyyy-MM-dd"
                 onValueChanged={(e) =>
-                  setForm((prev) => ({ ...prev, endDate: e.value }))
+                  setForm((p) => ({ ...p, endDate: e.value }))
                 }
-              />  
-            </div>                                 
+              />
+            </div>
           </div>
+
           <div className="col-6 d-flex align-items-center">
             <div className="col-3">대분류</div>
             <div className="col">
@@ -286,18 +194,19 @@ export default function Hist() {
                 displayExpr="name"
                 value={form.company}
                 onValueChanged={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
+                  setForm((p) => ({
+                    ...p,
                     company: e.value,
                     table: -1,
                   }))
                 }
               />
             </div>
-          </div>        
+          </div>
         </div>
+
         <div className="row d-flex mb-2">
-          <div className="col-6 d-flex align-items-center">  
+          <div className="col-6 d-flex align-items-center">
             <div className="col-3">수신 번호</div>
             <div className="col">
               <TextBox
@@ -305,12 +214,13 @@ export default function Hist() {
                 placeholder="수신 번호를 입력하세요."
                 maxLength={16}
                 onValueChanged={(e) =>
-                  setForm((prev) => ({ ...prev, phoneNum: e.value }))
+                  setForm((p) => ({ ...p, phoneNum: e.value }))
                 }
               />
-            </div>            
+            </div>
           </div>
-          <div className="col-6 d-flex align-items-center">  
+
+          <div className="col-6 d-flex align-items-center">
             <div className="col-3">중분류</div>
             <div className="col">
               <SelectBox
@@ -319,18 +229,22 @@ export default function Hist() {
                 displayExpr="name"
                 value={form.table}
                 onValueChanged={(e) =>
-                  setForm((prev) => ({ ...prev, table: e.value }))
+                  setForm((p) => ({ ...p, table: e.value }))
                 }
               />
             </div>
           </div>
         </div>
+
         <div className="row d-flex">
           <div className="col-6"></div>
           <div className="col-6 d-flex">
             <div className="col-3"></div>
             <div className="col-9 d-flex justify-content-between">
-              <div style={{ color: '#e70808' }}>※ 전체 조회는 조회 기간의 시작 달만 조회</div>
+              <div style={{ color: '#e70808' }}>
+                ※ 전체 조회는 조회 기간의 시작 달만 조회
+              </div>
+
               <div className="d-flex">
                 <Button
                   text="엑셀 다운로드"
@@ -346,30 +260,17 @@ export default function Hist() {
                   onClick={onSearch}
                   className="ms-2"
                 />
-              </div>              
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 그리드 (조회 후에만 렌더링) */}
-      {store && (
-        <HistGrid
-          store={memoizedStore}
-          totalCount={totalCount}
-          setTotalCount={setTotalCount}
-          onRowClick={openHistMessageInquiry}
-          companyOptions={companyOptions}
-          onGridReady={handleGridReady}
-        />
-      )}
+      {/* 그리드 */}
+      <HistGrid />
 
-      {/* 메시지 팝업 */}
-      <HistMessage
-        visible={isModalOpen}
-        message={modalMessage}
-        onClose={closeHistMessageInquiry}
-      />
+      {/* 메시지 상세 팝업 */}
+      <HistMessage />
     </div>
   );
 }
