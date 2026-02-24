@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 
 import DateBox from 'devextreme-react/date-box';
 import SelectBox from 'devextreme-react/select-box';
-import TextBox from 'devextreme-react/text-box';
 import Button from 'devextreme-react/button';
 import CustomStore from 'devextreme/data/custom_store';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
 import AlarmGrid from './AlarmGrid';
+import { useAlarmStore } from './useAlarmStore';
 
 // --------------------
 // 임시 전역 데이터
@@ -17,21 +17,29 @@ const userGrade = window.userGrade ?? 0;
 const companyCode = window.companyCode ?? 0;
 const codeList = window.codeList ?? [];
 
+// --------------------
+// 메인 컴포넌트
+// --------------------
 export default function Alarm() {
   const today = new Date();
 
   /* --------------------
-    * 조회 조건 state
-    * -------------------- */
+   * 조회 조건 state
+   * -------------------- */
   const [form, setForm] = useState({
     startDate: today,
     endDate: today,
-    phoneNum: '',
     company: companyCode,
-    table: 0,
+    service: 0,
+    serverId: -1,
   });
 
-    /* --------------------
+  /* --------------------
+   * Zustand actions
+   * -------------------- */
+  const setGridStore = useAlarmStore((s) => s.setGridStore);
+
+  /* --------------------
    * 옵션 데이터
    * -------------------- */
   const defaultOption = { code: -1, name: '선택하세요' };
@@ -60,6 +68,101 @@ export default function Alarm() {
     tableOptions[companyCode]?.push({ code, name });
   });
 
+  const serverIdDefaultOption = { code: -1, name: '전체' };
+  
+  const serverIdOptions = [
+    serverIdDefaultOption, 
+    { code: 1, name: '1번' },
+    { code: 2, name: '2번' }
+  ];
+  
+  /* --------------------
+   * 조회 검증
+   * -------------------- */
+  const validateSearch = (cond) => {
+    const { startDate, endDate, company, service } = cond;
+
+    if (company === -1) {
+      alert('대분류를 선택하세요.');
+      return false;
+    }
+
+    if (service === -1) {
+      alert('서비스를 선택하세요.');
+      return false;
+    }
+
+    if (startDate > endDate) {
+      alert('조회 기간을 다시 입력하세요.');
+      return false;
+    }
+
+    return true;
+  };
+
+  /* --------------------
+   * CustomStore 생성
+   * -------------------- */
+  const createStore = (cond) =>
+    new CustomStore({
+      key: 'ALM_SEQ',
+      load: (loadOptions) => {
+        // const tableItem = tableOptions[cond.company]?.find(
+        //   (t) => t.code === cond.table
+        // );
+
+        return axios
+          .post('/api/v1/alarm/list', {
+            companyCode: cond.company,
+            svcName: "", // cond.service,
+            serverId: cond.serverId,
+            // tableName: tableItem?.name === '전체' ? '' : tableItem?.name,
+
+            // Java YearMonth
+            startDate: dayjs(cond.startDate).format('YYYY-MM-DD'),
+            endDate: dayjs(cond.endDate).format('YYYY-MM-DD'),
+
+            // Java LocalDate
+            // startTime: dayjs(cond.startDate).format('YYYYMMDD'),
+            // endTime: dayjs(cond.endDate).format('YYYYMMDD'),
+
+            // DevExtreme Options
+            skip: loadOptions.skip ?? 0,
+            take: loadOptions.take ?? 50,
+            sort: loadOptions.sort || [],
+          })
+          .then((res) => ({
+            data: res.data.list,
+            totalCount: res.data.totalCount,
+            console: console.log(res.data),
+          }));
+      },
+  });
+  
+  /* --------------------
+   * 페이지 최초 진입 시 조회
+   * -------------------- */
+  useEffect(() => {
+    if (!validateSearch(form)) return;
+    setGridStore(createStore({ ...form }));
+  }, []);
+
+  /* --------------------
+   * 조회 버튼
+   * -------------------- */
+  const onSearch = () => {
+    if (!validateSearch(form)) return;
+    setGridStore(createStore({ ...form }));
+  };
+
+  /* --------------------
+   * 엑셀 다운로드 버튼
+   * -------------------- */
+  // const onExportExcel = () => {};
+
+  /* --------------------
+   * Render
+   * -------------------- */
   return (
     <div id='alarmGrid' className="container pb-3">
       <p className="font-sz-20 font-weight-600 pt-3 text-666">알림 이력 조회</p>
@@ -112,13 +215,13 @@ export default function Alarm() {
             <div className="col-3">서비스</div>
             <div className="col">
               <SelectBox
-                // dataSource={tableOptions[form.company]}
-                // valueExpr="code"
-                // displayExpr="name"
-                // value={form.table}
-                // onValueChanged={(e) =>
-                //   setForm((p) => ({ ...p, table: e.value }))
-                // }
+                dataSource={tableOptions[form.service]}
+                valueExpr="code"
+                displayExpr="name"
+                value={form.service}
+                onValueChanged={(e) =>
+                  setForm((p) => ({ ...p, table: e.value }))
+                }
               />
             </div>
           </div>
@@ -127,13 +230,16 @@ export default function Alarm() {
             <div className="col-3">서버</div>
             <div className="col">
               <SelectBox
-                // dataSource={tableOptions[form.company]}
-                // valueExpr="code"
-                // displayExpr="name"
-                // value={form.table}
-                // onValueChanged={(e) =>
-                //   setForm((p) => ({ ...p, table: e.value }))
-                // }
+                dataSource={serverIdOptions}
+                valueExpr="code"
+                displayExpr="name"
+                value={form.serverId}
+                onValueChanged={(e) =>
+                  setForm((p) => ({
+                    ...p,
+                    serverId: e.value,
+                  }))
+                }
               />
             </div>
           </div>
@@ -155,7 +261,7 @@ export default function Alarm() {
                 text="조회"
                 type="default"
                 width={60}
-                // onClick={onSearch}
+                onClick={onSearch}
                 className="ms-2"
               />              
             </div>

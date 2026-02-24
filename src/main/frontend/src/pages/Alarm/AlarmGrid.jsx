@@ -1,27 +1,27 @@
 import React from 'react';
 import DataGrid, { Column, Toolbar, Item } from 'devextreme-react/data-grid';
-import { formatTranDate } from '@/utils/dateFormat';
-// import { switchTranRslt } from '@/utils/histTran';
-// import { useHistStore } from './useHistStore';
+// import { formatTranDate } from '@/utils/dateFormat';
+// import { switchTranRslt } from '@/utils/alarmTran';
+import { useAlarmStore } from './useAlarmStore';
 
 const AlarmGrid = React.memo(() => {
-  // const store = useHistStore((s) => s.gridStore);
-  // const totalCount = useHistStore((s) => s.totalCount);
-  // const setTotalCount = useHistStore((s) => s.setTotalCount);
-  // const openMessage = useHistStore((s) => s.openMessage);
+  const store = useAlarmStore((s) => s.gridStore);
+  const totalCount = useAlarmStore((s) => s.totalCount);
+  const setTotalCount = useAlarmStore((s) => s.setTotalCount);
+  const openMessage = useAlarmStore((s) => s.openMessage);
 
-  // const companyOptions = React.useMemo(
-  //   () => [
-  //     { code: 0, name: '옥션' },
-  //     { code: 1, name: 'G마켓' },
-  //   ],
-  //   []
-  // );
+  const companyOptions = React.useMemo(
+    () => [
+      { code: 0, name: '옥션' },
+      { code: 1, name: 'G마켓' },
+    ],
+    []
+  );
 
   return (
     <div className="content">
       <DataGrid
-        // dataSource={store}
+        dataSource={store}
         remoteOperations={true}
         paging={{ pageSize: 50 }}
         pager={{
@@ -38,10 +38,10 @@ const AlarmGrid = React.memo(() => {
         columnAutoWidth
         allowColumnResizing
         columnResizingMode="widget"
-        // onRowClick={(e) => openMessage(e.data?.TRAN_MSG)}
-        // onContentReady={(e) =>
-        //   setTotalCount(e.component.totalCount())
-        // }
+        onRowClick={(e) => openMessage(e.data?.TRAN_MSG)}
+        onContentReady={(e) =>
+          setTotalCount(e.component.totalCount())
+        }
       >
         <Toolbar>
           <Item location="before">
@@ -52,64 +52,63 @@ const AlarmGrid = React.memo(() => {
                 padding: '0 5px',
               }}
             >
-              {/* 총 {totalCount.toLocaleString()}건 */}
+              총 {totalCount.toLocaleString()}건
             </div>
           </Item>
         </Toolbar>
-
-        <Column dataField="TRAN_PR" caption="NO" alignment="center" />
 
         <Column
           dataField="COMPANY_CODE"
           caption="대분류"
           alignment="center"
-          // customizeText={(e) =>
-          //   companyOptions.find((c) => c.code === e.value)?.name ?? ''
-          // }
+          customizeText={(e) =>
+            companyOptions.find((c) => c.code === e.value)?.name ?? ''
+          }
         />
 
         <Column
-          dataField="TABLE_NAME"
-          caption="중분류"
+          dataField="SERVER_ID"
+          caption="서버"
+          alignment="center"
+          customizeText={(e) => 
+            e.value === 1 ? '1번' : e.value === 2 ? '2번' : ''
+          }
+        />
+
+        <Column
+          dataField="SVC_NAME"
+          caption="서비스"
           alignment="center"
         />
 
         <Column
-          dataField="TRAN_PHONE"
-          caption="수신 번호"
+          dataField="PROC_NAME"
+          caption="프로세스"
           alignment="center"
         />
 
         <Column
-          dataField="TRAN_CALLBACK"
-          caption="발신 번호"
+          dataField="MON_COMMENT"
+          caption="오류"
+          alignment="center"          
+        />
+
+        <Column
+          dataField="ALM_COMMENT"
+          caption="알림"
           alignment="center"
         />
 
         <Column
-          dataField="TRAN_DATE"
-          caption="발송 일시"
-          alignment="center"
-          customizeText={(e) => formatTranDate(e.value)}
-        />
-
-        <Column
-          dataField="TRAN_MSG"
-          caption="메시지 내용"
-          alignment="left"
-          width={350}
-        />
-
-        <Column
-          dataField="TRAN_RSLT"
-          caption="결과"
+          dataField="ALM_INFO"
+          caption="상세"
           alignment="center"
           // customizeText={(e) => switchTranRslt(e.value)}
         />
 
         <Column
-          dataField="CORP_RESERVED2"
-          caption="Flow #"
+          dataField="ALM_DATE"
+          caption="알림 발생 시간"
           alignment="center"
         />
       </DataGrid>
