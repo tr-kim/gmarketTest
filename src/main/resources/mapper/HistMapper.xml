@@ -51,23 +51,32 @@
 				</foreach>
 				)
 				
-				<!-- DevExtreme 정렬 처리 -->
-				<if test="sort != null and sort.size() > 0">
-					ORDER BY
-					<foreach collection="sort" item="s" separator=",">
-						${s.selector}
-						<choose>
-							<when test="s.desc">DESC</when>
-							<otherwise>ASC</otherwise>
-						</choose>
-					</foreach>
-				</if>
-				<if test="sort == null or sort.size() == 0">
-					ORDER BY TRAN_DATE DESC
-				</if>
+				<choose>
+					<!-- GRID: DevExtreme 정렬 -->
+					<when test="queryMode == 'GRID'">
+						<if test="sort != null and sort.size() > 0">
+							ORDER BY
+							<foreach collection="sort" item="s" separator=",">
+								${s.selector}
+								<choose>
+									<when test="s.desc">DESC</when>
+									<otherwise>ASC</otherwise>
+								</choose>
+							</foreach>
+						</if>
+						<if test="sort == null or sort.size() == 0">
+							ORDER BY TRAN_PR ASC
+						</if>
+					</when>
+					
+					<!-- EXCEL: 기본 정렬 -->
+					<otherwise>
+						ORDER BY TRAN_PR ASC
+					</otherwise>
+				</choose>
 				
-				<!-- DevExtreme 페이징 처리 -->
-				<if test="take != null and skip != null">
+				<!-- GRID만 DevExtreme 페이징 -->
+				<if test="queryMode == 'GRID' and take != null and skip != null">
 					OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 				</if>
 			</when>

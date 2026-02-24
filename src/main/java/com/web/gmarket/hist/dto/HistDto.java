@@ -23,6 +23,9 @@ public class HistDto {
 	private Integer companyCode;
 	private List<String> monthTables;
 	
+	// 조회 모드(GRID or EXCEL)
+	private String queryMode;
+	
 	// DevExtreme 조회 옵션
 	private List<Object> filter;
 	private List<Object> group;

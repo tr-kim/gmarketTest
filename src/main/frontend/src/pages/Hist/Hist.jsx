@@ -95,39 +95,50 @@ export default function Hist() {
   };
 
   /* --------------------
+   * 공통 파라미터 생성
+   * -------------------- */
+  const buildHistParams = (cond, tableOptions, extra = {}) => {
+    const tableItem = tableOptions[cond.company]?.find(
+      (t) => t.code === cond.table
+    );
+
+    return {
+      phoneNum: cond.phoneNum,
+      companyCode: cond.company,
+      tableName: tableItem?.name === '전체' ? '' : tableItem?.name,
+
+      // Java YearMonth
+      startDate: dayjs(cond.startDate).format('YYYYMM'),
+      endDate: dayjs(cond.endDate).format('YYYYMM'),
+
+      // Java LocalDate
+      startTime: dayjs(cond.startDate).format('YYYYMMDD'),
+      endTime: dayjs(cond.endDate).format('YYYYMMDD'),
+	  
+	  // 추가 옵션 (grid용 skip/take/sort 등)
+	  ...extra,
+    };
+  };
+  
+  /* --------------------
    * CustomStore 생성
    * -------------------- */
   const createStore = (cond) =>
     new CustomStore({
       key: 'TRAN_PR',
       load: (loadOptions) => {
-        const tableItem = tableOptions[cond.company]?.find(
-          (t) => t.code === cond.table
-        );
-
-        return axios
-          .post('/api/v1/hist/list', {
-            phoneNum: cond.phoneNum,
-            companyCode: cond.company,
-            tableName: tableItem?.name === '전체' ? '' : tableItem?.name,
-
-            // Java YearMonth
-            startDate: dayjs(cond.startDate).format('YYYYMM'),
-            endDate: dayjs(cond.endDate).format('YYYYMM'),
-
-            // Java LocalDate
-            startTime: dayjs(cond.startDate).format('YYYYMMDD'),
-            endTime: dayjs(cond.endDate).format('YYYYMMDD'),
-
-            // DevExtreme Options
-            skip: loadOptions.skip ?? 0,
-            take: loadOptions.take ?? 50,
-            sort: loadOptions.sort || [],
-          })
-          .then((res) => ({
-            data: res.data.data,
-            totalCount: res.data.totalCount,
-          }));
+		
+		const params = buildHistParams(cond, tableOptions, {
+		  // DevExtreme Options
+		  skip: loadOptions.skip ?? 0, // 페이지 시작 위치(offset)
+		  take: loadOptions.take ?? 50, // 페이지 크기(limit)
+		  sort: loadOptions.sort || [], // 정렬
+		});
+		
+		return axios.post('/api/v1/hist/list', params).then((res) => ({
+		  data: res.data.data,
+		  totalCount: res.data.totalCount,
+		}));
       },
     });
 
@@ -150,7 +161,44 @@ export default function Hist() {
   /* --------------------
    * 엑셀 다운로드 버튼
    * -------------------- */
-  const onExportExcel = () => {};
+  const onExportExcel = async () => {
+    if (!validateSearch(form)) return;
+
+    try {
+      const params = buildHistParams(form, tableOptions);
+
+      const res = await axios.post('/api/v1/hist/excel', params, {
+        responseType: 'blob',
+      });
+
+      // 서버 파일명 추출
+      let fileName = '이력조회.xlsx';
+      const disposition = res.headers['content-disposition'];
+
+      if (disposition) {
+        const match = disposition.match(/filename="?(.+?)"?$/);
+        if (match?.[1]) {
+          fileName = decodeURIComponent(match[1]);
+        }
+      }
+
+      // 파일 다운로드 처리
+      const blob = new Blob([res.data]);
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error(e);
+      alert('엑셀 다운로드 중 오류가 발생했습니다.');
+    }
+  };
 
   /* --------------------
    * Render

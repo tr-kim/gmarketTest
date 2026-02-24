@@ -1,21 +1,27 @@
 package com.web.gmarket.hist.controller;
 
 import java.util.List;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.gmarket.common.utils.ConstantsUtils;
+import com.web.gmarket.common.utils.ExcelUtils;
 import com.web.gmarket.hist.dto.HistDto;
 import com.web.gmarket.hist.service.HistService;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/v1/hist")
@@ -30,6 +36,7 @@ public class RestHistController {
 	@PostMapping("/list")
 	public ResponseEntity<?> getHistList(@RequestBody HistDto histDto) {
 		try {
+			histDto.setQueryMode("GRID"); // grid 리스트 조회
 			List<HistDto> result = histService.getHistList(histDto);
 			int totalCount = histService.getHistCount(histDto);
 			
@@ -49,11 +56,76 @@ public class RestHistController {
 		}
 	}
 	
-	@PutMapping("/update")
-	public void update() {
-	}
-	
-	@DeleteMapping("/delete")
-	public void delete() {
+	@PostMapping("/excel")
+	public void downloadExcel(@RequestBody HistDto histDto, HttpServletResponse response) {
+		try {
+			histDto.setQueryMode("EXCEL"); // excel 리스트 조회
+			List<HistDto> list = histService.getHistList(histDto);
+			
+			// 파일명
+			String startDateFormatted = ExcelUtils.formatFileDate(histDto.getStartTime());
+			String endDateFormatted = ExcelUtils.formatFileDate(histDto.getEndTime());
+			String fileName = String.format("이력조회(%s~%s).xlsx", startDateFormatted, endDateFormatted);
+			
+			SXSSFWorkbook workbook = new SXSSFWorkbook(100); // 메모리에 유지할 row 수
+			SXSSFSheet sheet = workbook.createSheet("이력조회");
+			
+			sheet.setColumnWidth(0, 2500);  // NO
+			sheet.setColumnWidth(1, 4000);  // 대분류
+			sheet.setColumnWidth(2, 6000);  // 중분류
+			sheet.setColumnWidth(3, 4500);  // 수신번호
+			sheet.setColumnWidth(4, 4500);  // 발신번호
+			sheet.setColumnWidth(5, 6000);  // 발송일시
+			sheet.setColumnWidth(6, 15000); // 메시지 내용
+			sheet.setColumnWidth(7, 5000);  // 결과
+			sheet.setColumnWidth(8, 4000);  // Flow
+			
+			// 헤더
+			SXSSFRow header = sheet.createRow(0);
+			header.createCell(0).setCellValue("NO");
+			header.createCell(1).setCellValue("대분류");
+			header.createCell(2).setCellValue("중분류");
+			header.createCell(3).setCellValue("수신번호");
+			header.createCell(4).setCellValue("발신번호");
+			header.createCell(5).setCellValue("발송일시");
+			header.createCell(6).setCellValue("메시지 내용");
+			header.createCell(7).setCellValue("결과");
+			header.createCell(8).setCellValue("Flow #");
+			
+			// 데이터
+			int rowIdx = 1;
+			for (HistDto item : list) {
+				SXSSFRow row = sheet.createRow(rowIdx++);
+				
+	            String companyName = ExcelUtils.switchCompanyCode(item.getCOMPANY_CODE());
+	            String tranDate = ExcelUtils.formatDate(item.getTRAN_DATE());
+	            String tranRslt = ExcelUtils.switchTranRslt(item.getTRAN_RSLT());
+	            
+				row.createCell(0).setCellValue(item.getTRAN_PR());
+				row.createCell(1).setCellValue(companyName);
+				row.createCell(2).setCellValue(item.getTABLE_NAME());
+				row.createCell(3).setCellValue(item.getTRAN_PHONE());
+				row.createCell(4).setCellValue(item.getTRAN_CALLBACK());
+				row.createCell(5).setCellValue(tranDate);
+				row.createCell(6).setCellValue(item.getTRAN_MSG());
+				row.createCell(7).setCellValue(tranRslt);
+				row.createCell(8).setCellValue(item.getCORP_RESERVED2());
+			}
+			
+			// 응답
+			response.setContentType(
+					"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+			response.setHeader(
+					"Content-Disposition",
+					"attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
+			
+			workbook.write(response.getOutputStream());
+	        workbook.dispose();
+	        workbook.close();
+	        
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
