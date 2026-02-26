@@ -59,13 +59,12 @@ public class RestHistController {
 	@PostMapping("/excel")
 	public void downloadExcel(@RequestBody HistDto histDto, HttpServletResponse response) {
 		try {
+			// 조회일자 재사용 방지
+			String startDate = histDto.getStartTime();
+			String endDate = histDto.getEndTime();
+			
 			histDto.setQueryMode("EXCEL"); // excel 리스트 조회
 			List<HistDto> list = histService.getHistList(histDto);
-			
-			// 파일명
-			String startDateFormatted = ExcelUtils.formatFileDate(histDto.getStartTime());
-			String endDateFormatted = ExcelUtils.formatFileDate(histDto.getEndTime());
-			String fileName = String.format("이력조회(%s~%s).xlsx", startDateFormatted, endDateFormatted);
 			
 			SXSSFWorkbook workbook = new SXSSFWorkbook(100); // 메모리에 유지할 row 수
 			SXSSFSheet sheet = workbook.createSheet("이력조회");
@@ -111,6 +110,11 @@ public class RestHistController {
 				row.createCell(7).setCellValue(tranRslt);
 				row.createCell(8).setCellValue(item.getCORP_RESERVED2());
 			}
+			
+			// 파일명
+			String startDateFormatted = ExcelUtils.formatFileDate(startDate);
+			String endDateFormatted = ExcelUtils.formatFileDate(endDate);
+			String fileName = String.format("이력조회(%s~%s).xlsx", startDateFormatted, endDateFormatted);
 			
 			// 응답
 			response.setContentType(
