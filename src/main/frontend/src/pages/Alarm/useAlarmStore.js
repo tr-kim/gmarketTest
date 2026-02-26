@@ -6,25 +6,10 @@ export const useAlarmStore = create((set) => ({
   gridStore: null,
   totalCount: 0,
 
-  // 메시지 팝업
-  // selectedMessage: '',
-  // isModalOpen: false,
-
   setGridStore: (store) =>
     set({ gridStore: store }),
 
   setTotalCount: (count) =>
     set({ totalCount: count }),
 
-  // openMessage: (msg) =>
-  //   set({
-  //     selectedMessage: msg ?? '',
-  //     isModalOpen: true,
-  //   }),
-
-  // closeMessage: () =>
-  //   set({
-  //     selectedMessage: '',
-  //     isModalOpen: false,
-  //   }),
 }));

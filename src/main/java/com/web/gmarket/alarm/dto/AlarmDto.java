@@ -83,6 +83,9 @@ public class AlarmDto implements Serializable {
 	// 조회 기간
 	private String startDate;
 	private String endDate;
+
+	// 조회 모드(GRID or EXCEL)
+	private String queryMode;
 	
 	// DevExtreme 조회 옵션
 	private Integer skip = 0;

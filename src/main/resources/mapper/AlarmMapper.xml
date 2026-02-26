@@ -85,21 +85,32 @@
 			</if>
 		) T
 		<choose>
-	  		<when test="sort != null and sort.size() > 0">
-		ORDER BY
-			<foreach collection="sort" item="s" separator=",">
-				${s.selector}
+			<when test="queryMode == 'GRID'">
 				<choose>
-					<when test="s.desc">DESC</when>
-					<otherwise>ASC</otherwise>
+					<when test="sort != null and sort.size() > 0">
+						ORDER BY
+						<foreach collection="sort" item="s" separator=",">
+							${s.selector}
+							<choose>
+								<when test="s.desc">DESC</when>
+								<otherwise>ASC</otherwise>
+							</choose>
+						</foreach>
+					</when>
+					<otherwise>
+						ORDER BY ALM_DATE DESC
+					</otherwise>
 				</choose>
-			</foreach>
-	  		</when>
-	  		<otherwise>
-	  	ORDER BY ALM_DATE DESC
-	  		</otherwise>
-	  	</choose>
-		OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
+			</when>
+
+			<otherwise>
+				ORDER BY ALM_DATE DESC
+			</otherwise>
+		</choose>
+
+		<if test="queryMode == 'GRID' and take != null and skip != null">
+			OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
+		</if>
 	</select>
 	
 </mapper>
