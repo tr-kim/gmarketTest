@@ -163,6 +163,9 @@ export default function Alarm() {
   const onExportExcel = async () => {
     if (!validateSearch(form)) return;
 
+    const { gridInstance } = useAlarmStore.getState();
+    gridInstance?.beginCustomLoading('엑셀 다운로드 중입니다.');
+	
     try {
       const params = buildAlarmParams(form);
 
@@ -196,7 +199,9 @@ export default function Alarm() {
     } catch (e) {
       console.error(e);
       alert('엑셀 다운로드 중 오류가 발생했습니다.');
-    }
+    } finally {
+      gridInstance?.endCustomLoading();
+	}
   };
 
   /* --------------------

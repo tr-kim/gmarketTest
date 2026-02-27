@@ -8,6 +8,7 @@ const HistGrid = React.memo(() => {
   const store = useHistStore((s) => s.gridStore);
   const totalCount = useHistStore((s) => s.totalCount);
   const setTotalCount = useHistStore((s) => s.setTotalCount);
+  const setGridInstance = useHistStore((s) => s.setGridInstance);
   const openMessage = useHistStore((s) => s.openMessage);
 
   const companyOptions = React.useMemo(
@@ -39,9 +40,8 @@ const HistGrid = React.memo(() => {
         allowColumnResizing
         columnResizingMode="widget"
         onRowClick={(e) => openMessage(e.data?.TRAN_MSG)}
-        onContentReady={(e) =>
-          setTotalCount(e.component.totalCount())
-        }
+		onInitialized={(e) => setGridInstance(e.component)}
+        onContentReady={(e) => setTotalCount(e.component.totalCount())}
       >
         <Toolbar>
           <Item location="before">

@@ -8,6 +8,7 @@ const AlarmGrid = React.memo(() => {
   const store = useAlarmStore((s) => s.gridStore);
   const totalCount = useAlarmStore((s) => s.totalCount);
   const setTotalCount = useAlarmStore((s) => s.setTotalCount);
+  const setGridInstance = useAlarmStore((s) => s.setGridInstance);
   const openMessage = useAlarmStore((s) => s.openMessage);
 
   const companyOptions = React.useMemo(
@@ -39,9 +40,8 @@ const AlarmGrid = React.memo(() => {
         allowColumnResizing
         columnResizingMode="widget"
         onRowClick={(e) => openMessage(e.data?.TRAN_MSG)}
-        onContentReady={(e) =>
-          setTotalCount(e.component.totalCount())
-        }
+		onInitialized={(e) => setGridInstance(e.component)}
+		onContentReady={(e) => setTotalCount(e.component.totalCount())}
       >
         <Toolbar>
           <Item location="before">

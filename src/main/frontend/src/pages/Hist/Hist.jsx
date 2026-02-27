@@ -164,6 +164,9 @@ export default function Hist() {
   const onExportExcel = async () => {
     if (!validateSearch(form)) return;
 
+	const { gridInstance } = useHistStore.getState();
+	gridInstance?.beginCustomLoading('엑셀 다운로드 중입니다.');
+	
     try {
       const params = buildHistParams(form, tableOptions);
 
@@ -197,7 +200,9 @@ export default function Hist() {
     } catch (e) {
       console.error(e);
       alert('엑셀 다운로드 중 오류가 발생했습니다.');
-    }
+    } finally {
+		gridInstance?.endCustomLoading();
+	}
   };
 
   /* --------------------
