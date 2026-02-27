@@ -6,6 +6,11 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.streaming.SXSSFCell;
 import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -78,16 +83,22 @@ public class RestAlarmController {
 			sheet.setColumnWidth(6, 5000);  // 상세
 			sheet.setColumnWidth(7, 5000);  // 알림 발생 시간
 			
+			// 헤더용 스타일 설정
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true); // 글씨 굵게
+            headerStyle.setFont(headerFont);
+			headerStyle.setAlignment(HorizontalAlignment.CENTER); // 가운데 정렬
+
 			// 헤더
 			SXSSFRow header = sheet.createRow(0);
-			header.createCell(0).setCellValue("대분류");
-			header.createCell(1).setCellValue("서버");
-			header.createCell(2).setCellValue("서비스");
-			header.createCell(3).setCellValue("프로세스");
-			header.createCell(4).setCellValue("오류");
-			header.createCell(5).setCellValue("알림");
-			header.createCell(6).setCellValue("상세");
-			header.createCell(7).setCellValue("알림 발생 시간");
+			String[] headerLabels = {"대분류", "서버", "서비스", "프로세스", "오류", "알림", "상세", "알림 발생 시간"};
+            
+            for (int i = 0; i < headerLabels.length; i++) {
+                SXSSFCell cell = header.createCell(i);
+                cell.setCellValue(headerLabels[i]);
+                cell.setCellStyle(headerStyle);
+            }
 			
 			// 데이터
 			int rowIdx = 1;
@@ -95,8 +106,6 @@ public class RestAlarmController {
 				SXSSFRow row = sheet.createRow(rowIdx++);
 				
 	            String companyName = ExcelUtils.switchCompanyCode(item.getCOMPANY_CODE());
-	            //String tranDate = ExcelUtils.formatDate(item.getTRAN_DATE());
-	            //String tranRslt = ExcelUtils.switchTranRslt(item.getTRAN_RSLT());
 	            
 				row.createCell(0).setCellValue(companyName);
 				row.createCell(1).setCellValue(item.getSERVER_ID() + "번");
@@ -107,6 +116,14 @@ public class RestAlarmController {
 				row.createCell(6).setCellValue(item.getALM_INFO());
 				row.createCell(7).setCellValue(item.getALM_DATE());
 			}
+
+			// 필터 적용 
+            if (rowIdx > 1) { 
+                sheet.setAutoFilter(new CellRangeAddress(0, rowIdx - 1, 0, 7));
+            }
+
+			// 헤더 고정
+            sheet.createFreezePane(0, 1);
 			
 			// 파일명
 			String startDateFormatted = ExcelUtils.formatFileDate(startDate);

@@ -6,6 +6,11 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.streaming.SXSSFCell;
 import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -78,18 +83,23 @@ public class RestHistController {
 			sheet.setColumnWidth(6, 15000); // 메시지 내용
 			sheet.setColumnWidth(7, 5000);  // 결과
 			sheet.setColumnWidth(8, 4000);  // Flow
+
+			// 헤더용 스타일 설정
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true); // 글씨 굵게
+            headerStyle.setFont(headerFont);
+			headerStyle.setAlignment(HorizontalAlignment.CENTER); // 가운데 정렬
 			
 			// 헤더
 			SXSSFRow header = sheet.createRow(0);
-			header.createCell(0).setCellValue("NO");
-			header.createCell(1).setCellValue("대분류");
-			header.createCell(2).setCellValue("중분류");
-			header.createCell(3).setCellValue("수신번호");
-			header.createCell(4).setCellValue("발신번호");
-			header.createCell(5).setCellValue("발송일시");
-			header.createCell(6).setCellValue("메시지 내용");
-			header.createCell(7).setCellValue("결과");
-			header.createCell(8).setCellValue("Flow #");
+			String[] headerLabels = {"NO", "대분류", "중분류", "수신번호", "발신번호", "발송일시", "메시지 내용", "결과", "Flow #"};
+            
+            for (int i = 0; i < headerLabels.length; i++) {
+                SXSSFCell cell = header.createCell(i);
+                cell.setCellValue(headerLabels[i]);
+                cell.setCellStyle(headerStyle);
+            }
 			
 			// 데이터
 			int rowIdx = 1;
@@ -111,6 +121,14 @@ public class RestHistController {
 				row.createCell(8).setCellValue(item.getCORP_RESERVED2());
 			}
 			
+			// 필터 적용 
+            if (rowIdx > 1) { 
+                sheet.setAutoFilter(new CellRangeAddress(0, rowIdx - 1, 0, 8));
+            }
+
+			// 헤더 고정
+            sheet.createFreezePane(0, 1);
+
 			// 파일명
 			String startDateFormatted = ExcelUtils.formatFileDate(startDate);
 			String endDateFormatted = ExcelUtils.formatFileDate(endDate);
