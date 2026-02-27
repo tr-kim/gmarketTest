@@ -21,9 +21,8 @@
 		/*
 			HistMapper.selectHistList
 		*/
-		<choose>
-			<when test="monthTables != null and monthTables.size() > 0">
-				(
+		<if test="monthTables != null and monthTables.size() > 0">
+			(
 				<foreach collection="monthTables" item="tableName" separator=" UNION ALL ">
 					SELECT
 						TRAN_PR,
@@ -49,38 +48,32 @@
 						AND TRAN_PHONE LIKE CONCAT('%', #{phoneNum}, '%')
 					</if>
 				</foreach>
-				)
+			)
+			
+			<choose>
+				<!-- GRID: DevExtreme 정렬 -->
+				<when test="queryMode == 'GRID' and sort != null and sort.size() > 0">
+					ORDER BY
+					<foreach collection="sort" item="s" separator=",">
+						${s.selector}
+						<choose>
+							<when test="s.desc">DESC</when>
+							<otherwise>ASC</otherwise>
+						</choose>
+					</foreach>
+				</when>
 				
-				<choose>
-					<!-- GRID: DevExtreme 정렬 -->
-					<when test="queryMode == 'GRID'">
-						<if test="sort != null and sort.size() > 0">
-							ORDER BY
-							<foreach collection="sort" item="s" separator=",">
-								${s.selector}
-								<choose>
-									<when test="s.desc">DESC</when>
-									<otherwise>ASC</otherwise>
-								</choose>
-							</foreach>
-						</if>
-						<if test="sort == null or sort.size() == 0">
-							ORDER BY TRAN_PR ASC
-						</if>
-					</when>
-					
-					<!-- EXCEL: 기본 정렬 -->
-					<otherwise>
-						ORDER BY TRAN_PR ASC
-					</otherwise>
-				</choose>
-				
-				<!-- GRID만 DevExtreme 페이징 -->
-				<if test="queryMode == 'GRID' and take != null and skip != null">
-					OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
-				</if>
-			</when>
-		</choose>
+				<!-- 그 외 기본 정렬 -->
+				<otherwise>
+					ORDER BY TRAN_PR ASC
+				</otherwise>
+			</choose>
+			
+			<!-- GRID: DevExtreme 페이징 -->
+			<if test="queryMode == 'GRID' and take != null and skip != null">
+				OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
+			</if>
+		</if>
 	</select>
 	
 	<select id="selectHistCount" resultType="int">

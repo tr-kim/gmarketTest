@@ -84,30 +84,27 @@
 				AND SVC_NAME = #{svcName}
 			</if>
 		) T
+		
 		<choose>
-			<when test="queryMode == 'GRID'">
-				<choose>
-					<when test="sort != null and sort.size() > 0">
-						ORDER BY
-						<foreach collection="sort" item="s" separator=",">
-							${s.selector}
-							<choose>
-								<when test="s.desc">DESC</when>
-								<otherwise>ASC</otherwise>
-							</choose>
-						</foreach>
-					</when>
-					<otherwise>
-						ORDER BY ALM_DATE DESC
-					</otherwise>
-				</choose>
+			<!-- GRID: DevExtreme 정렬 -->
+			<when test="queryMode == 'GRID' and sort != null and sort.size() > 0">
+				ORDER BY
+				<foreach collection="sort" item="s" separator=",">
+					${s.selector}
+					<choose>
+						<when test="s.desc">DESC</when>
+						<otherwise>ASC</otherwise>
+					</choose>
+				</foreach>
 			</when>
-
+			
+			<!-- 그 외 기본 정렬 -->
 			<otherwise>
 				ORDER BY ALM_DATE DESC
 			</otherwise>
 		</choose>
-
+		
+		<!-- GRID: DevExtreme 페이징 -->
 		<if test="queryMode == 'GRID' and take != null and skip != null">
 			OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 		</if>
