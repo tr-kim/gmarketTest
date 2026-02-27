@@ -59,13 +59,12 @@ public class RestAlarmController {
 	@PostMapping("/excel")
 	public void downloadExcel(@RequestBody AlarmDto alarmDto, HttpServletResponse response) {
 		try {
+			// 조회일자 재사용 방지
+			String startDate = alarmDto.getStartDate();
+			String endDate = alarmDto.getEndDate();
+			
 			alarmDto.setQueryMode("EXCEL"); // excel 리스트 조회
 			List<AlarmDto> list = alarmService.selectAlarmList(alarmDto);
-			
-			// 파일명
-			String startDateFormatted = ExcelUtils.formatFileDate(alarmDto.getStartDate());
-			String endDateFormatted = ExcelUtils.formatFileDate(alarmDto.getEndDate());
-			String fileName = String.format("알림이력조회(%s~%s).xlsx", startDateFormatted, endDateFormatted);
 			
 			SXSSFWorkbook workbook = new SXSSFWorkbook(100); // 메모리에 유지할 row 수
 			SXSSFSheet sheet = workbook.createSheet("알림이력조회");
@@ -108,6 +107,11 @@ public class RestAlarmController {
 				row.createCell(6).setCellValue(item.getALM_INFO());
 				row.createCell(7).setCellValue(item.getALM_DATE());
 			}
+			
+			// 파일명
+			String startDateFormatted = ExcelUtils.formatFileDate(startDate);
+			String endDateFormatted = ExcelUtils.formatFileDate(endDate);
+			String fileName = String.format("알림이력조회(%s~%s).xlsx", startDateFormatted, endDateFormatted);
 			
 			// 응답
 			response.setContentType(

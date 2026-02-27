@@ -34,6 +34,8 @@ public class ExcelUtils {
 	public static String formatFileDate(String value) {
 		if (value == null) return "";
 		
+		value = value.replaceAll("[^0-9]", ""); // 숫자만
+		
 		// yyyyMM
 		if (value.length() == 6) {
 			return value.substring(0, 4) + value.substring(4, 6);
