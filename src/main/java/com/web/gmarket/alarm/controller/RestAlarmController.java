@@ -74,29 +74,29 @@ public class RestAlarmController {
 			SXSSFWorkbook workbook = new SXSSFWorkbook(100); // 메모리에 유지할 row 수
 			SXSSFSheet sheet = workbook.createSheet("알림이력조회");
 			
-			sheet.setColumnWidth(0, 4000);  // 대분류
-			sheet.setColumnWidth(1, 4000);  // 서버
-			sheet.setColumnWidth(2, 6000);  // 서비스
-			sheet.setColumnWidth(3, 4500);  // 프로세스
-			sheet.setColumnWidth(4, 4500);  // 오류
-			sheet.setColumnWidth(5, 6000);  // 알림
-			sheet.setColumnWidth(6, 5000);  // 상세
-			sheet.setColumnWidth(7, 5000);  // 알림 발생 시간
+			// 컬럼 너비
+			int[] widths = {4000, 4000, 6000, 4500, 4500, 6000, 5000, 5000};
+			for (int i = 0; i < widths.length; i++) {
+				sheet.setColumnWidth(i, widths[i]);
+			}
 			
-			// 헤더용 스타일 설정
+			// 첫번째 행 고정
+			sheet.createFreezePane(0, 1);
+			
+			// 헤더 스타일
             CellStyle headerStyle = workbook.createCellStyle();
             Font headerFont = workbook.createFont();
             headerFont.setBold(true); // 글씨 굵게
             headerStyle.setFont(headerFont);
 			headerStyle.setAlignment(HorizontalAlignment.CENTER); // 가운데 정렬
-
+			
 			// 헤더
-			SXSSFRow header = sheet.createRow(0);
-			String[] headerLabels = {"대분류", "서버", "서비스", "프로세스", "오류", "알림", "상세", "알림 발생 시간"};
-            
-            for (int i = 0; i < headerLabels.length; i++) {
-                SXSSFCell cell = header.createCell(i);
-                cell.setCellValue(headerLabels[i]);
+			String[] headers = {"대분류", "서버", "서비스", "프로세스", "오류", "알림", "상세", "알림 발생 시간"};
+			SXSSFRow headerRow = sheet.createRow(0);
+			
+            for (int i = 0; i < headers.length; i++) {
+                SXSSFCell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
                 cell.setCellStyle(headerStyle);
             }
 			
@@ -116,15 +116,12 @@ public class RestAlarmController {
 				row.createCell(6).setCellValue(item.getALM_INFO());
 				row.createCell(7).setCellValue(item.getALM_DATE());
 			}
-
+			
 			// 필터 적용 
             if (rowIdx > 1) { 
                 sheet.setAutoFilter(new CellRangeAddress(0, rowIdx - 1, 0, 7));
             }
-
-			// 헤더 고정
-            sheet.createFreezePane(0, 1);
-			
+            
 			// 파일명
 			String startDateFormatted = ExcelUtils.formatFileDate(startDate);
 			String endDateFormatted = ExcelUtils.formatFileDate(endDate);
