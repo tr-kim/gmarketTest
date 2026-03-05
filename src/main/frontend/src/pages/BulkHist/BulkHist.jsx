@@ -35,11 +35,6 @@ export default function BulkHist() {
   });
 
   /* --------------------
-   * grid용 조회 조건 state
-   * -------------------- */
-  const [appliedCompany, setAppliedCompany] = useState(form.company);
-
-  /* --------------------
    * Zustand actions
    * -------------------- */
   const setGridStore = useBulkHistStore((s) => s.setGridStore);
@@ -151,7 +146,6 @@ export default function BulkHist() {
   const onSearch = () => {
     if (!validateSearch(form)) return;
     setGridStore(createStore({ ...form }));    
-    setAppliedCompany(form.company);
   };
 
   /* --------------------
@@ -289,7 +283,7 @@ export default function BulkHist() {
       </div>
 
       {/* 그리드 */}
-      <BulkHistGrid companyCode={appliedCompany} />
+      <BulkHistGrid />
 
       {/* 메시지 상세 팝업 */}
       {/* <HistMessage /> */}

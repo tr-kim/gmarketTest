@@ -30,6 +30,9 @@ public class BulkHistDto {
 	private Integer skip;
 	private Integer take;
 	private List<Object> sort;
+
+	// 조회 모드(GRID or EXCEL)
+	private String queryMode;
 	
 	//조회 컬럼
 	@JsonProperty("B_SEQ")
@@ -76,6 +79,9 @@ public class BulkHistDto {
 	
 	@JsonProperty("FAIL_CNT")
 	private Integer FAIL_CNT;
+
+	@JsonProperty("COMPANY_CODE")
+	private Integer COMPANY_CODE;
 	
 	@JsonProperty("CNT_STANBY")
 	private Integer CNT_STANBY;

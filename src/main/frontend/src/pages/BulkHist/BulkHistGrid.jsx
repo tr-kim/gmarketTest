@@ -4,12 +4,20 @@ import { formatTranDate } from '@/utils/dateFormat';
 // import { switchTranRslt } from '@/utils/bulkhistTran';
 import { useBulkHistStore } from './useBulkHistStore';
 
-const BulkHistGrid = React.memo(({ companyCode }) => {
+const BulkHistGrid = React.memo(() => {
   const store = useBulkHistStore((s) => s.gridStore);
   const totalCount = useBulkHistStore((s) => s.totalCount);
   const setTotalCount = useBulkHistStore((s) => s.setTotalCount);
   const setGridInstance = useBulkHistStore((s) => s.setGridInstance);
   const openMessage = useBulkHistStore((s) => s.openMessage);
+
+  const companyOptions = React.useMemo(
+    () => [
+      { code: 0, name: '옥션' },
+      { code: 1, name: 'G마켓' },
+    ],
+    []
+  );
 
   return (
     <div className="content">
@@ -50,13 +58,12 @@ const BulkHistGrid = React.memo(({ companyCode }) => {
         </Toolbar>        
 
         <Column
+          dataField="COMPANY_CODE"
           caption="대분류"
           alignment="center"
-          customizeText={() => {
-            if (companyCode === 0) return "옥션";
-            if (companyCode === 1) return "G마켓";
-            return ""; 
-          }}
+          customizeText={(e) =>
+            companyOptions.find((c) => c.code === e.value)?.name ?? ''
+          }
         />
 
         <Column dataField="TITLE" caption="제목" alignment="left" />

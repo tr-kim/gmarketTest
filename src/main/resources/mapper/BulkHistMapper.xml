@@ -20,6 +20,7 @@
 		<result property="SEND_INFO" column="SEND_INFO"/>
 		<result property="SUCC_CNT" column="SUCC_CNT" />
 		<result property="FAIL_CNT" column="FAIL_CNT" />
+		<result property="COMPANY_CODE" column="COMPANY_CODE" />
 	</resultMap>
 	
 	<select id="selectBulkHistList" resultMap="BulkHistResultMap">
@@ -29,6 +30,7 @@
 	
 		(
 		SELECT
+
 			B_SEQ,
 			B_MSG_KEY,
 			LOGIN_ID,
@@ -43,7 +45,8 @@
 			SVC_TYPE,
 			SEND_INFO,
 			SUCC_CNT,
-			FAIL_CNT
+			FAIL_CNT,
+			#{companyCode} AS COMPANY_CODE
 		FROM T_BROADCAST_MSG
 <!--		WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}	-->
 <!--			AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}	-->
@@ -54,23 +57,27 @@
 		</if>
 		)
 		
-		<!-- DevExtreme 정렬 처리 -->
-		<if test="sort != null and sort.size() > 0">
-			ORDER BY
-			<foreach collection="sort" item="s" separator=",">
-				${s.selector}
-				<choose>
-					<when test="s.desc">DESC</when>
-					<otherwise>ASC</otherwise>
-				</choose>
-			</foreach>
-		</if>
-		<if test="sort == null or sort.size() == 0">
-			ORDER BY B_SEQ DESC
-		</if>
+		<choose>
+			<!-- GRID: DevExtreme 정렬 -->
+			<when test="queryMode == 'GRID' and sort != null and sort.size() > 0">
+				ORDER BY
+				<foreach collection="sort" item="s" separator=",">
+					${s.selector}
+					<choose>
+						<when test="s.desc">DESC</when>
+						<otherwise>ASC</otherwise>
+					</choose>
+				</foreach>
+			</when>
+
+			<!-- 그 외 기본 정렬 -->
+			<otherwise>
+				ORDER BY B_SEQ DESC
+			</otherwise>
+		</choose>
 		
-		<!-- DevExtreme 페이징 처리 -->
-		<if test="take != null and skip != null">
+		<!-- GRID: DevExtreme 페이징 -->
+		<if test="queryMode == 'GRID' and take != null and skip != null">
 			OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 		</if>
 	</select>
