@@ -3,8 +3,10 @@ package com.web.gmarket.hist.controller;
 import java.util.List;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -21,10 +23,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.web.gmarket.common.service.CommonService;
 import com.web.gmarket.common.utils.ConstantsUtils;
 import com.web.gmarket.common.utils.ExcelUtils;
 import com.web.gmarket.hist.dto.HistDto;
 import com.web.gmarket.hist.service.HistService;
+import com.web.gmarket.stat.dto.StatCodeDto;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -33,9 +37,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class RestHistController {
 	
 	private final HistService histService;
+	private final CommonService commonService;
 	
-	public RestHistController(HistService histService) {
+	public RestHistController(HistService histService, CommonService commonService) {
 		this.histService = histService;
+		this.commonService = commonService;
 	}
 	
 	@PostMapping("/list")
@@ -59,6 +65,24 @@ public class RestHistController {
 	        
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
 		}
+	}
+	
+	@PostMapping("/codeList")
+	public List<Map<String, Object>> getCodeList() {
+		
+		// 테이블 명 목록 전체 조회
+		List<Map<String, Object>> codeList = commonService.getStatCodeMapper().selectStatCodeList(-1, 0).stream()
+				.sorted(Comparator.comparing(StatCodeDto::getCompanyCode).thenComparing(StatCodeDto::getTableCode))
+			    .map(dto -> {
+			        Map<String, Object> map = new HashMap<>();
+			        map.put("companyCode", dto.getCompanyCode());
+			        map.put("code", dto.getTableCode());
+			        map.put("name", dto.getTableName());
+			        return map;
+			    })
+			    .collect(Collectors.toList());
+		
+		return codeList;
 	}
 	
 	@PostMapping("/excel")

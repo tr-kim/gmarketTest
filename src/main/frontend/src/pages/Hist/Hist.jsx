@@ -10,19 +10,15 @@ import axios from 'axios';
 
 import HistGrid from './HistGrid';
 import HistMessage from './HistMessage';
+import { useAppStore } from '@/useAppStore';
 import { useHistStore } from './useHistStore';
 
-// --------------------
-// 임시 전역 데이터
-// --------------------
-const userGrade = window.userGrade ?? 0;
-const companyCode = window.companyCode ?? 0;
-const codeList = window.codeList ?? [];
-
-// --------------------
-// 메인 컴포넌트
-// --------------------
 export default function Hist() {
+  const session = useAppStore((s) => s.session);
+
+  const userGrade = session?.userGrade ?? 0;
+  const companyCode = session?.companyCode ?? 0;
+
   const today = new Date();
 
   /* --------------------
@@ -39,10 +35,12 @@ export default function Hist() {
   /* --------------------
    * Zustand actions
    * -------------------- */
+  const codeList = useHistStore((s) => s.codeList);
+  const setCodeList = useHistStore((s) => s.setCodeList);
   const setGridStore = useHistStore((s) => s.setGridStore);
 
   /* --------------------
-   * 옵션 데이터
+   * 대분류 옵션
    * -------------------- */
   const defaultOption = { code: -1, name: '선택하세요' };
 
@@ -61,6 +59,9 @@ export default function Hist() {
         ]),
   ];
 
+  /* --------------------
+   * 중분류 옵션
+   * -------------------- */
   const tableOptions = {
     0: [defaultOption, { code: 0, name: '전체' }],
     1: [defaultOption, { code: 0, name: '전체' }],
@@ -69,6 +70,32 @@ export default function Hist() {
   codeList.forEach(({ companyCode, code, name }) => {
     tableOptions[companyCode]?.push({ code, name });
   });
+
+  /* --------------------
+   * 중분류 옵션 조회
+   * 대분류 변경 시 중분류 재조회
+   * -------------------- */
+  useEffect(() => {
+    const fetchCodeList = async () => {
+      try {
+        const res = await axios.post('/api/v1/hist/codeList', {
+          companyCode: form.company,
+        });
+
+        setCodeList(res.data ?? []);
+      } catch (err) {
+        console.error('codeList 조회 실패', err);
+        setCodeList([]);
+      }
+    };
+
+    if (form.company === -1) {
+      setCodeList([]);
+      return;
+    }
+
+    fetchCodeList();
+  }, [form.company]);
 
   /* --------------------
    * 조회 검증
