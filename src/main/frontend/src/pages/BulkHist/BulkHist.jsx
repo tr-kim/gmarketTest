@@ -9,21 +9,17 @@ import dayjs from 'dayjs';
 import axios from 'axios';
 
 import BulkHistGrid from './BulkHistGrid';
+import { useAppStore } from '@/useAppStore';
 import { useBulkHistStore } from './useBulkHistStore';
 
-// --------------------
-// 임시 전역 데이터
-// --------------------
-const userGrade = window.userGrade ?? 0;
-const companyCode = window.companyCode ?? 0;
-const codeList = window.codeList ?? [];
-
-// --------------------
-// 메인 컴포넌트
-// --------------------
 export default function BulkHist() {
+  const session = useAppStore((s) => s.session);
+
+  const userGrade = session?.userGrade ?? 0;
+  const companyCode = session?.companyCode ?? 0;
+
   const today = new Date();
-  
+
   /* --------------------
    * 조회 조건 state
    * -------------------- */
@@ -40,7 +36,7 @@ export default function BulkHist() {
   const setGridStore = useBulkHistStore((s) => s.setGridStore);
 
   /* --------------------
-   * 옵션 데이터
+   * 대분류 옵션
    * -------------------- */
   const defaultOption = { code: -1, name: '선택하세요' };
 
@@ -58,15 +54,6 @@ export default function BulkHist() {
           },
         ]),
   ];
-
-  const tableOptions = {
-    0: [defaultOption, { code: 0, name: '전체' }],
-    1: [defaultOption, { code: 0, name: '전체' }],
-  };
-
-  codeList.forEach(({ companyCode, code, name }) => {
-    tableOptions[companyCode]?.push({ code, name });
-  });
 
   /* --------------------
    * 조회 검증
