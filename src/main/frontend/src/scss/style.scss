@@ -1,4 +1,5 @@
 $green: #0abb26;
+
 // modal
 .modal-bg{
     position: fixed;
@@ -56,6 +57,7 @@ $green: #0abb26;
         }
     }
 }
+
 // header
 header{
     border-bottom: 1px solid #ddd;
@@ -142,6 +144,7 @@ header{
         }
     }    
 }
+
 // hist
 #histGrid {
     .dx-bordered-bottom-view {
@@ -154,6 +157,7 @@ header{
         }
     }
 }
+
 // alarm
 #alarmGrid {
     .dx-bordered-bottom-view {
@@ -161,3 +165,9 @@ header{
     }
 }
 
+// bulkHist
+#bulkHistGrid {
+    .dx-bordered-bottom-view {
+        height: calc(100vh - 520px);
+    }
+}
