@@ -294,4 +294,52 @@ public class RestUserController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
 	}
+	
+	/**
+	 * 세션 정보 조회
+	 * 
+	 */
+	@PostMapping("/session")
+	public ResponseEntity<?> getSession(Authentication authentication) {
+		
+		UserDetailsDto user = null;
+		
+		if (authentication == null || !(authentication.getPrincipal() instanceof UserDetailsDto)) {
+			System.out.println(">>> 테스트 사용자");
+			
+			// 내부 DTO 생성
+			UserDto userDto = new UserDto();
+			userDto.setUserId("test");
+			userDto.setUserName("테스트");
+			userDto.setUserGrade(0); // 슈퍼관리자
+			userDto.setCompanyCode(1); // G마켓
+			userDto.setSmsYn("Y");
+			userDto.setExcelYn("Y");
+			userDto.setFileYn("Y");
+			userDto.setDbYn("Y");
+			userDto.setLmsYn("Y");
+			userDto.setMmsYn("Y");
+			
+			user = new UserDetailsDto(userDto);
+			
+		} else {
+			System.out.println(">>> 로그인 사용자");
+			
+			user = (UserDetailsDto) authentication.getPrincipal();
+		}
+		
+		Map<String, Object> result = new HashMap<>();
+		result.put("userId", user.getUserId());
+		result.put("userName", user.getUsername());
+		result.put("userGrade", user.getUserGrade());
+		result.put("companyCode", user.getCompanyCode());
+	    result.put("smsYn", user.getSmsYn());
+	    result.put("excelYn", user.getExcelYn());
+	    result.put("fileYn", user.getFileYn());
+	    result.put("dbYn", user.getDbYn());
+	    result.put("lmsYn", user.getLmsYn());
+	    result.put("mmsYn", user.getMmsYn());
+	    
+		return ResponseEntity.ok(result);
+	}
 }
