@@ -1,7 +1,6 @@
 import React from 'react';
 import DataGrid, { Column, Toolbar, Item } from 'devextreme-react/data-grid';
 import { formatTranDate } from '@/utils/dateFormat';
-// import { switchTranRslt } from '@/utils/bulkhistTran';
 import { useBulkHistStore } from './useBulkHistStore';
 
 const BulkHistGrid = React.memo(() => {
@@ -39,7 +38,7 @@ const BulkHistGrid = React.memo(() => {
         columnAutoWidth
         allowColumnResizing
         columnResizingMode="widget"
-        onRowClick={(e) => openMessage(e.data?.TRAN_MSG)}
+        onRowClick={(e) => openMessage(e.data)}
 		    onInitialized={(e) => setGridInstance(e.component)}
         onContentReady={(e) => setTotalCount(e.component.totalCount())}
       >

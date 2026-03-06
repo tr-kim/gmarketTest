@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import axios from 'axios';
 
 import BulkHistGrid from './BulkHistGrid';
+import BulkHistMessage from './BulkHistMessage';
 import { useBulkHistStore } from './useBulkHistStore';
 
 // --------------------
