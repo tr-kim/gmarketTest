@@ -8,21 +8,17 @@ import dayjs from 'dayjs';
 import axios from 'axios';
 
 import AlarmGrid from './AlarmGrid';
+import { useAppStore } from '@/useAppStore';
 import { useAlarmStore } from './useAlarmStore';
 
-// --------------------
-// 임시 전역 데이터
-// --------------------
-const userGrade = window.userGrade ?? 0;
-const companyCode = window.companyCode ?? 0;
-const codeList = window.codeList ?? [];
-
-// --------------------
-// 메인 컴포넌트
-// --------------------
 export default function Alarm() {
-  const today = new Date();
+  const session = useAppStore((s) => s.session);
 
+  const userGrade = session?.userGrade ?? 0;
+  const companyCode = session?.companyCode ?? 0;
+
+  const today = new Date();
+  
   /* --------------------
    * 조회 조건 state
    * -------------------- */
@@ -40,7 +36,7 @@ export default function Alarm() {
   const setGridStore = useAlarmStore((s) => s.setGridStore);
 
   /* --------------------
-   * 옵션 데이터
+   * 대분류 옵션
    * -------------------- */
   const defaultOption = { code: -1, name: '선택하세요' };
 
@@ -59,23 +55,23 @@ export default function Alarm() {
         ]),
   ];
 
+  /* --------------------
+   * 서비스 옵션
+   * -------------------- */
   const tableOptions = {
     0: [defaultOption, { code: 0, name: '전체' }],
     1: [defaultOption, { code: 0, name: '전체' }],
   };
 
-  codeList.forEach(({ companyCode, code, name }) => {
-    tableOptions[companyCode]?.push({ code, name });
-  });
-
-  const serverIdDefaultOption = { code: -1, name: '전체' };
-  
+  /* --------------------
+   * 서버 옵션
+   * -------------------- */
   const serverIdOptions = [
-    serverIdDefaultOption, 
-    { code: 1, name: '1번' },
-    { code: 2, name: '2번' }
+    { code: -1, name: '전체' },
+	{ code: 1, name: '1번' },
+	{ code: 2, name: '2번' }
   ];
-  
+
   /* --------------------
    * 조회 검증
    * -------------------- */

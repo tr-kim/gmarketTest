@@ -16,6 +16,11 @@ export const useHistStore = create((set) => ({
   setTotalCount: (count) =>
     set({ totalCount: count }),
 
+  // 중분류(테이블명)
+  codeList: [],
+  setCodeList: (list) =>
+    set({ codeList: list }),
+
   // 메시지 팝업
   selectedMessage: '',
   isModalOpen: false,
