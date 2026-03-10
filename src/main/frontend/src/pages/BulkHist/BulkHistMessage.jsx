@@ -29,112 +29,112 @@ export default function BulkHistMessage() {
           </button>
         </div>
         <div className="modal-con">
-          <div class="row">
-            <div class="col-12 mb-3">
-              <p class="d-block mb-1">제목</p>
+          <div className="row">
+            <div className="col-12 mb-3">
+              <p className="d-block mb-1">제목</p>
               <input 
                 type="text" 
-                class="form-control" 
-                readonly
+                className="form-control" 
+                readOnly
                 value={title || ''}
               />
             </div>
-            <div class="col-6 mb-3">
-              <p class="d-block mb-1">등록 일시</p>
+            <div className="col-6 mb-3">
+              <p className="d-block mb-1">등록 일시</p>
               <input 
                 type="text" 
-                class="form-control" 
-                readonly
+                className="form-control" 
+                readOnly
                 value={inTime || ''}
               />
             </div>
-            <div class="col-6 mb-3">
-              <p class="d-block mb-1">전송 일시</p>
+            <div className="col-6 mb-3">
+              <p className="d-block mb-1">전송 일시</p>
               <input 
                 type="text" 
-                class="form-control" 
-                readonly
+                className="form-control" 
+                readOnly
                 value={reqTime || ''}
               />
             </div>
-            <div class="col-6 mb-3">
-              <p class="d-block mb-1">발송 ID</p>
+            <div className="col-6 mb-3">
+              <p className="d-block mb-1">발송 ID</p>
               <input 
                 type="text" 
-                class="form-control" 
-                readonly
+                className="form-control" 
+                readOnly
                 value={userID || ''}
               />
             </div>
-            <div class="col-6 mb-3">
-              <p class="d-block mb-1">전송 대상</p>
+            <div className="col-6 mb-3">
+              <p className="d-block mb-1">전송 대상</p>
               <input 
                 type="text" 
-                class="form-control" 
-                readonly
+                className="form-control" 
+                readOnly
                 value={sendInfo || ''}
               />
             </div>
-            <div class="col-4 mb-3">
-              <p class="d-block mb-1">전체</p>
+            <div className="col-4 mb-3">
+              <p className="d-block mb-1">전체</p>
               <input 
                 type="text" 
-                class="form-control" 
-                readonly
-                value={count || ''}
+                className="form-control" 
+                readOnly
+                value={count ?? ''}
               />
             </div>
-            <div class="col-4 mb-3">
-              <p class="d-block mb-1">등록 성공</p>
+            <div className="col-4 mb-3">
+              <p className="d-block mb-1">등록 성공</p>
               <input 
                 type="text" 
-                class="form-control" 
-                readonly
-                value={succCount || ''}
+                className="form-control" 
+                readOnly
+                value={succCount ?? ''}
               />
             </div>					
-            <div class="col-4 mb-3">
-              <p class="d-block mb-1">미등록</p>
+            <div className="col-4 mb-3">
+              <p className="d-block mb-1">미등록</p>
               <input 
                 type="text" 
-                class="form-control" 
-                readonly
-                value={failCount || ''}
+                className="form-control" 
+                readOnly
+                value={failCount ?? ''}
               />
             </div>
-            <div class="col-4 mb-3">
-              <p class="d-block mb-1">대기 건수</p>
+            <div className="col-4 mb-3">
+              <p className="d-block mb-1">대기 건수</p>
               <input 
                 type="text" 
-                class="form-control" 
-                readonly
-                value={standbyCount || ''}
+                className="form-control" 
+                readOnly
+                value={standbyCount ?? ''}
               />
             </div>
-            <div class="col-4 mb-3">
-              <p class="d-block mb-1">전송중</p>
+            <div className="col-4 mb-3">
+              <p className="d-block mb-1">전송중</p>
               <input 
                 type="text" 
-                class="form-control" 
-                readonly
-                value={tranCount || ''  }
+                className="form-control" 
+                readOnly
+                value={tranCount ?? ''  }
               />
             </div>
-            <div class="col-4 mb-3">
-              <p class="d-block mb-1">성공/실패</p>
+            <div className="col-4 mb-3">
+              <p className="d-block mb-1">성공/실패</p>
               <input 
                 type="text" 
-                class="form-control" 
-                readonly
-                value={succFailCount || ''  }
+                className="form-control" 
+                readOnly
+                value={succFailCount ?? ''  }
               />
             </div>
-            <div class="col-12">
-              <p class="d-block mb-1">메시지 내용</p>
+            <div className="col-12">
+              <p className="d-block mb-1">메시지 내용</p>
               <textarea 
-                class="form-control"
+                className="form-control"
                 style={{height: '200px'}} 
-                readonly
+                readOnly
                 value={message || ''}
               />
             </div>

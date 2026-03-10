@@ -40,7 +40,7 @@ const HistGrid = React.memo(() => {
         allowColumnResizing
         columnResizingMode="widget"
         onRowClick={(e) => openMessage(e.data?.TRAN_MSG)}
-		onInitialized={(e) => setGridInstance(e.component)}
+		    onInitialized={(e) => setGridInstance(e.component)}
         onContentReady={(e) => setTotalCount(e.component.totalCount())}
       >
         <Toolbar>

@@ -47,6 +47,7 @@ export const useBulkHistStore = create((set) => ({
         ? `${data.CNT_SUCC ?? 0} / ${(data.CNT_DUP ?? 0) + (data.CNT_SENDFAIL ?? 0)}`
         : '',
       selectedMessage: data?.MSG ?? '',
+      // selectedMessage: msg ?? '',
       isModalOpen: true,
     }),
 

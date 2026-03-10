@@ -38,7 +38,14 @@ const BulkHistGrid = React.memo(() => {
         columnAutoWidth
         allowColumnResizing
         columnResizingMode="widget"
-        onRowClick={(e) => openMessage(e.data)}
+        onRowClick={(e) => {
+          console.log('전체' + e.data.CNT);
+          console.log('성공' + e.data.SUCC_CNT);
+          console.log('미등록' + e.data.FAIL_CNT);
+          console.log('대기' + e.data.CNT_STANBY);
+          console.log('전송중' + e.data.CNT_TRAN);
+          openMessage(e.data);
+        }}
 		    onInitialized={(e) => setGridInstance(e.component)}
         onContentReady={(e) => setTotalCount(e.component.totalCount())}
       >

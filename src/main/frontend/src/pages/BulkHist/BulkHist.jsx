@@ -274,7 +274,7 @@ export default function BulkHist() {
       <BulkHistGrid />
 
       {/* 메시지 상세 팝업 */}
-      {/* <HistMessage /> */}
+      <BulkHistMessage />
     </div>
   );
 }
