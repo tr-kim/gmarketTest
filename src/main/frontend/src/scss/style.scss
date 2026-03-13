@@ -158,16 +158,23 @@ header{
     }
 }
 
-// alarm
-#alarmGrid {
-    .dx-bordered-bottom-view {
-        height: calc(100vh - 560px);
-    }
-}
-
 // bulkHist
 #bulkHistGrid {
     .dx-bordered-bottom-view {
         height: calc(100vh - 520px);
+    }
+}
+
+// wait
+#waitGrid {
+    .dx-bordered-bottom-view {
+        height: calc(100vh - 520px);
+    }
+}
+
+// alarm
+#alarmGrid {
+    .dx-bordered-bottom-view {
+        height: calc(100vh - 560px);
     }
 }
