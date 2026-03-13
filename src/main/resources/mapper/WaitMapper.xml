@@ -15,6 +15,7 @@
 		<result property="CNT" column="CNT" />
 		<result property="STATUS" column="STATUS" />
 		<result property="SVC_TYPE" column="SVC_TYPE"/>
+		<result property="COMPANY_CODE" column="COMPANY_CODE" />
 	</resultMap>
 	
 	<select id="selectWaitList" resultMap="WaitResultMap">
@@ -33,7 +34,8 @@
 			REPLACE( REPLACE( REPLACE( CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') AS REQ_TIME,
 			CNT,
 			STATUS,
-			SVC_TYPE
+			SVC_TYPE,
+			#{companyCode} AS COMPANY_CODE
 		FROM T_BROADCAST_MSG
 <!--		WHERE REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[>=]]> #{startTime}	-->
 <!--			AND REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), REQ_TIME, 120), '-', ''), ':', ''), ' ', '') <![CDATA[<=]]> #{endTime}	-->
