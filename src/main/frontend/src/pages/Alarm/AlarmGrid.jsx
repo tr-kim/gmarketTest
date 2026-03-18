@@ -9,7 +9,6 @@ const AlarmGrid = React.memo(() => {
   const totalCount = useAlarmStore((s) => s.totalCount);
   const setTotalCount = useAlarmStore((s) => s.setTotalCount);
   const setGridInstance = useAlarmStore((s) => s.setGridInstance);
-  const openMessage = useAlarmStore((s) => s.openMessage);
 
   const companyOptions = React.useMemo(
     () => [
@@ -39,9 +38,8 @@ const AlarmGrid = React.memo(() => {
         columnAutoWidth
         allowColumnResizing
         columnResizingMode="widget"
-        onRowClick={(e) => openMessage(e.data?.TRAN_MSG)}
-		onInitialized={(e) => setGridInstance(e.component)}
-		onContentReady={(e) => setTotalCount(e.component.totalCount())}
+        onInitialized={(e) => setGridInstance(e.component)}
+        onContentReady={(e) => setTotalCount(e.component.totalCount())}
       >
         <Toolbar>
           <Item location="before">
@@ -103,7 +101,6 @@ const AlarmGrid = React.memo(() => {
           dataField="ALM_INFO"
           caption="상세"
           alignment="center"
-          // customizeText={(e) => switchTranRslt(e.value)}
         />
 
         <Column
