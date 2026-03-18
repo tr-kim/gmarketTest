@@ -1,4 +1,5 @@
 import { useBulkHistStore } from './useBulkHistStore';
+import { formatTranDate } from '@/utils/dateFormat';
 
 export default function BulkHistMessage() {
   const visible = useBulkHistStore((s) => s.isModalOpen);
@@ -45,7 +46,7 @@ export default function BulkHistMessage() {
                 type="text" 
                 className="form-control" 
                 readOnly
-                value={inTime || ''}
+                value={formatTranDate(inTime) || ''}
               />
             </div>
             <div className="col-6 mb-3">
@@ -54,7 +55,7 @@ export default function BulkHistMessage() {
                 type="text" 
                 className="form-control" 
                 readOnly
-                value={reqTime || ''}
+                value={formatTranDate(reqTime) || ''}
               />
             </div>
             <div className="col-6 mb-3">
@@ -131,14 +132,14 @@ export default function BulkHistMessage() {
             </div>
             <div className="col-12">
               <p className="d-block mb-1">메시지 내용</p>
-              <textarea 
+              <textarea
                 className="form-control"
-                style={{height: '200px'}} 
+                style={{height: '200px'}}
                 readOnly
                 value={message || ''}
               />
             </div>
-          </div>          
+          </div>
         </div>
       </div>
     </div>
