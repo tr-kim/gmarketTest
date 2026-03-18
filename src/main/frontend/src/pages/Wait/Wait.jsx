@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import axios from 'axios';
 
 import WaitGrid from './WaitGrid';
-// import WaitMessage from './WaitMessage';
+import WaitMessage from './WaitMessage';
 import { useAppStore } from '@/useAppStore';
 import { useWaitStore } from './useWaitStore';
 
@@ -220,7 +220,7 @@ export default function Wait() {
       <WaitGrid />
 
       {/* 메시지 상세 팝업 */}
-      {/* <WaitMessage /> */}
+      <WaitMessage />
     </div>
 
   )

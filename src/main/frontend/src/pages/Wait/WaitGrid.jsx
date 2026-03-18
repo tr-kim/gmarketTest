@@ -10,7 +10,7 @@ const WaitGrid = React.memo(() => {
   const totalCount = useWaitStore((s) => s.totalCount);
   const setTotalCount = useWaitStore((s) => s.setTotalCount);
   const setGridInstance = useWaitStore((s) => s.setGridInstance);
-  // const openMessage = useWaitStore((s) => s.openMessage);
+  const openMessage = useWaitStore((s) => s.openMessage);
 
   const companyOptions = React.useMemo(
     () => [
@@ -83,9 +83,25 @@ const WaitGrid = React.memo(() => {
         columnAutoWidth
         allowColumnResizing
         columnResizingMode="widget"
-        // onRowClick={(e) => openMessage(e.data)}
+        onRowClick={(e) => openMessage(e.data)}
 		    onInitialized={(e) => setGridInstance(e.component)}
         onContentReady={(e) => setTotalCount(e.component.totalCount())}
+        onSelectionChanged={(e)=> {
+          const grid = e.component;
+          const nowPlus30 = getAfterTime(30); 
+          const selectedRowsData = e.selectedRowsData;
+
+          const allowedKeys = selectedRowsData
+            .filter(row => row.REQ_TIME > nowPlus30)
+            .map(row => row.B_MSG_KEY);
+
+          const hasForbiddenRows = selectedRowsData.some(row => row.REQ_TIME <= nowPlus30);
+
+          if (hasForbiddenRows) {
+            alert('전송 임박 항목은 선택되지 않습니다.');
+            grid.selectRows(allowedKeys, false);
+          }
+        }}
       >
         <Toolbar>
           <Item location="before">
@@ -130,7 +146,8 @@ const WaitGrid = React.memo(() => {
         <Column
           dataField="TITLE"
           caption="제목"
-          alignment="center"
+          alignment="left"
+          width={200}
         />
 
         <Column
@@ -143,7 +160,7 @@ const WaitGrid = React.memo(() => {
         <Column
           dataField="MSG"
           caption="메시지 내용"
-          alignment="center"
+          alignment="left"
           width={350}
         />
 
