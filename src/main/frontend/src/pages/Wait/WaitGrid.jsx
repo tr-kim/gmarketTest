@@ -59,6 +59,59 @@ const WaitGrid = React.memo(() => {
     }
   };
 
+  
+  const onDeleteSelected = async () => {
+    
+    const grid = useWaitStore.getState().gridInstance;
+    if (!grid) return;
+
+    const selectedRowsData = grid.getSelectedRowsData();
+
+    if (selectedRowsData.length === 0) {
+      alert('삭제할 메시지를 선택하세요.');
+      return;
+    }
+
+    if (confirm(`${selectedRowsData.length}건을 삭제하시겠습니까?`)) {
+      // [확인] 클릭 시 실행
+      const param = selectedRowsData.map(row => ({
+        bulkMsgKey: row.B_MSG_KEY,
+        svcType: row.SVC_TYPE,
+        companyCode: row.COMPANY_CODE,
+      }));
+
+      try {
+        const response = await fetch("/api/v1/wait/delete", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(param),
+        });
+
+        if (!response.ok) throw new Error("네트워크 응답에 문제가 있습니다.");
+
+        const data = await response.json();
+        const { code, result } = data;
+
+        if (code === 1000) {
+          // 성공 시 알림 후 그리드 리로드
+          alert(result); 
+          
+        if (grid) {
+          //grid.refresh();
+          grid.getDataSource().reload();
+        }
+        } else {
+          alert(result);
+        }
+      } catch (error) {
+        console.error("삭제 요청 실패:", error);
+        alert("삭제 중 오류가 발생했습니다.");
+      }
+    }
+  };
+ 
   return (
     <div className="content">
       <DataGrid
@@ -129,6 +182,7 @@ const WaitGrid = React.memo(() => {
                 stylingMode= "contained"
                 type="danger"
                 className="ms-2"
+                onClick={onDeleteSelected}
               />
             </div>
           </Item>
