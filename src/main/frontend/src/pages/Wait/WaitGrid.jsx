@@ -99,8 +99,13 @@ const WaitGrid = React.memo(() => {
           alert(result); 
           
         if (grid) {
-          //grid.refresh();
-          grid.getDataSource().reload();
+
+          grid.beginUpdate();       // API 호출 일시 정지
+          grid.clearSelection(); 
+          grid.getDataSource().pageIndex(0);           
+          grid.getDataSource().reload().done(() => {
+            grid.endUpdate();       // 모든 설정 변경 후 한 번만 호출하도록 허용
+          });
         }
         } else {
           alert(result);
