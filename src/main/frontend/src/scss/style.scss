@@ -183,3 +183,8 @@ header{
 .stat-radio .dx-radiobutton {
   width: 100px;
 }
+#statGrid {
+    .dx-bordered-bottom-view {
+        height: calc(100vh - 560px);
+    }
+}

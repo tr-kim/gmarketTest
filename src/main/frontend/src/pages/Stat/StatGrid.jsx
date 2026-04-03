@@ -1,7 +1,7 @@
 import React from 'react';
 import DataGrid, { Column, Toolbar, Item } from 'devextreme-react/data-grid';
-import { formatTranDate } from '@/utils/dateFormat';
-// import { switchTranRslt } from '@/utils/statTran';
+// import { formatTranDate } from '@/utils/dateFormat';
+import { parseDateString } from '@/utils/statTran';
 import { useStatStore } from './useStatStore';
 
 const StatGrid = React.memo(() => {
@@ -9,7 +9,7 @@ const StatGrid = React.memo(() => {
   const totalCount = useStatStore((s) => s.totalCount);
   const setTotalCount = useStatStore((s) => s.setTotalCount);
   const setGridInstance = useStatStore((s) => s.setGridInstance);
-  const openMessage = useStatStore((s) => s.openMessage);
+  // const openMessage = useStatStore((s) => s.openMessage);
 
   const companyOptions = React.useMemo(
     () => [
@@ -39,7 +39,7 @@ const StatGrid = React.memo(() => {
         columnAutoWidth
         allowColumnResizing
         columnResizingMode="widget"
-        onRowClick={(e) => openMessage(e.data?.TRAN_MSG)}
+        // onRowClick={(e) => openMessage(e.data?.TRAN_MSG)}
 		    onInitialized={(e) => setGridInstance(e.component)}
         onContentReady={(e) => setTotalCount(e.component.totalCount())}
       >
@@ -61,6 +61,7 @@ const StatGrid = React.memo(() => {
           dataField="RESULT_DATE"
           caption="시간/일자"
           alignment="center"
+          customizeText={(e) => parseDateString(e.value)}
         />
 
         <Column
@@ -94,7 +95,6 @@ const StatGrid = React.memo(() => {
           dataField="FAIL_CNT"
           caption="실패"
           alignment="center"
-          customizeText={(e) => formatTranDate(e.value)}
         />
 
       </DataGrid>
