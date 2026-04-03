@@ -21,6 +21,7 @@
 		<result property="FAIL_07" column="FAIL_07" />
 		<result property="FAIL_08" column="FAIL_08" />
 		<result property="FAIL_09" column="FAIL_09" />
+		<result property="COMPANY_CODE" column="COMPANY_CODE" />
 	</resultMap>
 	
 	<select id="selectAuctionStatListCount" resultType="int" parameterType="com.web.gmarket.stat.dto.StatDto">
@@ -77,6 +78,7 @@
 			RESULT_DATE, TABLE_CODE, SUM(SUCC_CNT) AS SUCC_CNT, SUM(TRY_CNT) AS TRY_CNT, (SUM(TRY_CNT) - SUM(SUCC_CNT)) AS FAIL_CNT
 			, SUM(FAIL_00) AS FAIL_00, SUM(FAIL_01) AS FAIL_01, SUM(FAIL_02) AS FAIL_02, SUM(FAIL_03) AS FAIL_03, SUM(FAIL_04) AS FAIL_04
 			, SUM(FAIL_05) AS FAIL_05, SUM(FAIL_06) AS FAIL_06, SUM(FAIL_07) AS FAIL_07, SUM(FAIL_08) AS FAIL_08, SUM(FAIL_09) AS FAIL_09
+			, #{companyCode} AS COMPANY_CODE
     	FROM (
 			<choose>
 				<when test="timeType == 1">
@@ -128,7 +130,6 @@
 				ORDER BY RESULT_DATE DESC, TABLE_CODE
 			</otherwise>
 		</choose>
-		OFFSET #{skip} ROWS FETCH NEXT #{take} ROWS ONLY
 	</select>
 	
 	<select id="selectGmarketStatListCount" resultType="int" parameterType="com.web.gmarket.stat.dto.StatDto">
@@ -176,11 +177,13 @@
 	  	SELECT
 	  		RESULT_DATE, TABLE_CODE, TABLE_NAME, SUCC_CNT, TRY_CNT, FAIL_CNT
 			, FAIL_00, FAIL_01, FAIL_02, FAIL_03, FAIL_04, FAIL_05, FAIL_06, FAIL_07, FAIL_08, FAIL_09
+			, COMPANY_CODE
 	  	FROM (
 			SELECT
 				RESULT_DATE, TABLE_CODE, TABLE_NAME, SUM(SUCC_CNT) AS SUCC_CNT, SUM(TRY_CNT) AS TRY_CNT, (SUM(TRY_CNT) - SUM(SUCC_CNT)) AS FAIL_CNT
 				, SUM(FAIL_00) AS FAIL_00, SUM(FAIL_01) AS FAIL_01, SUM(FAIL_02) AS FAIL_02, SUM(FAIL_03) AS FAIL_03, SUM(FAIL_04) AS FAIL_04
 				, SUM(FAIL_05) AS FAIL_05, SUM(FAIL_06) AS FAIL_06, SUM(FAIL_07) AS FAIL_07, SUM(FAIL_08) AS FAIL_08, SUM(FAIL_09) AS FAIL_09
+				, #{companyCode} AS COMPANY_CODE
 	    	FROM (
 				<choose>
 					<when test="timeType == 1">

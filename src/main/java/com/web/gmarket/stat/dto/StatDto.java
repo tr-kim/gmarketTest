@@ -88,8 +88,11 @@ public class StatDto extends StatCodeDto implements Serializable {
 	// 전송 실패 횟수 (수신거부 등록번호)
 	@JsonProperty("FAIL_09")
 	private Integer FAIL_09;
-	
-	
+
+	// 회사 구분 코드
+	@JsonProperty("COMPANY_CODE")
+	private Integer COMPANY_CODE;
+
 	/****************************** 검색 컬럼 ***************************/
 	// 테이블 이름
 	private int tableCode = 0;
